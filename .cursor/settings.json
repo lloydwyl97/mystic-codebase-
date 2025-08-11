@@ -1,0 +1,6 @@
+{
+  "python.defaultInterpreterPath": "C:\\Users\\lloyd\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+  "python": {
+    "requirements": "requirements.txt"
+  }
+} 

@@ -1,0 +1,109 @@
+# ===== CONSOLIDATED FRONTEND REQUIREMENTS =====
+# Combined all requirements files and added missing dependencies from actual code usage
+
+# Core Streamlit and web framework
+streamlit==1.28.1
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+
+# Data processing and visualization (essential)
+pandas==2.0.3
+numpy==1.24.3
+plotly==5.17.0
+matplotlib==3.7.2
+seaborn==0.12.2
+
+# HTTP and networking (essential)
+requests==2.31.0
+httpx==0.28.1
+aiohttp==3.9.1
+websockets==11.0.3
+
+# Caching and message queuing
+redis==5.2.1
+celery==5.3.4
+
+# Configuration and environment
+python-dotenv==1.0.0
+pydantic==2.7.1
+pyyaml==6.0.1
+
+# Monitoring and logging
+structlog==24.1.0
+loguru==0.7.2
+psutil==6.1.0
+
+# Security and encryption
+cryptography==41.0.7
+
+# Performance and JSON
+ujson==5.8.0
+orjson==3.9.10
+
+# Utilities (essential)
+python-dateutil==2.8.2
+pytz==2023.3
+click==8.1.7
+rich==13.7.0
+
+# HTTP and SSL
+urllib3==2.0.7
+certifi>=2024.2.2
+
+# Retry and rate limiting
+tenacity==8.3.0
+backoff==2.2.1
+ratelimit==2.2.1
+
+# File handling and caching
+aiofiles==23.2.1
+fastapi-cache2==0.2.1
+
+# Web UI / Visualization
+dash==2.14.0
+gradio==4.0.0
+
+# Time handling
+pendulum==2.1.2
+
+# UUID handling
+uuid==1.30
+
+# Environment variables
+python-decouple==3.8
+
+# Compression
+brotli==1.1.0
+
+# Image processing
+pillow==10.1.0
+
+# Configuration parsing
+configparser==6.0.0
+
+# WebSocket and real-time (for live data)
+python-socketio==5.9.0
+
+# Trading data
+pandas-ta>=0.3.14b0
+
+# Sentiment analysis
+textblob>=0.17.1
+
+# Quantum computing (for dashboard features)
+qiskit==0.44.0
+
+# Streamlit extensions and plugins
+streamlit-option-menu
+streamlit-aggrid
+streamlit-authenticator
+streamlit-echarts
+streamlit-plotly-events
+streamlit-ace
+streamlit-js-eval
+streamlit-custom-notification-box
+streamlit-vertical-slider
+streamlit-timeline
+
+# Additional dependencies
+pika

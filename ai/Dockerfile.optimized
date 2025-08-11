@@ -1,0 +1,26 @@
+FROM python:3.10
+
+WORKDIR /app
+
+# Copy requirements and install
+COPY ai/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy only AI-specific files and directories
+COPY ai/ ./ai/
+COPY ai_cache.json .
+COPY ai_strategy_generator.py .
+COPY ai_strategy_endpoints.py .
+COPY ai_supercomputer/ ./ai_supercomputer/
+
+# Copy environment file
+COPY .env .
+
+# Create main entry point
+COPY ai/main.py .
+
+# Expose port
+EXPOSE 8001
+
+# Command to run the AI application
+CMD ["python", "main.py"] 

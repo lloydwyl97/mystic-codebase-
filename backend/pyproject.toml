@@ -1,0 +1,297 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mystic-trading-platform"
+version = "1.0.0"
+description = "Advanced AI-powered cryptocurrency trading platform"
+authors = [{name = "Mystic Trading Team"}]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+[project.optional-dependencies]
+dev = [
+    "flake8>=6.1.0",
+    "black>=23.12.0",
+    "isort>=5.13.0",
+    "mypy>=1.8.0",
+    "bandit>=1.7.0",
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pre-commit>=3.6.0",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | venv
+  | logs
+  | backups
+  | model_versions
+  | mutated_strategies
+  | strategy_backups
+  | stubs
+  | typings
+  | redis-server
+  | crypto_widget
+  | frontend
+  | src
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+skip = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+    ".env",
+    "*.pyc",
+    "*.pyo",
+    "*.pyd",
+    ".pytest_cache",
+    ".coverage",
+    "htmlcov",
+    "build",
+    "dist",
+    "*.egg-info",
+    "migrations",
+    "node_modules",
+    ".tox",
+    ".mypy_cache",
+    ".ruff_cache",
+    "logs",
+    "backups",
+    "model_versions",
+    "mutated_strategies",
+    "strategy_backups",
+    "stubs",
+    "typings",
+    "redis-server",
+    "crypto_widget",
+    "frontend",
+    "src"
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+show_error_codes = true
+ignore_missing_imports = true
+exclude = [
+    "venv",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "build",
+    "dist",
+    "*.egg-info",
+    "logs",
+    "backups",
+    "model_versions",
+    "mutated_strategies",
+    "strategy_backups",
+    "stubs",
+    "typings",
+    "redis-server",
+    "crypto_widget",
+    "frontend",
+    "src"
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --strict-markers --strict-config --tb=short"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "ai: marks tests as AI-related tests",
+    "trading: marks tests as trading-related tests",
+    "database: marks tests as database-related tests",
+    "api: marks tests as API-related tests",
+]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/tests/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/__pycache__/*",
+    "*/logs/*",
+    "*/backups/*",
+    "*/model_versions/*",
+    "*/mutated_strategies/*",
+    "*/strategy_backups/*",
+    "*/stubs/*",
+    "*/typings/*",
+    "*/redis-server/*",
+    "*/crypto_widget/*",
+    "*/frontend/*",
+    "*/src/*",
+    "*/build/*",
+    "*/dist/*",
+    "*.egg-info/*",
+    "setup.py",
+    "conftest.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", "venv", ".venv", "logs", "backups", "model_versions", "mutated_strategies", "strategy_backups", "stubs", "typings", "redis-server", "crypto_widget", "frontend", "src"]
+skips = ["B101", "B601"]
+
+[tool.vulture]
+exclude = [
+    "venv",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "build",
+    "dist",
+    "*.egg-info",
+    "logs",
+    "backups",
+    "model_versions",
+    "mutated_strategies",
+    "strategy_backups",
+    "stubs",
+    "typings",
+    "redis-server",
+    "crypto_widget",
+    "frontend",
+    "src"
+]
+min_confidence = 80
+
+[tool.radon]
+cc_min = "A"
+mi_min = "A"
+hal_min = "A"
+exclude = [
+    "venv",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "build",
+    "dist",
+    "*.egg-info",
+    "logs",
+    "backups",
+    "model_versions",
+    "mutated_strategies",
+    "strategy_backups",
+    "stubs",
+    "typings",
+    "redis-server",
+    "crypto_widget",
+    "frontend",
+    "src"
+]
+
+[tool.lizard]
+CCN = 10
+length = 1000
+arguments = 100
+warnings_only = false
+exclude = [
+    "venv",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "build",
+    "dist",
+    "*.egg-info",
+    "logs",
+    "backups",
+    "model_versions",
+    "mutated_strategies",
+    "strategy_backups",
+    "stubs",
+    "typings",
+    "redis-server",
+    "crypto_widget",
+    "frontend",
+    "src"
+]
+
+[tool.pylama]
+linters = "pycodestyle,pyflakes,mccabe,isort"
+ignore = "E203,E501,W503,W504,F401,F841,E722,E731,W291,W293,E402"
+exclude = [
+    "venv",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "build",
+    "dist",
+    "*.egg-info",
+    "logs",
+    "backups",
+    "model_versions",
+    "mutated_strategies",
+    "strategy_backups",
+    "stubs",
+    "typings",
+    "redis-server",
+    "crypto_widget",
+    "frontend",
+    "src"
+]

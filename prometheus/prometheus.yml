@@ -1,0 +1,255 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Backend services
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['mystic-backend:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # AI services
+  - job_name: 'ai'
+    static_configs:
+      - targets: ['mystic-ai:8001']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Quantum Computing Services
+  - job_name: 'qiskit'
+    static_configs:
+      - targets: ['mystic-qiskit:8087']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    honor_labels: true
+
+  - job_name: 'cirq'
+    static_configs:
+      - targets: ['mystic-cirq:8088']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    honor_labels: true
+
+  - job_name: 'pennylane'
+    static_configs:
+      - targets: ['mystic-pennylane:8089']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    honor_labels: true
+
+  # Edge Computing Services
+  - job_name: 'edge-node-1'
+    static_configs:
+      - targets: ['mystic-edge-1:8090']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'edge-node-2'
+    static_configs:
+      - targets: ['mystic-edge-2:8091']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'edge-orchestrator'
+    static_configs:
+      - targets: ['mystic-edge-orchestrator:8092']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # 5G Network Services
+  - job_name: '5g-core'
+    static_configs:
+      - targets: ['mystic-5g-core:8093']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: '5g-ran'
+    static_configs:
+      - targets: ['mystic-5g-ran:8094']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: '5g-slice-manager'
+    static_configs:
+      - targets: ['mystic-5g-slice-manager:8095']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Satellite Data Services
+  - job_name: 'satellite-receiver'
+    static_configs:
+      - targets: ['mystic-satellite-receiver:8096']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'satellite-processor'
+    static_configs:
+      - targets: ['mystic-satellite-processor:8097']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'satellite-analytics'
+    static_configs:
+      - targets: ['mystic-satellite-analytics:8098']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Blockchain Mining Services
+  - job_name: 'bitcoin-miner'
+    static_configs:
+      - targets: ['mystic-bitcoin-miner:8099']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'ethereum-miner'
+    static_configs:
+      - targets: ['mystic-ethereum-miner:8100']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'mining-pool'
+    static_configs:
+      - targets: ['mystic-mining-pool:8101']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # AI Supercomputing Services
+  - job_name: 'ai-supercomputer-master'
+    static_configs:
+      - targets: ['mystic-ai-super-master:8102']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'ai-supercomputer-worker-1'
+    static_configs:
+      - targets: ['mystic-ai-super-worker-1:8103']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'ai-supercomputer-worker-2'
+    static_configs:
+      - targets: ['mystic-ai-super-worker-2:8104']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'ai-supercomputer-worker-3'
+    static_configs:
+      - targets: ['mystic-ai-super-worker-3:8105']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Quantum Key Distribution Services
+  - job_name: 'qkd-alice'
+    static_configs:
+      - targets: ['mystic-qkd-alice:8106']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'qkd-bob'
+    static_configs:
+      - targets: ['mystic-qkd-bob:8107']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'qkd-eve'
+    static_configs:
+      - targets: ['mystic-qkd-eve:8108']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Advanced Services
+  - job_name: 'neural-engine'
+    static_configs:
+      - targets: ['mystic-neural-engine:8109']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'post-quantum-crypto'
+    static_configs:
+      - targets: ['mystic-post-quantum-crypto:8110']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'genetic-algorithm-engine'
+    static_configs:
+      - targets: ['mystic-genetic-engine:8111']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'monte-carlo-simulator'
+    static_configs:
+      - targets: ['mystic-monte-carlo:8112']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'time-series-forecaster'
+    static_configs:
+      - targets: ['mystic-time-series-forecaster:8113']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'risk-engine'
+    static_configs:
+      - targets: ['mystic-risk-engine:8114']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'compliance-monitor'
+    static_configs:
+      - targets: ['mystic-compliance-monitor:8115']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'audit-trail'
+    static_configs:
+      - targets: ['mystic-audit-trail:8116']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Node Exporter
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['mystic-node-exporter:9100']
+
+  # Redis
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['mystic-redis:6379']
+
+  # RabbitMQ
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['mystic-rabbitmq:15692']
+
+  # MongoDB
+  - job_name: 'mongodb'
+    static_configs:
+      - targets: ['mystic-mongodb:9216']
+
+  # PostgreSQL
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['mystic-postgres:9187']
+
+  # Elasticsearch
+  - job_name: 'elasticsearch'
+    static_configs:
+      - targets: ['mystic-elasticsearch:9200']
+    metrics_path: '/_prometheus/metrics'
+
+  # InfluxDB
+  - job_name: 'influxdb'
+    static_configs:
+      - targets: ['mystic-influxdb:8086']
+    metrics_path: '/metrics' 

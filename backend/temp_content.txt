@@ -1,0 +1,102 @@
+import openai
+import time
+import json
+import requests
+import logging
+from datetime import datetime
+from pathlib import Path
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Configuration
+STRATEGY_DIR = "./generated_modules"
+INTERVAL_HOURS = 3
+PING_FILE = "./logs/ai_strategy_generator.ping"
+
+# Ensure directories exist
+os.makedirs(STRATEGY_DIR, exist_ok=True)
+os.makedirs("./logs", exist_ok=True)
+
+# OpenAI configuration
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+def create_ping_file():
+    """Create ping file for dashboard monitoring"""
+    try:
+        with open(PING_FILE, "w") as f:
+            json.dump({
+                "status": "online",
+                "last_update": datetime.utcnow().isoformat(),
+                "strategies_generated": len(os.listdir(STRATEGY_DIR)) if os.path.exists(STRATEGY_DIR) else 0
+            }, f)
+    except Exception as e:
+        print(f"Ping file error: {e}")
+
+def get_live_market_data():
+    """Get live market data for strategy context"""
+    try:
+        # Binance API for live data
+        response = requests.get("https://api.binance.us/api/v3/ticker/24hr", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            # Get top movers
+            top_movers = sorted(data, key=lambda x: abs(float(x['priceChangePercent'])), reverse=True)[:5]
+            return top_movers
+    except Exception as e:
+        print(f"Market data fetch error: {e}")
+    return []
+
+def generate_prompt():
+    return ("You are a crypto quant. Write a new Python strategy function using TA-Lib and pandas. "
+            "Return only the function with buy/sell logic.")
+
+def generate_strategy():
+    """Generate a new trading strategy using OpenAI"""
+    try:
+        if not openai.api_key:
+            print("[LLM] No OpenAI API key found, skipping strategy generation")
+            return
+        
+        print("[LLM] Generating new strategy...")
+        res = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": generate_prompt()}],
+            temperature=0.7,
+            max_tokens=800
+        )
+        
+        code = res.choices[0].message['content']
+        ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        fname = f"{STRATEGY_DIR}/strategy_llm_{ts}.py"
+        os.makedirs(STRATEGY_DIR, exist_ok=True)
+        with open(fname, "w") as f: f.write(code)
+        
+        print(f"[LLM] Strategy saved: {fname}")
+        create_ping_file()
+        
+    except Exception as e:
+        print(f"[LLM] Strategy generation error: {e}")
+        create_ping_file()
+
+def main():
+    """Main execution loop"""
+    print("[LLM] AI Strategy Generator started")
+    print(f"[LLM] Strategy directory: {STRATEGY_DIR}")
+    print(f"[LLM] Generation interval: {INTERVAL_HOURS} hours")
+    
+    while True:
+        try:
+            generate_strategy()
+        except KeyboardInterrupt:
+            print("[LLM] Shutting down...")
+            break
+        except Exception as e:
+            print(f"[LLM] Main loop error: {e}")
+        
+        print(f"[LLM] Sleeping for {INTERVAL_HOURS} hours...")
+        time.sleep(INTERVAL_HOURS * 3600)
+
+if __name__ == "__main__":
+    main() 

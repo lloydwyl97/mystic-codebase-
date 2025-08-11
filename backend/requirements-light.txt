@@ -1,0 +1,132 @@
+# ===== BACKEND LIGHT REQUIREMENTS - BACKEND-SPECIFIC ONLY =====
+# Only backend-specific dependencies - inherits from base.txt
+
+# Web Framework and API
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+
+# Authentication and Security
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.6
+PyJWT==2.8.0
+passlib[bcrypt]==1.7.4
+
+# Configuration and Environment
+pydantic-settings==2.1.0
+
+# Database and ORM
+sqlalchemy==2.0.23
+alembic==1.12.1
+psycopg2-binary==2.9.7
+
+# Data Processing
+numpy>=2.0.0,<3.0.0
+pandas>=2.1.0
+matplotlib>=3.8.0
+plotly==5.17.0
+seaborn>=0.13.0
+pandas-ta>=0.3.14b0
+
+# Trading APIs and Data Sources
+python-binance==1.0.21
+coinbase==2.1.0
+ccxt==4.4.15
+yfinance==0.2.65
+alpha-vantage==2.3.1
+polygon-api-client==1.14.6
+
+# HTTP and WebSocket
+aiohttp==3.9.1
+websockets>=13.0
+httpx==0.28.1
+aiohttp-retry==2.8.3
+
+# Caching and Message Queuing
+redis==5.2.1
+celery==5.3.4
+flower==2.0.1
+kombu==5.3.4
+billiard==4.2.0
+aioredis==2.0.1
+fastapi-cache2==0.2.1
+
+# Monitoring and Logging
+python-json-logger==2.0.7
+loguru==0.7.2
+prometheus-client==0.21.1
+grafana-api==1.0.3
+sentry-sdk[fastapi]==1.38.0
+
+# Retry and Rate Limiting
+backoff==2.2.1
+ratelimit==2.2.1
+
+# Utilities
+tzlocal==5.0.1
+click==8.1.7
+rich==13.7.0
+gunicorn==21.2.0
+
+# Notifications
+twilio==8.10.0
+slack-sdk==3.26.1
+
+# Configuration and YAML
+slowapi==0.1.9
+cachetools==5.3.2
+
+# Performance and JSON
+ujson==5.8.0
+
+# Configuration Management
+python-decouple==3.8
+
+# WebSocket and Real-time
+python-socketio==5.9.0
+
+# Observability
+opentelemetry-api==1.21.0
+opentelemetry-sdk==1.21.0
+
+# Utilities
+more-itertools==10.1.0
+toolz==0.12.0
+cytoolz==0.12.3
+pathlib2==2.3.7
+pendulum>=2.1.2
+uuid==1.30
+brotli==1.1.0
+pillow==10.1.0
+configparser==6.0.0
+marshmallow==3.20.1
+apispec==6.3.0
+datadog==0.48.0
+memory-profiler==0.61.0
+bandit==1.7.5
+pylint==3.0.3
+factory-boy==3.3.0
+faker==20.1.0
+coverage==7.3.2
+networkx==3.4.2
+
+# Basic AI/ML (lightweight)
+scikit-learn>=1.4.0
+scipy>=1.12.0
+statsmodels==0.14.0
+
+# AI and Machine Learning - Core packages
+openai==1.12.0
+anthropic==0.25.0
+torch==2.1.0
+transformers==4.35.0
+
+# Sentiment Analysis
+vaderSentiment==3.3.2
+textblob>=0.17.1
+
+# Additional dependencies
+pika
+
+# Experimental Services Dependencies
+qiskit==1.4.3
+qiskit-machine-learning==0.8.3 

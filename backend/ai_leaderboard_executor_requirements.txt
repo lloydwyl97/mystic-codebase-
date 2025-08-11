@@ -1,0 +1,47 @@
+# AI Leaderboard Executor Service Requirements
+# Only dependencies needed for leaderboard analysis
+
+# FastAPI and web framework
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+
+# Redis for caching and messaging
+redis==5.2.1
+
+# Data processing (essential for leaderboard analysis)
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.3.2
+scipy==1.10.1
+
+# Trading APIs (for market data)
+python-binance==1.0.21
+ccxt==4.4.15
+yfinance==0.2.64
+
+# HTTP client
+requests==2.31.0
+aiohttp==3.9.1
+
+# Environment and configuration
+python-dotenv==1.0.0
+pydantic==2.7.1
+
+# Logging
+structlog==24.1.0
+
+# JSON handling
+orjson==3.9.10
+
+# Date and time
+python-dateutil==2.8.2
+pytz==2023.3
+
+# Background tasks
+celery==5.3.4
+
+# Database (for leaderboard data)
+sqlalchemy==2.0.23
+
+# Monitoring
+prometheus-client==0.21.1 

@@ -1,0 +1,16 @@
+# ===== MIDDLEWARE SERVICE - SPECIFIC REQUIREMENTS =====
+
+# Core web framework (essential)
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+
+# HTTP and networking (essential)
+websockets>=13.0
+
+# Caching and message queuing (essential)
+redis>=4.5.0
+celery==5.3.4
+kombu==5.3.4
+
+# Async support (essential)
+asyncio 

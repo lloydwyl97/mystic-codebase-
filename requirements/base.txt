@@ -1,0 +1,36 @@
+# ===== BASE REQUIREMENTS - TRULY SHARED ACROSS ALL SERVICES =====
+# Only packages that EVERY service needs - no service-specific dependencies
+
+# Core Python utilities (universal)
+python-dotenv==1.0.0
+pydantic==2.7.1
+python-dateutil==2.8.2
+pytz==2023.3
+
+# HTTP client (universal)
+requests==2.31.0
+
+# JSON handling (universal)
+orjson==3.9.10
+
+# Logging (universal)
+structlog==24.1.0
+
+# Configuration (universal)
+pyyaml==6.0.1
+
+# Security (universal)
+cryptography==41.0.7
+
+# File handling (universal)
+aiofiles==23.2.1
+
+# Retry logic (universal)
+tenacity==8.3.0
+
+# System monitoring (universal)
+psutil==6.1.0
+
+# Utilities (universal)
+urllib3==2.0.7
+certifi>=2024.2.2 

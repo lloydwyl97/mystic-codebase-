@@ -1,0 +1,48 @@
+# ===== AI PROCESSOR ML REQUIREMENTS - HEAVY ML ONLY =====
+# Only heavy ML libraries not in ai.txt - inherits from base.txt
+
+# Additional Deep Learning (not in ai.txt)
+keras==2.15.0
+theano==1.0.5
+
+# Advanced ML Frameworks
+xgboost==2.0.3
+lightgbm==4.1.0
+catboost==1.2.2
+
+# Computer Vision
+opencv-python==4.8.1.78
+pillow==10.1.0
+
+# Natural Language Processing
+spacy==3.7.2
+nltk==3.8.1
+gensim==4.3.2
+
+# Time Series Analysis
+prophet==1.1.4
+statsmodels==0.14.0
+
+# Feature Engineering
+feature-engine==1.6.2
+category-encoders==2.6.3
+
+# Model Interpretability
+shap==0.44.0
+lime==0.2.0.1
+
+# AutoML
+autosklearn==0.15.0
+flaml==1.2.8
+
+# Distributed Computing
+dask==2023.11.0
+vaex==4.17.0
+
+# GPU Computing
+cupy-cuda12x==12.3.0
+numba==0.58.1
+
+# Model Serving
+bentoml==1.0.20
+tritonclient==2.41.0 

@@ -1,0 +1,103 @@
+{
+  "name": "mystic-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Advanced cryptocurrency trading platform with AI-powered analytics, social trading, and real-time market data",
+  "type": "module",
+  "author": "Mystic Trading Team",
+  "license": "MIT",
+  "keywords": [
+    "trading",
+    "cryptocurrency",
+    "ai",
+    "analytics",
+    "social-trading",
+    "real-time",
+    "pwa"
+  ],
+  "scripts": {
+    "dev": "vite --port 3000 --host",
+    "build": "vite build",
+    "preview": "vite preview --port 3000 --host",
+    "lint": "eslint . --report-unused-disable-directives",
+    "lint:strict": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --fix --cache --cache-location .eslintcache",
+    "lint:fast": "eslint . --cache --cache-location .eslintcache --max-warnings 0 --quiet",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "type-check": "tsc --noEmit",
+    "clean": "rimraf dist .vite node_modules package-lock.json .eslintcache",
+    "clean:install": "npm run clean && npm install",
+    "start": "vite --port 3000 --host localhost --open",
+    "test": "echo \"No tests specified\" && exit 0",
+    "build:prod": "vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "fix": "npm run format && npm run lint:fix"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
+    "@mui/x-charts": "^6.19.6",
+    "@mui/x-data-grid": "^6.19.6",
+    "@mui/x-date-pickers": "^6.19.6",
+    "@tensorflow/tfjs": "^4.18.0",
+    "@tensorflow/tfjs-vis": "^1.5.1",
+    "axios": "^1.7.9",
+    "chart.js": "^4.4.2",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^11.0.14",
+    "lodash": "^4.17.21",
+    "notistack": "^3.0.1",
+    "openai": "^4.57.0",
+    "react": "^18.3.1",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.3.1",
+    "react-confetti": "^6.1.0",
+    "react-helmet-async": "^2.0.4",
+    "react-router-dom": "^6.28.0",
+    "react-spring": "^9.7.3",
+    "recharts": "^2.12.7",
+    "socket.io-client": "^4.8.1",
+    "uuid": "^11.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@types/lodash": "^4.14.202",
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__template": "^7.4.4",
+    "@types/babel__traverse": "^7.20.5",
+    "@types/d3-color": "^3.0.4",
+    "@types/d3-path": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

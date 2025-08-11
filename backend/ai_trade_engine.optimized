@@ -1,0 +1,27 @@
+# ===== OPTIMIZED AI TRADE ENGINE =====
+FROM mystic_base
+
+# Install backend-light requirements (no heavy ML)
+COPY backend/backend-light.txt .
+RUN pip install --no-cache-dir -r backend-light.txt
+
+# Copy only AI trade engine files
+COPY backend/ai_trade_engine.py .
+COPY backend/trade_engine_manager.py .
+COPY backend/ai_trade_engine_service.py .
+
+# Copy only needed directories
+COPY backend/strategies/ ./strategies/
+COPY backend/models/ ./models/
+
+# Copy configuration
+COPY .env .
+
+# Create logs directory
+RUN mkdir -p logs
+
+# Expose port
+EXPOSE 8004
+
+# Run the AI trade engine
+CMD ["python", "ai_trade_engine.py"] 

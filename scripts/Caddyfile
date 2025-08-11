@@ -1,0 +1,131 @@
+# Mystic Trading Platform - Caddy Configuration
+# This configuration serves the frontend and proxies API requests to the backend
+
+# Development configuration (localhost)
+localhost {
+    # Serve static files from frontend build
+    root * /var/www/mystic
+    try_files {path} /index.html
+
+    # Enable file server with directory listing (optional)
+    file_server
+
+    # API reverse proxy to backend
+    reverse_proxy /api/* localhost:8000 {
+        # Headers for proper proxying
+        header_up Host {get-host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+
+        # WebSocket support
+        header_up Connection {>Connection}
+        header_up Upgrade {>Upgrade}
+
+        # Timeouts
+        timeout 60s
+    }
+
+    # WebSocket proxy for real-time data
+    reverse_proxy /ws/* localhost:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+
+        # WebSocket headers
+        header_up Connection {>Connection}
+        header_up Upgrade {>Upgrade}
+
+        # WebSocket timeouts
+        timeout 60s
+    }
+
+    # Health check endpoint
+    reverse_proxy /health localhost:8000 {
+        header_up Host {Get-host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Security headers
+    header {
+        # Security headers
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+
+        # Cache control for static assets
+        @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+        header @static Cache-Control "public, max-age=31536000, immutable"
+
+        # Remove server header
+        -Server
+    }
+
+    # Gzip compression
+    encode gzip
+
+    # Logging
+    log {
+        output file /var/log/caddy/mystic.log
+        format json
+    }
+}
+
+# Production configuration (replace with your domain)
+# yourdomain.com {
+#     root * /var/www/mystic
+#     try_files {path} /index.html
+#
+#     # API reverse proxy
+#     reverse_proxy /api/* localhost:8000 {
+#         header_up Host {host}
+#         header_up X-Real-IP {remote_host}
+#         header_up X-Forwarded-For {remote_host}
+#         header_up X-Forwarded-Proto {scheme}
+#         header_up Connection {>Connection}
+#         header_up Upgrade {>Upgrade}
+#         timeout 60s
+#     }
+#
+#     # WebSocket proxy
+#     reverse_proxy /ws/* localhost:8000 {
+#         header_up Host {host}
+#         header_up X-Real-IP {remote_host}
+#         header_up X-Forwarded-For {remote_host}
+#         header_up X-Forwarded-Proto {scheme}
+#         header_up Connection {>Connection}
+#         header_up Upgrade {>Upgrade}
+#         timeout 60s
+#     }
+#
+#     # Health check
+#     reverse_proxy /health localhost:8000 {
+#         header_up Host {host}
+#         header_up X-Real-IP {remote_host}
+#         header_up X-Forwarded-For {remote_host}
+#         header_up X-Forwarded-Proto {scheme}
+#     }
+#
+#     # Security headers
+#     header {
+#         X-Frame-Options "SAMEORIGIN"
+#         X-Content-Type-Options "nosniff"
+#         X-XSS-Protection "1; mode=block"
+#         Referrer-Policy "strict-origin-when-cross-origin"
+#         @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+#         header @static Cache-Control "public, max-age=31536000, immutable"
+#         -Server
+#     }
+#
+#     # Auto HTTPS (Caddy handles this automatically)
+#     encode gzip
+#
+#     log {
+#         output file /var/log/caddy/mystic.log
+#         format json
+#     }
+# }

@@ -1,0 +1,86 @@
+{
+  "timestamp": "2025-06-28T13:10:26.006673",
+  "overall_status": "\u274c POOR",
+  "summary": {
+    "total_checks": 9,
+    "passed": 2,
+    "failed": 7,
+    "total_errors": 0,
+    "total_warnings": 114,
+    "total_time": 763.4958391189575
+  },
+  "results": [
+    {
+      "tool": "check_black",
+      "success": false,
+      "error_count": 0,
+      "warning_count": 0,
+      "duration": 0.0,
+      "output": "unsupported operand type(s) for +: 'NoneType' and 'str'"
+    },
+    {
+      "tool": "isort",
+      "success": false,
+      "error_count": 0,
+      "warning_count": 0,
+      "duration": 45.92626667022705,
+      "output": "--- C:\\Users\\lloyd\\Downloads\\Mystic-Codebase\\backend\\ai_leaderboard_executor.py:before\t2025-06-26 14:49:19.247394\n+++ C:\\Users\\lloyd\\Downloads\\Mystic-Codebase\\backend\\ai_leaderboard_executor.py:after\t2025-06-28 12:58:16.117335\n@@ -1,6 +1,7 @@\n import json\n+import logging\n import time\n-import logging\n+\n from ai_strategy_execution import execute_ai_strategy_signal\n \n # Configure logging\n--- C:\\Users\\lloyd\\Downloads\\Mystic-Codebase\\backend\\ai_strategy_endpoints.py:before\t2025-06-26 23:10:15.748858\n..."
+    },
+    {
+      "tool": "flake8",
+      "success": false,
+      "error_count": 0,
+      "warning_count": 0,
+      "duration": 2.2687716484069824,
+      "output": ""
+    },
+    {
+      "tool": "mypy",
+      "success": false,
+      "error_count": 0,
+      "warning_count": 0,
+      "duration": 1.2468876838684082,
+      "output": ""
+    },
+    {
+      "tool": "bandit",
+      "success": true,
+      "error_count": 0,
+      "warning_count": 0,
+      "duration": 300.02996158599854,
+      "output": ""
+    },
+    {
+      "tool": "vulture",
+      "success": false,
+      "error_count": 0,
+      "warning_count": 14,
+      "duration": 3.6835837364196777,
+      "output": "exchange_integration.py:67: unused variable 'exc_tb' (100% confidence)\nexchange_integration.py:67: unused variable 'exc_type' (100% confidence)\nexchange_integration.py:67: unused variable 'exc_val' (100% confidence)\nexchange_integration.py:183: unused variable 'exc_tb' (100% confidence)\nexchange_integration.py:183: unused variable 'exc_type' (100% confidence)\nexchange_integration.py:183: unused variable 'exc_val' (100% confidence)\nportfolio_rebalancer.py:16: unused variable 'stablecoin' (100% co..."
+    },
+    {
+      "tool": "radon",
+      "success": true,
+      "error_count": 0,
+      "warning_count": 0,
+      "duration": 300.07042264938354,
+      "output": ""
+    },
+    {
+      "tool": "pytest",
+      "success": false,
+      "error_count": 0,
+      "warning_count": 0,
+      "duration": 54.310173988342285,
+      "output": "============================= test session starts =============================\nplatform win32 -- Python 3.13.5, pytest-8.2.2, pluggy-1.6.0\nrootdir: C:\\Users\\lloyd\\Downloads\\Mystic-Codebase\\backend\nconfigfile: pyproject.toml\ntestpaths: tests\nplugins: anyio-3.7.1, asyncio-0.21.1, cov-6.2.1, mock-3.14.1\nasyncio: mode=Mode.STRICT\ncollected 102 items / 6 errors\n\n=================================== ERRORS ====================================\n__________________ ERROR collecting tests/test_ai_modules.p..."
+    },
+    {
+      "tool": "coverage",
+      "success": false,
+      "error_count": 0,
+      "warning_count": 100,
+      "duration": 23.208144664764404,
+      "output": ""
+    }
+  ]
+}

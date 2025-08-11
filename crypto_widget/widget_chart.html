@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Chart Widget</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { background: #111; color: #fff; font-family: sans-serif; }
+    .coin-container { margin: 2rem; background: #222; padding: 1rem; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Live Crypto Charts</h1>
+  <div id="chart-area"></div>
+
+  <script>
+    const symbols = ["BTC", "ETH", "SOL", "ADA"];
+    const sources = ["Binance", "Coinbase"];
+    const apiBase = "http://localhost:8000";
+
+    async function fetchHistory(symbol, source) {
+      const url = `${apiBase}/history?symbol=${symbol}&source=${source}&limit=30`;
+      const res = await fetch(url);
+      return await res.json();
+    }
+
+    function createChart(id, label, data) {
+      const ctx = document.getElementById(id).getContext('2d');
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.map(d => new Date(d.timestamp).toLocaleTimeString()),
+          datasets: [{
+            label: label,
+            data: data.map(d => parseFloat(d.price)),
+            fill: false,
+            tension: 0.1,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              ticks: { color: "#ccc" },
+              beginAtZero: false
+            },
+            x: {
+              ticks: { color: "#ccc" }
+            }
+          },
+          plugins: {
+            legend: { labels: { color: "#eee" } }
+          }
+        }
+      });
+    }
+
+    async function buildCharts() {
+      const container = document.getElementById("chart-area");
+      for (let source of sources) {
+        for (let symbol of symbols) {
+          const id = `${source}_${symbol}`;
+          const history = await fetchHistory(symbol, source);
+
+          if (!Array.isArray(history) || history.length === 0) continue;
+
+          const card = document.createElement("div");
+          card.className = "coin-container";
+          card.innerHTML = `<h3>${symbol} (${source})</h3><canvas id="${id}" height="120"></canvas>`;
+          container.appendChild(card);
+          createChart(id, `${symbol} ${source}`, history);
+        }
+      }
+    }
+
+    buildCharts();
+    setInterval(() => {
+      document.getElementById("chart-area").innerHTML = ""; // clear
+      buildCharts(); // refresh
+    }, 60000); // update every minute
+  </script>
+</body>
+</html>

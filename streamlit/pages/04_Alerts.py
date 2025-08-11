@@ -1,0 +1,101 @@
+from __future__ import annotations
+
+import os
+import sys
+import shutil
+from pathlib import Path
+import pandas as pd
+from datetime import datetime, timezone
+import streamlit as st
+
+# Ensure project root is importable so `dashboard` resolves
+_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if _ROOT not in sys.path:
+    sys.path.append(_ROOT)
+
+# Canonical components root: components.*
+from streamlit.data_client import get_alerts, get_health_check, get_ai_heartbeat
+from streamlit.state import render_sidebar_controls
+from streamlit.ui_guard import display_guard
+
+# Backup
+_p = Path(__file__)
+_bak = _p.with_suffix(_p.suffix + ".bak_cursor")
+try:
+    if not _bak.exists():
+        shutil.copyfile(_p, _bak)
+except Exception:
+    pass
+
+
+def main() -> None:
+    st.set_page_config(page_title="Alerts", layout="wide")
+    # Unified sidebar controls bound to session state
+    render_sidebar_controls()
+    # Top banner status pills
+    try:
+        hc = get_health_check()
+        from typing import Any, Dict, List, cast
+        hdata: Dict[str, Any] = cast(Dict[str, Any], hc.data) if isinstance(hc.data, dict) else {}
+        adapters: List[str] = [str(x) for x in cast(List[Any], hdata.get("adapters", []))] if isinstance(hdata.get("adapters"), list) else []
+        autobuy_state: str = str(hdata.get("autobuy", ""))
+        sys_state: str = str(hdata.get("status", ""))
+        status_map = {
+            "CB": "✅" if "coinbase" in adapters else "⚠️",
+            "BUS": "✅" if "binanceus" in adapters else "⚠️",
+            "KRA": "✅" if "kraken" in adapters else "⚠️",
+            "CGK": "✅" if "coingecko" in adapters else "⚠️",
+            "AI": "✅" if autobuy_state == "ready" else ("⚠️" if autobuy_state else "❌"),
+            "SYS": "✅" if sys_state == "ok" else ("⚠️" if sys_state else "❌"),
+        }
+        pills = " ".join([f"<span style='padding:4px 8px;border-radius:12px;background:#222;color:#eee;margin-right:6px'>{k} {v}</span>" for k, v in status_map.items()])
+        st.markdown(pills, unsafe_allow_html=True)
+        # AI status chip
+        try:
+            ai = get_ai_heartbeat()
+            running = bool(ai.data.get("running")) if isinstance(ai.data, dict) else False
+            last_ts = ai.data.get("last_decision_ts") if isinstance(ai.data, dict) else None
+            st.markdown(
+                f"<div style='margin:6px 0;padding:6px 10px;display:inline-block;border-radius:12px;background:{'#154' if running else '#441'};color:#eee'>AI: {'Running' if running else 'Idle'} • {last_ts or '—'}</div>",
+                unsafe_allow_html=True,
+            )
+        except Exception:
+            pass
+        st.caption(f"Last refresh: {datetime.now(timezone.utc).strftime('%H:%M:%S UTC')}")
+    except Exception:
+        pass
+    with display_guard("Alerts Table"):
+        res = get_alerts(200)
+    from typing import Any, Dict, List, cast
+    data: Any = res.data
+    alerts: List[Dict[str, Any]] = []
+    if isinstance(data, dict):
+        inner: Any = data.get("data", data)
+        if isinstance(inner, dict):
+            alerts = cast(List[Dict[str, Any]], inner.get("notifications", []) or inner.get("alerts", []))
+    elif isinstance(data, list):
+        alerts = cast(List[Dict[str, Any]], data)
+
+    st.subheader("Live Alerts")
+    if alerts:
+        try:
+            df = pd.DataFrame(alerts)
+            st.dataframe(df, use_container_width=True)
+        except Exception:
+            st.json(alerts)
+    else:
+        st.info("Live: no data yet")
+
+    with st.expander("Debug"):
+        payload_size = len(str(res.data)) if res.data is not None else 0
+        st.write({
+            "alerts_latency_ms": res.latency_ms,
+            "alerts_payload_size": payload_size,
+            "alerts_cache_age_s": res.cache_age_s,
+        })
+
+
+if __name__ == "__main__":
+    main()
+
+

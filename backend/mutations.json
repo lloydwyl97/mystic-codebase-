@@ -1,0 +1,23 @@
+[
+  {
+    "id": "mutation_001_rsi_enhanced",
+    "win_rate": 0.62,
+    "profit": 18.5,
+    "trades": 25,
+    "promoted": false
+  },
+  {
+    "id": "mutation_002_ema_optimized",
+    "win_rate": 0.58,
+    "profit": 12.3,
+    "trades": 32,
+    "promoted": false
+  },
+  {
+    "id": "mutation_003_macd_improved",
+    "win_rate": 0.51,
+    "profit": 8.7,
+    "trades": 19,
+    "promoted": false
+  }
+]

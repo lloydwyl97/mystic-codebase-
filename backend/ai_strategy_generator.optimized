@@ -1,0 +1,28 @@
+# ===== OPTIMIZED AI STRATEGY GENERATOR =====
+FROM mystic_base
+
+# Install backend-light requirements (no heavy ML)
+COPY backend/backend-light.txt .
+RUN pip install --no-cache-dir -r backend-light.txt
+
+# Copy only AI strategy generator files
+COPY backend/ai_strategy_generator.py .
+COPY backend/ai_strategies.py .
+COPY backend/ai_strategy_generator_service.py .
+
+# Copy only needed directories
+COPY backend/ai/ ./ai/
+COPY backend/strategies/ ./strategies/
+COPY backend/models/ ./models/
+
+# Copy configuration
+COPY .env .
+
+# Create logs directory
+RUN mkdir -p logs
+
+# Expose port
+EXPOSE 8002
+
+# Run the AI strategy generator
+CMD ["python", "ai_strategy_generator.py"] 

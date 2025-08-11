@@ -1,0 +1,27 @@
+# ===== OPTIMIZED AI STRATEGY EXECUTION =====
+FROM mystic_base
+
+# Install backend-light requirements (no heavy ML)
+COPY backend/backend-light.txt .
+RUN pip install --no-cache-dir -r backend-light.txt
+
+# Copy only AI strategy execution files
+COPY backend/ai_strategy_execution.py .
+COPY backend/ai_strategies.py .
+COPY backend/ai_strategy_executor_service.py .
+
+# Copy only needed directories
+COPY backend/strategies/ ./strategies/
+COPY backend/models/ ./models/
+
+# Copy configuration
+COPY .env .
+
+# Create logs directory
+RUN mkdir -p logs
+
+# Expose port
+EXPOSE 8003
+
+# Run the AI strategy execution system
+CMD ["python", "ai_strategy_execution.py"] 

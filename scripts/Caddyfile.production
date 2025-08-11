@@ -1,0 +1,123 @@
+# Mystic Trading Platform - Production Caddy Configuration
+# Replace 'yourdomain.com' with your actual domain
+
+yourdomain.com {
+    # Serve static files from frontend build
+    root * /var/www/mystic
+    try_files {path} /index.html
+
+    # Enable file server
+    file_server
+
+    # API reverse proxy to backend
+    reverse_proxy /api/* localhost:8000 {
+        # Headers for proper proxying
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+
+        # WebSocket support
+        header_up Connection {>Connection}
+        header_up Upgrade {>Upgrade}
+
+        # Timeouts
+        timeout 60s
+
+        # Load balancing (if you have multiple backend instances)
+        # lb_policy round_robin
+        # lb_try_duration 1s
+        # lb_try_interval 250ms
+    }
+
+    # WebSocket proxy for real-time data
+    reverse_proxy /ws/* localhost:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+
+        # WebSocket headers
+        header_up Connection {>Connection}
+        header_up Upgrade {>Upgrade}
+
+        # WebSocket timeouts
+        timeout 60s
+    }
+
+    # Health check endpoint
+    reverse_proxy /health localhost:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Security headers
+    header {
+        # Security headers
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+
+        # Content Security Policy
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none';"
+
+        # Cache control for static assets
+        @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+        header @static Cache-Control "public, max-age=31536000, immutable"
+
+        # Remove server header
+        -Server
+
+        # HSTS (HTTP Strict Transport Security)
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    }
+
+    # Rate limiting
+    @api {
+        path /api/*
+    }
+    @ws {
+        path /ws/*
+    }
+
+    # Apply rate limiting to API endpoints
+    handle @api {
+        rate_limit {
+            zone api
+            rate 10r/s
+            burst 20
+        }
+    }
+
+    handle @ws {
+        rate_limit {
+            zone ws
+            rate 5r/s
+            burst 10
+        }
+    }
+
+    # Gzip compression
+    encode gzip
+
+    # Logging
+    log {
+        output file /var/log/caddy/mystic.log
+        format json
+        level INFO
+    }
+
+    # Auto HTTPS (Caddy handles this automatically)
+    # Caddy will automatically obtain and renew SSL certificates from Let's Encrypt
+}
+
+# Redirect www to non-www (optional)
+www.yourdomain.com {
+    redir https://yourdomain.com{uri} permanent
+}
+
+# HTTP to HTTPS redirect (handled automatically by Caddy)
+# Caddy automatically redirects HTTP to HTTPS

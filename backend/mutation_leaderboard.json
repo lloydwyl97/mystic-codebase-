@@ -1,0 +1,30 @@
+{
+  "leaderboard": [
+    {
+      "strategy_id": "mutation_001",
+      "name": "BTC Momentum Strategy",
+      "performance": 15.2,
+      "win_rate": 68.5,
+      "total_trades": 45,
+      "last_updated": "2024-01-15T10:30:00Z"
+    },
+    {
+      "strategy_id": "mutation_002", 
+      "name": "ETH Mean Reversion",
+      "performance": 12.8,
+      "win_rate": 72.1,
+      "total_trades": 38,
+      "last_updated": "2024-01-15T10:30:00Z"
+    },
+    {
+      "strategy_id": "mutation_003",
+      "name": "ADA Breakout Detector",
+      "performance": 18.9,
+      "win_rate": 65.3,
+      "total_trades": 52,
+      "last_updated": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "last_updated": "2024-01-15T10:30:00Z",
+  "total_strategies": 3
+}

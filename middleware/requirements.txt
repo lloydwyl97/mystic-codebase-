@@ -1,0 +1,57 @@
+# Core web framework
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+
+# HTTP and networking
+aiohttp==3.9.1
+httpx==0.28.1
+requests==2.31.0
+websockets==11.0.3
+
+# Caching and message queuing
+redis==5.2.1
+celery==5.3.4
+kombu==5.3.4
+
+# Async support
+asyncio
+aiofiles==23.2.1
+
+# Configuration and environment
+python-dotenv==1.0.0
+pydantic==2.7.1
+pyyaml==6.0.1
+
+# Monitoring and logging
+structlog==24.1.0
+loguru==0.7.2
+psutil==6.1.0
+
+# Security and encryption
+cryptography==41.0.7
+
+# Performance and JSON
+ujson==5.8.0
+orjson==3.9.10
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2023.3
+click==8.1.7
+rich==13.7.0
+
+# HTTP and SSL
+urllib3==2.0.7
+certifi>=2024.2.2
+
+# Retry and rate limiting
+tenacity==8.3.0
+backoff==2.2.1
+ratelimit==2.2.1
+
+# Observability
+opentelemetry-api==1.21.0
+opentelemetry-sdk==1.21.0
+
+# Additional dependencies
+pika 

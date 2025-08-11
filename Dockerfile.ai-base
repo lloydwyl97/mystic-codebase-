@@ -1,0 +1,12 @@
+# ===== AI BASE IMAGE - FOR AI SERVICES ONLY =====
+FROM mystic-base:latest
+
+# Install AI/ML dependencies
+COPY requirements/ml.txt .
+RUN pip install --no-cache-dir -r ml.txt
+
+# Create AI-specific directories
+RUN mkdir -p /app/ai /app/models /app/strategies /app/data
+
+# Set AI-specific environment
+ENV SERVICE_TYPE=ai 

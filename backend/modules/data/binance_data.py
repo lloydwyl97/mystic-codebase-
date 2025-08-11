@@ -1,0 +1,269 @@
+"""
+Binance Data Fetcher Module for Mystic Trading Platform
+
+Handles all Binance US API interactions with centralized coin management.
+"""
+
+import logging
+import time
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
+import ccxt
+import asyncio
+
+logger = logging.getLogger(__name__)
+
+if TYPE_CHECKING:
+    pass  # Type hint fallback
+
+# === Data Structure ===
+
+
+@dataclass
+class BinanceMarketData:
+    """Binance market data structure"""
+
+    symbol: str
+    price: float
+    volume: float
+    change_24h: float
+    high_24h: float
+    low_24h: float
+    timestamp: float
+    exchange: str = "binance"
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "symbol": self.symbol,
+            "price": self.price,
+            "volume": self.volume,
+            "change_24h": self.change_24h,
+            "high_24h": self.high_24h,
+            "low_24h": self.low_24h,
+            "timestamp": self.timestamp,
+            "exchange": self.exchange,
+        }
+
+
+# === Custom Exceptions ===
+
+
+class BinanceClientError(Exception):
+    pass
+
+
+class BinanceDataError(Exception):
+    pass
+
+
+# === Main Fetcher Class ===
+
+
+class BinanceDataFetcher:
+    """Binance US API data fetcher with centralized coin management"""
+
+    def __init__(self):
+        self.supported_coins = [
+            "BTC",
+            "ETH",
+            "ADA",
+            "SOL",
+            "DOT",
+            "LINK",
+            "MATIC",
+            "AVAX",
+            "UNI",
+            "ATOM",
+        ]
+        self.trading_pairs = {coin: f"{coin}/USDT" for coin in self.supported_coins}
+        self.client = ccxt.binanceus({"apiKey": "your_api_key", "secret": "your_secret_key"})
+        logger.info(f"✅ BinanceDataFetcher initialized with {len(self.supported_coins)} coins")
+
+    def add_coin(self, coin: str) -> bool:
+        try:
+            if coin not in self.supported_coins:
+                self.supported_coins.append(coin)
+                self.trading_pairs[coin] = f"{coin}/USDT"
+                logger.info(f"✅ Added coin: {coin}")
+                return True
+            return False
+        except Exception as e:
+            logger.error(f"❌ Error adding coin {coin}: {str(e)}")
+            return False
+
+    def remove_coin(self, coin: str) -> bool:
+        try:
+            if coin in self.supported_coins:
+                self.supported_coins.remove(coin)
+                self.trading_pairs.pop(coin, None)
+                logger.info(f"✅ Removed coin: {coin}")
+                return True
+            return False
+        except Exception as e:
+            logger.error(f"❌ Error removing coin {coin}: {str(e)}")
+            return False
+
+    def get_supported_coins(self) -> List[str]:
+        return self.supported_coins.copy()
+
+    async def get_market_data(self, symbol: str) -> Optional[BinanceMarketData]:
+        """Get live market data for a symbol"""
+        try:
+            if symbol not in self.trading_pairs:
+                logger.warning(f"Symbol {symbol} not supported")
+                return None
+
+            trading_pair = self.trading_pairs[symbol]
+            ticker = self.client.fetch_ticker(trading_pair)
+
+            return BinanceMarketData(
+                symbol=symbol,
+                price=float(ticker.get("last", 0)),
+                volume=float(ticker.get("baseVolume", 0)),
+                change_24h=float(ticker.get("percentage", 0)),
+                high_24h=float(ticker.get("high", 0)),
+                low_24h=float(ticker.get("low", 0)),
+                timestamp=time.time(),
+                exchange="binance",
+            )
+
+        except Exception as e:
+            logger.error(f"❌ Error getting Binance data for {symbol}: {str(e)}")
+            return None
+
+    async def get_all_market_data(self) -> Dict[str, BinanceMarketData]:
+        if not self.client:
+            return {}
+
+        try:
+            tasks = [self.get_market_data(symbol) for symbol in self.supported_coins]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            market_data: Dict[str, BinanceMarketData] = {}
+            for i, result in enumerate(results):
+                if isinstance(result, BinanceMarketData):
+                    market_data[self.supported_coins[i]] = result
+                else:
+                    logger.warning(f"Failed to get data for {self.supported_coins[i]}: {result}")
+
+            return market_data
+
+        except Exception as e:
+            logger.error(f"❌ Error getting all market data: {str(e)}")
+            raise BinanceDataError("Error getting all market data")
+
+    async def get_order_book(self, symbol: str, limit: int = 10) -> Optional[Dict[str, Any]]:
+        """Get order book for a symbol"""
+        try:
+            if symbol not in self.trading_pairs:
+                return None
+
+            trading_pair = self.trading_pairs[symbol]
+            order_book = self.client.fetch_order_book(trading_pair, limit=limit)
+
+            return {
+                "symbol": symbol,
+                "bids": order_book.get("bids", [])[:limit],
+                "asks": order_book.get("asks", [])[:limit],
+                "timestamp": time.time(),
+                "exchange": "binance",
+            }
+        except Exception as e:
+            logger.error(f"❌ Error getting order book for {symbol}: {str(e)}")
+            return None
+
+    async def get_recent_trades(
+        self, symbol: str, limit: int = 50
+    ) -> Optional[List[Dict[str, Any]]]:
+        """Get recent trades for a symbol"""
+        try:
+            if symbol not in self.trading_pairs:
+                return None
+
+            trading_pair = self.trading_pairs[symbol]
+            trades = self.client.fetch_trades(trading_pair, limit=limit)
+
+            return [
+                {
+                    "symbol": symbol,
+                    "price": float(trade.get("price", 0)),
+                    "quantity": float(trade.get("amount", 0)),
+                    "time": trade.get("timestamp", 0),
+                    "is_buyer_maker": trade.get("side", "") == "sell",
+                    "exchange": "binance",
+                }
+                for trade in trades
+            ]
+        except Exception as e:
+            logger.error(f"❌ Error getting recent trades for {symbol}: {str(e)}")
+            return None
+
+    def get_statistics(self) -> Dict[str, Any]:
+        return {
+            "supported_coins": len(self.supported_coins),
+            "trading_pairs": len(self.trading_pairs),
+            "client_available": self.client is not None,
+            "exchange": "binance",
+        }
+
+
+# === Singleton Instance ===
+binance_fetcher = BinanceDataFetcher()
+
+
+# === Local Stub (Optional override) ===
+class LocalClient:
+    def __init__(self, api_key: str, api_secret: str, tld: str = "com"):
+        """Initialize local client for testing purposes"""
+        self.api_key = api_key
+        self.api_secret = api_secret
+        self.tld = tld
+        self.is_local = True
+
+    def get_ticker(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """Get mock ticker data for local testing"""
+        return {
+            "symbol": symbol,
+            "price": 50000.0,  # Mock price
+            "volume": 1000000.0,
+            "change_24h": 2.5,
+            "high_24h": 51000.0,
+            "low_24h": 49000.0,
+            "timestamp": time.time(),
+            "exchange": "local",
+        }
+
+    def get_order_book(self, symbol: str, limit: int = 10) -> Optional[Dict[str, Any]]:
+        """Get mock order book for local testing"""
+        return {
+            "symbol": symbol,
+            "bids": [[50000.0, 1.0] for _ in range(limit)],
+            "asks": [[50001.0, 1.0] for _ in range(limit)],
+            "timestamp": time.time(),
+            "exchange": "local",
+        }
+
+    def get_recent_trades(self, symbol: str, limit: int = 50) -> Optional[List[Dict[str, Any]]]:
+        """Get mock recent trades for local testing"""
+        return [
+            {
+                "symbol": symbol,
+                "price": 50000.0 + i * 0.1,
+                "quantity": 1.0,
+                "time": time.time() - i * 60,
+                "is_buyer_maker": i % 2 == 0,
+                "exchange": "local",
+            }
+            for i in range(limit)
+        ]
+
+# --- Legacy alias for backward compatibility ---
+try:
+    BinanceData  # type: ignore[name-defined]
+except NameError:
+    try:
+        BinanceData = BinanceDataFetcher  # alias for legacy imports
+    except Exception:
+        pass
+
+__all__ = list(set([*globals().get('__all__', []), 'BinanceData']))

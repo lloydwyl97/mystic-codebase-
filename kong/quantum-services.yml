@@ -1,0 +1,68 @@
+_format_version: "2.1"
+
+services:
+  - name: qiskit-service
+    url: http://mystic-qiskit:8087
+    routes:
+      - name: qiskit-health
+        paths:
+          - /quantum/qiskit/health
+        strip_path: false
+      - name: qiskit-metrics
+        paths:
+          - /quantum/qiskit/metrics
+        strip_path: false
+      - name: qiskit-execute
+        paths:
+          - /quantum/qiskit/execute
+        strip_path: false
+    plugins:
+      - name: prometheus
+      - name: rate-limiting
+        config:
+          minute: 100
+          hour: 1000
+
+  - name: cirq-service
+    url: http://mystic-cirq:8088
+    routes:
+      - name: cirq-health
+        paths:
+          - /quantum/cirq/health
+        strip_path: false
+      - name: cirq-metrics
+        paths:
+          - /quantum/cirq/metrics
+        strip_path: false
+      - name: cirq-optimize
+        paths:
+          - /quantum/cirq/optimize
+        strip_path: false
+    plugins:
+      - name: prometheus
+      - name: rate-limiting
+        config:
+          minute: 100
+          hour: 1000
+
+  - name: pennylane-service
+    url: http://mystic-pennylane:8089
+    routes:
+      - name: pennylane-health
+        paths:
+          - /quantum/pennylane/health
+        strip_path: false
+      - name: pennylane-metrics
+        paths:
+          - /quantum/pennylane/metrics
+        strip_path: false
+      - name: pennylane-ml
+        paths:
+          - /quantum/pennylane/ml
+        strip_path: false
+    plugins:
+      - name: prometheus
+      - name: rate-limiting
+        config:
+          minute: 100
+          hour: 1000 

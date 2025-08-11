@@ -1,0 +1,23 @@
+# ===== ALERTS SERVICE - SPECIFIC REQUIREMENTS =====
+
+# Notifications (essential)
+twilio==8.10.0
+slack-sdk==3.26.1
+
+# Caching and message queuing (essential)
+redis==4.6.0
+celery==5.3.4
+flower==2.0.1
+kombu==5.3.4
+billiard==4.2.0
+
+# Monitoring and Logging (essential)
+python-json-logger==2.0.7
+prometheus-client==0.21.1
+sentry-sdk[fastapi]==1.38.0
+
+# Trading APIs for price alerts
+python-binance==1.0.21
+coinbase==2.1.0
+ccxt==4.4.15
+yfinance==0.2.64 

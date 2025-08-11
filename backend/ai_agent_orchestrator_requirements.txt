@@ -1,0 +1,43 @@
+# AI Agent Orchestrator Service Requirements
+# Only dependencies needed for agent orchestration
+
+# FastAPI and web framework
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+
+# Redis for caching and messaging
+redis==5.2.1
+
+# Data processing (essential for agent coordination)
+numpy==1.24.3
+pandas==2.0.3
+
+# HTTP client
+requests==2.31.0
+aiohttp==3.9.1
+
+# Environment and configuration
+python-dotenv==1.0.0
+pydantic==2.7.1
+
+# Logging
+structlog==24.1.0
+
+# JSON handling
+orjson==3.9.10
+
+# Date and time
+python-dateutil==2.8.2
+pytz==2023.3
+
+# Background tasks
+celery==5.3.4
+
+# Database (for agent state)
+sqlalchemy==2.0.23
+
+# Monitoring
+prometheus-client==0.21.1
+
+# Agent communication
+websockets==11.0.3 

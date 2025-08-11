@@ -1,0 +1,27 @@
+# ===== OPTIMIZED AI LEADERBOARD EXECUTOR =====
+FROM mystic_base
+
+# Install backend-light requirements (no heavy ML)
+COPY backend/backend-light.txt .
+RUN pip install --no-cache-dir -r backend-light.txt
+
+# Copy only AI leaderboard executor files
+COPY backend/ai_leaderboard_executor.py .
+COPY backend/ai_strategy_execution.py .
+COPY backend/mutation_leaderboard.json .
+
+# Copy only needed directories
+COPY backend/strategies/ ./strategies/
+COPY backend/models/ ./models/
+
+# Copy configuration
+COPY .env .
+
+# Create logs directory
+RUN mkdir -p logs
+
+# Expose port
+EXPOSE 8005
+
+# Run the AI leaderboard executor
+CMD ["python", "ai_leaderboard_executor.py"] 

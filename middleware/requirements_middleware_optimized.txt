@@ -1,0 +1,59 @@
+# ===== MIDDLEWARE SERVICE - OPTIMIZED REQUIREMENTS =====
+
+# Core web framework (essential)
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+
+# HTTP and networking (essential)
+aiohttp>=3.8.0
+httpx==0.28.1
+requests==2.31.0
+websockets>=13.0
+
+# Caching and message queuing (essential)
+redis>=4.5.0
+celery==5.3.4
+kombu==5.3.4
+
+# Async support (essential)
+asyncio
+aiofiles==23.2.1
+
+# Configuration and environment (essential)
+python-dotenv==1.0.0
+pydantic==2.7.1
+pyyaml==6.0.1
+
+# Monitoring and logging (essential)
+structlog==24.1.0
+loguru==0.7.2
+psutil==6.1.0
+
+# Security and encryption (essential)
+cryptography==41.0.7
+
+# Performance and JSON (essential)
+ujson==5.8.0
+orjson==3.9.10
+
+# Utilities (essential)
+python-dateutil==2.8.2
+pytz==2023.3
+click==8.1.7
+rich==13.7.0
+
+# HTTP and SSL (essential)
+urllib3==2.0.7
+certifi>=2024.2.2
+
+# Retry and rate limiting (essential)
+tenacity==8.3.0
+backoff==2.2.1
+ratelimit==2.2.1
+
+# Observability (essential)
+opentelemetry-api==1.21.0
+opentelemetry-sdk==1.21.0
+
+# Additional dependencies
+pika 

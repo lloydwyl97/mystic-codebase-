@@ -1,0 +1,249 @@
+{
+  "exchanges": {
+    "coinbase_us": {
+      "name": "Coinbase US",
+      "base_url": "https://api.pro.coinbase.com",
+      "symbols": [
+        "BTC-USD",
+        "ETH-USD",
+        "ADA-USD",
+        "SOL-USD",
+        "DOT-USD",
+        "LINK-USD",
+        "MATIC-USD",
+        "AVAX-USD",
+        "UNI-USD",
+        "ATOM-USD"
+      ],
+      "enabled": true,
+      "rate_limit": 3,
+      "priority": 1
+    },
+    "binance_us": {
+      "name": "Binance US",
+      "base_url": "https://api.binance.us",
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "ADAUSDT",
+        "SOLUSDT",
+        "DOTUSDT",
+        "LINKUSDT",
+        "MATICUSDT",
+        "AVAXUSDT",
+        "UNIUSDT",
+        "ATOMUSDT"
+      ],
+      "enabled": true,
+      "rate_limit": 5,
+      "priority": 2
+    },
+    "kraken_us": {
+      "name": "Kraken US",
+      "base_url": "https://api.kraken.com",
+      "symbols": [
+        "XBTUSD",
+        "ETHUSD",
+        "ADAUSD",
+        "SOLUSD",
+        "DOTUSD",
+        "LINKUSD",
+        "MATICUSD",
+        "AVAXUSD",
+        "UNIUSD",
+        "ATOMUSD"
+      ],
+      "enabled": true,
+      "rate_limit": 2,
+      "priority": 3
+    },
+    "coingecko": {
+      "name": "CoinGecko",
+      "base_url": "https://api.coingecko.com/api/v3",
+      "symbols": [
+        "bitcoin",
+        "ethereum",
+        "cardano",
+        "solana",
+        "polkadot",
+        "chainlink",
+        "matic-network",
+        "avalanche-2",
+        "uniswap",
+        "cosmos"
+      ],
+      "enabled": true,
+      "rate_limit": 1,
+      "priority": 4
+    }
+  },
+  "global_settings": {
+    "update_interval": 30,
+    "max_retries": 3,
+    "timeout": 10,
+    "cache_duration": 300,
+    "fallback_enabled": true,
+    "aggregation_method": "weighted_average"
+  },
+  "symbol_mapping": {
+    "BTC": {
+      "coinbase": "BTC-USD",
+      "binance": "BTCUSDT",
+      "kraken": "XBTUSD",
+      "coingecko": "bitcoin"
+    },
+    "ETH": {
+      "coinbase": "ETH-USD",
+      "binance": "ETHUSDT",
+      "kraken": "ETHUSD",
+      "coingecko": "ethereum"
+    },
+    "ADA": {
+      "coinbase": "ADA-USD",
+      "binance": "ADAUSDT",
+      "kraken": "ADAUSD",
+      "coingecko": "cardano"
+    },
+    "SOL": {
+      "coinbase": "SOL-USD",
+      "binance": "SOLUSDT",
+      "kraken": "SOLUSD",
+      "coingecko": "solana"
+    },
+    "DOT": {
+      "coinbase": "DOT-USD",
+      "binance": "DOTUSDT",
+      "kraken": "DOTUSD",
+      "coingecko": "polkadot"
+    },
+    "LINK": {
+      "coinbase": "LINK-USD",
+      "binance": "LINKUSDT",
+      "kraken": "LINKUSD",
+      "coingecko": "chainlink"
+    },
+    "MATIC": {
+      "coinbase": "MATIC-USD",
+      "binance": "MATICUSDT",
+      "kraken": "MATICUSD",
+      "coingecko": "matic-network"
+    },
+    "AVAX": {
+      "coinbase": "AVAX-USD",
+      "binance": "AVAXUSDT",
+      "kraken": "AVAXUSD",
+      "coingecko": "avalanche-2"
+    },
+    "UNI": {
+      "coinbase": "UNI-USD",
+      "binance": "UNIUSDT",
+      "kraken": "UNIUSD",
+      "coingecko": "uniswap"
+    },
+    "ATOM": {
+      "coinbase": "ATOM-USD",
+      "binance": "ATOMUSDT",
+      "kraken": "ATOMUSD",
+      "coingecko": "cosmos"
+    }
+  },
+  "trading_pairs": [
+    {
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "enabled": true,
+      "min_order_size": 0.001,
+      "max_order_size": 10.0,
+      "price_precision": 2,
+      "volume_precision": 6
+    },
+    {
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "enabled": true,
+      "min_order_size": 0.01,
+      "max_order_size": 100.0,
+      "price_precision": 2,
+      "volume_precision": 5
+    },
+    {
+      "symbol": "ADA",
+      "name": "Cardano",
+      "enabled": true,
+      "min_order_size": 1.0,
+      "max_order_size": 10000.0,
+      "price_precision": 4,
+      "volume_precision": 2
+    },
+    {
+      "symbol": "SOL",
+      "name": "Solana",
+      "enabled": true,
+      "min_order_size": 0.1,
+      "max_order_size": 1000.0,
+      "price_precision": 2,
+      "volume_precision": 3
+    },
+    {
+      "symbol": "DOT",
+      "name": "Polkadot",
+      "enabled": true,
+      "min_order_size": 0.1,
+      "max_order_size": 1000.0,
+      "price_precision": 2,
+      "volume_precision": 3
+    },
+    {
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "enabled": true,
+      "min_order_size": 0.1,
+      "max_order_size": 1000.0,
+      "price_precision": 2,
+      "volume_precision": 3
+    },
+    {
+      "symbol": "MATIC",
+      "name": "Polygon",
+      "enabled": true,
+      "min_order_size": 1.0,
+      "max_order_size": 10000.0,
+      "price_precision": 4,
+      "volume_precision": 2
+    },
+    {
+      "symbol": "AVAX",
+      "name": "Avalanche",
+      "enabled": true,
+      "min_order_size": 0.1,
+      "max_order_size": 1000.0,
+      "price_precision": 2,
+      "volume_precision": 3
+    },
+    {
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "enabled": true,
+      "min_order_size": 0.1,
+      "max_order_size": 1000.0,
+      "price_precision": 2,
+      "volume_precision": 3
+    },
+    {
+      "symbol": "ATOM",
+      "name": "Cosmos",
+      "enabled": true,
+      "min_order_size": 0.1,
+      "max_order_size": 1000.0,
+      "price_precision": 2,
+      "volume_precision": 3
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2024-01-15T12:00:00Z",
+    "description": "Live Top 10 tradable pairs configuration for Mystic AI Trading Platform",
+    "author": "Mystic AI Team",
+    "supported_exchanges": ["coinbase_us", "binance_us", "kraken_us", "coingecko"]
+  }
+} 

@@ -1,0 +1,55 @@
+# ===== CONSOLIDATED AGENTS DOCKERFILE - ALL AGENT SERVICES =====
+FROM mystic-backend-base:latest
+
+# Set working directory
+WORKDIR /app
+
+# Install additional dependencies for agents
+RUN pip install --no-cache-dir \
+    qiskit==0.45.0 \
+    qiskit-aer==0.13.0 \
+    qiskit-ibmq-provider==0.20.0 \
+    qiskit-finance==0.4.0 \
+    torch==2.1.0 \
+    transformers==4.35.0 \
+    scikit-learn==1.3.2 \
+    scipy==1.10.1 \
+    networkx==3.4.2
+
+# Copy all agent files from backend/agents/
+COPY backend/agents/ ./agents/
+
+# Copy individual agent files from backend root
+COPY backend/realtime_processor.py .
+COPY backend/risk_manager.py .
+COPY backend/sentiment_analyzer.py .
+COPY backend/strategy_monitor.py .
+
+# Copy quantum trading engine
+COPY backend/quantum_trading_engine.py .
+
+# Copy AI strategy generator and related modules
+COPY backend/ai_strategy_generator.py .
+COPY backend/ai_strategy_generator_enhanced.py .
+COPY backend/ai_strategies.py .
+COPY backend/ai_auto_retrain.py .
+
+# Copy database and logging modules
+COPY backend/db_logger.py .
+COPY backend/database.py .
+COPY backend/enhanced_logging.py .
+
+# Copy AI mutation modules
+COPY backend/ai_mutation/ ./ai_mutation/
+
+# Copy environment file
+COPY .env .
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data /app/models /app/strategies /app/mutated_strategies
+
+# Expose default port (will be overridden by individual services)
+EXPOSE 8000
+
+# Default command (will be overridden by individual services)
+CMD ["python", "agents/base_agent.py"] 

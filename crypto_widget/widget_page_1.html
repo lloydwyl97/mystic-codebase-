@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Widget</title>
+  <style>
+    body { background: #111; color: #fff; font-family: Arial; }
+    .coin { background: #222; padding: 10px; margin: 10px; border: 1px solid #333; }
+  </style>
+</head>
+<body>
+  <h2>Live Prices (FastAPI)</h2>
+  <div id="prices"></div>
+
+  <script>
+    async function update() {
+      try {
+        const res = await fetch("http://localhost:8000/prices");
+        const data = await res.json();
+        let html = "";
+        for (const source in data) {
+          for (const symbol in data[source]) {
+            const { price, timestamp, change_pct } = data[source][symbol];
+            html += `<div class="coin">
+              <b>${symbol} (${source})</b><br>
+              $${price.toFixed(2)}<br>
+              <small>${new Date(timestamp).toLocaleTimeString()}</small><br>
+              <span style="color:${change_pct >= 0 ? 'lightgreen' : 'red'}">
+                ${change_pct >= 0 ? '+' : ''}${change_pct}%
+              </span>
+            </div>`;
+          }
+        }
+        document.getElementById("prices").innerHTML = html;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    update();
+    setInterval(update, 30000);
+  </script>
+</body>
+</html>

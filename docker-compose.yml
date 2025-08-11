@@ -1,0 +1,922 @@
+services:
+
+  # ===== CORE SERVICES =====
+
+  redis:
+    image: redis:7-alpine
+    container_name: mystic-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mystic-network
+
+  # ===== REDIS CLUSTER FOR SCALABILITY =====
+  
+  redis-cluster-1:
+    image: redis:7-alpine
+    container_name: mystic-redis-cluster-1
+    ports:
+      - "6380:6379"
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000
+    networks:
+      - mystic-network
+    profiles:
+      - redis-cluster
+
+  redis-cluster-2:
+    image: redis:7-alpine
+    container_name: mystic-redis-cluster-2
+    ports:
+      - "6381:6379"
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000
+    networks:
+      - mystic-network
+    profiles:
+      - redis-cluster
+
+  redis-cluster-3:
+    image: redis:7-alpine
+    container_name: mystic-redis-cluster-3
+    ports:
+      - "6382:6379"
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000
+    networks:
+      - mystic-network
+    profiles:
+      - redis-cluster
+
+  # ===== OPTIMIZED CORE SERVICES =====
+
+  backend:
+    image: mystic-backend:latest
+    container_name: mystic-backend
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      DATABASE_URL: sqlite:///./data/mystic_trading.db
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mystic-network
+
+  dashboard:
+    image: mystic_super_dashboard:latest
+    container_name: mystic_super_dashboard
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      BACKEND_URL: http://backend:9000
+      REDIS_URL: redis://redis:6379
+      STREAMLIT_SERVER_PORT: 8501
+      STREAMLIT_SERVER_ADDRESS: 0.0.0.0
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mystic-network
+
+  ai:
+    image: mystic-ai:latest
+    container_name: mystic-ai
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mystic-network
+
+  middleware:
+    image: mystic-middleware:latest
+    container_name: mystic-middleware
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  alerts:
+    image: mystic-alerts:latest
+    container_name: mystic-alerts
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  visualization:
+    image: mystic-visualization:latest
+    container_name: mystic-visualization
+    ports:
+      - "8003:8003"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mystic-network
+
+  ai-processor:
+    image: mystic-ai-processor:latest
+    container_name: mystic-ai-processor
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      SERVICE_PORT: 8002
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mystic-network
+
+  # ===== MONITORING & METRICS =====
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: mystic-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - mystic-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: mystic-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - mystic-network
+
+  # ===== MESSAGE QUEUE =====
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: mystic-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - mystic-network
+
+  # ===== DISTRIBUTED COMPUTING =====
+
+  ray-head:
+    image: python:3.10
+    container_name: mystic-ray-head
+    ports:
+      - "8265:8265"
+      - "10001:10001"
+    volumes:
+      - ./ray:/ray
+    working_dir: /ray
+    command: >
+      bash -c "
+        pip install ray[rllib]==2.7.0 &&
+        ray start --head --port=6379 --dashboard-host=0.0.0.0 --dashboard-port=8265
+      "
+    networks:
+      - mystic-network
+
+  # ===== QUANTUM SERVICES =====
+
+  quantum-algorithm-engine:
+    image: mystic-agents:latest
+    container_name: mystic-quantum-algorithm-engine
+    command: python agents/quantum_algorithm_engine.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - quantum_data:/app/quantum_data
+    networks:
+      - mystic-network
+
+  quantum-ml-agent:
+    image: mystic-agents:latest
+    container_name: mystic-quantum-ml-agent
+    command: python agents/quantum_machine_learning_agent.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - quantum_data:/app/quantum_data
+    networks:
+      - mystic-network
+
+  quantum-optimization-agent:
+    image: mystic-agents:latest
+    container_name: mystic-quantum-optimization-agent
+    command: python agents/quantum_optimization_agent.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - quantum_data:/app/quantum_data
+    networks:
+      - mystic-network
+
+  quantum-trading-engine:
+    image: mystic-agents:latest
+    container_name: mystic-quantum-trading-engine
+    command: python quantum_trading_engine.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - quantum_data:/app/quantum_data
+    networks:
+      - mystic-network
+
+  # ===== AI AGENTS =====
+
+  realtime-processor:
+    image: mystic-agents:latest
+    container_name: mystic-realtime-processor
+    command: python realtime_processor.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mystic-network
+
+  reinforcement-learning-agent:
+    image: mystic-agents:latest
+    container_name: mystic-reinforcement-learning-agent
+    command: python agents/reinforcement_learning_agent.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - ./backend/models:/app/models
+    networks:
+      - mystic-network
+
+  risk-agent:
+    image: mystic-agents:latest
+    container_name: mystic-risk-agent
+    command: python agents/risk_agent.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mystic-network
+
+  risk-manager:
+    image: mystic-agents:latest
+    container_name: mystic-risk-manager
+    command: python risk_manager.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mystic-network
+
+  sentiment-analyzer:
+    image: mystic-agents:latest
+    container_name: mystic-sentiment-analyzer
+    command: python sentiment_analyzer.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mystic-network
+
+  social-media-agent:
+    image: mystic-agents:latest
+    container_name: mystic-social-media-agent
+    command: python agents/social_media_agent.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mystic-network
+
+  strategy-agent:
+    image: mystic-agents:latest
+    container_name: mystic-strategy-agent
+    command: python agents/strategy_agent.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mystic-network
+
+  strategy-monitor:
+    image: mystic-agents:latest
+    container_name: mystic-strategy-monitor
+    command: python strategy_monitor.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mystic-network
+
+  technical-indicator-agent:
+    image: mystic-agents:latest
+    container_name: mystic-technical-indicator-agent
+    command: python agents/technical_indicator_agent.py
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mystic-network
+
+  # ===== EXPERIMENTAL SERVICES =====
+
+  # Quantum Services
+  quantum-trading-engine-new:
+    image: mystic-agents:latest
+    container_name: mystic-quantum-trading-engine-new
+    command: python quantum/quantum_trading_engine.py
+    ports:
+      - "8087:8087"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8087
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  quantum-machine-learning:
+    image: mystic-agents:latest
+    container_name: mystic-quantum-ml
+    command: python quantum/quantum_machine_learning.py
+    ports:
+      - "8088:8088"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8088
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  quantum-optimization:
+    image: mystic-agents:latest
+    container_name: mystic-quantum-optimization
+    command: python quantum/quantum_optimization.py
+    ports:
+      - "8089:8089"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8089
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  # 5G Services
+  g5-core:
+    image: mystic-agents:latest
+    container_name: mystic-5g-core
+    command: python 5g/5g_core.py
+    ports:
+      - "8093:8093"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8093
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  g5-ran:
+    image: mystic-agents:latest
+    container_name: mystic-5g-ran
+    command: python 5g/5g_ran.py
+    ports:
+      - "8094:8094"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8094
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  g5-slice-manager:
+    image: mystic-agents:latest
+    container_name: mystic-5g-slice-manager
+    command: python 5g/5g_slice_manager.py
+    ports:
+      - "8095:8095"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8095
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  # Blockchain Services
+  bitcoin-miner:
+    image: mystic-agents:latest
+    container_name: mystic-bitcoin-miner
+    command: python blockchain/bitcoin_miner.py
+    ports:
+      - "8099:8099"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8099
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  ethereum-miner:
+    image: mystic-agents:latest
+    container_name: mystic-ethereum-miner
+    command: python blockchain/ethereum_miner.py
+    ports:
+      - "8100:8100"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8100
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  mining-pool:
+    image: mystic-agents:latest
+    container_name: mystic-mining-pool
+    command: python blockchain/mining_pool.py
+    ports:
+      - "8101:8101"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8101
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  # Satellite Services
+  satellite-analytics:
+    image: mystic-agents:latest
+    container_name: mystic-satellite-analytics
+    command: python satellite/satellite_analytics.py
+    ports:
+      - "8098:8098"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8098
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  satellite-processor:
+    image: mystic-agents:latest
+    container_name: mystic-satellite-processor
+    command: python satellite/satellite_processor.py
+    ports:
+      - "8096:8096"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8096
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  satellite-receiver:
+    image: mystic-agents:latest
+    container_name: mystic-satellite-receiver
+    command: python satellite/satellite_receiver.py
+    ports:
+      - "8097:8097"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8097
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  # Edge Computing Services
+  edge-orchestrator:
+    image: mystic-agents:latest
+    container_name: mystic-edge-orchestrator
+    command: python edge/edge_orchestrator.py
+    ports:
+      - "8092:8092"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8092
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  edge-node-1:
+    image: mystic-agents:latest
+    container_name: mystic-edge-node-1
+    command: python edge/edge_node_1.py
+    ports:
+      - "8090:8090"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8090
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  edge-node-2:
+    image: mystic-agents:latest
+    container_name: mystic-edge-node-2
+    command: python edge/edge_node_2.py
+    ports:
+      - "8091:8091"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8091
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  # AI Supercomputer Services
+  ai-super-master:
+    image: mystic-agents:latest
+    container_name: mystic-ai-super-master
+    command: python ai_supercomputer/ai_super_master.py
+    ports:
+      - "8102:8102"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PORT: 8102
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mystic-network
+
+  # ===== INFRASTRUCTURE SERVICES =====
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: mystic-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      ZOOKEEPER_TICK_TIME: "2000"
+      ZOOKEEPER_SERVER_ID: "1"
+      ZOOKEEPER_INIT_LIMIT: "5"
+      ZOOKEEPER_SYNC_LIMIT: "2"
+    ports:
+      - "2181:2181"
+    networks:
+      - mystic-network
+
+networks:
+  mystic-network:
+    driver: bridge
+
+volumes:
+  grafana_data:
+  influxdb_data:
+  prometheus_data:
+  quantum_data:
+  rabbitmq_data:
+  redis_data:
+  spark_data:
+

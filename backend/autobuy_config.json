@@ -1,0 +1,50 @@
+{
+  "trading_pairs": {
+    "SOLUSDT": {
+      "name": "Solana",
+      "min_trade_amount": 25.0,
+      "max_trade_amount": 200.0,
+      "target_frequency": 15,
+      "enabled": true
+    },
+    "BTCUSDT": {
+      "name": "Bitcoin",
+      "min_trade_amount": 50.0,
+      "max_trade_amount": 500.0,
+      "target_frequency": 30,
+      "enabled": true
+    },
+    "ETHUSDT": {
+      "name": "Ethereum",
+      "min_trade_amount": 50.0,
+      "max_trade_amount": 400.0,
+      "target_frequency": 20,
+      "enabled": true
+    }
+  },
+  "signal_config": {
+    "min_confidence": 50.0,
+    "min_volume_increase": 1.5,
+    "min_price_change": 0.02,
+    "max_price_change": 0.15,
+    "volume_threshold": 1000000,
+    "volatility_threshold": 0.05,
+    "momentum_threshold": 0.03
+  },
+  "risk_config": {
+    "max_concurrent_trades": 4,
+    "max_daily_trades": 48,
+    "max_daily_volume": 2000.0,
+    "stop_loss_percentage": 0.05,
+    "take_profit_percentage": 0.1,
+    "max_drawdown": 0.2
+  },
+  "trading_hours": {
+    "start_hour": 0,
+    "end_hour": 24,
+    "timezone": "UTC"
+  },
+  "emergency_stop": false,
+  "cycle_interval": 30,
+  "signal_cooldown": 300
+}

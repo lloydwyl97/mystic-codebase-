@@ -1,0 +1,13 @@
+# ===== MYSTIC TRADING PLATFORM - MAIN REQUIREMENTS =====
+# This file contains minimal dependencies for the main project
+# For service-specific dependencies, see individual service requirements files
+
+# Core dependencies (minimal)
+python-dotenv==1.0.0
+pydantic==2.7.1
+requests==2.31.0
+redis==5.2.1
+
+# Data processing (minimal)
+numpy==1.24.3
+pandas==2.0.3 

@@ -1,0 +1,296 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Quantum Computing Services Dashboard",
+    "tags": ["quantum", "services", "monitoring"],
+    "style": "dark",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Quantum Services Health Status",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up{job=~\"qiskit|cirq|pennylane\"}",
+            "legendFormat": "{{job}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "green", "value": 1}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Quantum Requests per Second",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(qiskit_requests_total[5m])",
+            "legendFormat": "Qiskit"
+          },
+          {
+            "expr": "rate(cirq_requests_total[5m])",
+            "legendFormat": "Cirq"
+          },
+          {
+            "expr": "rate(pennylane_requests_total[5m])",
+            "legendFormat": "PennyLane"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Quantum Circuit Execution Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(qiskit_execution_duration_seconds_bucket[5m]))",
+            "legendFormat": "Qiskit 95th percentile"
+          },
+          {
+            "expr": "histogram_quantile(0.95, rate(cirq_execution_duration_seconds_bucket[5m]))",
+            "legendFormat": "Cirq 95th percentile"
+          },
+          {
+            "expr": "histogram_quantile(0.95, rate(pennylane_execution_duration_seconds_bucket[5m]))",
+            "legendFormat": "PennyLane 95th percentile"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Execution Time (seconds)",
+            "unit": "s"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Quantum Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(qiskit_errors_total[5m]) / rate(qiskit_requests_total[5m]) * 100",
+            "legendFormat": "Qiskit Error Rate %"
+          },
+          {
+            "expr": "rate(cirq_errors_total[5m]) / rate(cirq_requests_total[5m]) * 100",
+            "legendFormat": "Cirq Error Rate %"
+          },
+          {
+            "expr": "rate(pennylane_errors_total[5m]) / rate(pennylane_requests_total[5m]) * 100",
+            "legendFormat": "PennyLane Error Rate %"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Error Rate (%)",
+            "unit": "percent"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "Quantum Qubits Utilization",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "qiskit_qubits_active",
+            "legendFormat": "Qiskit Active Qubits"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 50},
+                {"color": "red", "value": 80}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 16}
+      },
+      {
+        "id": 6,
+        "title": "Quantum Circuit Depth",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "qiskit_circuit_depth",
+            "legendFormat": "Qiskit Circuit Depth"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "max": 1000,
+            "min": 0,
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 500},
+                {"color": "red", "value": 800}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 16}
+      },
+      {
+        "id": 7,
+        "title": "Quantum Entanglement Metrics",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "qiskit_entanglement_measure",
+            "legendFormat": "Qiskit Entanglement"
+          },
+          {
+            "expr": "cirq_entanglement_measure",
+            "legendFormat": "Cirq Entanglement"
+          },
+          {
+            "expr": "pennylane_entanglement_measure",
+            "legendFormat": "PennyLane Entanglement"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Entanglement Measure",
+            "unit": "short"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+      },
+      {
+        "id": 8,
+        "title": "Quantum Service Response Time",
+        "type": "heatmap",
+        "targets": [
+          {
+            "expr": "rate(qiskit_response_time_seconds_bucket[5m])",
+            "legendFormat": "Qiskit Response Time"
+          },
+          {
+            "expr": "rate(cirq_response_time_seconds_bucket[5m])",
+            "legendFormat": "Cirq Response Time"
+          },
+          {
+            "expr": "rate(pennylane_response_time_seconds_bucket[5m])",
+            "legendFormat": "PennyLane Response Time"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24}
+      },
+      {
+        "id": 9,
+        "title": "Quantum Circuit Success Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "(1 - rate(qiskit_circuit_failures_total[5m]) / rate(qiskit_circuits_executed_total[5m])) * 100",
+            "legendFormat": "Qiskit Success Rate"
+          },
+          {
+            "expr": "(1 - rate(cirq_circuit_failures_total[5m]) / rate(cirq_circuits_executed_total[5m])) * 100",
+            "legendFormat": "Cirq Success Rate"
+          },
+          {
+            "expr": "(1 - rate(pennylane_circuit_failures_total[5m]) / rate(pennylane_circuits_executed_total[5m])) * 100",
+            "legendFormat": "PennyLane Success Rate"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 90},
+                {"color": "green", "value": 95}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 32}
+      },
+      {
+        "id": 10,
+        "title": "Quantum Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "qiskit_memory_usage_bytes",
+            "legendFormat": "Qiskit Memory"
+          },
+          {
+            "expr": "cirq_memory_usage_bytes",
+            "legendFormat": "Cirq Memory"
+          },
+          {
+            "expr": "pennylane_memory_usage_bytes",
+            "legendFormat": "PennyLane Memory"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Memory Usage (bytes)",
+            "unit": "bytes"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 40}
+      },
+      {
+        "id": 11,
+        "title": "Quantum CPU Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(qiskit_cpu_usage_seconds_total[5m]) * 100",
+            "legendFormat": "Qiskit CPU %"
+          },
+          {
+            "expr": "rate(cirq_cpu_usage_seconds_total[5m]) * 100",
+            "legendFormat": "Cirq CPU %"
+          },
+          {
+            "expr": "rate(pennylane_cpu_usage_seconds_total[5m]) * 100",
+            "legendFormat": "PennyLane CPU %"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "CPU Usage (%)",
+            "unit": "percent"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 40}
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "10s"
+  }
+} 

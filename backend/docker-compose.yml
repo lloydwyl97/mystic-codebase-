@@ -1,0 +1,467 @@
+services:
+  # Main AI Trading Engine
+  mystic-ai:
+    build:
+      context: .
+    container_name: mystic_ai_core
+    restart: always
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./agents:/app/agents
+      - ./strategy_versions:/app/strategy_versions
+      - ./generated_modules:/app/generated_modules
+      - ./logs:/app/logs
+    environment:
+      - TRADE_LOG_DB=/data/trades.db
+      - COLD_WALLET_THRESHOLD=1000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "9000:9000"
+    command: uvicorn main:app --host 0.0.0.0 --port 9000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - mystic_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: mystic_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - mystic_network
+
+  # Trade Logger Service
+  trade-logger:
+    build:
+      context: .
+    container_name: mystic_trade_logger
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python db_logger.py
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/trade_logger.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Strategy Mutator Service
+  strategy-mutator:
+    build:
+      context: .
+    container_name: mystic_strategy_mutator
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./mutated_strategies:/app/mutated_strategies
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python mutator.py
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/strategy_mutator.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Hyperparameter Optimization
+  hyper-optimizer:
+    build:
+      context: .
+    container_name: mystic_optimizer
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    command: python hyper_tuner.py
+    volumes:
+      - ./data:/data
+      - ./strategy_versions:/app/strategy_versions
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/hyper_optimizer.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # AI Strategy Generator
+  ai_strategy_generator:
+    build:
+      context: .
+    container_name: mystic_ai_strategy_generator
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./generated_modules:/app/generated_modules
+      - ./logs:/app/logs
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PYTHONUNBUFFERED=1
+    command: python ai_strategy_generator.py
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/ai_strategy_generator.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Sentiment Monitor
+  sentiment_monitor:
+    build:
+      context: .
+    container_name: mystic_sentiment_monitor
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python sentiment_monitor.py
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/sentiment_monitor.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Anomaly Guardian
+  anomaly_guardian:
+    build:
+      context: .
+    container_name: mystic_anomaly_guardian
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python anomaly_guardian.py
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/anomaly_guardian.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Risk Optimizer
+  risk_optimizer:
+    build:
+      context: .
+    container_name: mystic_risk_optimizer
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python risk_optimizer.py
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/risk_optimizer.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Trade Explainer
+  trade_explainer:
+    build:
+      context: .
+    container_name: mystic_trade_explainer
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PYTHONUNBUFFERED=1
+    command: python trade_explainer.py
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/trade_explainer.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Strategy Reaper
+  strategy_reaper:
+    build:
+      context: .
+    container_name: mystic_strategy_reaper
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./strategy_versions:/app/strategy_versions
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python strategy_reaper.py
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Portfolio AI Balance
+  portfolio_ai_balance:
+    build:
+      context: .
+    container_name: mystic_portfolio_ai_balance
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python portfolio_ai_balance.py
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Train Fast Mutations
+  train_fast_mutations:
+    build:
+      context: .
+    container_name: mystic_train_fast_mutations
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./generated_modules:/app/generated_modules
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python train_fast_mutations.py
+    depends_on:
+      - mystic-ai
+    networks:
+      - mystic_network
+
+  # Phase 5: Interdimensional Signal Decoder
+  interdimensional_signal_decoder:
+    build:
+      context: .
+    container_name: mystic_interdimensional_signal_decoder
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python -m agents.interdimensional_signal_decoder
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/interdimensional_signal_decoder.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+      - redis
+    networks:
+      - mystic_network
+
+  # Phase 5: Neuro-Synchronization Engine
+  neuro_synchronization_engine:
+    build:
+      context: .
+    container_name: mystic_neuro_synchronization_engine
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python -m agents.neuro_synchronization_engine
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/neuro_synchronization_engine.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+      - redis
+    networks:
+      - mystic_network
+
+  # Phase 5: Cosmic Pattern Recognizer
+  cosmic_pattern_recognizer:
+    build:
+      context: .
+    container_name: mystic_cosmic_pattern_recognizer
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python -m agents.cosmic_pattern_recognizer
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/cosmic_pattern_recognizer.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+      - redis
+    networks:
+      - mystic_network
+
+  # Phase 5: AuraNet Channel Interface
+  auranet_channel:
+    build:
+      context: .
+    container_name: mystic_auranet_channel
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python -m agents.auranet_channel
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/auranet_channel.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - mystic-ai
+      - redis
+    networks:
+      - mystic_network
+
+  # Watchdog Service
+  mystic_watchdog:
+    build:
+      context: .
+    container_name: mystic_watchdog
+    restart: always
+    env_file:
+      - ../.env
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python watchdog.py
+    depends_on:
+      - mystic-ai
+      - trade-logger
+      - strategy-mutator
+      - hyper-optimizer
+      - ai_strategy_generator
+      - sentiment_monitor
+      - anomaly_guardian
+      - risk_optimizer
+      - trade_explainer
+      - strategy_reaper
+      - portfolio_ai_balance
+      - train_fast_mutations
+      - interdimensional_signal_decoder
+      - neuro_synchronization_engine
+      - cosmic_pattern_recognizer
+      - auranet_channel
+    networks:
+      - mystic_network
+
+  middleware:
+    build:
+      context: ../middleware
+      dockerfile: Dockerfile
+    container_name: mystic_middleware
+    restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - mystic_network
+
+volumes:
+  redis_data:
+  data:
+  logs:
+
+networks:
+  mystic_network:
+    driver: bridge
+

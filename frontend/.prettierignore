@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+dist/
+.vite/
+build/
+
+# Config files
+*.config.js
+*.config.ts
+vite.config.js
+vite.config.ts
+eslint.config.js
+
+# Generated files
+package-lock.json
+*.log
+*.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Cache
+.cache/
+.eslintcache

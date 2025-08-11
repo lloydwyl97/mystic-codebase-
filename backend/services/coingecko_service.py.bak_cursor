@@ -1,0 +1,54 @@
+from __future__ import annotations
+from typing import Any, Optional
+
+# Prefer delegating to the existing client if present
+try:
+    from backend.exchanges.coingecko_client import CoinGeckoClient as _CGClient  # type: ignore[import-not-found]
+except Exception:
+    try:
+        from exchanges.coingecko_client import CoinGeckoClient as _CGClient  # type: ignore[import-not-found]
+    except Exception:
+        _CGClient = None  # type: ignore[assignment]
+
+
+class CoingeckoService:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self._client = _CGClient() if _CGClient is not None else None
+
+    def is_ready(self) -> bool:
+        return self._client is not None
+
+    # Optional convenience used by legacy code paths; safe no-op default
+    def get_simple_price(self, symbol: str, vs: str = "usd") -> Optional[float]:
+        if self._client is None:
+            return None
+        try:
+            # Delegate if implemented: our client expects list of ids
+            data = None
+            try:
+                data = self._client.get_simple_price([symbol])  # type: ignore[arg-type]
+            except TypeError:
+                # Some implementations may accept (symbol, vs)
+                data = self._client.get_simple_price(symbol, vs)  # type: ignore[misc]
+
+            # Normalize common shapes: {"bitcoin": {"usd": 12345.0}} -> 12345.0
+            if isinstance(data, dict):
+                sym = symbol.lower()
+                curr = vs.lower()
+                try:
+                    return float(data.get(sym, {}).get(curr))  # type: ignore[arg-type]
+                except Exception:
+                    pass
+            if data is not None:
+                try:
+                    return float(data)
+                except Exception:
+                    return None
+            return None
+        except Exception:
+            return None
+
+
+__all__ = ["CoingeckoService"]
+
+
