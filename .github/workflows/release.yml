@@ -1,0 +1,49 @@
+name: Release (auto-tag patch)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  tag-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine next tag
+        id: next
+        shell: bash
+        run: |
+          latest_tag="$(git tag --list 'v*' --sort=-v:refname | head -n1)"
+          if [ -z "$latest_tag" ]; then
+            next="v1.0.0"
+          else
+            IFS='.' read -r major minor patch <<<"${latest_tag#v}"
+            patch=$((patch + 1))
+            next="v${major}.${minor}.${patch}"
+          fi
+          echo "latest=$latest_tag" >> $GITHUB_OUTPUT
+          echo "next=$next" >> $GITHUB_OUTPUT
+          echo "Next tag: $next"
+
+      - name: Create tag
+        uses: actions/github-tag@v1.2.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.next.outputs.next }}
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.next.outputs.next }}
+          name: "Release ${{ steps.next.outputs.next }}"
+          generateReleaseNotes: true
+          draft: false
+          prerelease: false
+
+
