@@ -1,3 +1,9 @@
+from contextlib import contextmanager
+
+@contextmanager
+def display_guard(*args, **kwargs):
+    yield
+
 import contextlib
 import traceback
 import streamlit as st

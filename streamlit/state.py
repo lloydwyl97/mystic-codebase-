@@ -1,50 +1,18 @@
-"""Unified sidebar state for Streamlit dashboard.
+import os, streamlit as st
+from typing import MutableMapping, Any, cast
 
-This module re-exports state helpers from the legacy `streamlit/pages/components/state.py`
-to provide a canonical import path `streamlit.state` across all pages.
-"""
+_st = cast(Any, st)
 
-from __future__ import annotations
+def get_app_state() -> MutableMapping[str, Any]:
+    s = cast(MutableMapping[str, Any], _st.session_state)
+    s.setdefault("exchange", os.getenv("DISPLAY_EXCHANGE", "binanceus"))
+    s.setdefault("symbol",   os.getenv("DISPLAY_SYMBOL",  "BTCUSDT"))
+    s.setdefault("timeframe","1m")
+    return s
 
-from typing import Any, Dict, List
-
-try:
-    # Prefer canonical path within this package
-    from streamlit.pages.components.state import (  # type: ignore
-        get_app_state,
-        set_exchange,
-        set_symbol,
-        set_timeframe,
-        set_refresh_sec,
-        set_live_mode,
-        EXCHANGES,
-        EXCHANGE_TOP4,
-        render_sidebar_controls,
-    )
-except Exception:  # pragma: no cover - safety fallback for import edge cases
-    # Fallback to relative legacy path resolution
-    from .pages.components.state import (  # type: ignore
-        get_app_state,
-        set_exchange,
-        set_symbol,
-        set_timeframe,
-        set_refresh_sec,
-        set_live_mode,
-        EXCHANGES,
-        EXCHANGE_TOP4,
-        render_sidebar_controls,
-    )
-
-__all__ = [
-    "get_app_state",
-    "set_exchange",
-    "set_symbol",
-    "set_timeframe",
-    "set_refresh_sec",
-    "set_live_mode",
-    "EXCHANGES",
-    "EXCHANGE_TOP4",
-    "render_sidebar_controls",
-]
-
-
+def render_sidebar_controls() -> None:
+    s = get_app_state()
+    _st.sidebar.caption("Exchange & Symbol (locked by env unless changed here)")
+    s["exchange"] = _st.sidebar.text_input("Exchange", s["exchange"]) 
+    s["symbol"]   = _st.sidebar.text_input("Symbol",   s["symbol"]) 
+    s["timeframe"]= _st.sidebar.text_input("Timeframe",s["timeframe"]) 

@@ -8,10 +8,10 @@ import streamlit as st
 
 # Resolve API client without hard depending on Streamlit package path
 try:  # Prefer Streamlit pages client when available
-    from streamlit.pages.components.api_client import api_client as _api_client  # type: ignore[import-not-found]
+    from streamlit._pages.components.api_client import api_client as _api_client  # type: ignore[import-not-found]
 except Exception:
     try:  # Fallback if running from Streamlit app root
-        from pages.components.api_client import api_client as _api_client  # type: ignore[import-not-found]
+        from _pages.components.api_client import api_client as _api_client  # type: ignore[import-not-found]
     except Exception:
         _api_client = None  # type: ignore[assignment]
 

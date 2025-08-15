@@ -1,102 +1,227 @@
-from __future__ import annotations
-
-"""Central data client for Streamlit dashboard.
-
-Provides a canonical facade over the legacy `dashboard.data_client` so that all
-pages import from `streamlit.data_client` and use a single BASE_URL.
-"""
-
 import os
+from typing import Any, Dict, List, Optional, Sequence, Tuple
+import requests
 
-# Single source of truth for backend base URL
-BASE_URL = os.getenv("DASHBOARD_BASE_URL", "http://127.0.0.1:9000").rstrip("/")
-if not globals().get("_BASE_URL_LOGGED"):
-    print(f"[streamlit] BASE_URL={BASE_URL}")
-    _BASE_URL_LOGGED = True  # type: ignore
+API = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:9000").rstrip("/")
 
-# Wire the underlying client to use BASE_URL by setting env var expected by legacy client
-os.environ.setdefault("BACKEND_URL", BASE_URL)
+# ----------------- helpers -----------------
+def _to_int(x: Any, default: int) -> int:
+    try:
+        return int(x)
+    except Exception:
+        return default
 
-try:
-    # Prefer legacy dashboard client already used across pages
-    from dashboard import data_client as _core  # type: ignore
-except Exception:  # pragma: no cover
-    # Fallback to the copy inside pages if needed
-    from streamlit.pages.components import data_client as _core  # type: ignore
+def _req(path: str, params: Optional[Dict[str, Any]] = None, timeout: float = 6) -> requests.Response:
+    url = f"{API}/{path.lstrip('/')}"
+    return requests.get(url, params=params, timeout=timeout)
 
-# Re-export the public API expected by pages
-from typing import Any, Dict, List, Optional  # noqa: E402
+def _first_ok(candidates: Sequence[Tuple[str, Optional[Dict[str, Any]]]]) -> Optional[Any]:
+    """
+    candidates: list[tuple[path, params_dict]]
+    returns json or None
+    """
+    for path, params in candidates:
+        try:
+            r = _req(path, params)
+            if r.status_code == 200:
+                return r.json()
+        except requests.RequestException:
+            pass
+    return None
 
-FetchResult = _core.FetchResult  # type: ignore[attr-defined]
+# ----------------- symbol normalization -----------------
+def _norm_symbol(sym: str, ex: str) -> str:
+    s = str(sym).upper().replace("-", "")           # BTC-USD -> BTCUSD
+    if ex == "binanceus" and s.endswith("USD") and not s.endswith("USDT"):
+        s = s[:-3] + "USDT"                          # BTCUSD -> BTCUSDT
+    return s
 
-get_prices = _core.get_prices
-get_ticker = _core.get_ticker
-get_ohlcv = _core.get_ohlcv
-get_orderbook = _core.get_orderbook
-get_trades = _core.get_trades
-get_balances = _core.get_balances
-get_ai_signals = _core.get_ai_signals
-get_autobuy_heartbeat = _core.get_autobuy_heartbeat
-get_ai_heartbeat = _core.get_ai_heartbeat
-get_autobuy_status = _core.get_autobuy_status
-get_autobuy_signals = _core.get_autobuy_signals
-get_autobuy_decision = getattr(_core, "get_autobuy_decision", lambda symbol: _core.get_autobuy_signals(1))
-start_autobuy = _core.start_autobuy
-stop_autobuy = _core.stop_autobuy
-system_health = _core.system_health
-get_health_check = _core.get_health_check
-advanced_events = _core.advanced_events
-advanced_performance = _core.advanced_performance
-get_portfolio_overview = _core.get_portfolio_overview
-get_trading_orders = _core.get_trading_orders
-get_risk_alerts = _core.get_risk_alerts
-get_market_liquidity = _core.get_market_liquidity
-get_analytics_performance = _core.get_analytics_performance
-get_alerts = _core.get_alerts
-compute_spread_from_price_entry = _core.compute_spread_from_price_entry
-clear_cache = _core.clear_cache
+def _norm_symbols(symbols: Optional[Sequence[str]], ex: str) -> List[str]:
+    return [] if not symbols else [_norm_symbol(str(x), ex) for x in symbols]
 
-__all__ = [
-    "BASE_URL",
-    "FetchResult",
-    "fetch_api",
-    "post_api",
-    "get_prices",
-    "get_ticker",
-    "get_ohlcv",
-    "get_orderbook",
-    "get_trades",
-    "get_balances",
-    "get_ai_signals",
-    "get_autobuy_heartbeat",
-    "get_ai_heartbeat",
-    "get_autobuy_status",
-    "get_autobuy_signals",
-    "get_autobuy_decision",
-    "start_autobuy",
-    "stop_autobuy",
-    "system_health",
-    "get_health_check",
-    "advanced_events",
-    "advanced_performance",
-    "get_portfolio_overview",
-    "get_trading_orders",
-    "get_risk_alerts",
-    "get_market_liquidity",
-    "get_analytics_performance",
-    "get_alerts",
-    "compute_spread_from_price_entry",
-    "clear_cache",
-]
+# ----------------- argument parsers -----------------
+def _parse_exchange(default: str = "binanceus") -> str:
+    return (os.getenv("DISPLAY_EXCHANGE") or default).lower()
 
-# Generic helpers for hub pages that still need raw endpoints
-def fetch_api(endpoint: str):
-    from streamlit.api_client import api_client as _api  # local import to avoid cycles
-    return _api.fetch_api_data(endpoint)
+def _parse_ohlcv_args(*args: Any, **kwargs: Any) -> Tuple[str, str, str, int]:
+    """
+    Accepts:
+      (symbol)
+      (symbol, timeframe)
+      (symbol, timeframe, limit)
+      (exchange, symbol, timeframe)
+      (exchange, symbol, timeframe, limit)
+      or keyword args: exchange=, symbol=, timeframe=, limit=
+    """
+    ex: Any = kwargs.get("exchange", _parse_exchange())
+    symbol: Any = kwargs.get("symbol")
+    timeframe: Any = kwargs.get("timeframe")
+    limit: Any = kwargs.get("limit")
+
+    if symbol is None:
+        if len(args) == 1:
+            symbol = args[0]
+        elif len(args) == 2:
+            symbol, timeframe = args
+        elif len(args) >= 3:
+            ex, symbol, timeframe = args[:3]
+            if len(args) >= 4:
+                limit = args[3]
+
+    if timeframe is None:
+        timeframe = "1m"
+    limit = _to_int(limit, 300)
+
+    ex_str = str(ex).lower()
+    symbol_str = _norm_symbol(str(symbol), ex_str)
+    return ex_str, symbol_str, str(timeframe), int(limit)
+
+def _parse_trades_args(*args: Any, **kwargs: Any) -> Tuple[str, str, int]:
+    """
+    Accepts:
+      (symbol)
+      (symbol, limit)
+      (exchange, symbol)
+      (exchange, symbol, limit)
+      or keyword args: exchange=, symbol=, limit=
+    """
+    ex: Any = kwargs.get("exchange", _parse_exchange())
+    symbol: Any = kwargs.get("symbol")
+    limit: Any = kwargs.get("limit")
+
+    if symbol is None:
+        if len(args) == 1:
+            symbol = args[0]
+        elif len(args) >= 2:
+            # could be (symbol, limit) or (exchange, symbol)
+            a0, a1 = args[0], args[1]
+            # if second looks numeric, it's limit
+            if isinstance(a1, (int, float)) or (isinstance(a1, str) and a1.isdigit()):
+                symbol, limit = a0, a1
+            else:
+                ex, symbol = a0, a1
+            if len(args) >= 3:
+                limit = args[2]
+
+    limit = _to_int(limit, 50)
+    ex_str = str(ex).lower()
+    symbol_str = _norm_symbol(str(symbol), ex_str)
+    return ex_str, symbol_str, int(limit)
+
+# ----------------- API wrappers with fallbacks -----------------
+def get_health_check() -> Optional[Any]:
+    return _first_ok([
+        ("/system/health-check", None),
+        ("/system/health", None),
+        ("/health", None),
+        ("/health-check", None),
+    ])
+
+def get_autobuy_status() -> Optional[Any]:
+    return _first_ok([
+        ("/autobuy/status", None),
+        ("/ai/autobuy/status", None),
+        ("/autobuy/health", None),
+    ])
+
+def get_prices(symbols: Sequence[str], exchange: Optional[str] = None) -> Optional[Any]:
+    ex = (exchange or _parse_exchange()).lower()
+    syms = _norm_symbols(symbols, ex)
+    if not syms:
+        return None
+    p = {"symbols": ",".join(syms), "exchange": ex}
+    return _first_ok([
+        ("/market/prices", p),
+        ("/markets/prices", p),
+        ("/prices", p),
+    ])
+
+def get_ohlcv(*args: Any, **kwargs: Any) -> Optional[Any]:
+    ex, symbol, timeframe, limit = _parse_ohlcv_args(*args, **kwargs)
+    # common param aliases
+    p1 = {"symbol": symbol, "timeframe": timeframe, "limit": limit, "exchange": ex}
+    p2 = {"symbol": symbol, "tf": timeframe, "limit": limit, "exchange": ex}
+    p3 = {"ticker": symbol, "interval": timeframe, "limit": limit, "exchange": ex}
+
+    return _first_ok([
+        # path-param styles
+        (f"/market/ohlcv/{symbol}", {"timeframe": timeframe, "limit": limit, "exchange": ex}),
+        (f"/markets/ohlcv/{symbol}", {"timeframe": timeframe, "limit": limit, "exchange": ex}),
+        (f"/ohlcv/{symbol}", {"timeframe": timeframe, "limit": limit, "exchange": ex}),
+        (f"/live/market/historical/{symbol}", {"timeframe": timeframe, "limit": limit}),
+        (f"/charts/ohlcv/{symbol}", {"timeframe": timeframe, "limit": limit, "exchange": ex}),
+        # query-param styles
+        ("/market/ohlcv", p1), ("/market/ohlcv", p2), ("/market/ohlcv", p3),
+        ("/markets/ohlcv", p1), ("/ohlcv", p1), ("/charts/ohlcv", p1),
+        ("/live/market/historical", p1),
+    ])
+
+def get_trades(*args: Any, **kwargs: Any) -> Optional[Any]:
+    ex, symbol, limit = _parse_trades_args(*args, **kwargs)
+    p = {"symbol": symbol, "limit": limit, "exchange": ex}
+
+    return _first_ok([
+        # path-param styles
+        (f"/trades/{symbol}", {"limit": limit, "exchange": ex}),
+        (f"/trading/trades/{symbol}", {"limit": limit, "exchange": ex}),
+        (f"/live/trading/trades/{symbol}", {"limit": limit}),
+        (f"/market/trades/{symbol}", {"limit": limit, "exchange": ex}),
+        (f"/recent_trades/{symbol}", {"limit": limit, "exchange": ex}),
+        # query-param styles
+        ("/trades", p), ("/trading/trades", p),
+        ("/live/trading/trades", p),
+        ("/market/trades", p), ("/recent_trades", p),
+    ])
 
 
-def post_api(endpoint: str, data: dict):
-    from streamlit.api_client import api_client as _api
-    return _api.post_api_data(endpoint, data)
+# ----------------- alerts and ai heartbeat -----------------
+def get_ai_heartbeat() -> Optional[Any]:
+    return _first_ok([
+        ("/ai/heartbeat", None),
+        ("/api/ai/heartbeat", None),
+    ])
 
 
+def get_alerts(limit: int = 100) -> Optional[Any]:
+    """
+    Fetch recent alerts/notifications from available backends.
+    Tries multiple canonical paths and shapes.
+    """
+    p = {"limit": int(limit)}
+    return _first_ok([
+        # Preferred live notifications endpoint
+        ("/api/live/notifications", None),
+        # Recent alerts under dashboard endpoints
+        ("/api/alerts/recent", p),
+        # Generic alerts collections
+        ("/api/alerts", None),
+        ("/alerts", p),
+    ])
+
+
+# ----------------- features and system health -----------------
+def get_features() -> Optional[Any]:
+    return _first_ok([
+        ("/features", None),
+        ("/api/features", None),
+    ])
+
+
+def get_system_health_basic() -> Optional[Any]:
+    """
+    Lightweight server health ping suitable for liveness checks.
+    """
+    return _first_ok([
+        ("/api/health", None),
+        ("/health", None),
+    ])
+
+
+def get_system_health_detailed() -> Optional[Any]:
+    """
+    Detailed system health including services and resources.
+    """
+    return _first_ok([
+        ("/system/health", None),
+        ("/health/comprehensive", None),
+    ])

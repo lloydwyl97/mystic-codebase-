@@ -1,50 +1,50 @@
 {
   "binance": {
     "BTCUSDT": {
-      "price": 118744.9,
-      "volume": 22.43521,
-      "change_24h": 0.237,
-      "high_24h": 122262.32,
-      "low_24h": 118075.53,
-      "bid": 118744.88,
-      "ask": 118744.9,
-      "timestamp": 1754944073.2741852
+      "price": 117233.68,
+      "volume": 151.38864,
+      "change_24h": -0.86,
+      "high_24h": 119000.0,
+      "low_24h": 116839.76,
+      "bid": 117219.26,
+      "ask": 117359.95,
+      "timestamp": 1755289861.5142443
     },
     "ETHUSDT": {
-      "price": 4244.43,
-      "volume": 988.03709,
-      "change_24h": 0.647,
-      "high_24h": 4362.88,
-      "low_24h": 4169.95,
-      "bid": 4232.31,
-      "ask": 4243.58,
-      "timestamp": 1754944074.3411453
+      "price": 4417.89,
+      "volume": 456.9529,
+      "change_24h": -2.81,
+      "high_24h": 4663.58,
+      "low_24h": 4370.93,
+      "bid": 4415.33,
+      "ask": 4421.18,
+      "timestamp": 1755289862.5630202
     }
   },
   "coinbase": {
     "BTC-USD": {
-      "price": 118817.93,
-      "volume": 4.8e-07,
-      "bid": 118817.91,
-      "ask": 118817.92,
+      "price": 117314.78,
+      "volume": 3.667e-05,
+      "bid": 117314.77,
+      "ask": 117314.78,
       "product_id": "BTC-USD",
       "base_currency": "BTC",
       "quote_currency": "USD",
       "status": "online",
       "trading_enabled": true,
-      "timestamp": 1754944075.6592617
+      "timestamp": 1755289863.7444637
     },
     "ETH-USD": {
-      "price": 4243.08,
-      "volume": 0.03546723,
-      "bid": 4243.08,
-      "ask": 4243.48,
+      "price": 4422.82,
+      "volume": 0.02196988,
+      "bid": 4422.69,
+      "ask": 4422.82,
       "product_id": "ETH-USD",
       "base_currency": "ETH",
       "quote_currency": "USD",
       "status": "online",
       "trading_enabled": true,
-      "timestamp": 1754944078.7489645
+      "timestamp": 1755289866.800998
     }
   },
   "coingecko": {
@@ -52,68 +52,68 @@
       "symbol": "BITCOIN",
       "name": "Bitcoin",
       "rank": 0,
-      "price": 118747,
-      "market_cap": 2363388449619.8525,
-      "volume_24h": 62640284978.61333,
-      "price_change_24h": 0.4523258639344447,
+      "price": 117220,
+      "market_cap": 2332092810028.319,
+      "volume_24h": 46130882823.729935,
+      "price_change_24h": -0.727305454819214,
       "high_24h": 0,
       "low_24h": 0,
-      "timestamp": 1754944081.9215457
+      "timestamp": 1755289870.4095886
     },
     "cardano": {
       "symbol": "CARDANO",
       "name": "Cardano",
       "rank": 0,
-      "price": 0.784158,
-      "market_cap": 28320754014.49535,
-      "volume_24h": 1514294555.4918313,
-      "price_change_24h": -1.9496722530971657,
+      "price": 0.9299,
+      "market_cap": 33788315668.678253,
+      "volume_24h": 4147509131.7648034,
+      "price_change_24h": 3.0225429457776745,
       "high_24h": 0,
       "low_24h": 0,
-      "timestamp": 1754944081.9215457
+      "timestamp": 1755289870.4095886
     },
     "dogecoin": {
       "symbol": "DOGECOIN",
       "name": "Dogecoin",
       "rank": 0,
-      "price": 0.22677,
-      "market_cap": 34116582055.89239,
-      "volume_24h": 2588112790.5265083,
-      "price_change_24h": -2.887112292409647,
+      "price": 0.222534,
+      "market_cap": 33538056022.65712,
+      "volume_24h": 4426670565.648247,
+      "price_change_24h": -0.31278262285292135,
       "high_24h": 0,
       "low_24h": 0,
-      "timestamp": 1754944081.9215457
+      "timestamp": 1755289870.4095886
     },
     "ethereum": {
       "symbol": "ETHEREUM",
       "name": "Ethereum",
       "rank": 0,
-      "price": 4239.84,
-      "market_cap": 510880026288.87726,
-      "volume_24h": 41816616125.11684,
-      "price_change_24h": 0.4218392798143264,
+      "price": 4419.13,
+      "market_cap": 532620705230.4225,
+      "volume_24h": 43843171051.71542,
+      "price_change_24h": -2.738686367115487,
       "high_24h": 0,
       "low_24h": 0,
-      "timestamp": 1754944081.9215457
+      "timestamp": 1755289870.4095886
     },
     "solana": {
       "symbol": "SOLANA",
       "name": "Solana",
       "rank": 0,
-      "price": 176.24,
-      "market_cap": 95055618440.5812,
-      "volume_24h": 7427527766.163295,
-      "price_change_24h": -3.000514209690349,
+      "price": 184.32,
+      "market_cap": 99420085730.6274,
+      "volume_24h": 8932027886.001156,
+      "price_change_24h": -4.283250964846428,
       "high_24h": 0,
       "low_24h": 0,
-      "timestamp": 1754944081.9215457
+      "timestamp": 1755289870.4095886
     }
   },
   "last_update": {
-    "binance": "2025-08-11T15:28:06.911700",
-    "coinbase": "2025-08-11T15:28:06.911700",
-    "coingecko": "2025-08-11T15:28:06.911700"
+    "binance": "2025-08-15T15:31:15.422781",
+    "coinbase": "2025-08-15T15:31:15.424791",
+    "coingecko": "2025-08-15T15:31:15.426420"
   },
-  "created_at": "2025-08-05T21:45:13.288174",
-  "last_saved": "2025-08-11T15:28:06.911700"
+  "created_at": "2025-08-13T23:34:27.119631",
+  "last_saved": "2025-08-15T15:31:15.426420"
 }

@@ -11,6 +11,8 @@ from typing import Any, Dict, List, Optional, Protocol, runtime_checkable, Typed
 import aiohttp
 
 from fastapi import APIRouter, HTTPException
+from typing import Any, List
+from config.coins import FEATURED_SYMBOLS
 
 # Import real services
 try:
@@ -83,6 +85,15 @@ except ImportError as e:
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+
+def _filter_to_featured(items: List[Any]) -> List[Any]:
+    out: List[Any] = []
+    for it in items:
+        sym = it.get("symbol") if isinstance(it, dict) else str(it)
+        if sym in FEATURED_SYMBOLS:
+            out.append(it)
+    return out
 
 @runtime_checkable
 class MarketDataServiceProtocol(Protocol):

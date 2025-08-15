@@ -12,10 +12,18 @@ from typing import Dict, Any, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 
-# Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add parent directory and project root to path for imports
+backend_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if backend_path not in sys.path:
+    sys.path.append(backend_path)
+root_path = os.path.dirname(backend_path)
+if root_path not in sys.path:
+    sys.path.append(root_path)
 
 from agents.base_agent import BaseAgent  # noqa: E402
+from config.coins import FEATURED_SYMBOLS  # noqa: E402
+from typing import Any, Dict, List, Optional
+from services.ai_attribution import save_attribution  # noqa: E402
 
 # Add usage for unused imports to satisfy F401
 _timedelta: timedelta = timedelta(seconds=0)
@@ -235,7 +243,7 @@ class AdvancedAIOrchestrator(BaseAgent):
         except Exception as e:
             print(f"❌ Error starting AI coordination: {e}")
 
-    async def listen_ai_updates(self, pubsub):
+    async def listen_ai_updates(self, pubsub) -> None:
         """Listen for AI agent updates"""
         try:
             for message in pubsub.listen():
@@ -525,12 +533,12 @@ class AdvancedAIOrchestrator(BaseAgent):
         except Exception as e:
             print(f"❌ Error requesting computer vision analysis: {e}")
 
-    async def generate_ai_strategies(self):
+    async def generate_ai_strategies(self) -> None:
         """Generate AI strategies by combining agent outputs"""
         try:
-            print(f"🎯 Generating AI strategies for {len(self.trading_symbols)} symbols...")
+            print(f"🎯 Generating AI strategies for {len(FEATURED_SYMBOLS)} symbols...")
 
-            for symbol in self.trading_symbols:
+            for symbol in FEATURED_SYMBOLS:
                 try:
                     await self.generate_symbol_ai_strategy(symbol)
                 except Exception as e:
@@ -541,9 +549,11 @@ class AdvancedAIOrchestrator(BaseAgent):
         except Exception as e:
             print(f"❌ Error generating AI strategies: {e}")
 
-    async def generate_symbol_ai_strategy(self, symbol: str):
+    async def generate_symbol_ai_strategy(self, symbol: str) -> None:
         """Generate AI strategy for a specific symbol"""
         try:
+            if symbol not in FEATURED_SYMBOLS:
+                return
             # Check if we have data from all agents
             if symbol not in self.strategy_cache:
                 return
@@ -588,6 +598,42 @@ class AdvancedAIOrchestrator(BaseAgent):
                 await self.broadcast_ai_strategy(symbol, strategy, active_agents)
 
                 print(f"✅ AI strategy generated for {symbol} with {len(active_agents)} agents")
+
+                # Save AI attribution for explainability
+                try:
+                    # Build inputs snapshot from available data
+                    cv_data = agent_data.get("computer_vision", {}).get("analysis_data", {})
+                    nlp_data = agent_data.get("nlp", {}).get("sentiment_data", {})
+                    rl_data = agent_data.get("reinforcement_learning", {}).get("strategies", {})
+                    dl_data = agent_data.get("deep_learning", {}).get("predictions", {})
+                    inputs = {
+                        "ohlcv": cv_data or {},
+                        "nlp": nlp_data or {},
+                        "rl": rl_data or {},
+                        "dl": dl_data or {},
+                    }
+
+                    # Derive weights from active agents
+                    weights = {}
+                    total = 0.0
+                    for a in active_agents:
+                        w = float(self.agent_weights.get(a, 0.1))
+                        weights[a] = w
+                        total += w
+                    if total > 0:
+                        for a in list(weights.keys()):
+                            weights[a] = weights[a] / total
+
+                    reason = (
+                        strategy.get("reasoning", [""])[0]
+                        if isinstance(strategy.get("reasoning"), list)
+                        else (strategy.get("reasoning", "") or "")
+                    )
+
+                    save_attribution(symbol, inputs, weights, reason)
+                except Exception as _e:
+                    # Non-fatal if attribution storage fails
+                    pass
 
         except Exception as e:
             print(f"❌ Error generating AI strategy for {symbol}: {e}")

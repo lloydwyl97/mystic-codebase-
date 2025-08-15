@@ -330,6 +330,15 @@ def create_app() -> FastAPI:
         except Exception as e2:
             logger.error(f"❌ Error loading UI router: {e2}")
 
+        # Register AI explain router
+        try:
+            from endpoints.ai_explain import router as ai_explain_router
+
+            app.include_router(ai_explain_router)
+            logger.info("✅ Included AI explain router")
+        except Exception as e2:
+            logger.error(f"❌ Error loading AI explain router: {e2}")
+
         try:
             from endpoints.dashboard_missing.dashboard_missing_endpoints import router as dashboard_missing_router
 
@@ -345,6 +354,15 @@ def create_app() -> FastAPI:
             logger.info("✅ Included AI dashboard router")
         except Exception as e2:
             logger.error(f"❌ Error loading AI dashboard router: {e2}")
+
+        # Register AI explain router
+        try:
+            from endpoints.ai_explain import router as ai_explain_router
+
+            app.include_router(ai_explain_router)
+            logger.info("✅ Included AI explain router (fallback)")
+        except Exception as e2:
+            logger.error(f"❌ Error loading AI explain router (fallback): {e2}")
 
         try:
             from routes.websocket import router as websocket_router
