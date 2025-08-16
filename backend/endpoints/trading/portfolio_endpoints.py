@@ -1,4 +1,4 @@
-"""
+﻿"""
 Portfolio Endpoints
 Consolidated portfolio management, overview, and live trading data
 All endpoints return live data - no stubs or placeholders
@@ -12,15 +12,15 @@ from fastapi import APIRouter, HTTPException
 
 # Import real services
 try:
-    from ai.persistent_cache import get_persistent_cache
-    from modules.ai.trade_tracker import (
+    from backend.ai.persistent_cache import get_persistent_cache
+    from backend.modules.ai.trade_tracker import (
         get_active_trades,
         get_trade_history,
         get_trade_summary,
     )
-    from modules.data.binance_data import BinanceData
-    from modules.data.coinbase_data import CoinbaseData
-    from services.trading import TradingService
+    from backend.modules.data.binance_data import BinanceData
+    from backend.modules.data.coinbase_data import CoinbaseData
+    from backend.services.trading import TradingService
 except ImportError as e:
     logging.warning(f"Some trading services not available: {e}")
     # Define fallback functions
@@ -49,7 +49,7 @@ except ImportError as e:
 
 # Import PortfolioService separately to ensure it's available
 try:
-    from services.portfolio_service import PortfolioService
+    from backend.services.portfolio_service import PortfolioService
 except ImportError as e:
     logging.warning(f"PortfolioService not available: {e}")
     PortfolioService = None
@@ -57,7 +57,7 @@ except ImportError as e:
 # Redis accessor shim (prefer project accessors if available)
 try:
     # First try a lightweight sync client accessor used elsewhere in endpoints
-    from services.redis_client import get_redis_client as _get_redis  # type: ignore[import-not-found]
+    from backend.services.redis_client import get_redis_client as _get_redis  # type: ignore[import-not-found]
     get_redis = _get_redis  # type: ignore[assignment]
 except Exception:
     try:
@@ -333,3 +333,6 @@ async def get_portfolio_allocations() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting portfolio allocations: {e}")
         raise HTTPException(status_code=500, detail=f"Portfolio allocations failed: {str(e)}")
+
+
+

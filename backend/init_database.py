@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Database Initialization Script for Mystic Trading Platform
 Fixes database file access issues and ensures proper setup
@@ -329,3 +329,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

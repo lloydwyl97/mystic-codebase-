@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trading Endpoints
 
 Handles all trading-related API endpoints including signals, orders, and portfolio management.
@@ -135,3 +135,6 @@ async def get_portfolio_positions() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error fetching portfolio positions: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch portfolio positions")
+
+
+

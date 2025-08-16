@@ -1,4 +1,4 @@
-"""
+﻿"""
 Signals Router - Signal Management
 
 Contains signal generation, health monitoring, and metrics endpoints.
@@ -12,11 +12,11 @@ from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException
 
 # Import real services
-from services.redis_service import get_redis_service
+from backend.services.redis_service import get_redis_service
 
-# Import services
-from services.signal_service import signal_service
-from services.live_market_data import live_market_data_service
+# import backend.services as services
+from backend.services.signal_service import signal_service
+from backend.services.live_market_data import live_market_data_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -316,7 +316,7 @@ async def get_signals_history() -> Dict[str, Any]:
         # Get symbols dynamically from exchange APIs
         symbols = []
         try:
-            from services.live_market_data import live_market_data_service
+            from backend.services.live_market_data import live_market_data_service
 
             market_data = await live_market_data_service.get_market_data(
                 currency="usd", per_page=10
@@ -680,3 +680,5 @@ async def get_signal_alerts() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting signal alerts: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+

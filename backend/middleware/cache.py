@@ -1,4 +1,4 @@
-"""
+﻿"""
 Cache Middleware Handler for Mystic Trading Platform
 
 Provides a simple async cache middleware for FastAPI/Starlette apps.
@@ -42,3 +42,5 @@ class CacheMiddleware(BaseHTTPMiddleware):
 
 # Exported handler for use in app_config and __init__.py
 cache_middleware_handler = CacheMiddleware
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Dashboard Endpoints
 Live AI mutation system status and performance metrics
 """
@@ -12,10 +12,10 @@ from typing import Any, Dict, List
 from fastapi import APIRouter, Body, HTTPException
 from fastapi.responses import HTMLResponse
 
-from ai_mutation.mutation_manager import mutation_manager
-from ai_mutation.promote_mutation import StrategyPromoter
-from ai_mutation.strategy_locker import get_live_strategy
-from ai_mutation.version_tracker import get_strategy_versions
+from backend.ai_mutation.mutation_manager import mutation_manager
+from backend.ai_mutation.promote_mutation import StrategyPromoter
+from backend.ai_mutation.strategy_locker import get_live_strategy
+from backend.ai_mutation.version_tracker import get_strategy_versions
 from database import get_db_connection
 
 logger = logging.getLogger(__name__)
@@ -322,11 +322,11 @@ async def get_expanded_strategy_leaderboard(limit: int = 20) -> Dict[str, Any]:
         def get_badges(strategy_name):
             badges = []
             if "breakout" in strategy_name.lower():
-                badges.append({"name": "Breakout Master", "icon": "🏆"})
+                badges.append({"name": "Breakout Master", "icon": "ðŸ†"})
             if "robust" in strategy_name.lower():
-                badges.append({"name": "Robust Performer", "icon": "🛡️"})
+                badges.append({"name": "Robust Performer", "icon": "ðŸ›¡ï¸"})
             if "innovative" in strategy_name.lower():
-                badges.append({"name": "Innovator", "icon": "💡"})
+                badges.append({"name": "Innovator", "icon": "ðŸ’¡"})
             return badges
 
         leaderboard = []
@@ -504,15 +504,15 @@ async def get_ai_dashboard_html() -> str:
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🤖 AI Trading System Dashboard</h1>
+                    <h1>ðŸ¤– AI Trading System Dashboard</h1>
                     <p>Live AI Mutation System Status</p>
                 </div>
 
                 <div class="section">
-                    <h2>📊 System Status</h2>
+                    <h2>ðŸ“Š System Status</h2>
                     <div class="metric">
                         <div class="metric-value {'status-running' if dashboard_data['mutation_system']['is_running'] else 'status-stopped'}">
-                            {'🟢 Running' if dashboard_data['mutation_system']['is_running'] else '🔴 Stopped'}
+                            {'ðŸŸ¢ Running' if dashboard_data['mutation_system']['is_running'] else 'ðŸ”´ Stopped'}
                         </div>
                         <div class="metric-label">Mutation Engine</div>
                     </div>
@@ -531,7 +531,7 @@ async def get_ai_dashboard_html() -> str:
                 </div>
 
                 <div class="section">
-                    <h2>🎯 Performance Metrics</h2>
+                    <h2>ðŸŽ¯ Performance Metrics</h2>
                     <div class="metric">
                         <div class="metric-value">{dashboard_data['performance_metrics']['success_rate']}%</div>
                         <div class="metric-label">Success Rate</div>
@@ -547,7 +547,7 @@ async def get_ai_dashboard_html() -> str:
                 </div>
 
                 <div class="section">
-                    <h2>🏆 Current Live Strategy</h2>
+                    <h2>ðŸ† Current Live Strategy</h2>
                     {f'''
                     <div class="strategy-card promoted">
                         <h3>{dashboard_data['live_strategy']['data']['name'] if dashboard_data['live_strategy']['data'] else 'No Strategy'}</h3>
@@ -558,7 +558,7 @@ async def get_ai_dashboard_html() -> str:
                 </div>
 
                 <div class="section">
-                    <h2>📈 Recent Mutations</h2>
+                    <h2>ðŸ“ˆ Recent Mutations</h2>
                     <table>
                         <thead>
                             <tr>
@@ -577,7 +577,7 @@ async def get_ai_dashboard_html() -> str:
                                 <td>{mutation['strategy_type']}</td>
                                 <td>${mutation['simulated_profit']}</td>
                                 <td>{mutation['win_rate']}</td>
-                                <td>{'✅ Promoted' if mutation['promoted'] else '❌ Not Promoted'}</td>
+                                <td>{'âœ… Promoted' if mutation['promoted'] else 'âŒ Not Promoted'}</td>
                                 <td>{mutation['created_at']}</td>
                             </tr>
                             ''' for mutation in dashboard_data['recent_mutations'][:5])}
@@ -586,7 +586,7 @@ async def get_ai_dashboard_html() -> str:
                 </div>
 
                 <div class="section">
-                    <h2>🔄 Last Update</h2>
+                    <h2>ðŸ”„ Last Update</h2>
                     <p>{dashboard_data['timestamp']}</p>
                 </div>
             </div>
@@ -1450,3 +1450,5 @@ async def get_available_features() -> Dict[str, Any]:
         ],
         "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
     }
+
+

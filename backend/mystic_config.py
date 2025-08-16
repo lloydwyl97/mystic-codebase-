@@ -1,4 +1,4 @@
-"""
+﻿"""
 Mystic Configuration Module
 Handles environment variables for mystic integrations, Schumann resonance,
 fractal time, and other esoteric trading features.
@@ -164,3 +164,5 @@ class MysticConfig:
 
 # Global instance
 mystic_config = MysticConfig()
+
+

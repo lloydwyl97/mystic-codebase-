@@ -1,6 +1,6 @@
-from fastapi import APIRouter
+﻿from fastapi import APIRouter
 
-from config.coins import FEATURED_SYMBOLS
+from backend.config.coins import FEATURED_SYMBOLS
 
 
 router = APIRouter(prefix="/api/markets", tags=["markets"])
@@ -16,5 +16,8 @@ def _filter_to_featured(items):
 
 # Note: This module intentionally does not declare routes in this codebase variant.
 # The helper above is provided for use by any instruments-returning handlers that import it.
+
+
+
 
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 AI Model Versioning System
 Manages AI model versions, performance tracking, and rollback capabilities
@@ -44,7 +44,7 @@ class AIModelVersioning:
         # Load existing models
         self._load_model_registry()
 
-        logger.info("✅ AI Model Versioning System initialized")
+        logger.info("âœ… AI Model Versioning System initialized")
 
     def _load_model_registry(self):
         """Load existing model registry from file"""
@@ -60,11 +60,11 @@ class AIModelVersioning:
                         self.active_model = version
                         break
 
-                logger.info(f"✅ Loaded model registry with {len(self.model_registry)} models")
-                logger.info(f"✅ Active model: {self.active_model}")
+                logger.info(f"âœ… Loaded model registry with {len(self.model_registry)} models")
+                logger.info(f"âœ… Active model: {self.active_model}")
 
         except Exception as e:
-            logger.error(f"❌ Error loading model registry: {e}")
+            logger.error(f"âŒ Error loading model registry: {e}")
 
     def _save_model_registry(self):
         """Save model registry to file"""
@@ -73,10 +73,10 @@ class AIModelVersioning:
             with open(registry_file, "w") as f:
                 json.dump(self.model_registry, f, indent=2, default=str)
 
-            logger.debug("✅ Saved model registry")
+            logger.debug("âœ… Saved model registry")
 
         except Exception as e:
-            logger.error(f"❌ Error saving model registry: {e}")
+            logger.error(f"âŒ Error saving model registry: {e}")
 
     async def create_model_version(
         self, model_data: Dict[str, Any], version: str, description: str = ""
@@ -85,7 +85,7 @@ class AIModelVersioning:
         try:
             # Validate model data
             if not self._validate_model_data(model_data):
-                logger.error("❌ Invalid model data")
+                logger.error("âŒ Invalid model data")
                 return False
 
             # Create model metadata
@@ -118,11 +118,11 @@ class AIModelVersioning:
             # Save registry
             self._save_model_registry()
 
-            logger.info(f"✅ Created model version {version}")
+            logger.info(f"âœ… Created model version {version}")
             return True
 
         except Exception as e:
-            logger.error(f"❌ Error creating model version {version}: {e}")
+            logger.error(f"âŒ Error creating model version {version}: {e}")
             return False
 
     def _validate_model_data(self, model_data: Dict[str, Any]) -> bool:
@@ -136,7 +136,7 @@ class AIModelVersioning:
 
         for field in required_fields:
             if field not in model_data:
-                logger.error(f"❌ Missing required field: {field}")
+                logger.error(f"âŒ Missing required field: {field}")
                 return False
 
         return True
@@ -145,7 +145,7 @@ class AIModelVersioning:
         """Activate a specific model version"""
         try:
             if version not in self.model_registry:
-                logger.error(f"❌ Model version {version} not found")
+                logger.error(f"âŒ Model version {version} not found")
                 return False
 
             # Deactivate current active model
@@ -160,18 +160,18 @@ class AIModelVersioning:
             # Save registry
             self._save_model_registry()
 
-            logger.info(f"✅ Activated model version {version}")
+            logger.info(f"âœ… Activated model version {version}")
             return True
 
         except Exception as e:
-            logger.error(f"❌ Error activating model version {version}: {e}")
+            logger.error(f"âŒ Error activating model version {version}: {e}")
             return False
 
     async def deactivate_model(self, version: str) -> bool:
         """Deactivate a specific model version"""
         try:
             if version not in self.model_registry:
-                logger.error(f"❌ Model version {version} not found")
+                logger.error(f"âŒ Model version {version} not found")
                 return False
 
             self.model_registry[version]["is_active"] = False
@@ -183,18 +183,18 @@ class AIModelVersioning:
             # Save registry
             self._save_model_registry()
 
-            logger.info(f"✅ Deactivated model version {version}")
+            logger.info(f"âœ… Deactivated model version {version}")
             return True
 
         except Exception as e:
-            logger.error(f"❌ Error deactivating model version {version}: {e}")
+            logger.error(f"âŒ Error deactivating model version {version}: {e}")
             return False
 
     async def rollback_model(self, target_version: str) -> bool:
         """Rollback to a previous model version"""
         try:
             if target_version not in self.model_registry:
-                logger.error(f"❌ Target model version {target_version} not found")
+                logger.error(f"âŒ Target model version {target_version} not found")
                 return False
 
             # Create backup of current active model
@@ -205,14 +205,14 @@ class AIModelVersioning:
             success = await self.activate_model(target_version)
 
             if success:
-                logger.info(f"✅ Successfully rolled back to model version {target_version}")
+                logger.info(f"âœ… Successfully rolled back to model version {target_version}")
                 return True
             else:
-                logger.error(f"❌ Failed to rollback to model version {target_version}")
+                logger.error(f"âŒ Failed to rollback to model version {target_version}")
                 return False
 
         except Exception as e:
-            logger.error(f"❌ Error rolling back to model version {target_version}: {e}")
+            logger.error(f"âŒ Error rolling back to model version {target_version}: {e}")
             return False
 
     async def _create_model_backup(self, version: str):
@@ -223,10 +223,10 @@ class AIModelVersioning:
 
             if os.path.exists(source_file):
                 shutil.copy2(source_file, backup_file)
-                logger.info(f"✅ Created backup: {backup_file}")
+                logger.info(f"âœ… Created backup: {backup_file}")
 
         except Exception as e:
-            logger.error(f"❌ Error creating model backup: {e}")
+            logger.error(f"âŒ Error creating model backup: {e}")
 
     async def update_model_performance(
         self, version: str, performance_data: Dict[str, Any]
@@ -234,7 +234,7 @@ class AIModelVersioning:
         """Update performance metrics for a model version"""
         try:
             if version not in self.model_registry:
-                logger.error(f"❌ Model version {version} not found")
+                logger.error(f"âŒ Model version {version} not found")
                 return False
 
             # Update performance metrics
@@ -260,11 +260,11 @@ class AIModelVersioning:
             # Save registry
             self._save_model_registry()
 
-            logger.info(f"✅ Updated performance for model version {version}")
+            logger.info(f"âœ… Updated performance for model version {version}")
             return True
 
         except Exception as e:
-            logger.error(f"❌ Error updating performance for model version {version}: {e}")
+            logger.error(f"âŒ Error updating performance for model version {version}: {e}")
             return False
 
     async def evaluate_model_performance(self, version: str) -> Dict[str, Any]:
@@ -325,7 +325,7 @@ class AIModelVersioning:
             return evaluation
 
         except Exception as e:
-            logger.error(f"❌ Error evaluating model performance: {e}")
+            logger.error(f"âŒ Error evaluating model performance: {e}")
             return {"error": str(e)}
 
     async def get_best_performing_model(self) -> Optional[str]:
@@ -353,7 +353,7 @@ class AIModelVersioning:
             return best_model
 
         except Exception as e:
-            logger.error(f"❌ Error finding best performing model: {e}")
+            logger.error(f"âŒ Error finding best performing model: {e}")
             return None
 
     async def auto_optimize_models(self) -> Dict[str, Any]:
@@ -398,12 +398,12 @@ class AIModelVersioning:
                         )
 
             logger.info(
-                f"✅ Auto-optimization completed: {len(optimization_result['actions_taken'])} actions taken"
+                f"âœ… Auto-optimization completed: {len(optimization_result['actions_taken'])} actions taken"
             )
             return optimization_result
 
         except Exception as e:
-            logger.error(f"❌ Error in auto-optimization: {e}")
+            logger.error(f"âŒ Error in auto-optimization: {e}")
             return {"error": str(e)}
 
     def get_model_registry(self) -> Dict[str, Any]:
@@ -427,7 +427,7 @@ class AIModelVersioning:
                 return []
 
         except Exception as e:
-            logger.error(f"❌ Error getting performance history for {version}: {e}")
+            logger.error(f"âŒ Error getting performance history for {version}: {e}")
             return []
 
     def get_status(self) -> Dict[str, Any]:
@@ -444,7 +444,7 @@ class AIModelVersioning:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error getting system status: {e}")
+            logger.error(f"âŒ Error getting system status: {e}")
             return {"error": str(e)}
 
 
@@ -458,3 +458,5 @@ def get_ai_model_versioning() -> AIModelVersioning:
     if ai_model_versioning is None:
         ai_model_versioning = AIModelVersioning()
     return ai_model_versioning
+
+

@@ -1,9 +1,9 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import abc
 from typing import Dict, List, Literal, Protocol, runtime_checkable
 
-from models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
+from backend.models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
 
 
 @runtime_checkable
@@ -57,5 +57,7 @@ class AbstractExchangeAdapter(abc.ABC):
         type: Literal["market", "limit"] = "market",
         price: float | None = None,
     ) -> OrderResult: ...
+
+
 
 

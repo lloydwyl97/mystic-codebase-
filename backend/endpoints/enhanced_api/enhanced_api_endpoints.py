@@ -1,4 +1,4 @@
-"""
+﻿"""
 Enhanced API Endpoints for Mystic Trader
 Comprehensive endpoints for backtest analysis, live trading, market sentiment, and risk management
 """
@@ -76,7 +76,7 @@ def calculate_bollinger_bands(data: pd.Series, period: int = 20, std_dev: float 
 # ===== BACKTEST ENDPOINTS =====
 # Import best available live data sources
 try:
-    from ai_mutation.backtester import get_backtest_results as get_live_backtest_results
+    from backend.ai_mutation.backtester import get_backtest_results as get_live_backtest_results
 except ImportError:
     get_live_backtest_results = None
 try:
@@ -84,7 +84,7 @@ try:
 except ImportError:
     get_backup_backtest_data = None
 try:
-    from ai.trade_tracker import get_trade_history as get_live_trade_history
+    from backend.ai.trade_tracker import get_trade_history as get_live_trade_history
 except ImportError:
     get_live_trade_history = None
 try:
@@ -232,12 +232,12 @@ def calculate_backtest_metrics(returns: pd.Series) -> Dict[str, float]:
 # ===== LIVE TRADING ENDPOINTS =====
 # Import best available live data sources for analytics endpoints
 try:
-    from ai.trade_tracker import get_active_trades, get_trade_history
+    from backend.ai.trade_tracker import get_active_trades, get_trade_history
 except ImportError:
     get_active_trades = None
     get_trade_history = None
 try:
-    from services.analytics_service import analytics_service
+    from backend.services.analytics_service import analytics_service
 except ImportError:
     analytics_service = None
 try:
@@ -245,15 +245,15 @@ try:
 except ImportError:
     get_live_strategy_performance = None
 try:
-    from endpoints.market.market_data_endpoints import market_data_service
+    from backend.endpoints.market.market_data_endpoints import market_data_service
 except ImportError:
     market_data_service = None
 try:
-    from endpoints.trading.portfolio_endpoints import portfolio_manager
+    from backend.endpoints.trading.portfolio_endpoints import portfolio_manager
 except ImportError:
     portfolio_manager = None
 try:
-    from ai.persistent_cache import get_persistent_cache
+    from backend.ai.persistent_cache import get_persistent_cache
 except ImportError:
     get_persistent_cache = None
 
@@ -369,25 +369,25 @@ try:
 except ImportError:
     psutil = None
 try:
-    from services.health_monitor_service import HealthMonitorService
+    from backend.services.health_monitor_service import HealthMonitorService
 
     health_monitor = HealthMonitorService()
 except ImportError:
     health_monitor = None
 try:
-    from services.performance_monitor import PerformanceMonitor
+    from backend.services.performance_monitor import PerformanceMonitor
 
     performance_monitor = PerformanceMonitor()
 except ImportError:
     performance_monitor = None
 try:
-    from endpoints.core.system_endpoints import SystemMonitor
+    from backend.endpoints.core.system_endpoints import SystemMonitor
 
     system_monitor = SystemMonitor()
 except ImportError:
     system_monitor = None
 try:
-    from ai_mutation.backtester import export_backtest_results
+    from backend.ai_mutation.backtester import export_backtest_results
 except ImportError:
     export_backtest_results = None
 
@@ -499,3 +499,6 @@ async def health_check():
         return health
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in health check: {str(e)}")
+
+
+

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 AI Strategy Executor Service
 Port 8003 - Standalone AI strategy execution service
@@ -20,7 +20,7 @@ import redis
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import AI strategy execution
+# import backend.ai as ai strategy execution
 from ai_strategy_execution import execute_ai_strategy_signal
 
 # Configure logging
@@ -58,11 +58,11 @@ class AIStrategyExecutorService:
             decode_responses=True,
         )
 
-        logger.info("✅ AI Strategy Executor Service initialized")
+        logger.info("âœ… AI Strategy Executor Service initialized")
 
     async def start(self):
         """Start the service"""
-        logger.info("🚀 Starting AI Strategy Executor Service...")
+        logger.info("ðŸš€ Starting AI Strategy Executor Service...")
         self.running = True
 
         # Start execution monitoring loop
@@ -70,12 +70,12 @@ class AIStrategyExecutorService:
 
     async def stop(self):
         """Stop the service"""
-        logger.info("🛑 Stopping AI Strategy Executor Service...")
+        logger.info("ðŸ›‘ Stopping AI Strategy Executor Service...")
         self.running = False
 
     async def execution_monitor_loop(self):
         """Monitor for strategy execution requests"""
-        logger.info("👀 Starting execution monitor loop...")
+        logger.info("ðŸ‘€ Starting execution monitor loop...")
 
         while self.running:
             try:
@@ -90,7 +90,7 @@ class AIStrategyExecutorService:
                 await asyncio.sleep(10)
 
             except Exception as e:
-                logger.error(f"❌ Error in execution monitor loop: {e}")
+                logger.error(f"âŒ Error in execution monitor loop: {e}")
                 await asyncio.sleep(30)
 
     async def execute_strategy_request(self, request_data: Dict[str, Any]):
@@ -102,7 +102,7 @@ class AIStrategyExecutorService:
             signal = request_data.get("signal", True)
             strategy_id = request_data.get("strategy_id", "unknown")
 
-            logger.info(f"🎯 Executing strategy {strategy_id} for {symbol_binance}")
+            logger.info(f"ðŸŽ¯ Executing strategy {strategy_id} for {symbol_binance}")
 
             # Execute the strategy
             result = execute_ai_strategy_signal(symbol_binance, symbol_coinbase, usd_amount, signal)
@@ -129,12 +129,12 @@ class AIStrategyExecutorService:
             # Publish result
             self.redis_client.lpush("execution_results", json.dumps(execution_record))
 
-            logger.info(f"✅ Strategy {strategy_id} executed: {execution_record['status']}")
+            logger.info(f"âœ… Strategy {strategy_id} executed: {execution_record['status']}")
 
             return execution_record
 
         except Exception as e:
-            logger.error(f"❌ Error executing strategy request: {e}")
+            logger.error(f"âŒ Error executing strategy request: {e}")
 
             # Record failed execution
             execution_record = {
@@ -157,7 +157,7 @@ class AIStrategyExecutorService:
     ) -> Dict[str, Any]:
         """Execute a specific strategy"""
         try:
-            logger.info(f"🎯 Executing strategy {strategy_id}")
+            logger.info(f"ðŸŽ¯ Executing strategy {strategy_id}")
 
             # Execute the strategy
             result = execute_ai_strategy_signal(symbol_binance, symbol_coinbase, usd_amount, signal)
@@ -181,12 +181,12 @@ class AIStrategyExecutorService:
                 json.dumps(execution_record),
             )
 
-            logger.info(f"✅ Strategy {strategy_id} executed: {execution_record['status']}")
+            logger.info(f"âœ… Strategy {strategy_id} executed: {execution_record['status']}")
 
             return execution_record
 
         except Exception as e:
-            logger.error(f"❌ Error executing strategy: {e}")
+            logger.error(f"âŒ Error executing strategy: {e}")
             raise
 
     async def get_execution_history(self, limit: int = 100) -> List[Dict[str, Any]]:
@@ -195,7 +195,7 @@ class AIStrategyExecutorService:
             # Return recent executions
             return self.execution_history[-limit:] if self.execution_history else []
         except Exception as e:
-            logger.error(f"❌ Error getting execution history: {e}")
+            logger.error(f"âŒ Error getting execution history: {e}")
             return []
 
     async def get_strategy_executions(self, strategy_id: str) -> List[Dict[str, Any]]:
@@ -208,7 +208,7 @@ class AIStrategyExecutorService:
                     executions.append(json.loads(execution_data))
             return executions
         except Exception as e:
-            logger.error(f"❌ Error getting strategy executions: {e}")
+            logger.error(f"âŒ Error getting strategy executions: {e}")
             return []
 
 
@@ -223,9 +223,9 @@ async def startup_event():
     try:
         executor_service = AIStrategyExecutorService()
         await executor_service.start()
-        logger.info("✅ AI Strategy Executor Service started")
+        logger.info("âœ… AI Strategy Executor Service started")
     except Exception as e:
-        logger.error(f"❌ Failed to start AI Strategy Executor Service: {e}")
+        logger.error(f"âŒ Failed to start AI Strategy Executor Service: {e}")
         raise
 
 
@@ -235,7 +235,7 @@ async def shutdown_event():
     global executor_service
     if executor_service:
         await executor_service.stop()
-        logger.info("✅ AI Strategy Executor Service stopped")
+        logger.info("âœ… AI Strategy Executor Service stopped")
 
 
 @app.get("/health")
@@ -289,7 +289,7 @@ async def execute_strategy(
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error in execute endpoint: {e}")
+        logger.error(f"âŒ Error in execute endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -307,7 +307,7 @@ async def get_executions(limit: int = 100):
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error getting executions: {e}")
+        logger.error(f"âŒ Error getting executions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -326,7 +326,7 @@ async def get_strategy_executions(strategy_id: str):
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error getting strategy executions: {e}")
+        logger.error(f"âŒ Error getting strategy executions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -353,7 +353,7 @@ async def process_execution_queue():
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error processing execution queue: {e}")
+        logger.error(f"âŒ Error processing execution queue: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -361,7 +361,7 @@ if __name__ == "__main__":
     # Get port from environment
     port = int(os.getenv("SERVICE_PORT", 8003))
 
-    logger.info(f"🚀 Starting AI Strategy Executor Service on port {port}")
+    logger.info(f"ðŸš€ Starting AI Strategy Executor Service on port {port}")
 
     # Start the FastAPI server
     uvicorn.run(
@@ -371,3 +371,5 @@ if __name__ == "__main__":
         log_level="info",
         reload=False,
     )
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Enhanced Signal Manager Manager for Mystic Trading
 
 Manages all trading signals and ensures they are active and properly integrated.
@@ -755,3 +755,5 @@ class SignalManager:
 def get_signal_manager_manager(redis_client: Any) -> SignalManagerManager:
     """Get Signal Manager Manager instance"""
     return SignalManagerManager(redis_client)
+
+

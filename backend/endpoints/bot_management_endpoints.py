@@ -1,4 +1,4 @@
-"""
+﻿"""
 Bot Management Endpoints
 
 Handles all bot management related API endpoints including start, stop, and status for different bot types.
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def get_bot_manager():
     """Get bot manager instance"""
     try:
-        from services.bot_manager import BotManager
+        from backend.services.bot_manager import BotManager
 
         return BotManager()
     except ImportError as e:
@@ -170,3 +170,6 @@ async def get_binance_bot_data(bot_manager: Any = Depends(lambda: get_bot_manage
     except Exception as e:
         logger.error(f"Error getting Binance bot data: {str(e)}")
         raise HTTPException(status_code=500, detail="Error getting Binance bot data")
+
+
+

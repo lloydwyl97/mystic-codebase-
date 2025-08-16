@@ -1,4 +1,4 @@
-"""
+﻿"""
 WebSocket Connection Manager for Mystic Trading
 
 Manages WebSocket connections and provides broadcasting capabilities.
@@ -85,3 +85,5 @@ def get_websocket_manager():
 
 class WebSocketManager:
     pass
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Trading Endpoints
 Endpoints for AI trading signals, thoughts, bots, and performance
 """
@@ -10,7 +10,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, HTTPException
 
 # Import actual AI services
-from modules.ai.ai_signals import (
+from backend.modules.ai.ai_signals import (
     signal_scorer,
     risk_adjusted_signals,
     technical_signals,
@@ -20,7 +20,7 @@ from modules.ai.ai_signals import (
     get_trading_status,
     get_trade_summary,
 )
-from ai.trade_tracker import get_active_trades
+from backend.ai.trade_tracker import get_active_trades
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/ai", tags=["ai-trading"])
@@ -394,3 +394,5 @@ async def get_ai_predictions() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting AI predictions: {e}")
         raise HTTPException(status_code=500, detail=f"Error getting predictions: {str(e)}")
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Services Package for Mystic Trading
 
 This package contains all service implementations for the Mystic Trading platform.
@@ -24,3 +24,5 @@ __all__ = [
     "get_notification_service",
     "notification_manager",
 ]
+
+

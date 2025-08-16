@@ -1,4 +1,4 @@
-import requests
+﻿import requests
 
 
 def fetch_eth_gas_price():
@@ -19,3 +19,5 @@ def onchain_signal_check():
     whales = fetch_whale_alerts()
     print(f"[ONCHAIN] Gas: {gas} gwei | Whale TXs: {len(whales)}")
     return {"gas": gas, "whales": len(whales)}
+
+

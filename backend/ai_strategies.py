@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Trading Strategies Module
 
 Provides AI-powered trading strategies and machine learning models for market analysis.
@@ -183,7 +183,7 @@ class PatternRecognition:
         # Note: ta library doesn't have built-in candlestick patterns like TA-Lib
         # We'll implement basic pattern detection manually
         try:
-            # Doji pattern (open ≈ close)
+            # Doji pattern (open â‰ˆ close)
             doji_threshold = 0.001
             doji_pattern = abs(open_prices - close) <= (high - low) * doji_threshold
             doji_indices = np.where(doji_pattern)[0]
@@ -746,3 +746,5 @@ pattern_recognition = PatternRecognition()
 
 class AIStrategies:
     pass
+
+

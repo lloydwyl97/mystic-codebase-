@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import List, Literal, Optional, Tuple, Dict, Any
@@ -57,5 +57,7 @@ class OrderResult:
     fill_price: Optional[float]
     ts: int
     raw: Dict[str, Any]
+
+
 
 

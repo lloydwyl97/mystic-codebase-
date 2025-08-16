@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Live Endpoints Module - All Live Data, No Mock Data
 
@@ -20,12 +20,12 @@ except ImportError:
 
 # Import best available live data sources for live endpoints
 try:
-    from ai.trade_tracker import get_active_trades, get_trade_history
+    from backend.ai.trade_tracker import get_active_trades, get_trade_history
 except ImportError:
     get_active_trades = None
     get_trade_history = None
 try:
-    from services.analytics_service import analytics_service
+    from backend.services.analytics_service import analytics_service
 except ImportError:
     analytics_service = None
 try:
@@ -33,17 +33,17 @@ try:
 except ImportError:
     get_live_trading_signals = None
 try:
-    from endpoints.trading.portfolio_endpoints import portfolio_manager
+    from backend.endpoints.trading.portfolio_endpoints import portfolio_manager
 except ImportError:
     portfolio_manager = None
 try:
-    from ai.ai_predictions import get_ai_predictions
+    from backend.ai.ai_predictions import get_ai_predictions
 except ImportError:
     get_ai_predictions = None
 
 # Import best available live data sources for remaining live endpoints
 try:
-    from ai.social_trading import get_leaderboard
+    from backend.ai.social_trading import get_leaderboard
 except ImportError:
     get_leaderboard = None
 try:
@@ -51,17 +51,17 @@ try:
 except ImportError:
     get_bots_status = None
 try:
-    from modules.notifications.alert_manager import AlertManager
+    from backend.modules.notifications.alert_manager import AlertManager
 
     alert_manager = AlertManager()
 except ImportError:
     alert_manager = None
 try:
-    from services.analytics_service import analytics_service
+    from backend.services.analytics_service import analytics_service
 except ImportError:
     analytics_service = None
 try:
-    from ai.trade_tracker import get_orders, get_trade_history
+    from backend.ai.trade_tracker import get_orders, get_trade_history
 except ImportError:
     get_orders = None
     get_trade_history = None
@@ -70,7 +70,7 @@ try:
 except ImportError:
     get_live_strategies = None
 try:
-    from endpoints.core.system_endpoints import SystemMonitor
+    from backend.endpoints.core.system_endpoints import SystemMonitor
 
     system_monitor = SystemMonitor()
 except ImportError:
@@ -540,3 +540,6 @@ async def get_live_data_sources():
     except Exception as e:
         logger.error(f"Error getting live data sources: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error getting data sources: {str(e)}")
+
+
+

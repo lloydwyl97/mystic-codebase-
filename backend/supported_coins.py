@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Supported Coins Configuration
 Defines which coins are supported by each exchange to prevent API errors
 """
 
-# ✅ STEP 1: Filter Supported Coins per Exchange - User specified pairs
+# âœ… STEP 1: Filter Supported Coins per Exchange - User specified pairs
 SUPPORTED_COINS = {
     "coinbase": [
         # Coinbase pairs (format: BASE-USD)
@@ -104,3 +104,5 @@ def get_all_supported_coins() -> dict[str, list[str]]:
 def get_all_trading_pairs() -> dict[str, list[str]]:
     """Get all trading pairs for all exchanges"""
     return TRADING_PAIRS.copy()
+
+

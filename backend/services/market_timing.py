@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced Market Timing System
 Analyzes optimal entry/exit times based on market cycles and patterns
 """
@@ -141,7 +141,7 @@ class AdvancedMarketTiming:
         """Analyze current market phase"""
         try:
             # Get real market phase analysis from technical analysis service
-            from services.technical_analysis_service import (
+            from backend.services.technical_analysis_service import (
                 get_technical_analysis_service,
             )
 
@@ -177,7 +177,7 @@ class AdvancedMarketTiming:
         """Analyze lunar cycle impact on crypto markets"""
         try:
             # Get real lunar cycle data from astronomical service
-            from services.astronomical_service import get_astronomical_service
+            from backend.services.astronomical_service import get_astronomical_service
 
             astro_service = get_astronomical_service()
             lunar_score = astro_service.get_lunar_cycle_score()
@@ -235,3 +235,5 @@ class AdvancedMarketTiming:
 
 # Global market timing instance
 market_timing = AdvancedMarketTiming()
+
+

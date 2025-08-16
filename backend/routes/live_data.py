@@ -1,13 +1,13 @@
-import logging
+﻿import logging
 
 from fastapi import APIRouter, HTTPException
 
-from routes.live_data_manager import get_live_data_manager
-from services.market_data import MarketDataService
-from services.notification import get_notification_service
+from backend.routes.live_data_manager import get_live_data_manager
+from backend.services.market_data import MarketDataService
+from backend.services.notification import get_notification_service
 
 # Import market data service and manager
-from services.service_manager import service_manager
+from backend.services.service_manager import service_manager
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -183,3 +183,5 @@ async def get_coin_summary():
         except Exception:
             pass  # Don't fail if notification fails
         raise HTTPException(status_code=500, detail=f"Failed to get coin summary: {str(e)}")
+
+

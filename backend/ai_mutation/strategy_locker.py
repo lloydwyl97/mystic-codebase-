@@ -1,4 +1,4 @@
-"""
+﻿"""
 Strategy Locker Module
 
 Manages the current live strategy and provides access to strategy files.
@@ -52,7 +52,7 @@ def get_live_strategy() -> Optional[str]:
         return None
 
     except Exception as e:
-        logger.error(f"❌ Error getting live strategy: {e}")
+        logger.error(f"âŒ Error getting live strategy: {e}")
         return None
 
 
@@ -72,11 +72,11 @@ def set_live_strategy(strategy_file: str) -> bool:
         with open(lock_file, "w") as f:
             f.write(strategy_file)
 
-        logger.info(f"🔒 Live strategy set to: {strategy_file}")
+        logger.info(f"ðŸ”’ Live strategy set to: {strategy_file}")
         return True
 
     except Exception as e:
-        logger.error(f"❌ Error setting live strategy: {e}")
+        logger.error(f"âŒ Error setting live strategy: {e}")
         return False
 
 
@@ -86,12 +86,12 @@ def unlock_strategy() -> bool:
         lock_file = Path("strategies/live_strategy.lock")
         if lock_file.exists():
             lock_file.unlink()
-            logger.info("🔓 Live strategy lock removed")
+            logger.info("ðŸ”“ Live strategy lock removed")
             return True
         return False
 
     except Exception as e:
-        logger.error(f"❌ Error unlocking strategy: {e}")
+        logger.error(f"âŒ Error unlocking strategy: {e}")
         return False
 
 
@@ -123,7 +123,7 @@ def get_strategy_info(strategy_file: str) -> Optional[Dict[str, Any]]:
         }
 
     except Exception as e:
-        logger.error(f"❌ Error getting strategy info: {e}")
+        logger.error(f"âŒ Error getting strategy info: {e}")
         return None
 
 
@@ -160,7 +160,7 @@ def list_available_strategies() -> list:
         return strategies
 
     except Exception as e:
-        logger.error(f"❌ Error listing strategies: {e}")
+        logger.error(f"âŒ Error listing strategies: {e}")
         return []
 
 
@@ -204,7 +204,7 @@ def get_strategy_status(strategy_file: str) -> Dict[str, Any]:
         return status
 
     except Exception as e:
-        logger.error(f"❌ Error getting strategy status: {e}")
+        logger.error(f"âŒ Error getting strategy status: {e}")
         return {"error": str(e)}
 
 
@@ -230,9 +230,11 @@ def backup_strategy(strategy_file: str) -> Optional[str]:
 
         shutil.copy2(strategy_path, backup_path)
 
-        logger.info(f"💾 Strategy backed up: {backup_filename}")
+        logger.info(f"ðŸ’¾ Strategy backed up: {backup_filename}")
         return str(backup_path)
 
     except Exception as e:
-        logger.error(f"❌ Error backing up strategy: {e}")
+        logger.error(f"âŒ Error backing up strategy: {e}")
         return None
+
+

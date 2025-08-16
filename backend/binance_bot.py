@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Binance US Trading Bot - Dedicated bot for Binance US exchange only
 Handles only Binance US coins with proper throttling and error handling
@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Optional, TypedDict
 import aiohttp  # type: ignore
 
 # Import rotated logging system
-from utils.log_rotation_manager import get_log_rotation_manager
+from backend.utils.log_rotation_manager import get_log_rotation_manager
 
 # Configure logging with rotation
 log_manager = get_log_rotation_manager()
@@ -404,3 +404,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

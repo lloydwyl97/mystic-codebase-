@@ -1,4 +1,4 @@
-"""
+﻿"""
 Application Lifespan Management for Mystic Trading
 
 Handles application startup and shutdown processes.
@@ -11,7 +11,7 @@ from typing import AsyncGenerator
 
 from fastapi import FastAPI
 
-# Import services
+# import backend.services as services
 try:
     from .connection_manager import get_connection_manager
     from .enhanced_logging import setup_enhanced_logging
@@ -96,12 +96,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         try:
             if service_manager:
                 await service_manager.initialize_services()
-            logger.info("✅ Application startup completed")
+            logger.info("âœ… Application startup completed")
         except Exception as e:
-            logger.error(f"❌ Startup error: {e}")
+            logger.error(f"âŒ Startup error: {e}")
 
     except Exception as e:
-        logger.error(f"❌ Critical startup error: {e}")
+        logger.error(f"âŒ Critical startup error: {e}")
         # Continue with limited functionality
 
     yield
@@ -141,12 +141,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         try:
             if service_manager:
                 await service_manager.shutdown_services()
-            logger.info("✅ Application shutdown completed")
+            logger.info("âœ… Application shutdown completed")
         except Exception as e:
-            logger.error(f"❌ Shutdown error: {e}")
+            logger.error(f"âŒ Shutdown error: {e}")
 
     except Exception as e:
-        logger.error(f"❌ Critical shutdown error: {e}")
+        logger.error(f"âŒ Critical shutdown error: {e}")
 
 
 # Alternative lifespan for compatibility
@@ -154,10 +154,12 @@ async def startup():
     """Startup event handler for compatibility"""
     logger.info("Starting up application (compatibility mode)...")
     # Basic startup without complex initialization
-    logger.info("✅ Application startup completed (compatibility mode)")
+    logger.info("âœ… Application startup completed (compatibility mode)")
 
 
 async def shutdown():
     """Shutdown event handler for compatibility"""
     logger.info("Shutting down application (compatibility mode)...")
-    logger.info("✅ Application shutdown completed (compatibility mode)")
+    logger.info("âœ… Application shutdown completed (compatibility mode)")
+
+

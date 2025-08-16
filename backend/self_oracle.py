@@ -1,4 +1,4 @@
-"""
+﻿"""
 Self Oracle Module
 
 Provides self-validation and oracle functionality for trading predictions and decisions.
@@ -31,7 +31,7 @@ def fetch_real_world_trigger() -> bool:
         headlines = [x["title"] for x in news["news"]]
 
         if any("ban" in h.lower() or "regulation" in h.lower() for h in headlines):
-            trigger_msg = "[ORACLE] Detected regulation news — evolving AI strat params."
+            trigger_msg = "[ORACLE] Detected regulation news â€” evolving AI strat params."
             print(trigger_msg)
             logger.warning(trigger_msg)
             return True
@@ -322,3 +322,5 @@ if __name__ == "__main__":
         {"accuracy": 0.75, "precision": 0.8},
     )
     print(f"[ORACLE] Confidence analysis: {confidence}")
+
+

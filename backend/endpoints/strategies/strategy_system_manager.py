@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Strategy System Manager for Mystic Trading Platform
 
@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 
 # Use absolute imports
 from crypto_autoengine_config import get_config
-from services.websocket_manager import websocket_manager
+from backend.services.websocket_manager import websocket_manager
 from shared_cache import CoinCache, SharedCache
 
 logger = logging.getLogger(__name__)
@@ -632,3 +632,6 @@ class StrategyController:
             "description": signal.description,
             "timestamp": signal.timestamp,
         }
+
+
+

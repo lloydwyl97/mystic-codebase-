@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Model Manager
 Handles model versioning, deployment, and lifecycle management
 """
@@ -20,7 +20,7 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # noqa: E402
 
-from agents.base_agent import BaseAgent  # noqa: E402
+from backend.agents.base_agent import BaseAgent  # noqa: E402
 
 
 class ModelVersion:
@@ -64,7 +64,7 @@ class ModelRegistry:
                     registry_data = json.load(f)
                     self.models = registry_data
         except Exception as e:
-            print(f"❌ Error loading model registry: {e}")
+            print(f"âŒ Error loading model registry: {e}")
 
     def save_registry(self):
         """Save model registry to disk"""
@@ -73,7 +73,7 @@ class ModelRegistry:
             with open(registry_file, "w") as f:
                 json.dump(self.models, f, indent=2)
         except Exception as e:
-            print(f"❌ Error saving model registry: {e}")
+            print(f"âŒ Error saving model registry: {e}")
 
     def register_model(
         self,
@@ -102,7 +102,7 @@ class ModelRegistry:
             return model_version
 
         except Exception as e:
-            print(f"❌ Error registering model: {e}")
+            print(f"âŒ Error registering model: {e}")
             return None
 
     def get_model_versions(self, model_id: str) -> List[str]:
@@ -112,7 +112,7 @@ class ModelRegistry:
                 return list(self.models[model_id].keys())
             return []
         except Exception as e:
-            print(f"❌ Error getting model versions: {e}")
+            print(f"âŒ Error getting model versions: {e}")
             return []
 
     def get_latest_version(self, model_id: str) -> Optional[str]:
@@ -126,7 +126,7 @@ class ModelRegistry:
                 )
             return None
         except Exception as e:
-            print(f"❌ Error getting latest version: {e}")
+            print(f"âŒ Error getting latest version: {e}")
             return None
 
     def update_model_status(self, model_id: str, version: str, status: str):
@@ -136,7 +136,7 @@ class ModelRegistry:
                 self.models[model_id][version]["status"] = status
                 self.save_registry()
         except Exception as e:
-            print(f"❌ Error updating model status: {e}")
+            print(f"âŒ Error updating model status: {e}")
 
     def update_performance_metrics(self, model_id: str, version: str, metrics: Dict[str, Any]):
         """Update model performance metrics"""
@@ -145,7 +145,7 @@ class ModelRegistry:
                 self.models[model_id][version]["performance_metrics"] = metrics
                 self.save_registry()
         except Exception as e:
-            print(f"❌ Error updating performance metrics: {e}")
+            print(f"âŒ Error updating performance metrics: {e}")
 
 
 class AIModelManager(BaseAgent):
@@ -218,7 +218,7 @@ class AIModelManager(BaseAgent):
         self.register_handler("get_model_info", self.handle_get_model_info)
         self.register_handler("update_metrics", self.handle_update_metrics)
 
-        print(f"📦 AI Model Manager {agent_id} initialized")
+        print(f"ðŸ“¦ AI Model Manager {agent_id} initialized")
 
     async def validate_model_file(self, model_path: str, model_type: str) -> Tuple[bool, str]:
         """Validate model file using appropriate framework"""
@@ -299,7 +299,7 @@ class AIModelManager(BaseAgent):
             return metrics
 
         except Exception as e:
-            print(f"❌ Error calculating model metrics: {e}")
+            print(f"âŒ Error calculating model metrics: {e}")
             return {"error": str(e)}
 
     async def load_model_for_inference(self, model_path: str, model_type: str):
@@ -317,7 +317,7 @@ class AIModelManager(BaseAgent):
                 raise ValueError(f"Unsupported model type: {model_type}")
 
         except Exception as e:
-            print(f"❌ Error loading model for inference: {e}")
+            print(f"âŒ Error loading model for inference: {e}")
             return None
 
     async def initialize(self):
@@ -335,10 +335,10 @@ class AIModelManager(BaseAgent):
             # Start model monitoring
             await self.start_model_monitoring()
 
-            print(f"✅ AI Model Manager {self.agent_id} initialized successfully")
+            print(f"âœ… AI Model Manager {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing AI Model Manager: {e}")
+            print(f"âŒ Error initializing AI Model Manager: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -360,7 +360,7 @@ class AIModelManager(BaseAgent):
                 await asyncio.sleep(60)  # Check every minute
 
             except Exception as e:
-                print(f"❌ Error in model management processing loop: {e}")
+                print(f"âŒ Error in model management processing loop: {e}")
                 await asyncio.sleep(120)
 
     async def load_model_config(self):
@@ -372,11 +372,11 @@ class AIModelManager(BaseAgent):
                 self.model_config = json.loads(config_data)
 
             print(
-                f"📋 Model configuration loaded: {len(self.model_config['model_types'])} model types"
+                f"ðŸ“‹ Model configuration loaded: {len(self.model_config['model_types'])} model types"
             )
 
         except Exception as e:
-            print(f"❌ Error loading model configuration: {e}")
+            print(f"âŒ Error loading model configuration: {e}")
 
     async def initialize_model_storage(self):
         """Initialize model storage structure"""
@@ -391,10 +391,10 @@ class AIModelManager(BaseAgent):
                 (model_type_path / "deployed").mkdir(exist_ok=True)
                 (model_type_path / "backups").mkdir(exist_ok=True)
 
-            print("📁 Model storage initialized")
+            print("ðŸ“ Model storage initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing model storage: {e}")
+            print(f"âŒ Error initializing model storage: {e}")
 
     async def load_existing_models(self):
         """Load existing models from storage"""
@@ -409,10 +409,10 @@ class AIModelManager(BaseAgent):
                     ),
                 }
 
-            print(f"📦 Loaded {len(self.state['models_managed'])} existing models")
+            print(f"ðŸ“¦ Loaded {len(self.state['models_managed'])} existing models")
 
         except Exception as e:
-            print(f"❌ Error loading existing models: {e}")
+            print(f"âŒ Error loading existing models: {e}")
 
     async def start_model_monitoring(self):
         """Start model monitoring"""
@@ -425,10 +425,10 @@ class AIModelManager(BaseAgent):
             # Start monitoring listener
             asyncio.create_task(self.listen_model_updates(pubsub))
 
-            print("📡 Model monitoring started")
+            print("ðŸ“¡ Model monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting model monitoring: {e}")
+            print(f"âŒ Error starting model monitoring: {e}")
 
     async def listen_model_updates(self, pubsub):
         """Listen for model updates"""
@@ -442,7 +442,7 @@ class AIModelManager(BaseAgent):
                     await self.process_model_update(update_data)
 
         except Exception as e:
-            print(f"❌ Error in model updates listener: {e}")
+            print(f"âŒ Error in model updates listener: {e}")
         finally:
             pubsub.close()
 
@@ -459,7 +459,7 @@ class AIModelManager(BaseAgent):
                 await self.handle_model_deployed(update_data)
 
         except Exception as e:
-            print(f"❌ Error processing model update: {e}")
+            print(f"âŒ Error processing model update: {e}")
 
     async def handle_model_trained(self, update_data: Dict[str, Any]):
         """Handle model trained event"""
@@ -473,7 +473,7 @@ class AIModelManager(BaseAgent):
                 # Validate model file
                 is_valid, validation_msg = await self.validate_model_file(model_path, model_type)
                 if not is_valid:
-                    print(f"❌ Model validation failed: {validation_msg}")
+                    print(f"âŒ Model validation failed: {validation_msg}")
                     return
 
                 # Calculate model metrics
@@ -501,10 +501,10 @@ class AIModelManager(BaseAgent):
                     self.state["models_managed"][model_id]["versions"].append(version)
                     self.state["models_managed"][model_id]["latest_version"] = version
 
-                    print(f"✅ Registered new model version: {model_id} v{version}")
+                    print(f"âœ… Registered new model version: {model_id} v{version}")
 
         except Exception as e:
-            print(f"❌ Error handling model trained: {e}")
+            print(f"âŒ Error handling model trained: {e}")
 
     async def handle_model_metrics(self, update_data: Dict[str, Any]):
         """Handle model metrics update"""
@@ -526,7 +526,7 @@ class AIModelManager(BaseAgent):
                     await self.rollback_model(model_id)
 
         except Exception as e:
-            print(f"❌ Error handling model metrics: {e}")
+            print(f"âŒ Error handling model metrics: {e}")
 
     async def handle_model_deployed(self, update_data: Dict[str, Any]):
         """Handle model deployed event"""
@@ -547,10 +547,10 @@ class AIModelManager(BaseAgent):
                     "deployed_at": datetime.now().isoformat(),
                 }
 
-                print(f"✅ Model deployed: {model_id} v{version}")
+                print(f"âœ… Model deployed: {model_id} v{version}")
 
         except Exception as e:
-            print(f"❌ Error handling model deployed: {e}")
+            print(f"âŒ Error handling model deployed: {e}")
 
     async def generate_version_number(self, model_id: str) -> str:
         """Generate next version number for model"""
@@ -573,7 +573,7 @@ class AIModelManager(BaseAgent):
                 return "1.0.0"
 
         except Exception as e:
-            print(f"❌ Error generating version number: {e}")
+            print(f"âŒ Error generating version number: {e}")
             return "1.0.0"
 
     async def store_model(self, model_id: str, version: str, model_type: str, source_path: str):
@@ -603,10 +603,10 @@ class AIModelManager(BaseAgent):
                 with open(version_path / "metadata.json", "w") as f:
                     json.dump(metadata, f, indent=2)
 
-                print(f"✅ Model stored: {model_id} v{version}")
+                print(f"âœ… Model stored: {model_id} v{version}")
 
         except Exception as e:
-            print(f"❌ Error storing model: {e}")
+            print(f"âŒ Error storing model: {e}")
 
     async def calculate_file_hash(self, file_path: Path) -> str:
         """Calculate SHA256 hash of file"""
@@ -617,7 +617,7 @@ class AIModelManager(BaseAgent):
                     hash_sha256.update(chunk)
             return hash_sha256.hexdigest()
         except Exception as e:
-            print(f"❌ Error calculating file hash: {e}")
+            print(f"âŒ Error calculating file hash: {e}")
             return ""
 
     def should_deploy_model(self, model_id: str, version: str, metrics: Dict[str, Any]) -> bool:
@@ -633,7 +633,7 @@ class AIModelManager(BaseAgent):
             return performance_score >= threshold
 
         except Exception as e:
-            print(f"❌ Error checking deployment condition: {e}")
+            print(f"âŒ Error checking deployment condition: {e}")
             return False
 
     def should_rollback_model(self, model_id: str, version: str, metrics: Dict[str, Any]) -> bool:
@@ -646,20 +646,20 @@ class AIModelManager(BaseAgent):
             return performance_score < threshold
 
         except Exception as e:
-            print(f"❌ Error checking rollback condition: {e}")
+            print(f"âŒ Error checking rollback condition: {e}")
             return False
 
     async def deploy_model(self, model_id: str, version: str):
         """Deploy model to production"""
         try:
-            print(f"🚀 Deploying model: {model_id} v{version}")
+            print(f"ðŸš€ Deploying model: {model_id} v{version}")
 
             # Get model info
             if (
                 model_id not in self.registry.models
                 or version not in self.registry.models[model_id]
             ):
-                print(f"❌ Model not found: {model_id} v{version}")
+                print(f"âŒ Model not found: {model_id} v{version}")
                 return
 
             model_info = self.registry.models[model_id][version]
@@ -692,20 +692,20 @@ class AIModelManager(BaseAgent):
                 self.state["deployment_count"] += 1
                 self.state["last_deployment"] = datetime.now().isoformat()
 
-                print(f"✅ Model deployed successfully: {model_id} v{version}")
+                print(f"âœ… Model deployed successfully: {model_id} v{version}")
 
         except Exception as e:
-            print(f"❌ Error deploying model: {e}")
+            print(f"âŒ Error deploying model: {e}")
 
     async def rollback_model(self, model_id: str):
         """Rollback model to previous version"""
         try:
-            print(f"🔄 Rolling back model: {model_id}")
+            print(f"ðŸ”„ Rolling back model: {model_id}")
 
             # Get previous version
             versions = self.registry.get_model_versions(model_id)
             if len(versions) < 2:
-                print(f"❌ No previous version available for rollback: {model_id}")
+                print(f"âŒ No previous version available for rollback: {model_id}")
                 return
 
             # Get second latest version
@@ -715,10 +715,10 @@ class AIModelManager(BaseAgent):
             # Deploy previous version
             await self.deploy_model(model_id, previous_version)
 
-            print(f"✅ Model rolled back: {model_id} to v{previous_version}")
+            print(f"âœ… Model rolled back: {model_id} to v{previous_version}")
 
         except Exception as e:
-            print(f"❌ Error rolling back model: {e}")
+            print(f"âŒ Error rolling back model: {e}")
 
     async def broadcast_model_deployment(self, model_id: str, version: str, model_type: str):
         """Broadcast model deployment to other agents"""
@@ -739,7 +739,7 @@ class AIModelManager(BaseAgent):
             await self.send_message("execution_agent", deployment_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting model deployment: {e}")
+            print(f"âŒ Error broadcasting model deployment: {e}")
 
     async def monitor_model_performance(self):
         """Monitor model performance"""
@@ -760,7 +760,7 @@ class AIModelManager(BaseAgent):
                         await self.rollback_model(model_id)
 
         except Exception as e:
-            print(f"❌ Error monitoring model performance: {e}")
+            print(f"âŒ Error monitoring model performance: {e}")
 
     async def manage_deployments(self):
         """Manage model deployments"""
@@ -780,7 +780,7 @@ class AIModelManager(BaseAgent):
                             await self.deploy_model(model_id, latest_version)
 
         except Exception as e:
-            print(f"❌ Error managing deployments: {e}")
+            print(f"âŒ Error managing deployments: {e}")
 
     async def cleanup_old_models(self):
         """Clean up old model versions"""
@@ -802,7 +802,7 @@ class AIModelManager(BaseAgent):
                         await self.remove_model_version(model_id, version)
 
         except Exception as e:
-            print(f"❌ Error cleaning up old models: {e}")
+            print(f"âŒ Error cleaning up old models: {e}")
 
     async def remove_model_version(self, model_id: str, version: str):
         """Remove a model version"""
@@ -824,10 +824,10 @@ class AIModelManager(BaseAgent):
                 if model_id in self.state["models_managed"]:
                     self.state["models_managed"][model_id]["versions"].remove(version)
 
-                print(f"🗑️ Removed model version: {model_id} v{version}")
+                print(f"ðŸ—‘ï¸ Removed model version: {model_id} v{version}")
 
         except Exception as e:
-            print(f"❌ Error removing model version: {e}")
+            print(f"âŒ Error removing model version: {e}")
 
     async def handle_register_model(self, message: Dict[str, Any]):
         """Handle model registration request"""
@@ -837,7 +837,7 @@ class AIModelManager(BaseAgent):
             model_path = message.get("model_path")
             metadata = message.get("metadata", {})
 
-            print(f"📝 Model registration requested for {model_id}")
+            print(f"ðŸ“ Model registration requested for {model_id}")
 
             if model_id and model_path:
                 # Validate model file
@@ -894,7 +894,7 @@ class AIModelManager(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling model registration: {e}")
+            print(f"âŒ Error handling model registration: {e}")
             await self.broadcast_error(f"Model registration error: {e}")
 
     async def handle_deploy_model(self, message: Dict[str, Any]):
@@ -903,7 +903,7 @@ class AIModelManager(BaseAgent):
             model_id = message.get("model_id")
             version = message.get("version")
 
-            print(f"🚀 Model deployment requested for {model_id} v{version}")
+            print(f"ðŸš€ Model deployment requested for {model_id} v{version}")
 
             if model_id and version:
                 await self.deploy_model(model_id, version)
@@ -930,7 +930,7 @@ class AIModelManager(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling model deployment: {e}")
+            print(f"âŒ Error handling model deployment: {e}")
             await self.broadcast_error(f"Model deployment error: {e}")
 
     async def handle_get_model_info(self, message: Dict[str, Any]):
@@ -938,7 +938,7 @@ class AIModelManager(BaseAgent):
         try:
             model_id = message.get("model_id")
 
-            print(f"📊 Model info requested for {model_id}")
+            print(f"ðŸ“Š Model info requested for {model_id}")
 
             if model_id and model_id in self.state["models_managed"]:
                 model_info = self.state["models_managed"][model_id]
@@ -965,7 +965,7 @@ class AIModelManager(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling model info request: {e}")
+            print(f"âŒ Error handling model info request: {e}")
             await self.broadcast_error(f"Model info error: {e}")
 
     async def handle_update_metrics(self, message: Dict[str, Any]):
@@ -975,7 +975,7 @@ class AIModelManager(BaseAgent):
             version = message.get("version")
             metrics = message.get("metrics", {})
 
-            print(f"📈 Metrics update for {model_id} v{version}")
+            print(f"ðŸ“ˆ Metrics update for {model_id} v{version}")
 
             if model_id and version and metrics:
                 # Update performance metrics
@@ -1007,7 +1007,7 @@ class AIModelManager(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling metrics update: {e}")
+            print(f"âŒ Error handling metrics update: {e}")
             await self.broadcast_error(f"Metrics update error: {e}")
 
     async def update_model_metrics(self):
@@ -1027,12 +1027,12 @@ class AIModelManager(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating model metrics: {e}")
+            print(f"âŒ Error updating model metrics: {e}")
 
     async def process_market_data(self, market_data: Dict[str, Any]):
         """Process incoming market data for model management"""
         try:
-            print(f"📊 Processing market data for model management")
+            print(f"ðŸ“Š Processing market data for model management")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -1045,16 +1045,16 @@ class AIModelManager(BaseAgent):
                     performance_metrics = await self.analyze_model_performance(model_id, market_data)
                     
                     if performance_metrics.get("needs_retraining", False):
-                        print(f"🔄 Model {model_id} needs retraining based on market data")
+                        print(f"ðŸ”„ Model {model_id} needs retraining based on market data")
                         await self.handle_model_retraining_request(model_id, performance_metrics)
 
             # Update model metrics
             await self.update_model_metrics()
 
-            print(f"✅ Market data processed for model management")
+            print(f"âœ… Market data processed for model management")
 
         except Exception as e:
-            print(f"❌ Error processing market data for model management: {e}")
+            print(f"âŒ Error processing market data for model management: {e}")
             await self.broadcast_error(f"Model management market data error: {e}")
 
     async def analyze_model_performance(self, model_id: str, market_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -1070,7 +1070,7 @@ class AIModelManager(BaseAgent):
                 "market_conditions": "stable"
             }
         except Exception as e:
-            print(f"❌ Error analyzing model performance: {e}")
+            print(f"âŒ Error analyzing model performance: {e}")
             return {
                 "model_id": model_id,
                 "accuracy": 0.0,
@@ -1082,7 +1082,7 @@ class AIModelManager(BaseAgent):
     async def handle_model_retraining_request(self, model_id: str, performance_metrics: Dict[str, Any]):
         """Handle model retraining request"""
         try:
-            print(f"🔄 Initiating retraining for model {model_id}")
+            print(f"ðŸ”„ Initiating retraining for model {model_id}")
             
             # Broadcast retraining request
             await self.broadcast_message({
@@ -1093,7 +1093,7 @@ class AIModelManager(BaseAgent):
             })
             
         except Exception as e:
-            print(f"❌ Error handling model retraining request: {e}")
+            print(f"âŒ Error handling model retraining request: {e}")
             await self.broadcast_error(f"Model retraining error: {e}")
 
 
@@ -1105,3 +1105,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

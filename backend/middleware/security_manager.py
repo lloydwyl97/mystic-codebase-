@@ -1,4 +1,4 @@
-"""
+﻿"""
 Security Manager
 
 Handles security headers configuration and management.
@@ -125,3 +125,5 @@ class SecurityHeaders:
         except Exception as e:
             logger.error(f"Error adding security headers: {str(e)}")
             return response
+
+

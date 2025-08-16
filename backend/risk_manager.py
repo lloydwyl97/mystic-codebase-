@@ -1,4 +1,4 @@
-"""
+﻿"""
 Risk Management Service
 Manages portfolio risk and position limits
 """
@@ -28,7 +28,7 @@ class RiskManager:
 
     async def start(self):
         """Start the risk manager"""
-        print("🚀 Starting Risk Management Service...")
+        print("ðŸš€ Starting Risk Management Service...")
         self.running = True
 
         # Start risk monitoring
@@ -36,7 +36,7 @@ class RiskManager:
 
     async def monitor_risk(self):
         """Monitor portfolio risk"""
-        print("⚠️ Starting risk monitoring...")
+        print("âš ï¸ Starting risk monitoring...")
 
         while self.running:
             try:
@@ -56,7 +56,7 @@ class RiskManager:
                 await asyncio.sleep(60)  # Check every minute
 
             except Exception as e:
-                print(f"❌ Error in risk monitoring: {e}")
+                print(f"âŒ Error in risk monitoring: {e}")
                 await asyncio.sleep(120)
 
     async def calculate_risk_metrics(self) -> Dict[str, Any]:
@@ -156,7 +156,7 @@ class RiskManager:
 
     async def stop(self):
         """Stop the risk manager"""
-        print("🛑 Stopping Risk Management Service...")
+        print("ðŸ›‘ Stopping Risk Management Service...")
         self.running = False
 
 
@@ -167,12 +167,14 @@ async def main():
     try:
         await manager.start()
     except KeyboardInterrupt:
-        print("🛑 Received interrupt signal")
+        print("ðŸ›‘ Received interrupt signal")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
     finally:
         await manager.stop()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

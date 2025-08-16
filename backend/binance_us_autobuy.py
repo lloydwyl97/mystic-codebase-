@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Binance US Autobuy System
 Focused on SOLUSDT, BTCUSDT, ETHUSDT with aggressive autobuy logic
@@ -74,7 +74,7 @@ class BinanceUSAutobuy:
     async def initialize(self):
         """Initialize the autobuy system"""
         if not BINANCE_API_KEY or not BINANCE_SECRET_KEY:
-            logger.error("❌ Binance US API credentials not configured")
+            logger.error("âŒ Binance US API credentials not configured")
             return False
 
         self.session = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10, connect=5))
@@ -84,21 +84,21 @@ class BinanceUSAutobuy:
             account_info: Optional[Dict[str, Any]] = await self.get_account_info()
             if account_info:
                 balance = account_info.get("totalWalletBalance", "N/A")
-                logger.info("✅ Binance US connection successful")
+                logger.info("âœ… Binance US connection successful")
                 logger.info(f"Account balance: {balance} USDT")
                 return True
             else:
-                logger.error("❌ Failed to connect to Binance US")
+                logger.error("âŒ Failed to connect to Binance US")
                 return False
         except Exception as e:
-            logger.error(f"❌ Connection test failed: {e}")
+            logger.error(f"âŒ Connection test failed: {e}")
             return False
 
     async def cleanup(self):
         """Cleanup resources"""
         if self.session:
             await self.session.close()
-        logger.info("✅ Binance US Autobuy cleaned up")
+        logger.info("âœ… Binance US Autobuy cleaned up")
 
     def send_notification(self, message: str):
         """Send notification via Telegram and Discord"""
@@ -115,9 +115,9 @@ class BinanceUSAutobuy:
             if DISCORD_WEBHOOK_URL:
                 requests.post(DISCORD_WEBHOOK_URL, json={"content": message}, timeout=5)
 
-            logger.info(f"📢 Notification sent: {message}")
+            logger.info(f"ðŸ“¢ Notification sent: {message}")
         except Exception as e:
-            logger.error(f"❌ Failed to send notification: {e}")
+            logger.error(f"âŒ Failed to send notification: {e}")
 
     async def get_account_info(self) -> Optional[Dict[str, Any]]:
         """Get Binance US account information"""
@@ -140,10 +140,10 @@ class BinanceUSAutobuy:
                 if response.status == 200:
                     return await response.json()
                 else:
-                    logger.error(f"❌ Account info failed: {response.status}")
+                    logger.error(f"âŒ Account info failed: {response.status}")
                     return None
         except Exception as e:
-            logger.error(f"❌ Error getting account info: {e}")
+            logger.error(f"âŒ Error getting account info: {e}")
             return None
 
     async def get_ticker_24hr(self, symbol: str) -> Optional[Dict[str, Any]]:
@@ -159,10 +159,10 @@ class BinanceUSAutobuy:
                 if response.status == 200:
                     return await response.json()
                 else:
-                    logger.error(f"❌ Ticker failed for {symbol}: {response.status}")
+                    logger.error(f"âŒ Ticker failed for {symbol}: {response.status}")
                     return None
         except Exception as e:
-            logger.error(f"❌ Error getting ticker for {symbol}: {e}")
+            logger.error(f"âŒ Error getting ticker for {symbol}: {e}")
             return None
 
     async def get_current_price(self, symbol: str) -> Optional[float]:
@@ -179,10 +179,10 @@ class BinanceUSAutobuy:
                     data = await response.json()
                     return float(data["price"])
                 else:
-                    logger.error(f"❌ Price failed for {symbol}: {response.status}")
+                    logger.error(f"âŒ Price failed for {symbol}: {response.status}")
                     return None
         except Exception as e:
-            logger.error(f"❌ Error getting price for {symbol}: {e}")
+            logger.error(f"âŒ Error getting price for {symbol}: {e}")
             return None
 
     async def place_market_buy_order(
@@ -190,7 +190,7 @@ class BinanceUSAutobuy:
     ) -> Optional[Dict[str, Any]]:
         """Place a market buy order"""
         if not TRADING_ENABLED:
-            logger.info(f"🔄 Trading disabled - simulating buy order for {symbol}")
+            logger.info(f"ðŸ”„ Trading disabled - simulating buy order for {symbol}")
             return {
                 "symbol": symbol,
                 "orderId": f"sim_{int(time.time())}",
@@ -223,16 +223,16 @@ class BinanceUSAutobuy:
             async with self.session.post(url, headers=headers) as response:
                 if response.status == 200:
                     result = await response.json()
-                    logger.info(f"✅ Buy order executed: {symbol} ${quote_amount}")
+                    logger.info(f"âœ… Buy order executed: {symbol} ${quote_amount}")
                     return result
                 else:
                     error_text = await response.text()
                     logger.error(
-                        f"❌ Buy order failed for {symbol}: {response.status} - {error_text}"
+                        f"âŒ Buy order failed for {symbol}: {response.status} - {error_text}"
                     )
                     return None
         except Exception as e:
-            logger.error(f"❌ Error placing buy order for {symbol}: {e}")
+            logger.error(f"âŒ Error placing buy order for {symbol}: {e}")
             return None
 
     def analyze_buy_signal(self, symbol: str, ticker_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -304,7 +304,7 @@ class BinanceUSAutobuy:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error analyzing signal for {symbol}: {e}")
+            logger.error(f"âŒ Error analyzing signal for {symbol}: {e}")
             return {
                 "should_buy": False,
                 "confidence": 0,
@@ -320,23 +320,23 @@ class BinanceUSAutobuy:
         try:
             # Check if we already have an active trade for this symbol
             if symbol in self.active_trades:
-                logger.info(f"⏳ Already have active trade for {symbol}, skipping")
+                logger.info(f"â³ Already have active trade for {symbol}, skipping")
                 return
 
             # Check if we've exceeded max concurrent trades
             if len(self.active_trades) >= MAX_CONCURRENT_TRADES:
-                logger.info(f"⏳ Max concurrent trades reached ({MAX_CONCURRENT_TRADES}), skipping")
+                logger.info(f"â³ Max concurrent trades reached ({MAX_CONCURRENT_TRADES}), skipping")
                 return
 
             # Check cooldown
             current_time = time.time()
             if symbol in self.last_signal_time:
                 if current_time - self.last_signal_time[symbol] < SIGNAL_COOLDOWN:
-                    logger.info(f"⏳ Signal cooldown for {symbol}, skipping")
+                    logger.info(f"â³ Signal cooldown for {symbol}, skipping")
                     return
 
             # Execute the buy order
-            logger.info(f"🚀 Executing buy signal for {symbol}")
+            logger.info(f"ðŸš€ Executing buy signal for {symbol}")
             logger.info(f"   Confidence: {signal_data['confidence']}%")
             logger.info(f"   Signals: {', '.join(signal_data['signals'])}")
 
@@ -367,7 +367,7 @@ class BinanceUSAutobuy:
 
                 # Send notification
                 message = (
-                    f"🚀 BINANCE US AUTOBUY EXECUTED\n"
+                    f"ðŸš€ BINANCE US AUTOBUY EXECUTED\n"
                     f"Symbol: {symbol}\n"
                     f"Amount: ${USD_AMOUNT_PER_TRADE}\n"
                     f"Confidence: {signal_data['confidence']}%\n"
@@ -376,13 +376,13 @@ class BinanceUSAutobuy:
                 )
                 self.send_notification(message)
 
-                logger.info(f"✅ Buy order successful for {symbol}")
+                logger.info(f"âœ… Buy order successful for {symbol}")
             else:
-                logger.error(f"❌ Buy order failed for {symbol}")
+                logger.error(f"âŒ Buy order failed for {symbol}")
                 self.failed_trades += 1
 
         except Exception as e:
-            logger.error(f"❌ Error executing buy signal for {symbol}: {e}")
+            logger.error(f"âŒ Error executing buy signal for {symbol}: {e}")
             self.failed_trades += 1
 
     async def process_trading_pair(self, symbol: str):
@@ -421,32 +421,32 @@ class BinanceUSAutobuy:
                 await self.execute_buy_signal(symbol, signal_data)
 
         except Exception as e:
-            logger.error(f"❌ Error processing {symbol}: {e}")
+            logger.error(f"âŒ Error processing {symbol}: {e}")
 
     async def run_trading_cycle(self):
         """Run one complete trading cycle"""
-        logger.info("🔄 Starting trading cycle...")
+        logger.info("ðŸ”„ Starting trading cycle...")
 
         # Process all trading pairs
         tasks = [self.process_trading_pair(symbol) for symbol in TRADING_PAIRS]
         await asyncio.gather(*tasks, return_exceptions=True)
 
         # Log statistics
-        logger.info(f"📊 Cycle complete - Active trades: {len(self.active_trades)}")
+        logger.info(f"ðŸ“Š Cycle complete - Active trades: {len(self.active_trades)}")
         logger.info(
-            f"📊 Total trades: {self.total_trades}, Success: {self.successful_trades}, Failed: {self.failed_trades}"
+            f"ðŸ“Š Total trades: {self.total_trades}, Success: {self.successful_trades}, Failed: {self.failed_trades}"
         )
 
     async def run(self):
         """Main trading loop"""
-        logger.info("🚀 Starting Binance US Autobuy System")
-        logger.info(f"📊 Trading pairs: {TRADING_PAIRS}")
-        logger.info(f"💰 Amount per trade: ${USD_AMOUNT_PER_TRADE}")
-        logger.info(f"🔄 Trading enabled: {TRADING_ENABLED}")
+        logger.info("ðŸš€ Starting Binance US Autobuy System")
+        logger.info(f"ðŸ“Š Trading pairs: {TRADING_PAIRS}")
+        logger.info(f"ðŸ’° Amount per trade: ${USD_AMOUNT_PER_TRADE}")
+        logger.info(f"ðŸ”„ Trading enabled: {TRADING_ENABLED}")
 
         # Initialize
         if not await self.initialize():
-            logger.error("❌ Failed to initialize autobuy system")
+            logger.error("âŒ Failed to initialize autobuy system")
             return
 
         self.is_running = True
@@ -459,9 +459,9 @@ class BinanceUSAutobuy:
                 await asyncio.sleep(30)
 
         except KeyboardInterrupt:
-            logger.info("⏹️ Shutting down autobuy system...")
+            logger.info("â¹ï¸ Shutting down autobuy system...")
         except Exception as e:
-            logger.error(f"❌ Error in main loop: {e}")
+            logger.error(f"âŒ Error in main loop: {e}")
         finally:
             self.is_running = False
             await self.cleanup()
@@ -492,3 +492,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

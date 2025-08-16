@@ -1,4 +1,4 @@
-import ccxt
+﻿import ccxt
 
 binance = ccxt.binance()
 coinbase = ccxt.coinbasepro()
@@ -14,4 +14,6 @@ def check_arbitrage():
     b, c = fetch_prices()
     spread = abs(b - c)
     if spread > 20:  # adjust threshold
-        print(f"[ARBITRAGE] Spread Detected! Binance: {b}, Coinbase: {c} | Δ = {spread}")
+        print(f"[ARBITRAGE] Spread Detected! Binance: {b}, Coinbase: {c} | Î” = {spread}")
+
+

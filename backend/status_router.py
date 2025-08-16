@@ -1,4 +1,4 @@
-# status_router.py
+﻿# status_router.py
 """
 Status Router - Dashboard API for AI Module Monitoring
 Provides real-time status of all AI trading modules.
@@ -290,3 +290,5 @@ async def get_module_logs(module_id: str, lines: int = 50) -> Dict[str, Any]:
             details={"module_id": module_id, "original_error": str(e)},
             original_exception=e
         )
+
+

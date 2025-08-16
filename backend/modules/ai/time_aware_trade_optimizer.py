@@ -1,4 +1,4 @@
-"""
+﻿"""
 Time-Aware Trade Optimizer for Mystic AI Trading Platform
 Analyzes historical price data to identify optimal trading windows and timing patterns.
 """
@@ -13,7 +13,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class TimeAwareTradeOptimizer:
             'new_york': (13, 21)  # 13:00-21:00 UTC
         }
 
-        logger.info("✅ TimeAwareTradeOptimizer initialized")
+        logger.info("âœ… TimeAwareTradeOptimizer initialized")
 
     def _get_historical_data(self, symbol: str, hours: int = 168) -> List[Dict[str, Any]]:
         """Get historical price data from cache"""
@@ -337,7 +337,7 @@ class TimeAwareTradeOptimizer:
     def get_optimal_trade_times(self, exchange: str, symbol: str) -> Dict[str, Any]:
         """Get optimal trade times for a symbol"""
         try:
-            logger.info(f"⏰ Analyzing optimal trade times for {symbol}")
+            logger.info(f"â° Analyzing optimal trade times for {symbol}")
 
             # Get historical data
             historical_data = self._get_historical_data(symbol, hours=self.time_windows['weekly'])
@@ -374,7 +374,7 @@ class TimeAwareTradeOptimizer:
                 metadata=time_decision
             )
 
-            logger.info(f"✅ Time optimization complete for {symbol}: {time_decision['best_entry']} - {time_decision['best_exit']}")
+            logger.info(f"âœ… Time optimization complete for {symbol}: {time_decision['best_entry']} - {time_decision['best_exit']}")
 
             return {
                 'symbol': symbol,
@@ -400,7 +400,7 @@ class TimeAwareTradeOptimizer:
     def optimize_all_symbols(self) -> Dict[str, Any]:
         """Optimize trade times for all available symbols"""
         try:
-            logger.info("🔄 Starting optimization for all symbols")
+            logger.info("ðŸ”„ Starting optimization for all symbols")
 
             # Get list of symbols (mock implementation)
             symbols = ['BTC-USD', 'ETH-USD', 'ADA-USD', 'DOT-USD', 'LINK-USD']
@@ -497,7 +497,7 @@ def get_time_aware_trade_optimizer() -> TimeAwareTradeOptimizer:
 if __name__ == "__main__":
     # Test the time-aware trade optimizer
     optimizer = TimeAwareTradeOptimizer()
-    print(f"✅ TimeAwareTradeOptimizer initialized: {optimizer}")
+    print(f"âœ… TimeAwareTradeOptimizer initialized: {optimizer}")
 
     # Test optimal trade times
     result = optimizer.get_optimal_trade_times('coinbase', 'BTC-USD')
@@ -506,3 +506,5 @@ if __name__ == "__main__":
     # Test status
     status = optimizer.get_optimizer_status()
     print(f"Optimizer status: {status['status']}")
+
+

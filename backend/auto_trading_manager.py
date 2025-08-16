@@ -1,4 +1,4 @@
-"""
+﻿"""
 Auto Trading Manager for Mystic Trading
 
 Manages automated trading operations, separated from signal management for better modularity.
@@ -313,3 +313,5 @@ def get_auto_trading_manager(redis_client: Any) -> AutoTradingManager:
     if auto_trading_manager is None:
         auto_trading_manager = AutoTradingManager(redis_client)
     return auto_trading_manager
+
+

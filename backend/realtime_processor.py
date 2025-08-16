@@ -1,4 +1,4 @@
-"""
+﻿"""
 Real-time Data Processing Service
 Handles live trading data processing and streaming
 """
@@ -30,7 +30,7 @@ class RealTimeProcessor:
 
     async def start(self):
         """Start the real-time processor"""
-        print("🚀 Starting Real-time Data Processor...")
+        print("ðŸš€ Starting Real-time Data Processor...")
         self.running = True
         self.session = aiohttp.ClientSession()
 
@@ -46,7 +46,7 @@ class RealTimeProcessor:
 
     async def process_market_data(self):
         """Process live market data"""
-        print("📊 Starting market data processing...")
+        print("ðŸ“Š Starting market data processing...")
 
         while self.running:
             try:
@@ -62,12 +62,12 @@ class RealTimeProcessor:
                 await asyncio.sleep(5)  # Update every 5 seconds
 
             except Exception as e:
-                print(f"❌ Error in market data processing: {e}")
+                print(f"âŒ Error in market data processing: {e}")
                 await asyncio.sleep(10)
 
     async def process_trade_signals(self):
         """Process live trade signals"""
-        print("🎯 Starting trade signal processing...")
+        print("ðŸŽ¯ Starting trade signal processing...")
 
         while self.running:
             try:
@@ -83,12 +83,12 @@ class RealTimeProcessor:
                 await asyncio.sleep(10)  # Update every 10 seconds
 
             except Exception as e:
-                print(f"❌ Error in trade signal processing: {e}")
+                print(f"âŒ Error in trade signal processing: {e}")
                 await asyncio.sleep(15)
 
     async def process_portfolio_updates(self):
         """Process portfolio updates"""
-        print("💼 Starting portfolio update processing...")
+        print("ðŸ’¼ Starting portfolio update processing...")
 
         while self.running:
             try:
@@ -104,12 +104,12 @@ class RealTimeProcessor:
                 await asyncio.sleep(30)  # Update every 30 seconds
 
             except Exception as e:
-                print(f"❌ Error in portfolio processing: {e}")
+                print(f"âŒ Error in portfolio processing: {e}")
                 await asyncio.sleep(60)
 
     async def process_risk_alerts(self):
         """Process risk management alerts"""
-        print("⚠️ Starting risk alert processing...")
+        print("âš ï¸ Starting risk alert processing...")
 
         while self.running:
             try:
@@ -127,7 +127,7 @@ class RealTimeProcessor:
                 await asyncio.sleep(60)  # Check every minute
 
             except Exception as e:
-                print(f"❌ Error in risk alert processing: {e}")
+                print(f"âŒ Error in risk alert processing: {e}")
                 await asyncio.sleep(120)
 
     async def fetch_live_market_data(self) -> Dict[str, Any]:
@@ -378,7 +378,7 @@ class RealTimeProcessor:
 
     async def stop(self):
         """Stop the real-time processor"""
-        print("🛑 Stopping Real-time Data Processor...")
+        print("ðŸ›‘ Stopping Real-time Data Processor...")
         self.running = False
         if self.session:
             await self.session.close()
@@ -391,12 +391,14 @@ async def main():
     try:
         await processor.start()
     except KeyboardInterrupt:
-        print("🛑 Received interrupt signal")
+        print("ðŸ›‘ Received interrupt signal")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
     finally:
         await processor.stop()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

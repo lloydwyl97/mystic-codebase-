@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import os
 from datetime import datetime, timezone
@@ -7,8 +7,8 @@ from typing import Dict, List, Literal
 import aiohttp
 
 from .base_adapter import AbstractExchangeAdapter
-from models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
-from utils.symbols import to_exchange_symbol, normalize_symbol_to_dash  # type: ignore[import-not-found]
+from backend.models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
+from backend.utils.symbols import to_exchange_symbol, normalize_symbol_to_dash  # type: ignore[import-not-found]
 
 
 class CoinbaseAdapter(AbstractExchangeAdapter):
@@ -129,5 +129,7 @@ class CoinbaseAdapter(AbstractExchangeAdapter):
             ts=ts,
             raw={},
         )
+
+
 
 

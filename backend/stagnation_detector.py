@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 
 from ai_auto_learner import AIAutoLearner
@@ -21,7 +21,7 @@ def detect_stagnation():
         state["adjustment_count"] = 0
         with open(STATE_FILE, "w") as f:
             json.dump(state, f, indent=2)
-        send_alert("⚠️ AI strategy auto-reset due to stagnation.")
+        send_alert("âš ï¸ AI strategy auto-reset due to stagnation.")
         print("[Stagnation] AI auto-reset triggered.")
 
 
@@ -32,7 +32,9 @@ def check_performance_plateau():
     if summary["total_trades"] > 50:
         avg_profit = summary["avg_profit"]
         if abs(avg_profit) < 0.1:  # Less than 10 cents average profit
-            send_alert("📉 AI performance plateau detected. Consider strategy review.")
+            send_alert("ðŸ“‰ AI performance plateau detected. Consider strategy review.")
             print("[Stagnation] Performance plateau detected.")
             return True
     return False
+
+

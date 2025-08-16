@@ -1,4 +1,4 @@
-"""
+﻿"""
 Autosell Service for Mystic AI Trading Platform
 Monitors cached trades and current prices to execute automated sell orders.
 """
@@ -13,7 +13,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class AutoExecutionService:
             )
 
             if trade_success:
-                logger.info(f"✅ Sell order executed: {symbol} {quantity} @ ${price:.2f} = ${total_value:.2f}")
+                logger.info(f"âœ… Sell order executed: {symbol} {quantity} @ ${price:.2f} = ${total_value:.2f}")
 
                 return {
                     "success": True,
@@ -63,11 +63,11 @@ class AutoExecutionService:
                     "timestamp": timestamp.isoformat()
                 }
             else:
-                logger.error(f"❌ Failed to log sell trade for {symbol}")
+                logger.error(f"âŒ Failed to log sell trade for {symbol}")
                 return {"success": False, "error": "Failed to log trade"}
 
         except Exception as e:
-            logger.error(f"❌ Failed to execute sell order for {symbol}: {e}")
+            logger.error(f"âŒ Failed to execute sell order for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
     def set_simulation_mode(self, enabled: bool):
@@ -94,7 +94,7 @@ class AutoSellService:
         # Track trailing stops for each position
         self.trailing_stops = {}  # {symbol: highest_price_seen}
 
-        logger.info("✅ AutoSellService initialized")
+        logger.info("âœ… AutoSellService initialized")
 
     def get_open_buy_positions(self, symbol: Optional[str] = None) -> List[Dict[str, Any]]:
         """Get open buy positions from trade journal"""
@@ -135,7 +135,7 @@ class AutoSellService:
             return open_positions
 
         except Exception as e:
-            logger.error(f"❌ Failed to get open positions: {e}")
+            logger.error(f"âŒ Failed to get open positions: {e}")
             return []
 
     def check_sell_conditions(self, symbol: str, avg_buy_price: float,
@@ -182,14 +182,14 @@ class AutoSellService:
             }
 
             if should_sell:
-                logger.info(f"🎯 Sell conditions met for {symbol}: Profit={profit_percentage:.2%}, "
+                logger.info(f"ðŸŽ¯ Sell conditions met for {symbol}: Profit={profit_percentage:.2%}, "
                           f"Take Profit={take_profit_hit}, Stop Loss={stop_loss_hit}, "
                           f"Trailing Stop={trailing_stop_hit}")
 
             return should_sell, conditions
 
         except Exception as e:
-            logger.error(f"❌ Failed to check sell conditions for {symbol}: {e}")
+            logger.error(f"âŒ Failed to check sell conditions for {symbol}: {e}")
             return False, {"error": str(e)}
 
     def execute_autosell(self, exchange: str, symbol: str, quantity: float,
@@ -231,7 +231,7 @@ class AutoSellService:
                 )
 
                 if result["success"]:
-                    logger.info(f"🚀 Autosell executed: {symbol} {quantity} @ ${current_price:.2f}")
+                    logger.info(f"ðŸš€ Autosell executed: {symbol} {quantity} @ ${current_price:.2f}")
 
                     # Remove from trailing stops if sold
                     if symbol in self.trailing_stops:
@@ -244,13 +244,13 @@ class AutoSellService:
                 self.active_sells.discard(order_key)
 
         except Exception as e:
-            logger.error(f"❌ Failed to execute autosell for {symbol}: {e}")
+            logger.error(f"âŒ Failed to execute autosell for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
     def execute_all_autosells(self) -> Dict[str, Any]:
         """Execute autosell for all open positions"""
         try:
-            logger.info("🔄 Starting autosell execution for all positions...")
+            logger.info("ðŸ”„ Starting autosell execution for all positions...")
 
             # Get all open positions
             open_positions = self.get_open_buy_positions()
@@ -291,7 +291,7 @@ class AutoSellService:
                             break  # Move to next position if successful
 
                 except Exception as e:
-                    logger.error(f"❌ Failed to process position {position['symbol']}: {e}")
+                    logger.error(f"âŒ Failed to process position {position['symbol']}: {e}")
                     results.append({
                         "symbol": position['symbol'],
                         "exchange": "unknown",
@@ -308,11 +308,11 @@ class AutoSellService:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-            logger.info(f"✅ Autosell execution completed: {successful_sells}/{len(open_positions)} successful")
+            logger.info(f"âœ… Autosell execution completed: {successful_sells}/{len(open_positions)} successful")
             return summary
 
         except Exception as e:
-            logger.error(f"❌ Failed to execute all autosells: {e}")
+            logger.error(f"âŒ Failed to execute all autosells: {e}")
             return {"success": False, "error": str(e)}
 
     def get_open_orders(self) -> List[Dict[str, Any]]:
@@ -332,7 +332,7 @@ class AutoSellService:
                 for order in self.active_sells
             ]
         except Exception as e:
-            logger.error(f"❌ Failed to get open orders: {e}")
+            logger.error(f"âŒ Failed to get open orders: {e}")
             return []
 
     def get_trailing_stops(self) -> List[Dict[str, Any]]:
@@ -351,7 +351,7 @@ class AutoSellService:
                 for symbol, stop_data in self.trailing_stops.items()
             ]
         except Exception as e:
-            logger.error(f"❌ Failed to get trailing stops: {e}")
+            logger.error(f"âŒ Failed to get trailing stops: {e}")
             return []
 
     def get_service_status(self) -> Dict[str, Any]:
@@ -388,13 +388,13 @@ class AutoSellService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to get service status: {e}")
+            logger.error(f"âŒ Failed to get service status: {e}")
             return {"success": False, "error": str(e)}
 
     def reset_trailing_stops(self):
         """Reset all trailing stops (useful for testing)"""
         self.trailing_stops.clear()
-        logger.info("🔄 Trailing stops reset")
+        logger.info("ðŸ”„ Trailing stops reset")
 
 
 # Global service instance
@@ -409,7 +409,7 @@ def get_autosell_service() -> AutoSellService:
 if __name__ == "__main__":
     # Test the service
     service = AutoSellService()
-    print(f"✅ AutoSellService initialized: {service}")
+    print(f"âœ… AutoSellService initialized: {service}")
 
     # Test status
     status = service.get_service_status()
@@ -418,3 +418,5 @@ if __name__ == "__main__":
     print(f"Active sells: {status['active_sells']}")
     print(f"Open positions: {status['open_positions']}")
     print(f"Total invested: ${status['total_invested']:.2f}")
+
+

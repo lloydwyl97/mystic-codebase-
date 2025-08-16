@@ -1,4 +1,4 @@
-# start_trade_logging.py
+﻿# start_trade_logging.py
 """
 Startup script for the Trade Logging & Strategy Memory Engine.
 
@@ -20,7 +20,7 @@ try:
     from dashboard import app
     import uvicorn
 except ImportError as e:
-    print(f"❌ Import error: {e}")
+    print(f"âŒ Import error: {e}")
     print("Make sure all required packages are installed:")
     print("pip install fastapi uvicorn plotly sqlalchemy")
     sys.exit(1)
@@ -28,79 +28,79 @@ except ImportError as e:
 
 def initialize_system():
     """Initialize the trade logging system"""
-    print("🚀 Initializing Trade Logging & Strategy Memory Engine...")
+    print("ðŸš€ Initializing Trade Logging & Strategy Memory Engine...")
 
     try:
         # Initialize database
-        print("📊 Initializing database...")
+        print("ðŸ“Š Initializing database...")
         init_db()
-        print("✅ Database initialized successfully")
+        print("âœ… Database initialized successfully")
 
         # Check Discord connection
-        print("📡 Testing Discord connection...")
+        print("ðŸ“¡ Testing Discord connection...")
         discord_ok = test_discord_connection()
-        print(f"Discord: {'✅ Connected' if discord_ok else '❌ Not configured'}")
+        print(f"Discord: {'âœ… Connected' if discord_ok else 'âŒ Not configured'}")
 
         # Show initial strategies
         strategies = get_active_strategies()
-        print(f"📈 Found {len(strategies)} active strategies")
+        print(f"ðŸ“ˆ Found {len(strategies)} active strategies")
 
-        print("✅ System initialization completed!")
+        print("âœ… System initialization completed!")
         return True
 
     except Exception as e:
-        print(f"❌ Initialization failed: {e}")
+        print(f"âŒ Initialization failed: {e}")
         return False
 
 
 def run_dashboard():
     """Start the dashboard server"""
-    print("🌐 Starting dashboard server...")
+    print("ðŸŒ Starting dashboard server...")
     print("Dashboard will be available at: http://localhost:8080")
     print("Press Ctrl+C to stop the server")
 
     try:
         uvicorn.run(app, host="0.0.0.0", port=8080)
     except KeyboardInterrupt:
-        print("\n🛑 Dashboard server stopped")
+        print("\nðŸ›‘ Dashboard server stopped")
     except Exception as e:
-        print(f"❌ Dashboard failed to start: {e}")
+        print(f"âŒ Dashboard failed to start: {e}")
 
 
 def run_example():
     """Run the example trading simulation"""
-    print("🎯 Running example trading simulation...")
+    print("ðŸŽ¯ Running example trading simulation...")
 
     try:
         from example_usage import main
 
         main()
     except Exception as e:
-        print(f"❌ Example failed: {e}")
+        print(f"âŒ Example failed: {e}")
 
 
 def run_evaluation():
     """Run strategy evaluation"""
-    print("📊 Running strategy evaluation...")
+    print("ðŸ“Š Running strategy evaluation...")
 
     try:
         results = run_daily_evaluation()
-        print("✅ Evaluation completed:")
+        print("âœ… Evaluation completed:")
         print(f"   Strategies evaluated: {results.get('evaluated_strategies', 0)}")
         print(f"   Strategies updated: {results.get('updated_strategies', 0)}")
         print(f"   Top performers: {len(results.get('top_performers', []))}")
         print(f"   Poor performers: {len(results.get('poor_performers', []))}")
     except Exception as e:
-        print(f"❌ Evaluation failed: {e}")
+        print(f"âŒ Evaluation failed: {e}")
 
 
 def run_evolution():
     """Run evolution cycle"""
-    print("🧬 Running evolution cycle...")
+    print("ðŸ§¬ Running evolution cycle...")
 
     try:
         results = run_evolution_cycle()
-        print("✅ Evolution completed:")
+        print("âœ… Evolution completed:")
         print(f"   New strategies: {results.get('total_new_strategies', 0)}")
         print(f"   Mutations: {results.get('mutations_created', 0)}")
         print(f"   Crossovers: {results.get('crossovers_created', 0)}")
@@ -109,13 +109,13 @@ def run_evolution():
             f"   Active population: {results.get('population_stats', {}).get('active_strategies', 0)}"
         )
     except Exception as e:
-        print(f"❌ Evolution failed: {e}")
+        print(f"âŒ Evolution failed: {e}")
 
 
 def show_menu():
     """Show the main menu"""
     print("\n" + "=" * 60)
-    print("🎯 Mystic AI Trading - Trade Logging System")
+    print("ðŸŽ¯ Mystic AI Trading - Trade Logging System")
     print("=" * 60)
     print("1. Initialize System")
     print("2. Start Dashboard")
@@ -129,7 +129,7 @@ def show_menu():
 
 def show_status():
     """Show system status"""
-    print("\n📊 System Status:")
+    print("\nðŸ“Š System Status:")
     print("-" * 40)
 
     try:
@@ -145,7 +145,7 @@ def show_status():
 
         # Check Discord
         discord_ok = test_discord_connection()
-        print(f"Discord alerts: {'✅ Enabled' if discord_ok else '❌ Disabled'}")
+        print(f"Discord alerts: {'âœ… Enabled' if discord_ok else 'âŒ Disabled'}")
 
         # Show top performers
         from reward_engine import get_top_performers
@@ -157,12 +157,12 @@ def show_status():
                 print(f"  {i}. {performer['name']}: {performer['win_rate']:.1%} win rate")
 
     except Exception as e:
-        print(f"❌ Status check failed: {e}")
+        print(f"âŒ Status check failed: {e}")
 
 
 def main():
     """Main function"""
-    print("🎯 Welcome to Mystic AI Trading - Trade Logging System!")
+    print("ðŸŽ¯ Welcome to Mystic AI Trading - Trade Logging System!")
 
     while True:
         show_menu()
@@ -189,18 +189,20 @@ def main():
                 show_status()
 
             elif choice == "7":
-                print("👋 Goodbye!")
+                print("ðŸ‘‹ Goodbye!")
                 break
 
             else:
-                print("❌ Invalid choice. Please select 1-7.")
+                print("âŒ Invalid choice. Please select 1-7.")
 
         except KeyboardInterrupt:
-            print("\n👋 Goodbye!")
+            print("\nðŸ‘‹ Goodbye!")
             break
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"âŒ Error: {e}")
 
 
 if __name__ == "__main__":
     main()
+
+

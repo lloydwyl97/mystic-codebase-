@@ -1,4 +1,4 @@
-"""
+﻿"""
 Cosmic Fetcher Service
 Handles fetching cosmic/market data from various sources
 """
@@ -58,3 +58,5 @@ class CosmicFetcher:
 
 # Global instance
 cosmic_fetcher = CosmicFetcher()
+
+

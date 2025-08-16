@@ -1,4 +1,4 @@
-import random
+﻿import random
 
 
 def simulate_market_crash(df):
@@ -19,3 +19,5 @@ def run_simulation(df, mode="crash"):
         return simulate_rug_pull(df)
     else:
         return df
+
+

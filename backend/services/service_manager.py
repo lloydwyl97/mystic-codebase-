@@ -1,4 +1,4 @@
-"""
+﻿"""
 Service Manager
 
 Handles initialization and management of all application services.
@@ -34,22 +34,22 @@ class ServiceManager:
 
                 redis_health = self.connection_manager.check_redis_health()
                 if redis_health["connected"]:
-                    logger.info("✅ Redis connection established")
+                    logger.info("âœ… Redis connection established")
                 else:
-                    logger.error("❌ Redis not available - limited functionality")
+                    logger.error("âŒ Redis not available - limited functionality")
             except Exception as e:
-                logger.warning(f"⚠️ ConnectionManager not available: {e}")
+                logger.warning(f"âš ï¸ ConnectionManager not available: {e}")
 
             # Initialize market data service
             try:
-                from services.market_data import MarketDataService
+                from backend.services.market_data import MarketDataService
 
                 logger.info("Initializing market data service...")
                 self.market_data_service = MarketDataService()
                 await self.market_data_service.initialize()
-                logger.info("✅ Market data service initialized")
+                logger.info("âœ… Market data service initialized")
             except Exception as e:
-                logger.warning(f"⚠️ MarketDataService not available: {e}")
+                logger.warning(f"âš ï¸ MarketDataService not available: {e}")
 
             # Initialize unified signal manager
             if self.redis_client:
@@ -59,15 +59,15 @@ class ServiceManager:
                     )
 
                     self.unified_signal_manager = get_unified_signal_manager(self.redis_client)
-                    logger.info("✅ Unified signal manager initialized")
+                    logger.info("âœ… Unified signal manager initialized")
                 except Exception as e:
-                    logger.warning(f"⚠️ Unified signal manager failed: {e}")
+                    logger.warning(f"âš ï¸ Unified signal manager failed: {e}")
 
             self._initialized = True
-            logger.info("✅ Service initialization completed")
+            logger.info("âœ… Service initialization completed")
 
         except Exception as e:
-            logger.error(f"❌ Service initialization error: {e}")
+            logger.error(f"âŒ Service initialization error: {e}")
             raise
 
     async def shutdown_services(self):
@@ -78,9 +78,9 @@ class ServiceManager:
                 await self.market_data_service.close()
             if self.connection_manager:
                 await self.connection_manager.close_connections()
-            logger.info("✅ Services shut down successfully")
+            logger.info("âœ… Services shut down successfully")
         except Exception as e:
-            logger.error(f"❌ Shutdown error: {e}")
+            logger.error(f"âŒ Shutdown error: {e}")
 
     def get_health_status(self) -> dict[str, Any]:
         """Get health status of all services."""
@@ -102,3 +102,5 @@ class ServiceManager:
 
 # Global service manager instance
 service_manager = ServiceManager()
+
+

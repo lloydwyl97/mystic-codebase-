@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 CRYPTO AUTOENGINE Configuration
 Central configuration for 20 coins (10 Coinbase + 10 Binance US)
@@ -326,3 +326,5 @@ def get_binance_symbols() -> List[str]:
 def get_current_time() -> datetime:
     """Get current time as datetime object"""
     return datetime.now()
+
+

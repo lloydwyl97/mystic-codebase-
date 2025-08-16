@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Throttle Controller for Mystic Trading Platform
 
@@ -19,7 +19,7 @@ def get_performance_dashboard() -> Dict[str, Any]:
 
         return performance_monitor.get_performance_dashboard()
     except ImportError:
-        print("❌ Performance monitor not available")
+        print("âŒ Performance monitor not available")
         return {}
 
 
@@ -30,7 +30,7 @@ def get_api_stats() -> Dict[str, Any]:
 
         return api_throttler.get_performance_stats()
     except ImportError:
-        print("❌ API throttler not available")
+        print("âŒ API throttler not available")
         return {}
 
 
@@ -40,9 +40,9 @@ def increase_throttling():
         from api_throttler import api_throttler
 
         api_throttler.increase_throttling()
-        print("✅ Throttling increased")
+        print("âœ… Throttling increased")
     except ImportError:
-        print("❌ API throttler not available")
+        print("âŒ API throttler not available")
 
 
 def decrease_throttling():
@@ -51,9 +51,9 @@ def decrease_throttling():
         from api_throttler import api_throttler
 
         api_throttler.decrease_throttling()
-        print("✅ Throttling decreased")
+        print("âœ… Throttling decreased")
     except ImportError:
-        print("❌ API throttler not available")
+        print("âŒ API throttler not available")
 
 
 def optimize_system():
@@ -62,9 +62,9 @@ def optimize_system():
         from performance_monitor import performance_monitor
 
         performance_monitor.optimize_system()
-        print("✅ System optimization completed")
+        print("âœ… System optimization completed")
     except ImportError:
-        print("❌ Performance monitor not available")
+        print("âŒ Performance monitor not available")
 
 
 def clear_caches():
@@ -75,14 +75,14 @@ def clear_caches():
 
         optimized_market_service.clear_cache()
         optimized_db_manager.clear_cache()
-        print("✅ All caches cleared")
+        print("âœ… All caches cleared")
     except ImportError:
-        print("❌ Optimized services not available")
+        print("âŒ Optimized services not available")
 
 
 def show_status():
     """Show current system status"""
-    print("\n🔍 SYSTEM STATUS")
+    print("\nðŸ” SYSTEM STATUS")
     print("=" * 50)
 
     # Get performance dashboard
@@ -90,9 +90,9 @@ def show_status():
     if dashboard:
         health = dashboard.get("system_health", {})
         print(f"Overall Health: {health.get('overall', 'unknown')}")
-        print(f"Database: {'✅' if health.get('database') else '❌'}")
-        print(f"API: {'✅' if health.get('api') else '❌'}")
-        print(f"Cache: {'✅' if health.get('cache') else '❌'}")
+        print(f"Database: {'âœ…' if health.get('database') else 'âŒ'}")
+        print(f"API: {'âœ…' if health.get('api') else 'âŒ'}")
+        print(f"Cache: {'âœ…' if health.get('cache') else 'âŒ'}")
 
         if health.get("issues"):
             print(f"Issues: {', '.join(health['issues'])}")
@@ -100,7 +100,7 @@ def show_status():
     # Get API stats
     api_stats = get_api_stats()
     if api_stats:
-        print("\n📊 API STATISTICS")
+        print("\nðŸ“Š API STATISTICS")
         print(f"Total Requests: {api_stats.get('total_requests', 0)}")
         print(f"Throttled Requests: {api_stats.get('throttled_requests', 0)}")
         print(f"Success Rate: {api_stats.get('success_rate', 0):.2%}")
@@ -110,7 +110,7 @@ def show_status():
 
 def show_recommendations():
     """Show optimization recommendations"""
-    print("\n💡 OPTIMIZATION RECOMMENDATIONS")
+    print("\nðŸ’¡ OPTIMIZATION RECOMMENDATIONS")
     print("=" * 50)
 
     dashboard = get_performance_dashboard()
@@ -125,7 +125,7 @@ def show_recommendations():
 
 def monitor_performance(duration: int = 60):
     """Monitor performance for specified duration"""
-    print(f"\n📊 MONITORING PERFORMANCE FOR {duration} SECONDS")
+    print(f"\nðŸ“Š MONITORING PERFORMANCE FOR {duration} SECONDS")
     print("=" * 50)
     print("Press Ctrl+C to stop early")
 
@@ -137,18 +137,18 @@ def monitor_performance(duration: int = 60):
                 health = dashboard.get("system_health", {})
                 print(
                     f"\r[{time.strftime('%H:%M:%S')}] Health: {health.get('overall', 'unknown')} | "
-                    f"API: {'✅' if health.get('api') else '❌'} | "
-                    f"DB: {'✅' if health.get('database') else '❌'} | "
-                    f"Cache: {'✅' if health.get('cache') else '❌'}",
+                    f"API: {'âœ…' if health.get('api') else 'âŒ'} | "
+                    f"DB: {'âœ…' if health.get('database') else 'âŒ'} | "
+                    f"Cache: {'âœ…' if health.get('cache') else 'âŒ'}",
                     end="",
                 )
 
             time.sleep(5)
 
-        print("\n✅ Monitoring completed")
+        print("\nâœ… Monitoring completed")
 
     except KeyboardInterrupt:
-        print("\n⏹️  Monitoring stopped by user")
+        print("\nâ¹ï¸  Monitoring stopped by user")
 
 
 def main():
@@ -195,7 +195,7 @@ def main():
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         # No arguments provided, show help
-        print("🚀 Mystic Trading Platform Throttle Controller")
+        print("ðŸš€ Mystic Trading Platform Throttle Controller")
         print("=" * 50)
         print("Available commands:")
         print("  status          - Show current system status")
@@ -209,3 +209,5 @@ if __name__ == "__main__":
         print("Example: python throttle_controller.py status")
     else:
         main()
+
+

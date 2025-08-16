@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trading Configuration
 Centralized configuration for all trading-related hardcoded values
 """
@@ -170,3 +170,5 @@ class TradingConfig:
 
 # Global configuration instance
 trading_config = TradingConfig()
+
+

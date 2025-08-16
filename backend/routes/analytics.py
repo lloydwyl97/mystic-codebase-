@@ -1,4 +1,4 @@
-"""
+﻿"""
 Analytics Router - Performance and Market Analysis
 
 Contains performance metrics, strategy analysis, and market analytics endpoints.
@@ -12,12 +12,12 @@ import time
 from fastapi import APIRouter, Depends, HTTPException
 
 # Import real services
-from services.redis_service import get_redis_service
+from backend.services.redis_service import get_redis_service
 
-# Import services
-from services.analytics_service import analytics_service
-from services.order_service import order_service
-from services.live_market_data import live_market_data_service
+# import backend.services as services
+from backend.services.analytics_service import analytics_service
+from backend.services.order_service import order_service
+from backend.services.live_market_data import live_market_data_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -261,7 +261,7 @@ async def train_ml_model(
         model_data.get("features", [])
 
         # Train real ML model using analytics service
-        from services.analytics_service import get_analytics_service
+        from backend.services.analytics_service import get_analytics_service
 
         analytics_service = get_analytics_service()
         training_result = await analytics_service.train_ml_model(model_data)
@@ -285,7 +285,7 @@ async def make_prediction(prediction_data: Dict[str, Any]):
         prediction_data.get("features", {})
 
         # Make real prediction using analytics service
-        from services.analytics_service import get_analytics_service
+        from backend.services.analytics_service import get_analytics_service
 
         analytics_service = get_analytics_service()
         prediction = await analytics_service.make_prediction(prediction_data)
@@ -310,7 +310,7 @@ async def get_patterns(symbol: str) -> Dict[str, Union[str, Any]]:
     """Get technical patterns for a symbol"""
     try:
         # Get real pattern recognition using analytics service
-        from services.analytics_service import get_analytics_service
+        from backend.services.analytics_service import get_analytics_service
 
         analytics_service = get_analytics_service()
         patterns = await analytics_service.get_patterns(symbol)
@@ -705,3 +705,5 @@ async def get_analytics_market_cap() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting market cap analytics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+

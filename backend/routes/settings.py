@@ -1,4 +1,4 @@
-"""
+﻿"""
 Settings Routes
 
 Handles user settings, preferences, and configuration.
@@ -11,7 +11,7 @@ from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException
 
-from config import settings
+from backend.config import settings
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -435,3 +435,5 @@ async def get_system_settings() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting system settings: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+

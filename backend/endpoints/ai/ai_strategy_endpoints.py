@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Strategy Endpoints
 Consolidated AI strategies, predictions, signals, and AI system management
 All endpoints return live data - no stubs or placeholders
@@ -12,14 +12,14 @@ from fastapi import APIRouter, HTTPException
 
 # Import real services
 try:
-    from modules.ai.ai_signals import signal_scorer, technical_signals
+    from backend.modules.ai.ai_signals import signal_scorer, technical_signals
 except ImportError as e:
     logging.warning(f"AI signals not fully available: {e}")
 
 if TYPE_CHECKING:
-    from services.ai_strategy_service import AIStrategyService as _AIStrategyService  # type: ignore[unused-ignore]
-    from services.ai_prediction_service import AIPredictionService as _AIPredictionService  # type: ignore[unused-ignore]
-    from services.ai_signal_service import AISignalService as _AISignalService  # type: ignore[unused-ignore]
+    from backend.services.ai_strategy_service import AIStrategyService as _AIStrategyService  # type: ignore[unused-ignore]
+    from backend.services.ai_prediction_service import AIPredictionService as _AIPredictionService  # type: ignore[unused-ignore]
+    from backend.services.ai_signal_service import AISignalService as _AISignalService  # type: ignore[unused-ignore]
 
 @runtime_checkable
 class _AIStrategyLike(Protocol):
@@ -54,17 +54,17 @@ ai_signal_service: _AISignalLike | None = None
 
 # Try primary backend.services paths first (if present in this codebase)
 try:
-    from services.ai_strategy_service import AIStrategyService as _RealAIStrategyService  # type: ignore
+    from backend.services.ai_strategy_service import AIStrategyService as _RealAIStrategyService  # type: ignore
 except Exception as e:
     _RealAIStrategyService = None  # type: ignore[assignment]
     logger.warning(f"AI strategy service unavailable: {e}")
 try:
-    from services.ai_prediction_service import AIPredictionService as _RealAIPredictionService  # type: ignore
+    from backend.services.ai_prediction_service import AIPredictionService as _RealAIPredictionService  # type: ignore
 except Exception as e:
     _RealAIPredictionService = None  # type: ignore[assignment]
     logger.warning(f"AI prediction service unavailable: {e}")
 try:
-    from services.ai_signal_service import AISignalService as _RealAISignalService  # type: ignore
+    from backend.services.ai_signal_service import AISignalService as _RealAISignalService  # type: ignore
 except Exception as e:
     _RealAISignalService = None  # type: ignore[assignment]
     logger.warning(f"AI signal service unavailable: {e}")
@@ -78,11 +78,11 @@ if _RealAIStrategyService is None or _RealAIPredictionService is None or _RealAI
         if project_root not in sys.path:
             sys.path.insert(0, project_root)
         if _RealAIStrategyService is None:
-            from services.ai_strategy_service import AIStrategyService as _RealAIStrategyService  # type: ignore
+            from backend.services.ai_strategy_service import AIStrategyService as _RealAIStrategyService  # type: ignore
         if _RealAIPredictionService is None:
-            from services.ai_prediction_service import AIPredictionService as _RealAIPredictionService  # type: ignore
+            from backend.services.ai_prediction_service import AIPredictionService as _RealAIPredictionService  # type: ignore
         if _RealAISignalService is None:
-            from services.ai_signal_service import AISignalService as _RealAISignalService  # type: ignore
+            from backend.services.ai_signal_service import AISignalService as _RealAISignalService  # type: ignore
     except Exception:
         pass
 
@@ -116,14 +116,14 @@ from fastapi import APIRouter, HTTPException
 
 # Import real services
 try:
-    from modules.ai.ai_signals import signal_scorer, technical_signals
+    from backend.modules.ai.ai_signals import signal_scorer, technical_signals
 except ImportError as e:
     logging.warning(f"AI signals not fully available: {e}")
 
 if TYPE_CHECKING:
-    from services.ai_strategy_service import AIStrategyService as _AIStrategyService  # type: ignore[unused-ignore]
-    from services.ai_prediction_service import AIPredictionService as _AIPredictionService  # type: ignore[unused-ignore]
-    from services.ai_signal_service import AISignalService as _AISignalService  # type: ignore[unused-ignore]
+    from backend.services.ai_strategy_service import AIStrategyService as _AIStrategyService  # type: ignore[unused-ignore]
+    from backend.services.ai_prediction_service import AIPredictionService as _AIPredictionService  # type: ignore[unused-ignore]
+    from backend.services.ai_signal_service import AISignalService as _AISignalService  # type: ignore[unused-ignore]
 
 @runtime_checkable
 class _AIStrategyLike(Protocol):
@@ -156,17 +156,17 @@ ai_strategy_service: _AIStrategyLike | None = None
 ai_prediction_service: _AIPredictionLike | None = None
 ai_signal_service: _AISignalLike | None = None
 try:
-    from services.ai_strategy_service import AIStrategyService as _RealAIStrategyService  # type: ignore
+    from backend.services.ai_strategy_service import AIStrategyService as _RealAIStrategyService  # type: ignore
     ai_strategy_service = _RealAIStrategyService()  # type: ignore[assignment]
 except Exception as e:
     logger.warning(f"AI strategy service unavailable: {e}")
 try:
-    from services.ai_prediction_service import AIPredictionService as _RealAIPredictionService  # type: ignore
+    from backend.services.ai_prediction_service import AIPredictionService as _RealAIPredictionService  # type: ignore
     ai_prediction_service = _RealAIPredictionService()  # type: ignore[assignment]
 except Exception as e:
     logger.warning(f"AI prediction service unavailable: {e}")
 try:
-    from services.ai_signal_service import AISignalService as _RealAISignalService  # type: ignore
+    from backend.services.ai_signal_service import AISignalService as _RealAISignalService  # type: ignore
     ai_signal_service = _RealAISignalService()  # type: ignore[assignment]
 except Exception as e:
     logger.warning(f"AI signal service unavailable: {e}")
@@ -463,3 +463,6 @@ async def update_ai_strategy(strategy_id: str, config: Dict[str, Any]) -> Dict[s
     except Exception as e:
         logger.error(f"Error updating AI strategy: {e}")
         raise HTTPException(status_code=500, detail=f"AI strategy update failed: {str(e)}")
+
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Neural Mesh for Mystic AI Trading Platform
 Maintains a distributed shared agent learning network for parameter sharing and strategy merging.
 """
@@ -13,7 +13,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ class NeuralMesh:
         # Initialize mesh state
         self._initialize_mesh_state()
 
-        logger.info("✅ NeuralMesh initialized")
+        logger.info("âœ… NeuralMesh initialized")
 
     def _initialize_mesh_state(self):
         """Initialize the global mesh state with default parameters"""
@@ -71,7 +71,7 @@ class NeuralMesh:
             self.mesh_state["last_update"] = datetime.now(timezone.utc).isoformat()
             self.mesh_state["mesh_version"] = 0
 
-            logger.info("✅ Mesh state initialized with default parameters")
+            logger.info("âœ… Mesh state initialized with default parameters")
 
         except Exception as e:
             logger.error(f"Failed to initialize mesh state: {e}")
@@ -286,7 +286,7 @@ class NeuralMesh:
                 # Update with new performance
                 self.mesh_state["performance_weights"][agent_id] = max(decayed_weight, performance_score)
 
-            logger.info(f"✅ Mesh state updated with {len(successful_evaluations)} agent evaluations")
+            logger.info(f"âœ… Mesh state updated with {len(successful_evaluations)} agent evaluations")
 
             return self.mesh_state
 
@@ -297,7 +297,7 @@ class NeuralMesh:
     def update_mesh(self) -> Dict[str, Any]:
         """Update the neural mesh with latest agent data"""
         try:
-            logger.info("🔄 Updating neural mesh...")
+            logger.info("ðŸ”„ Updating neural mesh...")
 
             # Get all registered agents
             agent_ids = list(self.registered_agents.keys())
@@ -330,7 +330,7 @@ class NeuralMesh:
                 }
             )
 
-            logger.info(f"✅ Neural mesh updated: {len(agent_evaluations)} agents evaluated")
+            logger.info(f"âœ… Neural mesh updated: {len(agent_evaluations)} agents evaluated")
 
             return updated_mesh
 
@@ -364,7 +364,7 @@ class NeuralMesh:
     def sync_agent(self, agent_id: str) -> Dict[str, Any]:
         """Sync an agent with the current mesh state"""
         try:
-            logger.info(f"🔄 Syncing agent {agent_id} with mesh state")
+            logger.info(f"ðŸ”„ Syncing agent {agent_id} with mesh state")
 
             # Register agent if not already registered
             if agent_id not in self.registered_agents:
@@ -393,7 +393,7 @@ class NeuralMesh:
                 "sync_timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-            logger.info(f"✅ Agent {agent_id} synced with mesh state")
+            logger.info(f"âœ… Agent {agent_id} synced with mesh state")
 
             return sync_response
 
@@ -409,7 +409,7 @@ class NeuralMesh:
     def register_agent(self, agent_id: str, initial_parameters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Register a new agent with the neural mesh"""
         try:
-            logger.info(f"📝 Registering agent {agent_id} with neural mesh")
+            logger.info(f"ðŸ“ Registering agent {agent_id} with neural mesh")
 
             # Register agent
             self.registered_agents[agent_id] = {
@@ -430,7 +430,7 @@ class NeuralMesh:
                 "registration_timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-            logger.info(f"✅ Agent {agent_id} registered with neural mesh")
+            logger.info(f"âœ… Agent {agent_id} registered with neural mesh")
 
             return registration_response
 
@@ -490,7 +490,7 @@ def get_neural_mesh() -> NeuralMesh:
 if __name__ == "__main__":
     # Test the neural mesh
     mesh = NeuralMesh()
-    print(f"✅ NeuralMesh initialized: {mesh}")
+    print(f"âœ… NeuralMesh initialized: {mesh}")
 
     # Test mesh update
     mesh.update_mesh()
@@ -503,3 +503,5 @@ if __name__ == "__main__":
     # Test status
     status = mesh.get_mesh_status()
     print(f"Mesh status: {status['status']}")
+
+

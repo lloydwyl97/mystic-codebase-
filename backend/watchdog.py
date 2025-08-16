@@ -1,4 +1,4 @@
-# watchdog.py
+﻿# watchdog.py
 """
 Health Watchdog & Auto-Recovery System
 Monitors all trading services and automatically restarts failed components.
@@ -231,9 +231,9 @@ class TradingWatchdog:
             self._log_restart(restart_result)
 
             if restart_result["success"]:
-                print(f"✅ Successfully restarted {service_name}")
+                print(f"âœ… Successfully restarted {service_name}")
             else:
-                print(f"❌ Failed to restart {service_name}")
+                print(f"âŒ Failed to restart {service_name}")
 
             return restart_result
 
@@ -255,7 +255,7 @@ class TradingWatchdog:
                     process = psutil.Process(proc.info["pid"])
                     process.terminate()
                     process.wait(timeout=10)
-                    print(f"🔄 Killed process for {script_name}")
+                    print(f"ðŸ”„ Killed process for {script_name}")
         except Exception as e:
             print(f"Error killing process: {e}")
 
@@ -278,7 +278,7 @@ class TradingWatchdog:
         Returns:
             Monitoring results
         """
-        print(f"🔍 Checking health of {len(self.critical_services)} services...")
+        print(f"ðŸ” Checking health of {len(self.critical_services)} services...")
 
         monitoring_results = {
             "timestamp": datetime.timezone.utcnow().isoformat(),
@@ -295,19 +295,19 @@ class TradingWatchdog:
 
             if health_status["overall_healthy"]:
                 monitoring_results["healthy_services"] += 1
-                print(f"✅ {service_name}: Healthy")
+                print(f"âœ… {service_name}: Healthy")
             else:
                 monitoring_results["unhealthy_services"] += 1
-                print(f"❌ {service_name}: Unhealthy")
+                print(f"âŒ {service_name}: Unhealthy")
 
                 # Attempt restart
                 restart_result = self.restart_service(service_name)
                 if restart_result["success"]:
                     monitoring_results["restarts_performed"] += 1
-                    print(f"🔄 {service_name}: Restarted successfully")
+                    print(f"ðŸ”„ {service_name}: Restarted successfully")
                 else:
                     error_msg = restart_result.get("error", "Unknown error")
-                print(f"💥 {service_name}: Restart failed - {error_msg}")
+                print(f"ðŸ’¥ {service_name}: Restart failed - {error_msg}")
 
         # Log monitoring results
         self.health_log.append(monitoring_results)
@@ -351,9 +351,9 @@ class TradingWatchdog:
 
     def run_continuous_monitoring(self):
         """Run continuous monitoring loop."""
-        print("🚀 Starting continuous monitoring...")
-        print(f"⏰ Check interval: {self.check_interval} seconds")
-        print(f"🔄 Max restart attempts: {self.max_restart_attempts}")
+        print("ðŸš€ Starting continuous monitoring...")
+        print(f"â° Check interval: {self.check_interval} seconds")
+        print(f"ðŸ”„ Max restart attempts: {self.max_restart_attempts}")
 
         while True:
             try:
@@ -361,7 +361,7 @@ class TradingWatchdog:
 
                 # Print summary
                 summary = self.get_system_summary()
-                print(f"\n📊 System Summary: {summary['overall_health'].upper()}")
+                print(f"\nðŸ“Š System Summary: {summary['overall_health'].upper()}")
                 health_pct = summary["health_percentage"]
                 healthy_count = summary["healthy_services"]
                 total_count = summary["total_services"]
@@ -372,10 +372,10 @@ class TradingWatchdog:
                 time.sleep(self.check_interval)
 
             except KeyboardInterrupt:
-                print("\n🛑 Monitoring stopped by user")
+                print("\nðŸ›‘ Monitoring stopped by user")
                 break
             except Exception as e:
-                print(f"❌ Monitoring error: {e}")
+                print(f"âŒ Monitoring error: {e}")
                 time.sleep(self.check_interval)
 
 
@@ -406,23 +406,25 @@ def get_system_health() -> Dict[str, Any]:
 
 # Example usage
 if __name__ == "__main__":
-    print("🛡️ Trading System Watchdog")
+    print("ðŸ›¡ï¸ Trading System Watchdog")
     print("=" * 40)
 
     # Test health monitoring
     watchdog = TradingWatchdog()
 
-    print("\n🔍 Testing service health checks...")
+    print("\nðŸ” Testing service health checks...")
     for service_name in watchdog.critical_services:
         health = watchdog.check_service_health(service_name)
-        status = "✅ Healthy" if health["overall_healthy"] else "❌ Unhealthy"
+        status = "âœ… Healthy" if health["overall_healthy"] else "âŒ Unhealthy"
         print(f"   {service_name}: {status}")
 
-    print("\n📊 System summary:")
+    print("\nðŸ“Š System summary:")
     summary = watchdog.get_system_summary()
     print(f"   Overall: {summary['overall_health']}")
     print(f"   Health: {summary['health_percentage']}%")
 
     # Start continuous monitoring
-    print("\n🚀 Starting continuous monitoring (Ctrl+C to stop)...")
+    print("\nðŸš€ Starting continuous monitoring (Ctrl+C to stop)...")
     watchdog.run_continuous_monitoring()
+
+

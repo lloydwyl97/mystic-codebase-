@@ -1,4 +1,4 @@
-"""
+﻿"""
 Analytics Endpoints
 
 Handles all analytics-related API endpoints including performance and risk analytics.
@@ -50,3 +50,6 @@ async def get_risk_analytics() -> Any:
     except Exception as e:
         logger.error(f"Error fetching risk analytics: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch risk analytics")
+
+
+

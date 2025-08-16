@@ -1,4 +1,4 @@
-from typing import Any, Dict
+﻿from typing import Any, Dict
 from datetime import datetime, timezone
 
 
@@ -11,6 +11,8 @@ class MiningService:
 
     async def restart(self) -> Dict[str, Any]:
         return {"timestamp": datetime.now(timezone.utc).isoformat(), "restarted": True}
+
+
 
 
 

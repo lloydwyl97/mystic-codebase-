@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced Signal Endpoints
 
 Handles all advanced signal related API endpoints including live signals, health monitoring, and testing.
@@ -235,3 +235,6 @@ async def get_signal_system_health(health_monitor: Any = Depends(lambda: get_hea
     except Exception as e:
         logger.error(f"Error getting system health: {str(e)}")
         raise HTTPException(status_code=500, detail="Error getting system health")
+
+
+

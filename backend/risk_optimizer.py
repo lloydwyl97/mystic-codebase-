@@ -1,4 +1,4 @@
-# risk_optimizer.py
+﻿# risk_optimizer.py
 """
 Auto Risk Recalibrator - Dynamic Risk Management System
 Automatically adjusts risk parameters based on trading performance.
@@ -168,3 +168,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

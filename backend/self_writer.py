@@ -1,4 +1,4 @@
-import os
+﻿import os
 import datetime
 from ai_mutation_feedback import fetch_recent_strategy_stats
 
@@ -131,7 +131,7 @@ if __name__ == "__main__":
             f.write(code)
 
         self.generated_modules.append(full_path)
-        print(f"[SELF-WRITER] New module saved → {full_path}")
+        print(f"[SELF-WRITER] New module saved â†’ {full_path}")
         return full_path
 
     def auto_write_loop(self):
@@ -182,3 +182,5 @@ if __name__ == "__main__":
         print(f"[SELF-WRITER] Successfully generated: {path}")
     else:
         print("[SELF-WRITER] No module generated")
+
+

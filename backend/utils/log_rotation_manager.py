@@ -1,4 +1,4 @@
-"""
+﻿"""
 Log Rotation Manager for Mystic Trading Platform
 
 Handles automatic log rotation with different policies:
@@ -297,3 +297,5 @@ def setup_rotated_logging() -> Dict[str, logging.Logger]:
     loggers["app"].info("Rotated logging system initialized")
 
     return loggers
+
+

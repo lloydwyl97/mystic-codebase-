@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Binance US Autobuy Dashboard
 Real-time monitoring and control for the autobuy system
@@ -16,7 +16,7 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 import uvicorn
 
-from endpoints.autobuy.autobuy_config import get_config
+from backend.endpoints.autobuy.autobuy_config import get_config
 from binance_us_autobuy import autobuy_system
 
 # Configure logging
@@ -175,16 +175,16 @@ async def get_dashboard_html():
     <body>
         <div class="container">
             <div class="header">
-                <h1>🚀 Binance US Autobuy Dashboard</h1>
+                <h1>ðŸš€ Binance US Autobuy Dashboard</h1>
                 <p>Real-time monitoring for SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT</p>
             </div>
 
             <div class="controls">
                 <h3>System Controls</h3>
-                <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh Data</button>
-                <button class="btn btn-success" onclick="startSystem()">▶️ Start System</button>
-                <button class="btn btn-warning" onclick="stopSystem()">⏹️ Stop System</button>
-                <button class="btn btn-danger" onclick="emergencyStop()">🚨 Emergency Stop</button>
+                <button class="btn btn-primary" onclick="refreshData()">ðŸ”„ Refresh Data</button>
+                <button class="btn btn-success" onclick="startSystem()">â–¶ï¸ Start System</button>
+                <button class="btn btn-warning" onclick="stopSystem()">â¹ï¸ Stop System</button>
+                <button class="btn btn-danger" onclick="emergencyStop()">ðŸš¨ Emergency Stop</button>
             </div>
 
             <div class="stats-grid" id="stats-grid">
@@ -250,11 +250,11 @@ async def get_dashboard_html():
                         <div class="stat-label">Active Trades</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">${stats.trading_enabled ? '✅' : '❌'}</div>
+                        <div class="stat-value">${stats.trading_enabled ? 'âœ…' : 'âŒ'}</div>
                         <div class="stat-label">Trading Enabled</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">${stats.emergency_stop ? '🚨' : '✅'}</div>
+                        <div class="stat-value">${stats.emergency_stop ? 'ðŸš¨' : 'âœ…'}</div>
                         <div class="stat-label">Emergency Stop</div>
                     </div>
                 `;
@@ -447,5 +447,7 @@ async def broadcast_update(update_type: str, data: Dict[str, Any]):
 
 
 if __name__ == "__main__":
-    logger.info("🚀 Starting Binance US Autobuy Dashboard...")
+    logger.info("ðŸš€ Starting Binance US Autobuy Dashboard...")
     uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info")
+
+

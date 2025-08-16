@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Data Manager
 
 Handles business logic for market data operations including signal calculation,
@@ -171,3 +171,5 @@ class MarketDataManager:
 
 # Global instance
 market_data_manager = MarketDataManager()
+
+

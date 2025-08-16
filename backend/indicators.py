@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Tier 2: Tactical Strategy Indicators
 Handles tactical strategy signals every 2-3 minutes for trade timing and decision confidence
@@ -445,3 +445,5 @@ class IndicatorsFetcher:
                 "total": len(self.binance_coins) + len(self.coinbase_coins),
             },
         }
+
+

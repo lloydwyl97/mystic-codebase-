@@ -1,4 +1,4 @@
-import logging
+﻿import logging
 import uuid
 from typing import Awaitable, Callable
 
@@ -36,3 +36,5 @@ async def health_monitor_middleware(
                 "request_id": request_id,
             },
         )
+
+

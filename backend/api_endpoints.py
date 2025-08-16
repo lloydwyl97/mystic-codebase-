@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Endpoints for Mystic Trading
 
 Contains all API endpoint definitions for the Mystic Trading platform.
@@ -30,7 +30,7 @@ from advanced_trading import (
     portfolio_analyzer,
     risk_manager,
 )
-from services.ai_strategies import (
+from backend.services.ai_strategies import (
     pattern_recognition,
     predictive_analytics,
     strategy_builder,
@@ -38,21 +38,21 @@ from services.ai_strategies import (
 from enhanced_logging import log_event, log_operation_performance
 
 # Import all the advanced modules
-from services.exchange_integration import OrderRequest, exchange_manager
+from backend.services.exchange_integration import OrderRequest, exchange_manager
 
 # Import real services
-from services.auto_trading_service import get_auto_trading_service
-from services.notification_service import get_notification_service
-from services.analytics_service import analytics_service
-from services.binance_trading import get_binance_trading_service
-from services.coinbase_trading import get_coinbase_trading_service
+from backend.services.auto_trading_service import get_auto_trading_service
+from backend.services.notification_service import get_notification_service
+from backend.services.analytics_service import analytics_service
+from backend.services.binance_trading import get_binance_trading_service
+from backend.services.coinbase_trading import get_coinbase_trading_service
 
 # Import live services
-from services.live_market_data import live_market_data_service
-from modules.data.market_data import market_data_manager
-from services.order_service import order_service
-from services.portfolio_service import portfolio_service
-from services.signal_service import signal_service
+from backend.services.live_market_data import live_market_data_service
+from backend.modules.data.market_data import market_data_manager
+from backend.services.order_service import order_service
+from backend.services.portfolio_service import portfolio_service
+from backend.services.signal_service import signal_service
 
 # Import shared endpoints
 from shared_endpoints import register_shared_endpoints
@@ -62,7 +62,7 @@ from social_trading import (
     social_trading_manager,
 )
 
-from config import settings
+from backend.config import settings
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -441,7 +441,7 @@ async def get_coin_state() -> Dict[str, Any]:
     """Get current coin state using cached market data"""
     try:
         # Use cached market data from the persistent cache
-        from ai.persistent_cache import get_persistent_cache
+        from backend.ai.persistent_cache import get_persistent_cache
 
         cache = get_persistent_cache()
 
@@ -1770,7 +1770,7 @@ async def get_social_sentiment(symbol: str) -> Dict[str, Any]:
     """Get social sentiment for a symbol"""
     try:
         # Get real sentiment data from sentiment analyzer service
-        from services.sentiment_analyzer import get_sentiment_analyzer
+        from backend.services.sentiment_analyzer import get_sentiment_analyzer
 
         sentiment_service = get_sentiment_analyzer()
         sentiment = await sentiment_service.get_social_sentiment(symbol.upper())
@@ -1795,7 +1795,7 @@ async def get_news_feed() -> Dict[str, Any]:
     """Get news feed"""
     try:
         # Get real news data from news service
-        from services.news_service import get_news_service
+        from backend.services.news_service import get_news_service
 
         news_service = get_news_service()
         news = await news_service.get_latest_news()
@@ -1941,7 +1941,7 @@ async def get_logs() -> Dict[str, Any]:
     """Get system logs"""
     try:
         # Get real system logs from logging service
-        from services.logging_service import get_logging_service
+        from backend.services.logging_service import get_logging_service
 
         logging_service = get_logging_service()
         logs = await logging_service.get_system_logs()
@@ -1969,7 +1969,7 @@ async def get_logs() -> Dict[str, Any]:
 def get_signal_manager():
     """Get signal manager instance"""
     try:
-        from services.signal_service import get_signal_service
+        from backend.services.signal_service import get_signal_service
 
         return get_signal_service()
     except Exception as e:
@@ -1980,7 +1980,7 @@ def get_signal_manager():
 def get_auto_trading_manager():
     """Get auto trading manager instance"""
     try:
-        from services.auto_trading_service import get_auto_trading_service
+        from backend.services.auto_trading_service import get_auto_trading_service
 
         return get_auto_trading_service()
     except Exception as e:
@@ -1991,7 +1991,7 @@ def get_auto_trading_manager():
 def get_redis_client():
     """Get Redis client instance"""
     try:
-        from services.redis_service import get_redis_service
+        from backend.services.redis_service import get_redis_service
 
         return get_redis_service()
     except Exception as e:
@@ -2002,7 +2002,7 @@ def get_redis_client():
 def get_health_monitor():
     """Get health monitor instance"""
     try:
-        from services.health_monitor_service import get_health_monitor_service
+        from backend.services.health_monitor_service import get_health_monitor_service
 
         return get_health_monitor_service()
     except Exception as e:
@@ -2010,4 +2010,6 @@ def get_health_monitor():
         raise HTTPException(status_code=500, detail="Health monitor service unavailable")
 
 
-logger.info("✅ Main API endpoints loaded with shared endpoint consolidation")
+logger.info("âœ… Main API endpoints loaded with shared endpoint consolidation")
+
+

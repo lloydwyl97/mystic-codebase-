@@ -1,4 +1,4 @@
-import logging
+﻿import logging
 import os
 import sys
 from typing import Any, Dict, Optional, Union
@@ -7,9 +7,9 @@ from fastapi import APIRouter, HTTPException
 
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from services.market_data import MarketDataService
-from services.notification import get_notification_service
-from services.service_manager import service_manager
+from backend.services.market_data import MarketDataService
+from backend.services.notification import get_notification_service
+from backend.services.service_manager import service_manager
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -151,3 +151,5 @@ async def get_market_data_status() -> Dict[str, Any]:
             status_code=500,
             detail=f"Failed to fetch market data status: {str(e)}",
         )
+
+

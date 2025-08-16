@@ -1,4 +1,4 @@
-"""
+﻿"""
 Autobuy Endpoints
 Consolidated autobuy configuration, status, trades, and signals
 All endpoints return live data - no stubs or placeholders
@@ -12,9 +12,9 @@ from fastapi import APIRouter, HTTPException
 
 # Import real services
 try:
-    from endpoints.autobuy.autobuy_config import get_autobuy_status as get_autobuy_status_config
-    from endpoints.autobuy.autobuy_config import get_config as _real_get_autobuy_config
-    from modules.ai.ai_signals import signal_scorer
+    from backend.endpoints.autobuy.autobuy_config import get_autobuy_status as get_autobuy_status_config
+    from backend.endpoints.autobuy.autobuy_config import get_config as _real_get_autobuy_config
+    from backend.modules.ai.ai_signals import signal_scorer
 
     def get_autobuy_config() -> Dict[str, Any]:
         cfg = _real_get_autobuy_config()
@@ -31,8 +31,8 @@ except ImportError as e:
         return {"config": {}}
 
 if TYPE_CHECKING:
-    from services.autobuy_service import AutobuyService as _AutobuyService  # type: ignore[unused-ignore]
-    from services.trading import TradingService as _TradingService  # type: ignore[unused-ignore]
+    from backend.services.autobuy_service import AutobuyService as _AutobuyService  # type: ignore[unused-ignore]
+    from backend.services.trading import TradingService as _TradingService  # type: ignore[unused-ignore]
 
 
 class PerformanceDict(TypedDict, total=False):
@@ -90,9 +90,9 @@ router = APIRouter()
 
 # Initialize real services
 try:
-    from services.redis_client import get_redis_client
-    from services.autobuy_service import AutobuyService as _RealAutobuyService  # noqa: F401
-    from services.trading import TradingService as _RealTradingService  # noqa: F401
+    from backend.services.redis_client import get_redis_client
+    from backend.services.autobuy_service import AutobuyService as _RealAutobuyService  # noqa: F401
+    from backend.services.trading import TradingService as _RealTradingService  # noqa: F401
 
     autobuy_service: AutobuyServiceProtocol = _RealAutobuyService()  # type: ignore[assignment]
     trading_service = _RealTradingService(get_redis_client())  # type: ignore[call-arg]
@@ -113,9 +113,9 @@ from fastapi import APIRouter, HTTPException
 
 # Import real services
 try:
-    from endpoints.autobuy.autobuy_config import get_autobuy_status as get_autobuy_status_config
-    from endpoints.autobuy.autobuy_config import get_config as _real_get_autobuy_config
-    from modules.ai.ai_signals import signal_scorer
+    from backend.endpoints.autobuy.autobuy_config import get_autobuy_status as get_autobuy_status_config
+    from backend.endpoints.autobuy.autobuy_config import get_config as _real_get_autobuy_config
+    from backend.modules.ai.ai_signals import signal_scorer
 
     def get_autobuy_config() -> Dict[str, Any]:
         cfg = _real_get_autobuy_config()
@@ -132,8 +132,8 @@ except ImportError as e:
         return {"config": {}}
 
 if TYPE_CHECKING:
-    from services.autobuy_service import AutobuyService as _AutobuyService  # type: ignore[unused-ignore]
-    from services.trading import TradingService as _TradingService  # type: ignore[unused-ignore]
+    from backend.services.autobuy_service import AutobuyService as _AutobuyService  # type: ignore[unused-ignore]
+    from backend.services.trading import TradingService as _TradingService  # type: ignore[unused-ignore]
 
 
 class PerformanceDict(TypedDict, total=False):
@@ -191,9 +191,9 @@ router = APIRouter()
 
 # Initialize real services
 try:
-    from services.redis_client import get_redis_client
-    from services.autobuy_service import AutobuyService as _RealAutobuyService  # noqa: F401
-    from services.trading import TradingService as _RealTradingService  # noqa: F401
+    from backend.services.redis_client import get_redis_client
+    from backend.services.autobuy_service import AutobuyService as _RealAutobuyService  # noqa: F401
+    from backend.services.trading import TradingService as _RealTradingService  # noqa: F401
 
     autobuy_service: AutobuyServiceProtocol = _RealAutobuyService()  # type: ignore[assignment]
     # Avoid NameError at runtime if type not available; instantiate without annotation
@@ -226,7 +226,7 @@ async def get_autobuy_config_endpoint() -> Dict[str, Any]:
         # Enabled exchanges via unified router
         enabled_exchanges: List[str] = []
         try:
-            from services.market_data_router import MarketDataRouter  # type: ignore[import-not-found]
+            from backend.services.market_data_router import MarketDataRouter  # type: ignore[import-not-found]
             _router = MarketDataRouter()
             enabled_exchanges = await _router.get_enabled_adapters()
             if "coingecko" not in enabled_exchanges:
@@ -580,3 +580,6 @@ async def autobuy_decision(symbol: str = "BTC-USD") -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error running autobuy decision: {e}")
         raise HTTPException(status_code=500, detail=f"Autobuy decision failed: {str(e)}")
+
+
+

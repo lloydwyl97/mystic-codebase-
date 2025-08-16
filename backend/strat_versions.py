@@ -1,4 +1,4 @@
-# strat_versions.py
+﻿# strat_versions.py
 """
 Strategy Versioning System for AI Trading
 Manages strategy versions, saves/loads configurations, and tracks evolution.
@@ -449,3 +449,5 @@ if __name__ == "__main__":
     print(f"Found {len(versions)} versions")
 
     print("Strategy versioning system test completed!")
+
+

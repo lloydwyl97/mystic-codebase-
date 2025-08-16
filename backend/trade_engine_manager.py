@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Unified Trade Decision Engine Manager
 Combines all three tiers of signals and makes trading decisions every 3-10 seconds
@@ -890,3 +890,5 @@ class TradeEngine:
 def get_trade_engine_manager(redis_client: Any) -> TradeEngineManager:
     """Get Trade Engine Manager instance"""
     return TradeEngineManager(redis_client)
+
+

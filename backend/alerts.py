@@ -1,4 +1,4 @@
-# alerts.py
+﻿# alerts.py
 import requests
 import os
 import logging
@@ -62,7 +62,7 @@ def alert_strategy_mutation(mutation_info: Dict[str, Any]) -> bool:
     Returns:
         bool: True if successful
     """
-    message = "🧬 **New Strategy Mutation Created!**\n"
+    message = "ðŸ§¬ **New Strategy Mutation Created!**\n"
     message += f"**Name:** {mutation_info['name']}\n"
     message += f"**Parent:** {mutation_info['parent_strategy']}\n"
     message += f"**Parent Win Rate:** {mutation_info['parent_win_rate']:.1%}\n"
@@ -106,7 +106,7 @@ def alert_strategy_deactivation(strategy_info: Dict[str, Any]) -> bool:
     Returns:
         bool: True if successful
     """
-    message = "💀 **Strategy Deactivated**\n"
+    message = "ðŸ’€ **Strategy Deactivated**\n"
     message += f"**Name:** {strategy_info['name']}\n"
     message += f"**Win Rate:** {strategy_info['win_rate']:.1%}\n"
     message += f"**Avg Profit:** {strategy_info['avg_profit']:.2f}\n"
@@ -150,8 +150,8 @@ def alert_trade_execution(trade_info: Dict[str, Any]) -> bool:
     Returns:
         bool: True if successful
     """
-    success_emoji = "✅" if trade_info.get("success", False) else "❌"
-    profit_emoji = "📈" if trade_info.get("profit", 0) > 0 else "📉"
+    success_emoji = "âœ…" if trade_info.get("success", False) else "âŒ"
+    profit_emoji = "ðŸ“ˆ" if trade_info.get("profit", 0) > 0 else "ðŸ“‰"
 
     message = f"{success_emoji} **Trade Executed**\n"
     message += f"**Coin:** {trade_info['coin']}\n"
@@ -194,7 +194,7 @@ def alert_trade_execution(trade_info: Dict[str, Any]) -> bool:
             },
             {
                 "name": "Success",
-                "value": ("✅ Yes" if trade_info.get("success", False) else "❌ No"),
+                "value": ("âœ… Yes" if trade_info.get("success", False) else "âŒ No"),
                 "inline": True,
             },
         ],
@@ -213,7 +213,7 @@ def alert_daily_summary(summary_data: Dict[str, Any]) -> bool:
     Returns:
         bool: True if successful
     """
-    message = "📊 **Daily Trading Summary**\n"
+    message = "ðŸ“Š **Daily Trading Summary**\n"
     message += f"**Total Trades:** {summary_data.get('total_trades', 0)}\n"
     message += f"**Win Rate:** {summary_data.get('win_rate', 0):.1%}\n"
     message += f"**Total Profit:** {summary_data.get('total_profit', 0):.2f}\n"
@@ -270,7 +270,7 @@ def alert_evolution_cycle(evolution_data: Dict[str, Any]) -> bool:
     Returns:
         bool: True if successful
     """
-    message = "🧬 **Evolution Cycle Completed**\n"
+    message = "ðŸ§¬ **Evolution Cycle Completed**\n"
     message += f"**New Strategies:** {evolution_data.get('total_new_strategies', 0)}\n"
     message += f"**Mutations:** {evolution_data.get('mutations_created', 0)}\n"
     message += f"**Crossovers:** {evolution_data.get('crossovers_created', 0)}\n"
@@ -331,7 +331,7 @@ def alert_system_health(health_data: Dict[str, Any]) -> bool:
         bool: True if successful
     """
     status = health_data.get("status", "unknown")
-    status_emoji = "✅" if status == "healthy" else "⚠️" if status == "warning" else "❌"
+    status_emoji = "âœ…" if status == "healthy" else "âš ï¸" if status == "warning" else "âŒ"
 
     message = f"{status_emoji} **System Health Check**\n"
     message += f"**Status:** {status.title()}\n"
@@ -384,7 +384,7 @@ def test_discord_connection() -> bool:
     Returns:
         bool: True if successful
     """
-    test_message = "🧪 **Discord Integration Test**\nThis is a test message from your Mystic AI Trading System."
+    test_message = "ðŸ§ª **Discord Integration Test**\nThis is a test message from your Mystic AI Trading System."
 
     success = send_discord_alert(test_message)
     if success:
@@ -393,3 +393,5 @@ def test_discord_connection() -> bool:
         logger.error("Discord connection test failed")
 
     return success
+
+

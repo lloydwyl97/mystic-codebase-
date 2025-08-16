@@ -1,4 +1,4 @@
-"""
+﻿"""
 Data Module for Mystic Trading Platform
 
 Contains all data-related functionality including market data,
@@ -15,3 +15,5 @@ __all__ = [
     "BinanceDataFetcher",
     "BinanceMarketData",
 ]
+
+

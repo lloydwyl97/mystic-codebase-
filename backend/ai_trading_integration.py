@@ -1,4 +1,4 @@
-import asyncio
+﻿import asyncio
 import logging
 from datetime import datetime
 
@@ -140,3 +140,5 @@ def analyze_trade_pattern(prices: list[float]) -> dict[str, str]:
     }
 
     return pattern
+
+

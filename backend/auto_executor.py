@@ -1,4 +1,4 @@
-import importlib.util
+﻿import importlib.util
 import os
 from datetime import datetime
 
@@ -125,3 +125,5 @@ if __name__ == "__main__":
             print(f"  - {file_name}: {result}")
     else:
         print("[EXECUTOR] No modules to execute")
+
+

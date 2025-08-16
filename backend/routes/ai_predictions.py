@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Predictions Endpoints
 Focused on AI price prediction functionality
 """
@@ -10,14 +10,14 @@ from typing import Any, Dict, List
 from fastapi import APIRouter, HTTPException
 
 # Import actual AI services
-from modules.ai.ai_signals import (
+from backend.modules.ai.ai_signals import (
     signal_scorer,
     risk_adjusted_signals,
     technical_signals,
 )
-from ai.ai_brains import trend_analysis
-from ai.ai_mystic import mystic_oracle
-from ai.poller import cache
+from backend.ai.ai_brains import trend_analysis
+from backend.ai.ai_mystic import mystic_oracle
+from backend.ai.poller import cache
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/ai", tags=["ai-predictions"])
@@ -180,7 +180,7 @@ async def get_market_trends() -> Dict[str, Any]:
             logger.warning(f"Mystic oracle not available: {e}")
 
         # Get market strength
-        from modules.ai.ai_signals import market_strength_signals
+        from backend.modules.ai.ai_signals import market_strength_signals
 
         market_strength = market_strength_signals()
 
@@ -193,3 +193,5 @@ async def get_market_trends() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting market trends: {e}")
         raise HTTPException(status_code=500, detail="Failed to get market trends")
+
+

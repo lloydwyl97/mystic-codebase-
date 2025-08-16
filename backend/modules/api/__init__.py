@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Module for Mystic Trading Platform
 
 Contains all API-related functionality including endpoints, routers, and API utilities.
@@ -37,3 +37,5 @@ __all__ = [
     "create_analytics_router",
     "create_social_router",
 ]
+
+

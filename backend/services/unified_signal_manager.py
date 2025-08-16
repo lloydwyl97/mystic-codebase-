@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unified Signal Manager Service
 Handles trading signals from multiple sources
 """
@@ -84,3 +84,5 @@ class UnifiedSignalManager:
 
 # Global instance
 unified_signal_manager = UnifiedSignalManager()
+
+

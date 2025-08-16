@@ -1,4 +1,4 @@
-"""
+﻿"""
 Binance Trading Service
 
 Provides real trading capabilities on Binance exchange.
@@ -475,3 +475,5 @@ def get_binance_trading_service(
     if binance_trading_service is None:
         binance_trading_service = BinanceTradingService(api_key, secret_key, testnet)
     return binance_trading_service
+
+

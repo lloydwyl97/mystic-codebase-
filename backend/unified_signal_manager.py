@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Unified Signal Manager
 Coordinates all three tiers of signal fetchers and provides central interface
@@ -413,3 +413,5 @@ if __name__ == "__main__":
         logger.info("Unified Signal Manager stopped by user")
     except Exception as e:
         logger.error(f"Fatal error: {e}")
+
+

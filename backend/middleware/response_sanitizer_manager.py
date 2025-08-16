@@ -1,4 +1,4 @@
-"""
+﻿"""
 Response Sanitizer Manager
 
 Handles response sanitization and data cleaning.
@@ -186,3 +186,5 @@ class ResponseSanitizer:
         except Exception as e:
             logger.error(f"Error sanitizing response: {str(e)}")
             return response
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Data Endpoints
 
 Handles all market-related API endpoints including prices, indicators, and cosmic signals.
@@ -114,3 +114,6 @@ async def get_coin_state() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error fetching coin state: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch coin state")
+
+
+

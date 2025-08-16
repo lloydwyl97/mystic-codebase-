@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Predictions Module
 =====================
 
@@ -15,7 +15,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 
-from utils.exceptions import AIException
+from backend.utils.exceptions import AIException
 
 logger = logging.getLogger(__name__)
 
@@ -392,3 +392,5 @@ class AIPredictor:
             ema[i] = alpha * prices[i] + (1 - alpha) * ema[i - 1]
 
         return ema
+
+

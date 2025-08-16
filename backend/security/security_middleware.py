@@ -1,4 +1,4 @@
-"""
+﻿"""
 Security Middleware for Mystic Trading Platform
 
 Integrates all security components:
@@ -325,3 +325,5 @@ class SecurityMonitor:
 security_middleware = SecurityMiddleware()
 security_decorator = SecurityDecorator(security_middleware)
 security_monitor = SecurityMonitor(security_middleware)
+
+

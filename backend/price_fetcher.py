@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Tier 1: Real-Time Price Fetcher
 Handles real-time signals every 10-15 seconds for autobuy/autosell decisions
@@ -382,3 +382,5 @@ class PriceFetcher:
             },
             "price_history_count": len(self.price_history),
         }
+
+

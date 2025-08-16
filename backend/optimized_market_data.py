@@ -1,4 +1,4 @@
-"""
+﻿"""
 Optimized Market Data Service for Mystic Trading Platform
 
 Combines database optimization and API throttling for high-performance
@@ -13,7 +13,7 @@ from typing import Any, Dict, Optional
 
 from api_throttler import api_throttler
 from database_optimized import optimized_db_manager
-from utils.exceptions import MarketDataException, handle_exception
+from backend.utils.exceptions import MarketDataException, handle_exception
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +73,7 @@ class OptimizedMarketDataService:
         # Initialize with conservative throttling
         api_throttler.set_throttle_level(api_throttler.throttle_level)
 
-        logger.info("✅ OptimizedMarketDataService initialized")
+        logger.info("âœ… OptimizedMarketDataService initialized")
 
     def _is_cache_valid(self, symbol: str) -> bool:
         """Check if cached data is still valid"""
@@ -315,7 +315,7 @@ class OptimizedMarketDataService:
         self.data_cache.clear()
         self.cache_timestamps.clear()
         optimized_db_manager.clear_cache()
-        logger.info("✅ All caches cleared")
+        logger.info("âœ… All caches cleared")
 
     def increase_throttling(self):
         """Increase API throttling"""
@@ -332,3 +332,5 @@ class OptimizedMarketDataService:
 
 # Global optimized market data service instance
 optimized_market_service = OptimizedMarketDataService()
+
+

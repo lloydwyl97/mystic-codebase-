@@ -1,4 +1,4 @@
-"""
+﻿"""
 Alerts - Discord + Telegram Live Push
 
 Sends real-time alerts to Discord and Telegram
@@ -34,13 +34,13 @@ async def send_discord(message: str) -> bool:
 
             async with session.post(DISCORD_WEBHOOK, json=payload) as resp:
                 if resp.status == 204:
-                    logger.debug("✅ Discord message sent")
+                    logger.debug("âœ… Discord message sent")
                     return True
                 else:
-                    logger.error(f"❌ Discord API error: {resp.status}")
+                    logger.error(f"âŒ Discord API error: {resp.status}")
                     return False
     except Exception as e:
-        logger.error(f"❌ Discord send error: {e}")
+        logger.error(f"âŒ Discord send error: {e}")
         return False
 
 
@@ -61,13 +61,13 @@ async def send_telegram(message: str) -> bool:
         async with aiohttp.ClientSession() as session:
             async with session.post(url, data=payload) as resp:
                 if resp.status == 200:
-                    logger.debug("✅ Telegram message sent")
+                    logger.debug("âœ… Telegram message sent")
                     return True
                 else:
-                    logger.error(f"❌ Telegram API error: {resp.status}")
+                    logger.error(f"âŒ Telegram API error: {resp.status}")
                     return False
     except Exception as e:
-        logger.error(f"❌ Telegram send error: {e}")
+        logger.error(f"âŒ Telegram send error: {e}")
         return False
 
 
@@ -78,13 +78,13 @@ async def broadcast_alert(message: str) -> bool:
         telegram_sent = await send_telegram(message)
 
         if discord_sent or telegram_sent:
-            logger.info(f"📢 Alert broadcast: {message[:50]}...")
+            logger.info(f"ðŸ“¢ Alert broadcast: {message[:50]}...")
             return True
         else:
-            logger.warning("⚠️ No alert channels configured")
+            logger.warning("âš ï¸ No alert channels configured")
             return False
     except Exception as e:
-        logger.error(f"❌ Broadcast error: {e}")
+        logger.error(f"âŒ Broadcast error: {e}")
         return False
 
 
@@ -99,7 +99,7 @@ async def send_trade_alert(
     try:
         if action == "BUY":
             message = (
-                f"🟢 **BUY ORDER**\n"
+                f"ðŸŸ¢ **BUY ORDER**\n"
                 f"Symbol: {symbol}\n"
                 f"Price: ${price:.4f}\n"
                 f"Amount: {amount:.4f}\n"
@@ -108,7 +108,7 @@ async def send_trade_alert(
         elif action == "SELL":
             pnl_text = f"P&L: {pnl:+.2f}%" if pnl is not None else ""
             message = (
-                f"🔴 **SELL ORDER**\n"
+                f"ðŸ”´ **SELL ORDER**\n"
                 f"Symbol: {symbol}\n"
                 f"Price: ${price:.4f}\n"
                 f"Amount: {amount:.4f}\n"
@@ -116,11 +116,11 @@ async def send_trade_alert(
                 f"{pnl_text}"
             )
         else:
-            message = f"⚪ **{action}**\n" f"Symbol: {symbol}\n" f"Price: ${price:.4f}"
+            message = f"âšª **{action}**\n" f"Symbol: {symbol}\n" f"Price: ${price:.4f}"
 
         await broadcast_alert(message)
     except Exception as e:
-        logger.error(f"❌ Trade alert error: {e}")
+        logger.error(f"âŒ Trade alert error: {e}")
 
 
 async def send_market_alert(alert_type: str, data: dict):
@@ -128,30 +128,30 @@ async def send_market_alert(alert_type: str, data: dict):
     try:
         if alert_type == "BREAKOUT":
             message = (
-                f"🚀 **BREAKOUT DETECTED**\n"
+                f"ðŸš€ **BREAKOUT DETECTED**\n"
                 f"Symbol: {data.get('symbol', 'Unknown')}\n"
                 f"Change: {data.get('change', 0):.2f}%\n"
                 f"Price: ${data.get('price', 0):.4f}"
             )
         elif alert_type == "PUMP":
             message = (
-                f"💥 **PUMP DETECTED**\n"
+                f"ðŸ’¥ **PUMP DETECTED**\n"
                 f"Symbol: {data.get('symbol', 'Unknown')}\n"
                 f"Volume: ${data.get('volume', 0):,.0f}\n"
                 f"Rank: #{data.get('rank', 0)}"
             )
         elif alert_type == "MYSTIC":
             message = (
-                f"🔮 **MYSTIC SIGNAL**\n"
+                f"ðŸ”® **MYSTIC SIGNAL**\n"
                 f"Message: {data.get('message', 'Unknown')}\n"
                 f"Confidence: {data.get('confidence', 0)}%"
             )
         else:
-            message = f"📊 **{alert_type}**\n" f"Data: {str(data)[:100]}..."
+            message = f"ðŸ“Š **{alert_type}**\n" f"Data: {str(data)[:100]}..."
 
         await broadcast_alert(message)
     except Exception as e:
-        logger.error(f"❌ Market alert error: {e}")
+        logger.error(f"âŒ Market alert error: {e}")
 
 
 def get_alert_status() -> dict:
@@ -161,3 +161,5 @@ def get_alert_status() -> dict:
         "telegram_configured": bool(TELEGRAM_TOKEN and TELEGRAM_CHAT_ID),
         "total_channels": sum([bool(DISCORD_WEBHOOK), bool(TELEGRAM_TOKEN and TELEGRAM_CHAT_ID)]),
     }
+
+

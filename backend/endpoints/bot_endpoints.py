@@ -1,4 +1,4 @@
-"""
+﻿"""
 Bot Management Endpoints
 
 Handles all bot-related API endpoints including creation, management, and control.
@@ -91,3 +91,6 @@ async def stop_bot(bot_id: str) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error stopping bot {bot_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to stop bot")
+
+
+

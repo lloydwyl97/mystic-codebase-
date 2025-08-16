@@ -1,4 +1,4 @@
-"""
+﻿"""
 Mystic Signals Endpoints
 Focused on mystic signal generation and management
 """
@@ -21,7 +21,7 @@ async def get_mystic_signals() -> List[Dict[str, Any]]:
         # Get symbols dynamically from exchange APIs
         symbols = []
         try:
-            from services.live_market_data import live_market_data_service
+            from backend.services.live_market_data import live_market_data_service
 
             market_data = await live_market_data_service.get_market_data(
                 currency="usd", per_page=10
@@ -66,3 +66,5 @@ async def execute_mystic_signal(data: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error executing mystic signal: {e}")
         raise HTTPException(status_code=500, detail="Failed to execute mystic signal")
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Analytics Engine for Mystic Trading Platform
 
 Contains analytics and reporting logic for trading performance.
@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import pandas as pd
 
-from utils.exceptions import AnalyticsException
+from backend.utils.exceptions import AnalyticsException
 
 logger = logging.getLogger(__name__)
 
@@ -1006,3 +1006,5 @@ class AnalyticsEngine:
 
         # In a real implementation, this would validate and store the data
         return True
+
+

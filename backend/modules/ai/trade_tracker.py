@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trade Tracker Module
 
 Provides functions for tracking trades, history, and summaries.
@@ -33,7 +33,7 @@ def get_trade_summary() -> Dict[str, Any]:
     """Get trade summary"""
     try:
         # Import from ai.ai_signals where it's actually defined
-        from ai.ai_signals import get_trade_summary as ai_get_trade_summary
+        from backend.ai.ai_signals import get_trade_summary as ai_get_trade_summary
         return ai_get_trade_summary()
     except ImportError:
         logger.warning("ai.ai_signals.get_trade_summary not available")
@@ -57,3 +57,5 @@ def get_trade_summary() -> Dict[str, Any]:
             "average_profit": 0.0,
             "error": f"Trade summary error: {str(e)}"
         }
+
+

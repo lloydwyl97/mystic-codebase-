@@ -1,4 +1,4 @@
-"""
+﻿"""
 WebSocket Routes for Mystic Trading
 
 Handles WebSocket connections for real-time data streaming.
@@ -15,14 +15,14 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 try:
     from app_config import slowapi_limiter
-    from services.websocket_manager import get_websocket_manager
+    from backend.services.websocket_manager import get_websocket_manager
 except ImportError:
-    from services.websocket_manager import get_websocket_manager
+    from backend.services.websocket_manager import get_websocket_manager
 
     slowapi_limiter = None
 
-from services.notification import get_notification_service
-from services.service_manager import service_manager
+from backend.services.notification import get_notification_service
+from backend.services.service_manager import service_manager
 
 # Get logger
 logger = logging.getLogger("mystic.websocket")
@@ -309,3 +309,5 @@ async def websocket_ai_signals(websocket: WebSocket):
     except Exception as e:
         logger.error(f"WebSocket AI signals error: {str(e)}")
         await websocket.close()
+
+

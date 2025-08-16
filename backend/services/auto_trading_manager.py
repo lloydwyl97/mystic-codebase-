@@ -1,4 +1,4 @@
-"""
+﻿"""
 Auto Trading Manager Service
 Handles automated trading operations
 """
@@ -100,3 +100,5 @@ class AutoTradingManager:
 
 # Global instance
 auto_trading_manager = AutoTradingManager()
+
+

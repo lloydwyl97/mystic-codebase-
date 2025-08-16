@@ -1,4 +1,4 @@
-"""
+﻿"""
 Social Trading Features
 
 Includes copy trading, leaderboards, social features, and community trading.
@@ -499,49 +499,49 @@ class AchievementSystem:
             "first_trade": {
                 "name": "First Trade",
                 "description": "Complete your first trade",
-                "icon": "🎯",
+                "icon": "ðŸŽ¯",
                 "points": 10,
             },
             "profit_master": {
                 "name": "Profit Master",
                 "description": "Achieve 100% profit",
-                "icon": "💰",
+                "icon": "ðŸ’°",
                 "points": 50,
             },
             "winning_streak": {
                 "name": "Winning Streak",
                 "description": "Win 10 trades in a row",
-                "icon": "🔥",
+                "icon": "ðŸ”¥",
                 "points": 100,
             },
             "social_butterfly": {
                 "name": "Social Butterfly",
                 "description": "Gain 100 followers",
-                "icon": "🦋",
+                "icon": "ðŸ¦‹",
                 "points": 25,
             },
             "copy_trader": {
                 "name": "Copy Trader",
                 "description": "Copy your first trade",
-                "icon": "📋",
+                "icon": "ðŸ“‹",
                 "points": 15,
             },
             "risk_manager": {
                 "name": "Risk Manager",
                 "description": "Maintain positive PnL for 30 days",
-                "icon": "🛡️",
+                "icon": "ðŸ›¡ï¸",
                 "points": 75,
             },
             "volume_king": {
                 "name": "Volume King",
                 "description": "Trade $100,000 in volume",
-                "icon": "📊",
+                "icon": "ðŸ“Š",
                 "points": 200,
             },
             "diamond_hands": {
                 "name": "Diamond Hands",
                 "description": "Hold a position for 30 days",
-                "icon": "💎",
+                "icon": "ðŸ’Ž",
                 "points": 30,
             },
         }
@@ -613,3 +613,5 @@ class AchievementSystem:
 social_trading_manager = SocialTradingManager()
 leaderboard_manager = LeaderboardManager()
 achievement_system = AchievementSystem()
+
+

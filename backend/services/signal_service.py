@@ -1,4 +1,4 @@
-"""
+﻿"""
 Signal Service
 
 Handles trading signals and signal-related operations.
@@ -108,3 +108,5 @@ signal_service = SignalService()
 def get_signal_service() -> SignalService:
     """Get the signal service instance"""
     return signal_service
+
+

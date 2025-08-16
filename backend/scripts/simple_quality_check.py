@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Simple Code Quality Check for Mystic Trading Platform
 
@@ -34,7 +34,7 @@ class SimpleQualityChecker:
         self.results: List[QualityResult] = []
         self.start_time = time.time()
 
-        print("🔍 Mystic Trading Platform - Simple Quality Check")
+        print("ðŸ” Mystic Trading Platform - Simple Quality Check")
         print("=" * 50)
 
     def run_command(self, cmd: List[str]) -> subprocess.CompletedProcess:
@@ -58,7 +58,7 @@ class SimpleQualityChecker:
 
     def check_black(self) -> QualityResult:
         """Check code formatting with black"""
-        print("🎨 Checking code formatting (black)...")
+        print("ðŸŽ¨ Checking code formatting (black)...")
         start_time = time.time()
 
         result = self.run_command(
@@ -84,7 +84,7 @@ class SimpleQualityChecker:
 
     def check_isort(self) -> QualityResult:
         """Check import sorting with isort"""
-        print("📦 Checking import sorting (isort)...")
+        print("ðŸ“¦ Checking import sorting (isort)...")
         start_time = time.time()
 
         result = self.run_command(
@@ -110,7 +110,7 @@ class SimpleQualityChecker:
 
     def check_flake8(self) -> QualityResult:
         """Check code style with flake8"""
-        print("🔍 Checking code style (flake8)...")
+        print("ðŸ” Checking code style (flake8)...")
         start_time = time.time()
 
         result = self.run_command(
@@ -143,7 +143,7 @@ class SimpleQualityChecker:
 
     def check_bandit(self) -> QualityResult:
         """Check security with bandit"""
-        print("🔒 Checking security (bandit)...")
+        print("ðŸ”’ Checking security (bandit)...")
         start_time = time.time()
 
         result = self.run_command(
@@ -197,7 +197,7 @@ class SimpleQualityChecker:
 
     def check_vulture(self) -> QualityResult:
         """Check for dead code with vulture"""
-        print("💀 Checking for dead code (vulture)...")
+        print("ðŸ’€ Checking for dead code (vulture)...")
         start_time = time.time()
 
         result = self.run_command([sys.executable, "-m", "vulture", ".", "--min-confidence", "80"])
@@ -218,7 +218,7 @@ class SimpleQualityChecker:
 
     def check_optimization_tests(self) -> QualityResult:
         """Run optimization tests"""
-        print("🧪 Running optimization tests...")
+        print("ðŸ§ª Running optimization tests...")
         start_time = time.time()
 
         result = self.run_command([sys.executable, "test_optimizations.py"])
@@ -249,7 +249,7 @@ class SimpleQualityChecker:
                 result = check()
                 self.results.append(result)
 
-                status = "✅ PASS" if result.success else "❌ FAIL"
+                status = "âœ… PASS" if result.success else "âŒ FAIL"
                 print(f"   {status} ({result.duration:.2f}s)")
 
                 if not result.success and result.output:
@@ -260,7 +260,7 @@ class SimpleQualityChecker:
                             print(f"   {line[:100]}...")
 
             except Exception as e:
-                print(f"   ❌ ERROR: {e}")
+                print(f"   âŒ ERROR: {e}")
                 self.results.append(
                     QualityResult(tool=check.__name__, success=False, output=str(e))
                 )
@@ -279,28 +279,28 @@ class SimpleQualityChecker:
 
         # Determine overall status
         if failed == 0:
-            overall_status = "✅ EXCELLENT"
+            overall_status = "âœ… EXCELLENT"
         elif failed <= 2:
-            overall_status = "⚠️  GOOD"
+            overall_status = "âš ï¸  GOOD"
         elif failed <= 3:
-            overall_status = "⚠️  NEEDS IMPROVEMENT"
+            overall_status = "âš ï¸  NEEDS IMPROVEMENT"
         else:
-            overall_status = "❌ POOR"
+            overall_status = "âŒ POOR"
 
         print("\n" + "=" * 50)
-        print("📊 QUALITY CHECK SUMMARY")
+        print("ðŸ“Š QUALITY CHECK SUMMARY")
         print("=" * 50)
         print(f"Overall Status: {overall_status}")
         print(f"Total Checks: {len(self.results)}")
-        print(f"Passed: {passed} ✅")
-        print(f"Failed: {failed} ❌")
+        print(f"Passed: {passed} âœ…")
+        print(f"Failed: {failed} âŒ")
         print(f"Total Errors: {total_errors}")
         print(f"Total Warnings: {total_warnings}")
         print(f"Total Time: {total_time:.2f}s")
 
-        print("\n📋 Detailed Results:")
+        print("\nðŸ“‹ Detailed Results:")
         for result in self.results:
-            status = "✅ PASS" if result.success else "❌ FAIL"
+            status = "âœ… PASS" if result.success else "âŒ FAIL"
             print(f"  {result.tool:<20} {status}")
             if result.error_count > 0:
                 print(f"    Errors: {result.error_count}")
@@ -325,3 +325,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

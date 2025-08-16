@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Strategy Generator Service
 Advanced neural network-based strategy generation and signal optimization
 """
@@ -147,7 +147,7 @@ class AIStrategyGenerator:
 
     async def start(self):
         """Start the AI Strategy Generator"""
-        print("🚀 Starting AI Strategy Generator...")
+        print("ðŸš€ Starting AI Strategy Generator...")
         self.running = True
 
         # Start strategy generation
@@ -155,7 +155,7 @@ class AIStrategyGenerator:
 
     async def generate_strategies(self):
         """Generate AI strategies continuously"""
-        print("🧠 Starting AI strategy generation...")
+        print("ðŸ§  Starting AI strategy generation...")
 
         while self.running:
             try:
@@ -172,7 +172,7 @@ class AIStrategyGenerator:
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in strategy generation: {e}")
+                print(f"âŒ Error in strategy generation: {e}")
                 await asyncio.sleep(600)
 
     async def process_strategy_request(self, request_data: Dict[str, Any]):
@@ -182,7 +182,7 @@ class AIStrategyGenerator:
             symbol = request_data.get("symbol", "BTC/USDT")
             parameters = request_data.get("parameters", {})
 
-            print(f"🎯 Generating {strategy_type} strategy for {symbol}")
+            print(f"ðŸŽ¯ Generating {strategy_type} strategy for {symbol}")
 
             # Generate strategy
             strategy = await self.create_ai_strategy(strategy_type, symbol, parameters)
@@ -194,10 +194,10 @@ class AIStrategyGenerator:
                 # Publish strategy
                 await self.publish_strategy(strategy)
 
-                print(f"✅ Generated strategy: {strategy['id']}")
+                print(f"âœ… Generated strategy: {strategy['id']}")
 
         except Exception as e:
-            print(f"❌ Error processing strategy request: {e}")
+            print(f"âŒ Error processing strategy request: {e}")
 
     async def generate_periodic_strategies(self):
         """Generate strategies periodically"""
@@ -213,10 +213,10 @@ class AIStrategyGenerator:
                         if strategy:
                             await self.store_strategy(strategy)
                             await self.publish_strategy(strategy)
-                            print(f"✅ Generated periodic strategy: {strategy['id']}")
+                            print(f"âœ… Generated periodic strategy: {strategy['id']}")
 
         except Exception as e:
-            print(f"❌ Error in periodic strategy generation: {e}")
+            print(f"âŒ Error in periodic strategy generation: {e}")
 
     async def create_ai_strategy(
         self,
@@ -274,7 +274,7 @@ class AIStrategyGenerator:
             return strategy
 
         except Exception as e:
-            print(f"❌ Error creating AI strategy: {e}")
+            print(f"âŒ Error creating AI strategy: {e}")
             return None
 
     async def get_historical_data(self, symbol: str) -> pd.DataFrame:
@@ -516,7 +516,7 @@ class AIStrategyGenerator:
             # Save scaler
             joblib.dump(scaler, strategy["scaler_path"])
 
-            print(f"✅ Saved model: {strategy['model_path']}")
+            print(f"âœ… Saved model: {strategy['model_path']}")
 
         except Exception as e:
             print(f"Error saving model: {e}")
@@ -593,7 +593,7 @@ class AIStrategyGenerator:
 
     async def stop(self):
         """Stop the AI Strategy Generator"""
-        print("🛑 Stopping AI Strategy Generator...")
+        print("ðŸ›‘ Stopping AI Strategy Generator...")
         self.running = False
 
 
@@ -606,7 +606,7 @@ async def main():
         try:
             await generator.start()
         except Exception as e:
-            print(f"❌ Error in strategy generator: {e}")
+            print(f"âŒ Error in strategy generator: {e}")
 
     # Create background task
     background_task = asyncio.create_task(run_generator())
@@ -621,9 +621,9 @@ async def main():
     try:
         await server.serve()
     except KeyboardInterrupt:
-        print("🛑 Received interrupt signal")
+        print("ðŸ›‘ Received interrupt signal")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
     finally:
         await generator.stop()
         background_task.cancel()
@@ -635,3 +635,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

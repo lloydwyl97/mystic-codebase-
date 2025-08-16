@@ -1,4 +1,4 @@
-"""
+﻿"""
 Logging Manager for Mystic Trading
 
 Provides centralized logging configuration and management.
@@ -241,3 +241,5 @@ logging_manager = LoggingManager()
 def get_logging_manager():
     """Get the global logging manager instance"""
     return logging_manager
+
+

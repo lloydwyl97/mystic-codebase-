@@ -1,4 +1,4 @@
-class TradeMemory:
+﻿class TradeMemory:
     """
     In-memory trade state manager for live trading.
     Stores, updates, and retrieves open/closed trades.
@@ -33,3 +33,5 @@ class TradeMemory:
         self.trades.clear()
         self.open_trades.clear()
         self.closed_trades.clear()
+
+

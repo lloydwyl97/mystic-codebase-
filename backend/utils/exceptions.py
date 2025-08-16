@@ -1,4 +1,4 @@
-"""
+﻿"""
 Standardized Exception Handling for Mystic Trading Platform
 
 Provides consistent exception handling across the entire application.
@@ -514,3 +514,5 @@ async def safe_async_execute(func: Callable, *args, **kwargs) -> Union[Any, Myst
             details={"function": func.__name__},
             original_exception=e,
         )
+
+

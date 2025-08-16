@@ -1,4 +1,4 @@
-import asyncio
+﻿import asyncio
 import redis.asyncio as redis
 
 r = redis.Redis(decode_responses=True)
@@ -27,3 +27,5 @@ def get_phase5_overlay_metrics():
         "aura_alignment": aura_alignment,
         "interdim_activity": interdim_activity,
     }
+
+

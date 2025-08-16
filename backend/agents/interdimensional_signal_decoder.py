@@ -1,4 +1,4 @@
-"""
+﻿"""
 Interdimensional Signal Decoder
 Decodes non-linear market signatures, harmonics, and fractal signal structures
 from quantum fluctuations, AI dream states, and cosmic web oscillations
@@ -18,7 +18,7 @@ from scipy.signal import hilbert, cwt
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agents.base_agent import BaseAgent
+from backend.agents.base_agent import BaseAgent
 
 
 class InterdimensionalSignalDecoder(BaseAgent):
@@ -77,7 +77,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
         self.register_handler("analyze_fractals", self.handle_analyze_fractals)
         self.register_handler("quantum_correlation", self.handle_quantum_correlation)
 
-        print(f"🔮 Interdimensional Signal Decoder {agent_id} initialized")
+        print(f"ðŸ”® Interdimensional Signal Decoder {agent_id} initialized")
 
     async def initialize(self):
         """Initialize interdimensional signal decoder resources"""
@@ -91,10 +91,10 @@ class InterdimensionalSignalDecoder(BaseAgent):
             # Start signal monitoring
             await self.start_signal_monitoring()
 
-            print(f"✅ Interdimensional Signal Decoder {self.agent_id} initialized successfully")
+            print(f"âœ… Interdimensional Signal Decoder {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Interdimensional Signal Decoder: {e}")
+            print(f"âŒ Error initializing Interdimensional Signal Decoder: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -122,7 +122,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                 await asyncio.sleep(60)  # Check every minute
 
             except Exception as e:
-                print(f"❌ Error in signal decoding processing loop: {e}")
+                print(f"âŒ Error in signal decoding processing loop: {e}")
                 await asyncio.sleep(120)
 
     async def load_signal_config(self):
@@ -138,10 +138,10 @@ class InterdimensionalSignalDecoder(BaseAgent):
             if frequency_bands_data:
                 self.frequency_bands.update(json.loads(frequency_bands_data))
 
-            print("📋 Signal processing configuration loaded")
+            print("ðŸ“‹ Signal processing configuration loaded")
 
         except Exception as e:
-            print(f"❌ Error loading signal configuration: {e}")
+            print(f"âŒ Error loading signal configuration: {e}")
 
     async def initialize_signal_algorithms(self):
         """Initialize signal processing algorithms"""
@@ -155,10 +155,10 @@ class InterdimensionalSignalDecoder(BaseAgent):
             # Initialize Hilbert transform parameters
             self.hilbert_window = self.signal_params["hilbert_window"]
 
-            print("🧠 Signal processing algorithms initialized")
+            print("ðŸ§  Signal processing algorithms initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing signal algorithms: {e}")
+            print(f"âŒ Error initializing signal algorithms: {e}")
 
     async def start_signal_monitoring(self):
         """Start signal monitoring"""
@@ -172,10 +172,10 @@ class InterdimensionalSignalDecoder(BaseAgent):
             # Start signal data listener
             asyncio.create_task(self.listen_signal_data(pubsub))
 
-            print("📡 Signal monitoring started")
+            print("ðŸ“¡ Signal monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting signal monitoring: {e}")
+            print(f"âŒ Error starting signal monitoring: {e}")
 
     async def listen_signal_data(self, pubsub):
         """Listen for signal data updates"""
@@ -189,7 +189,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                     await self.process_signal_data(data)
 
         except Exception as e:
-            print(f"❌ Error in signal data listener: {e}")
+            print(f"âŒ Error in signal data listener: {e}")
         finally:
             pubsub.close()
 
@@ -206,7 +206,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                 await self.process_cosmic_signals(data)
 
         except Exception as e:
-            print(f"❌ Error processing signal data: {e}")
+            print(f"âŒ Error processing signal data: {e}")
 
     async def process_market_signals(self, market_data: Dict[str, Any]):
         """Process market signals for interdimensional analysis"""
@@ -240,7 +240,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             self.redis_client.set(cache_key, json.dumps(signal_result), ex=1800)
 
         except Exception as e:
-            print(f"❌ Error processing market signals: {e}")
+            print(f"âŒ Error processing market signals: {e}")
 
     async def process_quantum_signals(self, quantum_data: Dict[str, Any]):
         """Process quantum signals for interdimensional analysis"""
@@ -256,7 +256,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                 self.state["quantum_correlations"][datetime.now().isoformat()] = quantum_analysis
 
         except Exception as e:
-            print(f"❌ Error processing quantum signals: {e}")
+            print(f"âŒ Error processing quantum signals: {e}")
 
     async def process_cosmic_signals(self, cosmic_data: Dict[str, Any]):
         """Process cosmic signals for interdimensional analysis"""
@@ -277,7 +277,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             self.state["cosmic_oscillations"][datetime.now().isoformat()] = cosmic_analysis
 
         except Exception as e:
-            print(f"❌ Error processing cosmic signals: {e}")
+            print(f"âŒ Error processing cosmic signals: {e}")
 
     async def apply_fft_analysis(self, data: np.ndarray) -> Dict[str, Any]:
         """Apply Fast Fourier Transform analysis"""
@@ -322,7 +322,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error in FFT analysis: {e}")
+            print(f"âŒ Error in FFT analysis: {e}")
             return {}
 
     async def apply_wavelet_analysis(self, data: np.ndarray) -> Dict[str, Any]:
@@ -349,7 +349,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error in wavelet analysis: {e}")
+            print(f"âŒ Error in wavelet analysis: {e}")
             return {}
 
     async def apply_hilbert_analysis(self, data: np.ndarray) -> Dict[str, Any]:
@@ -376,7 +376,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error in Hilbert analysis: {e}")
+            print(f"âŒ Error in Hilbert analysis: {e}")
             return {}
 
     async def analyze_quantum_fluctuations(self, quantum_state: Dict[str, Any]) -> Dict[str, Any]:
@@ -405,13 +405,13 @@ class InterdimensionalSignalDecoder(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error analyzing quantum fluctuations: {e}")
+            print(f"âŒ Error analyzing quantum fluctuations: {e}")
             return {}
 
     async def collect_and_decode_signals(self):
         """Collect and decode interdimensional signals"""
         try:
-            print("🔮 Collecting and decoding interdimensional signals...")
+            print("ðŸ”® Collecting and decoding interdimensional signals...")
 
             # Collect signals from various sources
             market_signals = await self.collect_market_signals()
@@ -431,10 +431,10 @@ class InterdimensionalSignalDecoder(BaseAgent):
             self.state["decoding_count"] += 1
             self.state["last_decoding"] = datetime.now().isoformat()
 
-            print(f"✅ Decoded {len(decoded_signals)} interdimensional signals")
+            print(f"âœ… Decoded {len(decoded_signals)} interdimensional signals")
 
         except Exception as e:
-            print(f"❌ Error collecting and decoding signals: {e}")
+            print(f"âŒ Error collecting and decoding signals: {e}")
 
     async def collect_market_signals(self) -> List[Dict[str, Any]]:
         """Collect market signals from Redis"""
@@ -451,7 +451,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return signals
 
         except Exception as e:
-            print(f"❌ Error collecting market signals: {e}")
+            print(f"âŒ Error collecting market signals: {e}")
             return []
 
     async def collect_quantum_signals(self) -> List[Dict[str, Any]]:
@@ -469,7 +469,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return signals
 
         except Exception as e:
-            print(f"❌ Error collecting quantum signals: {e}")
+            print(f"âŒ Error collecting quantum signals: {e}")
             return []
 
     async def collect_cosmic_signals(self) -> List[Dict[str, Any]]:
@@ -487,7 +487,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return signals
 
         except Exception as e:
-            print(f"❌ Error collecting cosmic signals: {e}")
+            print(f"âŒ Error collecting cosmic signals: {e}")
             return []
 
     async def decode_combined_signals(
@@ -522,7 +522,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error decoding combined signals: {e}")
+            print(f"âŒ Error decoding combined signals: {e}")
             return {"error": str(e), "timestamp": datetime.now().isoformat()}
 
     async def extract_signal_features(self, signals: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -555,7 +555,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return features
 
         except Exception as e:
-            print(f"❌ Error extracting signal features: {e}")
+            print(f"âŒ Error extracting signal features: {e}")
             return {}
 
     async def apply_interdimensional_analysis(self, features: Dict[str, Any]) -> Dict[str, Any]:
@@ -590,7 +590,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return analysis
 
         except Exception as e:
-            print(f"❌ Error applying interdimensional analysis: {e}")
+            print(f"âŒ Error applying interdimensional analysis: {e}")
             return {}
 
     async def generate_signal_insights(self, analysis: Dict[str, Any]) -> List[str]:
@@ -617,7 +617,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return insights
 
         except Exception as e:
-            print(f"❌ Error generating signal insights: {e}")
+            print(f"âŒ Error generating signal insights: {e}")
             return []
 
     async def extract_harmonic_signatures(self):
@@ -637,7 +637,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             self.redis_client.set("harmonic_signatures", json.dumps(harmonic_signatures), ex=3600)
 
         except Exception as e:
-            print(f"❌ Error extracting harmonic signatures: {e}")
+            print(f"âŒ Error extracting harmonic signatures: {e}")
 
     async def analyze_harmonic_patterns(self, signals: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze harmonic patterns in signals"""
@@ -670,7 +670,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return patterns
 
         except Exception as e:
-            print(f"❌ Error analyzing harmonic patterns: {e}")
+            print(f"âŒ Error analyzing harmonic patterns: {e}")
             return {}
 
     async def analyze_fractal_patterns(self):
@@ -690,7 +690,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             self.redis_client.set("fractal_patterns", json.dumps(fractal_patterns), ex=3600)
 
         except Exception as e:
-            print(f"❌ Error analyzing fractal patterns: {e}")
+            print(f"âŒ Error analyzing fractal patterns: {e}")
 
     async def analyze_fractal_structures(self, signals: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze fractal structures in signals"""
@@ -717,7 +717,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return structures
 
         except Exception as e:
-            print(f"❌ Error analyzing fractal structures: {e}")
+            print(f"âŒ Error analyzing fractal structures: {e}")
             return {}
 
     async def process_quantum_correlations(self):
@@ -740,7 +740,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             )
 
         except Exception as e:
-            print(f"❌ Error processing quantum correlations: {e}")
+            print(f"âŒ Error processing quantum correlations: {e}")
 
     async def analyze_quantum_correlations(
         self, correlations: List[Dict[str, Any]]
@@ -770,7 +770,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return analysis
 
         except Exception as e:
-            print(f"❌ Error analyzing quantum correlations: {e}")
+            print(f"âŒ Error analyzing quantum correlations: {e}")
             return {}
 
     async def update_cosmic_oscillations(self):
@@ -793,7 +793,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             )
 
         except Exception as e:
-            print(f"❌ Error updating cosmic oscillations: {e}")
+            print(f"âŒ Error updating cosmic oscillations: {e}")
 
     async def analyze_cosmic_oscillations(
         self, oscillations: List[Dict[str, Any]]
@@ -825,7 +825,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return analysis
 
         except Exception as e:
-            print(f"❌ Error analyzing cosmic oscillations: {e}")
+            print(f"âŒ Error analyzing cosmic oscillations: {e}")
             return {}
 
     async def cleanup_cache(self):
@@ -856,7 +856,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                     del self.state["cosmic_oscillations"][key]
 
         except Exception as e:
-            print(f"❌ Error cleaning up cache: {e}")
+            print(f"âŒ Error cleaning up cache: {e}")
 
     async def handle_decode_signals(self, message: Dict[str, Any]):
         """Handle manual signal decoding request"""
@@ -864,7 +864,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             signal_type = message.get("signal_type", "all")
             symbols = message.get("symbols", [])
 
-            print(f"🔮 Manual signal decoding requested for {signal_type}")
+            print(f"ðŸ”® Manual signal decoding requested for {signal_type}")
 
             # Perform signal decoding
             decoded_signals = await self.decode_signals_by_type(signal_type, symbols)
@@ -883,7 +883,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling signal decoding request: {e}")
+            print(f"âŒ Error handling signal decoding request: {e}")
             await self.broadcast_error(f"Signal decoding error: {e}")
 
     async def decode_signals_by_type(self, signal_type: str, symbols: List[str]) -> Dict[str, Any]:
@@ -910,7 +910,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return decoded_signals
 
         except Exception as e:
-            print(f"❌ Error decoding signals by type: {e}")
+            print(f"âŒ Error decoding signals by type: {e}")
             return {}
 
     async def handle_extract_harmonics(self, message: Dict[str, Any]):
@@ -918,7 +918,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
         try:
             signal_data = message.get("signal_data", {})
 
-            print("🎵 Harmonic extraction requested")
+            print("ðŸŽµ Harmonic extraction requested")
 
             # Extract harmonics
             harmonics = await self.extract_harmonics_from_signals(signal_data)
@@ -935,7 +935,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling harmonic extraction request: {e}")
+            print(f"âŒ Error handling harmonic extraction request: {e}")
             await self.broadcast_error(f"Harmonic extraction error: {e}")
 
     async def extract_harmonics_from_signals(self, signal_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -971,7 +971,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return harmonics
 
         except Exception as e:
-            print(f"❌ Error extracting harmonics from signals: {e}")
+            print(f"âŒ Error extracting harmonics from signals: {e}")
             return {}
 
     async def handle_analyze_fractals(self, message: Dict[str, Any]):
@@ -979,7 +979,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
         try:
             signal_data = message.get("signal_data", {})
 
-            print("🔺 Fractal analysis requested")
+            print("ðŸ”º Fractal analysis requested")
 
             # Analyze fractals
             fractals = await self.analyze_fractals_in_signals(signal_data)
@@ -996,7 +996,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling fractal analysis request: {e}")
+            print(f"âŒ Error handling fractal analysis request: {e}")
             await self.broadcast_error(f"Fractal analysis error: {e}")
 
     async def analyze_fractals_in_signals(self, signal_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -1024,7 +1024,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
             return fractals
 
         except Exception as e:
-            print(f"❌ Error analyzing fractals in signals: {e}")
+            print(f"âŒ Error analyzing fractals in signals: {e}")
             return {}
 
     async def handle_quantum_correlation(self, message: Dict[str, Any]):
@@ -1032,7 +1032,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
         try:
             quantum_data = message.get("quantum_data", {})
 
-            print("⚛️ Quantum correlation analysis requested")
+            print("âš›ï¸ Quantum correlation analysis requested")
 
             # Analyze quantum correlations
             correlations = await self.analyze_quantum_correlations([quantum_data])
@@ -1049,7 +1049,7 @@ class InterdimensionalSignalDecoder(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling quantum correlation request: {e}")
+            print(f"âŒ Error handling quantum correlation request: {e}")
             await self.broadcast_error(f"Quantum correlation error: {e}")
 
     async def update_signal_metrics(self):
@@ -1072,10 +1072,12 @@ class InterdimensionalSignalDecoder(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating signal metrics: {e}")
+            print(f"âŒ Error updating signal metrics: {e}")
 
 
 if __name__ == "__main__":
     # Run the agent
     decoder = InterdimensionalSignalDecoder()
     asyncio.run(decoder.start())
+
+

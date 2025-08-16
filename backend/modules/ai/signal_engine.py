@@ -1,4 +1,4 @@
-"""
+﻿"""
 Signal Engine for Mystic AI Trading Platform
 Generates trading signals using technical indicators and machine learning.
 """
@@ -14,7 +14,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ class SignalEngine:
         self.rsi_overbought = 70
         self.min_confidence = 0.6
 
-        logger.info("✅ SignalEngine initialized")
+        logger.info("âœ… SignalEngine initialized")
 
     def _get_ohlcv_data(self, symbol: str, limit: int = 200) -> Optional[pd.DataFrame]:
         """Get OHLCV data from cache and convert to DataFrame"""
@@ -211,7 +211,7 @@ class SignalEngine:
 
             # Train model
             self.ml_model.fit(features_scaled, labels)
-            logger.info(f"✅ ML model trained for {symbol}")
+            logger.info(f"âœ… ML model trained for {symbol}")
             return True
 
         except Exception as e:
@@ -436,7 +436,7 @@ def get_signal_engine() -> SignalEngine:
 if __name__ == "__main__":
     # Test the signal engine
     engine = SignalEngine()
-    print(f"✅ SignalEngine initialized: {engine}")
+    print(f"âœ… SignalEngine initialized: {engine}")
 
     # Test signal generation
     signal = engine.get_signal('coinbase', 'BTC-USD')
@@ -447,3 +447,5 @@ if __name__ == "__main__":
     print(f"Service status: {status['status']}")
     print(f"Sklearn available: {status['sklearn_available']}")
     print(f"ML model trained: {status['ml_model_trained']}")
+
+

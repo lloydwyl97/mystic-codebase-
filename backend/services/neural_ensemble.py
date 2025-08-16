@@ -1,4 +1,4 @@
-"""
+﻿"""
 Neural Network Ensemble with Attention Mechanisms
 Advanced AI system focusing on important signals and adapting to market conditions
 """
@@ -468,3 +468,5 @@ class NeuralEnsemble:
 
 # Global neural ensemble instance
 neural_ensemble = NeuralEnsemble()
+
+

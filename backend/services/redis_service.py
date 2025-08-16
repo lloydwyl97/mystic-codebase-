@@ -1,4 +1,4 @@
-"""
+﻿"""
 Redis Service
 Handles Redis operations and caching with Docker connection
 """
@@ -31,7 +31,7 @@ class RedisService:
         self.redis_password = os.getenv("REDIS_PASSWORD", None)
 
         logger.info(
-            f"✅ RedisService initialized - connecting to {self.redis_host}:{self.redis_port}"
+            f"âœ… RedisService initialized - connecting to {self.redis_host}:{self.redis_port}"
         )
         self._connect()
 
@@ -50,9 +50,9 @@ class RedisService:
                 health_check_interval=30,
             )
             self.connection_status = "connected"
-            logger.info("✅ Connected to Redis successfully")
+            logger.info("âœ… Connected to Redis successfully")
         except Exception as e:
-            logger.error(f"❌ Failed to connect to Redis: {e}")
+            logger.error(f"âŒ Failed to connect to Redis: {e}")
             self.connection_status = "error"
             self.redis_client = None
 
@@ -77,7 +77,7 @@ class RedisService:
                 self.stats["cache_misses"] += 1
                 return default
         except Exception as e:
-            logger.error(f"❌ Error getting key {key}: {e}")
+            logger.error(f"âŒ Error getting key {key}: {e}")
             return default
 
     async def set(self, key: str, value: Any, ex: Optional[int] = None) -> bool:
@@ -95,7 +95,7 @@ class RedisService:
 
             return bool(result)
         except Exception as e:
-            logger.error(f"❌ Error setting key {key}: {e}")
+            logger.error(f"âŒ Error setting key {key}: {e}")
             return False
 
     async def delete(self, key: str) -> int:
@@ -108,7 +108,7 @@ class RedisService:
             self.stats["keys_stored"] = await self.redis_client.dbsize()
             return result
         except Exception as e:
-            logger.error(f"❌ Error deleting key {key}: {e}")
+            logger.error(f"âŒ Error deleting key {key}: {e}")
             return 0
 
     async def exists(self, key: str) -> bool:
@@ -120,7 +120,7 @@ class RedisService:
             result = await self.redis_client.exists(key)
             return bool(result)
         except Exception as e:
-            logger.error(f"❌ Error checking existence of key {key}: {e}")
+            logger.error(f"âŒ Error checking existence of key {key}: {e}")
             return False
 
     async def hget(self, name: str, key: str) -> Optional[str]:
@@ -129,7 +129,7 @@ class RedisService:
             await self._ensure_connection()
             return await self.redis_client.hget(name, key)
         except Exception as e:
-            logger.error(f"❌ Error getting hash field {name}:{key}: {e}")
+            logger.error(f"âŒ Error getting hash field {name}:{key}: {e}")
             return None
 
     async def hset(self, name: str, key: str, value: Any) -> int:
@@ -139,7 +139,7 @@ class RedisService:
             serialized_value = json.dumps(value) if not isinstance(value, str) else value
             return await self.redis_client.hset(name, key, serialized_value)
         except Exception as e:
-            logger.error(f"❌ Error setting hash field {name}:{key}: {e}")
+            logger.error(f"âŒ Error setting hash field {name}:{key}: {e}")
             return 0
 
     async def hgetall(self, name: str) -> Dict[str, Any]:
@@ -157,7 +157,7 @@ class RedisService:
                     deserialized[key] = value
             return deserialized
         except Exception as e:
-            logger.error(f"❌ Error getting all hash fields for {name}: {e}")
+            logger.error(f"âŒ Error getting all hash fields for {name}: {e}")
             return {}
 
     async def lpush(self, name: str, *values: Any) -> int:
@@ -167,7 +167,7 @@ class RedisService:
             serialized_values = [json.dumps(v) if not isinstance(v, str) else v for v in values]
             return await self.redis_client.lpush(name, *serialized_values)
         except Exception as e:
-            logger.error(f"❌ Error pushing to list {name}: {e}")
+            logger.error(f"âŒ Error pushing to list {name}: {e}")
             return 0
 
     async def lrange(self, name: str, start: int, end: int) -> List[Any]:
@@ -185,7 +185,7 @@ class RedisService:
                     deserialized.append(value)
             return deserialized
         except Exception as e:
-            logger.error(f"❌ Error getting list range for {name}: {e}")
+            logger.error(f"âŒ Error getting list range for {name}: {e}")
             return []
 
     async def ping(self) -> bool:
@@ -196,7 +196,7 @@ class RedisService:
             self.connection_status = "connected" if result else "error"
             return bool(result)
         except Exception as e:
-            logger.error(f"❌ Redis ping failed: {e}")
+            logger.error(f"âŒ Redis ping failed: {e}")
             self.connection_status = "error"
             return False
 
@@ -220,7 +220,7 @@ class RedisService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error getting Redis stats: {e}")
+            logger.error(f"âŒ Error getting Redis stats: {e}")
             return {
                 "connection_status": self.connection_status,
                 "error": str(e),
@@ -233,10 +233,10 @@ class RedisService:
             await self._ensure_connection()
             await self.redis_client.flushdb()
             self.stats["keys_stored"] = 0
-            logger.info("✅ Redis database flushed")
+            logger.info("âœ… Redis database flushed")
             return True
         except Exception as e:
-            logger.error(f"❌ Error flushing database: {e}")
+            logger.error(f"âŒ Error flushing database: {e}")
             return False
 
     async def close(self):
@@ -247,7 +247,7 @@ class RedisService:
             self.connection_status = "disconnected"
             logger.info("Redis connection closed")
         except Exception as e:
-            logger.error(f"❌ Error closing Redis connection: {e}")
+            logger.error(f"âŒ Error closing Redis connection: {e}")
 
 
 # Global instance
@@ -257,3 +257,5 @@ redis_service = RedisService()
 def get_redis_service() -> RedisService:
     """Get the Redis service instance"""
     return redis_service
+
+

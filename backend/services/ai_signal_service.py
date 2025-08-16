@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Signal Service (compat shim)
 Provides a minimal AISignalService expected by endpoints.
 """
@@ -12,5 +12,7 @@ class AISignalService:
     async def get_signals(self) -> Dict[str, Any]:
         # Minimal live-compatible response
         return {"signals": []}
+
+
 
 

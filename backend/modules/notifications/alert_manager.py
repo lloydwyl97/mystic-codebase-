@@ -1,4 +1,4 @@
-"""
+﻿"""
 Alert Manager for Mystic Trading Platform
 
 Contains alert management logic for real-time trading alerts.
@@ -10,7 +10,7 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from utils.exceptions import NotificationException
+from backend.utils.exceptions import NotificationException
 
 logger = logging.getLogger(__name__)
 
@@ -363,3 +363,5 @@ class AlertManager:
     def get_alert_by_id(self, alert_id: str) -> Optional[Dict[str, Any]]:
         """Get alert by ID (legacy method)"""
         return self.get_alert(alert_id)
+
+

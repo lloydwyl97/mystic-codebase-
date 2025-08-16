@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Endpoint Health Check Script
 Tests all endpoints and generates a comprehensive report for Docker deployment
@@ -361,22 +361,22 @@ class EndpointHealthChecker:
         )
 
         report = f"""
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                    ENDPOINT HEALTH CHECK REPORT                              ║
-╚══════════════════════════════════════════════════════════════════════════════╝
+â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+â•‘                    ENDPOINT HEALTH CHECK REPORT                              â•‘
+â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-📊 SUMMARY
-═══════════
-• Base URL: {self.base_url}
-• Timestamp: {self.results['timestamp']}
-• Total Endpoints Tested: {summary['total_endpoints']}
-• Successful: {summary['successful']} ✅
-• Failed: {summary['failed']} ❌
-• Errors: {summary['errors']} ⚠️
-• Success Rate: {success_rate:.1f}%
+ðŸ“Š SUMMARY
+â•â•â•â•â•â•â•â•â•â•â•
+â€¢ Base URL: {self.base_url}
+â€¢ Timestamp: {self.results['timestamp']}
+â€¢ Total Endpoints Tested: {summary['total_endpoints']}
+â€¢ Successful: {summary['successful']} âœ…
+â€¢ Failed: {summary['failed']} âŒ
+â€¢ Errors: {summary['errors']} âš ï¸
+â€¢ Success Rate: {success_rate:.1f}%
 
-📋 DETAILED RESULTS
-═══════════════════
+ðŸ“‹ DETAILED RESULTS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 """
 
         # Group endpoints by status
@@ -385,19 +385,19 @@ class EndpointHealthChecker:
         errors = [ep for ep in self.results["endpoints"] if ep["status"] == "ERROR"]
 
         if successful:
-            report += "\n✅ SUCCESSFUL ENDPOINTS:\n"
+            report += "\nâœ… SUCCESSFUL ENDPOINTS:\n"
             for ep in successful:
-                report += f"  • {ep['endpoint']} ({ep['response_time']}s)\n"
+                report += f"  â€¢ {ep['endpoint']} ({ep['response_time']}s)\n"
 
         if failed:
-            report += "\n❌ FAILED ENDPOINTS:\n"
+            report += "\nâŒ FAILED ENDPOINTS:\n"
             for ep in failed:
-                report += f"  • {ep['endpoint']} - {ep.get('error', 'Unknown error')}\n"
+                report += f"  â€¢ {ep['endpoint']} - {ep.get('error', 'Unknown error')}\n"
 
         if errors:
-            report += "\n⚠️ ERROR ENDPOINTS:\n"
+            report += "\nâš ï¸ ERROR ENDPOINTS:\n"
             for ep in errors:
-                report += f"  • {ep['endpoint']} - {ep.get('error', 'Unknown error')}\n"
+                report += f"  â€¢ {ep['endpoint']} - {ep.get('error', 'Unknown error')}\n"
 
         # Performance analysis
         if successful:
@@ -407,35 +407,35 @@ class EndpointHealthChecker:
             min_response_time = min(response_times)
 
             report += f"""
-📈 PERFORMANCE ANALYSIS
-═══════════════════════
-• Average Response Time: {avg_response_time:.3f}s
-• Fastest Response: {min_response_time:.3f}s
-• Slowest Response: {max_response_time:.3f}s
+ðŸ“ˆ PERFORMANCE ANALYSIS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+â€¢ Average Response Time: {avg_response_time:.3f}s
+â€¢ Fastest Response: {min_response_time:.3f}s
+â€¢ Slowest Response: {max_response_time:.3f}s
 """
 
         # Docker deployment recommendations
         report += """
-🚀 DOCKER DEPLOYMENT RECOMMENDATIONS
-═══════════════════════════════════════
+ðŸš€ DOCKER DEPLOYMENT RECOMMENDATIONS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 """
 
         if success_rate >= 95:
-            report += "✅ READY FOR DEPLOYMENT - All critical endpoints are working\n"
+            report += "âœ… READY FOR DEPLOYMENT - All critical endpoints are working\n"
         elif success_rate >= 80:
-            report += "⚠️ DEPLOYMENT READY WITH WARNINGS - Some non-critical endpoints failed\n"
+            report += "âš ï¸ DEPLOYMENT READY WITH WARNINGS - Some non-critical endpoints failed\n"
         else:
-            report += "❌ NOT READY FOR DEPLOYMENT - Critical endpoints are failing\n"
+            report += "âŒ NOT READY FOR DEPLOYMENT - Critical endpoints are failing\n"
 
         if failed or errors:
-            report += "\n🔧 RECOMMENDED ACTIONS:\n"
+            report += "\nðŸ”§ RECOMMENDED ACTIONS:\n"
             for ep in failed + errors:
-                report += f"  • Fix {ep['endpoint']}: {ep.get('error', 'Unknown issue')}\n"
+                report += f"  â€¢ Fix {ep['endpoint']}: {ep.get('error', 'Unknown issue')}\n"
 
         report += """
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                              END OF REPORT                                   ║
-╚══════════════════════════════════════════════════════════════════════════════╝
+â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+â•‘                              END OF REPORT                                   â•‘
+â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 """
 
         return report
@@ -477,9 +477,9 @@ async def main():
 
         # Save reports
         json_file, txt_file = checker.save_report()
-        print("\n📁 Reports saved to:")
-        print(f"  • JSON: {json_file}")
-        print(f"  • Text: {txt_file}")
+        print("\nðŸ“ Reports saved to:")
+        print(f"  â€¢ JSON: {json_file}")
+        print(f"  â€¢ Text: {txt_file}")
 
     except Exception as e:
         logger.error(f"Health check failed: {e}")
@@ -488,3 +488,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

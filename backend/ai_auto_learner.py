@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 from datetime import datetime
 
@@ -54,3 +54,5 @@ class AIAutoLearner:
 
     def get_current_threshold(self):
         return self.state["confidence_threshold"]
+
+

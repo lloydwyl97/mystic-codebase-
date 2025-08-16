@@ -1,4 +1,4 @@
-"""
+﻿"""
 Middleware Package for Mystic Trading
 
 This package contains all middleware components for the Mystic Trading platform.
@@ -23,3 +23,5 @@ __all__ = [
     "response_sanitizer_middleware",
     "get_middleware_manager",
 ]
+
+

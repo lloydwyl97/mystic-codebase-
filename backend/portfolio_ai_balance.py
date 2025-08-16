@@ -1,4 +1,4 @@
-# portfolio_ai_balance.py
+﻿# portfolio_ai_balance.py
 """
 Portfolio AI Balance - Health Evaluator and Rebalancing System
 Monitors portfolio health and suggests rebalancing actions.
@@ -108,7 +108,7 @@ def evaluate_portfolio():
         print(f"[BALANCE] Total portfolio value: ${total_value:,.2f}")
 
         if rebalance_needed:
-            print("[BALANCE] ⚠️  Rebalancing recommended!")
+            print("[BALANCE] âš ï¸  Rebalancing recommended!")
             print(f"[BALANCE] Target stablecoin ratio: {1 - THRESHOLD:.3f}")
             print(f"[BALANCE] Current ratio: {stablecoin_ratio:.3f}")
 
@@ -121,7 +121,7 @@ def evaluate_portfolio():
             else:
                 print(f"[BALANCE] Need to reduce USDT by ${abs(usdt_needed):,.2f}")
         else:
-            print("[BALANCE] ✅ Portfolio is well balanced")
+            print("[BALANCE] âœ… Portfolio is well balanced")
 
         # Log portfolio evaluation
         balance_log = {
@@ -166,3 +166,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

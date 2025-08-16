@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Configuration for Tiered Signal System
 Defines all settings and parameters for the three-tier signal architecture
@@ -288,3 +288,5 @@ def get_config(config_type: str = "default") -> TieredSystemConfig:
         "conservative": conservative_config,
     }
     return configs.get(config_type, default_config)
+
+

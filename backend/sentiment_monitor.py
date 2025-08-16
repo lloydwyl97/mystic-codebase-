@@ -1,4 +1,4 @@
-# sentiment_monitor.py
+﻿# sentiment_monitor.py
 """
 Sentiment AI Feed Parser - Real-time Crypto News Sentiment Analysis
 Monitors crypto news feeds and analyzes sentiment for trading signals.
@@ -135,9 +135,9 @@ def analyze_sentiment():
 
         if sentiments:
             avg_sentiment = sum(sentiments) / len(sentiments)
-            logger.info(f"📊 Sentiment: {avg_sentiment:.3f} ({len(headlines)} headlines)")
-            logger.info(f"📊 Positive headlines: {len([s for s in sentiments if s > 0.1])}")
-            logger.info(f"📊 Negative headlines: {len([s for s in sentiments if s < -0.1])}")
+            logger.info(f"ðŸ“Š Sentiment: {avg_sentiment:.3f} ({len(headlines)} headlines)")
+            logger.info(f"ðŸ“Š Positive headlines: {len([s for s in sentiments if s > 0.1])}")
+            logger.info(f"ðŸ“Š Negative headlines: {len([s for s in sentiments if s < -0.1])}")
 
             # Create ping file for dashboard
             create_ping_file(avg_sentiment, len(headlines))
@@ -165,20 +165,22 @@ def analyze_sentiment():
 
 def main():
     """Main execution loop"""
-    logger.info("🚀 Sentiment Monitor starting...")
-    logger.info(f"⏰ Analysis interval: {INTERVAL} seconds")
+    logger.info("ðŸš€ Sentiment Monitor starting...")
+    logger.info(f"â° Analysis interval: {INTERVAL} seconds")
 
     while True:
         try:
             analyze_sentiment()
         except KeyboardInterrupt:
-            logger.info("🛑 Sentiment monitor stopped")
+            logger.info("ðŸ›‘ Sentiment monitor stopped")
             break
         except Exception as e:
-            logger.error(f"❌ Main loop error: {e}")
+            logger.error(f"âŒ Main loop error: {e}")
 
         time.sleep(INTERVAL)
 
 
 if __name__ == "__main__":
     main()
+
+

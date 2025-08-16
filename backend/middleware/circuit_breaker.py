@@ -1,4 +1,4 @@
-import logging
+﻿import logging
 import time
 from collections import defaultdict
 from typing import Awaitable, Callable, Dict, Union
@@ -64,3 +64,5 @@ async def circuit_breaker_middleware(
             logger.error(f"Circuit breaker opened for endpoint: {endpoint}")
 
         return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
+

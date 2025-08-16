@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Visualization Agent
 Handles market visualization and chart generation for trading analysis
 """
@@ -26,11 +26,11 @@ _ = Image.new("RGB", (1, 1))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class MarketVisualizationAgent(BaseAgent):
@@ -80,7 +80,7 @@ class MarketVisualizationAgent(BaseAgent):
         self.register_handler("get_visual_analysis", self.handle_get_visual_analysis)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"📊 Market Visualization Agent {agent_id} initialized")
+        print(f"ðŸ“Š Market Visualization Agent {agent_id} initialized")
 
     async def initialize(self):
         """Initialize market visualization agent resources"""
@@ -94,10 +94,10 @@ class MarketVisualizationAgent(BaseAgent):
             # Start chart monitoring
             await self.start_chart_monitoring()
 
-            print(f"✅ Market Visualization Agent {self.agent_id} initialized successfully")
+            print(f"âœ… Market Visualization Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Market Visualization Agent: {e}")
+            print(f"âŒ Error initializing Market Visualization Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -116,7 +116,7 @@ class MarketVisualizationAgent(BaseAgent):
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in visualization processing loop: {e}")
+                print(f"âŒ Error in visualization processing loop: {e}")
                 await asyncio.sleep(600)
 
     async def load_chart_config(self):
@@ -133,11 +133,11 @@ class MarketVisualizationAgent(BaseAgent):
                 self.trading_symbols = json.loads(symbols_data)
 
             print(
-                f"📋 Chart configuration loaded: {len(self.chart_config['chart_types'])} chart types, {len(self.trading_symbols)} symbols"
+                f"ðŸ“‹ Chart configuration loaded: {len(self.chart_config['chart_types'])} chart types, {len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading chart configuration: {e}")
+            print(f"âŒ Error loading chart configuration: {e}")
 
     async def initialize_visualization_settings(self):
         """Initialize visualization settings"""
@@ -148,10 +148,10 @@ class MarketVisualizationAgent(BaseAgent):
             # Configure seaborn
             sns.set_palette("husl")
 
-            print("🎨 Visualization settings initialized")
+            print("ðŸŽ¨ Visualization settings initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing visualization settings: {e}")
+            print(f"âŒ Error initializing visualization settings: {e}")
 
     async def start_chart_monitoring(self):
         """Start chart monitoring"""
@@ -163,10 +163,10 @@ class MarketVisualizationAgent(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 Chart monitoring started")
+            print("ðŸ“¡ Chart monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting chart monitoring: {e}")
+            print(f"âŒ Error starting chart monitoring: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -180,7 +180,7 @@ class MarketVisualizationAgent(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -197,7 +197,7 @@ class MarketVisualizationAgent(BaseAgent):
                 await self.store_market_data(symbol, price, volume, timestamp)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def store_market_data(self, symbol: str, price: float, volume: float, timestamp: str):
         """Store market data for chart generation"""
@@ -225,27 +225,27 @@ class MarketVisualizationAgent(BaseAgent):
                 self.state["chart_cache"][symbol] = self.state["chart_cache"][symbol][-200:]
 
         except Exception as e:
-            print(f"❌ Error storing market data: {e}")
+            print(f"âŒ Error storing market data: {e}")
 
     async def generate_all_charts(self):
         """Generate charts for all symbols"""
         try:
-            print(f"📊 Generating charts for {len(self.trading_symbols)} symbols...")
+            print(f"ðŸ“Š Generating charts for {len(self.trading_symbols)} symbols...")
 
             for symbol in self.trading_symbols:
                 try:
                     await self.generate_symbol_charts(symbol)
                 except Exception as e:
-                    print(f"❌ Error generating charts for {symbol}: {e}")
+                    print(f"âŒ Error generating charts for {symbol}: {e}")
 
             # Update generation count
             self.state["generation_count"] += 1
             self.state["last_generation"] = datetime.now().isoformat()
 
-            print("✅ Chart generation complete")
+            print("âœ… Chart generation complete")
 
         except Exception as e:
-            print(f"❌ Error generating all charts: {e}")
+            print(f"âŒ Error generating all charts: {e}")
 
     async def generate_symbol_charts(self, symbol: str):
         """Generate charts for a specific symbol"""
@@ -265,7 +265,7 @@ class MarketVisualizationAgent(BaseAgent):
                     if chart_data:
                         charts[chart_type] = chart_data
                 except Exception as e:
-                    print(f"❌ Error generating {chart_type} chart for {symbol}: {e}")
+                    print(f"âŒ Error generating {chart_type} chart for {symbol}: {e}")
 
             # Store generated charts
             if charts:
@@ -279,7 +279,7 @@ class MarketVisualizationAgent(BaseAgent):
                 await self.broadcast_chart_generation(symbol, charts)
 
         except Exception as e:
-            print(f"❌ Error generating charts for {symbol}: {e}")
+            print(f"âŒ Error generating charts for {symbol}: {e}")
 
     async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
         """Get market data for a symbol"""
@@ -308,7 +308,7 @@ class MarketVisualizationAgent(BaseAgent):
             return data_points
 
         except Exception as e:
-            print(f"❌ Error getting market data for {symbol}: {e}")
+            print(f"âŒ Error getting market data for {symbol}: {e}")
             return []
 
     async def generate_chart_type(
@@ -330,7 +330,7 @@ class MarketVisualizationAgent(BaseAgent):
                 return None
 
         except Exception as e:
-            print(f"❌ Error generating {chart_type} chart: {e}")
+            print(f"âŒ Error generating {chart_type} chart: {e}")
             return None
 
     async def generate_candlestick_chart(
@@ -386,7 +386,7 @@ class MarketVisualizationAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error generating candlestick chart: {e}")
+            print(f"âŒ Error generating candlestick chart: {e}")
             return None
 
     async def generate_line_chart(
@@ -430,7 +430,7 @@ class MarketVisualizationAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error generating line chart: {e}")
+            print(f"âŒ Error generating line chart: {e}")
             return None
 
     async def generate_volume_chart(
@@ -474,7 +474,7 @@ class MarketVisualizationAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error generating volume chart: {e}")
+            print(f"âŒ Error generating volume chart: {e}")
             return None
 
     async def generate_heatmap_chart(
@@ -527,7 +527,7 @@ class MarketVisualizationAgent(BaseAgent):
             return None
 
         except Exception as e:
-            print(f"❌ Error generating heatmap chart: {e}")
+            print(f"âŒ Error generating heatmap chart: {e}")
             return None
 
     async def generate_correlation_chart(
@@ -576,7 +576,7 @@ class MarketVisualizationAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error generating correlation chart: {e}")
+            print(f"âŒ Error generating correlation chart: {e}")
             return None
 
     async def figure_to_base64(self, fig) -> str:
@@ -593,7 +593,7 @@ class MarketVisualizationAgent(BaseAgent):
             return img_data
 
         except Exception as e:
-            print(f"❌ Error converting figure to base64: {e}")
+            print(f"âŒ Error converting figure to base64: {e}")
             return ""
 
     async def broadcast_chart_generation(self, symbol: str, charts: Dict[str, Any]):
@@ -614,7 +614,7 @@ class MarketVisualizationAgent(BaseAgent):
             await self.send_message("technical_indicator_agent", chart_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting chart generation: {e}")
+            print(f"âŒ Error broadcasting chart generation: {e}")
 
     async def handle_generate_chart(self, message: Dict[str, Any]):
         """Handle manual chart generation request"""
@@ -622,7 +622,7 @@ class MarketVisualizationAgent(BaseAgent):
             symbol = message.get("symbol")
             chart_type = message.get("chart_type", "candlestick")
 
-            print(f"📊 Manual chart generation requested for {symbol}")
+            print(f"ðŸ“Š Manual chart generation requested for {symbol}")
 
             if symbol:
                 market_data = await self.get_symbol_market_data(symbol)
@@ -660,7 +660,7 @@ class MarketVisualizationAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling chart generation request: {e}")
+            print(f"âŒ Error handling chart generation request: {e}")
             await self.broadcast_error(f"Chart generation error: {e}")
 
     async def handle_get_visual_analysis(self, message: Dict[str, Any]):
@@ -668,7 +668,7 @@ class MarketVisualizationAgent(BaseAgent):
         try:
             symbol = message.get("symbol")
 
-            print(f"📈 Visual analysis requested for {symbol}")
+            print(f"ðŸ“ˆ Visual analysis requested for {symbol}")
 
             # Get visual analysis
             if symbol and symbol in self.state["charts_generated"]:
@@ -693,7 +693,7 @@ class MarketVisualizationAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling visual analysis request: {e}")
+            print(f"âŒ Error handling visual analysis request: {e}")
             await self.broadcast_error(f"Visual analysis error: {e}")
 
     async def update_visualization_metrics(self):
@@ -714,7 +714,7 @@ class MarketVisualizationAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating visualization metrics: {e}")
+            print(f"âŒ Error updating visualization metrics: {e}")
 
     async def cleanup_cache(self):
         """Clean up old cache entries"""
@@ -739,4 +739,6 @@ class MarketVisualizationAgent(BaseAgent):
                     del self.state["chart_cache"][symbol]
 
         except Exception as e:
-            print(f"❌ Error cleaning up cache: {e}")
+            print(f"âŒ Error cleaning up cache: {e}")
+
+

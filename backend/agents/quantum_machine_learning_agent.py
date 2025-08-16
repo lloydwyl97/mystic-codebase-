@@ -1,4 +1,4 @@
-"""
+﻿"""
 Quantum Machine Learning Agent
 Implements quantum machine learning algorithms for trading
 """
@@ -60,11 +60,11 @@ _ = classification_report([0, 1], 0, 1)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class QuantumNeuralNetwork:
@@ -99,7 +99,7 @@ class QuantumNeuralNetwork:
             return circuit
 
         except Exception as e:
-            print(f"❌ Error creating QNN circuit: {e}")
+            print(f"âŒ Error creating QNN circuit: {e}")
             return None
 
     def train_qnn(self, X: np.ndarray, y: np.ndarray, epochs: int = 100):
@@ -123,7 +123,7 @@ class QuantumNeuralNetwork:
             return vqc
 
         except Exception as e:
-            print(f"❌ Error training QNN: {e}")
+            print(f"âŒ Error training QNN: {e}")
             return None
 
     def predict_qnn(self, X: np.ndarray) -> np.ndarray:
@@ -137,7 +137,7 @@ class QuantumNeuralNetwork:
             return predictions
 
         except Exception as e:
-            print(f"❌ Error predicting with QNN: {e}")
+            print(f"âŒ Error predicting with QNN: {e}")
             return np.random.randint(0, self.num_classes, len(X))
 
 
@@ -171,7 +171,7 @@ class QuantumSupportVectorMachine:
             return self.qsvc
 
         except Exception as e:
-            print(f"❌ Error training QSVC: {e}")
+            print(f"âŒ Error training QSVC: {e}")
             return None
 
     def predict_qsvc(self, X: np.ndarray) -> np.ndarray:
@@ -185,7 +185,7 @@ class QuantumSupportVectorMachine:
             return predictions
 
         except Exception as e:
-            print(f"❌ Error predicting with QSVC: {e}")
+            print(f"âŒ Error predicting with QSVC: {e}")
             return np.random.randint(0, 2, len(X))
 
 
@@ -218,7 +218,7 @@ class QuantumRegression:
             return self.vqr
 
         except Exception as e:
-            print(f"❌ Error training VQR: {e}")
+            print(f"âŒ Error training VQR: {e}")
             return None
 
     def predict_vqr(self, X: np.ndarray) -> np.ndarray:
@@ -235,7 +235,7 @@ class QuantumRegression:
             return predictions
 
         except Exception as e:
-            print(f"❌ Error predicting with VQR: {e}")
+            print(f"âŒ Error predicting with VQR: {e}")
             return np.random.random(len(X))
 
 
@@ -313,7 +313,7 @@ class QuantumMachineLearningAgent(BaseAgent):
         self.register_handler("get_quantum_ml_status", self.handle_get_quantum_ml_status)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"🧠 Quantum Machine Learning Agent {agent_id} initialized")
+        print(f"ðŸ§  Quantum Machine Learning Agent {agent_id} initialized")
 
     async def initialize(self):
         """Initialize quantum machine learning agent resources"""
@@ -327,10 +327,10 @@ class QuantumMachineLearningAgent(BaseAgent):
             # Start quantum ML monitoring
             await self.start_quantum_ml_monitoring()
 
-            print(f"✅ Quantum Machine Learning Agent {self.agent_id} initialized successfully")
+            print(f"âœ… Quantum Machine Learning Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Quantum ML Agent: {e}")
+            print(f"âŒ Error initializing Quantum ML Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -352,7 +352,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in quantum ML processing loop: {e}")
+                print(f"âŒ Error in quantum ML processing loop: {e}")
                 await asyncio.sleep(600)
 
     async def load_quantum_ml_config(self):
@@ -369,11 +369,11 @@ class QuantumMachineLearningAgent(BaseAgent):
                 self.trading_symbols = json.loads(symbols_data)
 
             print(
-                f"📋 Quantum ML configuration loaded: {len(self.quantum_ml_config['algorithms'])} algorithms, {len(self.trading_symbols)} symbols"
+                f"ðŸ“‹ Quantum ML configuration loaded: {len(self.quantum_ml_config['algorithms'])} algorithms, {len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading quantum ML configuration: {e}")
+            print(f"âŒ Error loading quantum ML configuration: {e}")
 
     async def initialize_quantum_ml_components(self):
         """Initialize quantum ML components"""
@@ -409,11 +409,11 @@ class QuantumMachineLearningAgent(BaseAgent):
                     )
 
             print(
-                f"🧠 Quantum ML components initialized: {len(self.qnn_models)} QNN, {len(self.qsvc_models)} QSVC, {len(self.vqr_models)} VQR"
+                f"ðŸ§  Quantum ML components initialized: {len(self.qnn_models)} QNN, {len(self.qsvc_models)} QSVC, {len(self.vqr_models)} VQR"
             )
 
         except Exception as e:
-            print(f"❌ Error initializing quantum ML components: {e}")
+            print(f"âŒ Error initializing quantum ML components: {e}")
 
     async def start_quantum_ml_monitoring(self):
         """Start quantum ML monitoring"""
@@ -425,10 +425,10 @@ class QuantumMachineLearningAgent(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 Quantum ML monitoring started")
+            print("ðŸ“¡ Quantum ML monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting quantum ML monitoring: {e}")
+            print(f"âŒ Error starting quantum ML monitoring: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -442,7 +442,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -459,7 +459,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                 await self.store_market_data(symbol, price, volume, timestamp)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def store_market_data(self, symbol: str, price: float, volume: float, timestamp: str):
         """Store market data for quantum ML training"""
@@ -489,7 +489,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                 ]["data"][-2000:]
 
         except Exception as e:
-            print(f"❌ Error storing market data: {e}")
+            print(f"âŒ Error storing market data: {e}")
 
     async def train_quantum_models_if_needed(self):
         """Train quantum models if they need updating"""
@@ -507,7 +507,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                             await self.train_symbol_quantum_models(symbol)
 
         except Exception as e:
-            print(f"❌ Error training quantum models: {e}")
+            print(f"âŒ Error training quantum models: {e}")
 
     def should_retrain_model(self, symbol: str, last_training: str) -> bool:
         """Check if quantum model should be retrained"""
@@ -522,13 +522,13 @@ class QuantumMachineLearningAgent(BaseAgent):
             return (current_time - last_training_time).total_seconds() > 172800
 
         except Exception as e:
-            print(f"❌ Error checking retrain condition: {e}")
+            print(f"âŒ Error checking retrain condition: {e}")
             return True
 
     async def train_symbol_quantum_models(self, symbol: str):
         """Train quantum models for a specific symbol"""
         try:
-            print(f"🧠 Training quantum models for {symbol}...")
+            print(f"ðŸ§  Training quantum models for {symbol}...")
 
             # Get market data
             market_data = await self.get_symbol_market_data(symbol)
@@ -553,18 +553,18 @@ class QuantumMachineLearningAgent(BaseAgent):
                             "epochs"
                         ],
                     )
-                    print(f"✅ QNN training complete for {symbol}")
+                    print(f"âœ… QNN training complete for {symbol}")
                 except Exception as e:
-                    print(f"❌ Error training QNN for {symbol}: {e}")
+                    print(f"âŒ Error training QNN for {symbol}: {e}")
 
             # Train quantum support vector classifier
             if symbol in self.qsvc_models:
                 try:
                     qsvc = self.qsvc_models[symbol]
                     qsvc.train_qsvc(X, y_classification)
-                    print(f"✅ QSVC training complete for {symbol}")
+                    print(f"âœ… QSVC training complete for {symbol}")
                 except Exception as e:
-                    print(f"❌ Error training QSVC for {symbol}: {e}")
+                    print(f"âŒ Error training QSVC for {symbol}: {e}")
 
             # Train quantum regression
             if symbol in self.vqr_models:
@@ -575,9 +575,9 @@ class QuantumMachineLearningAgent(BaseAgent):
                         y_regression,
                         epochs=self.quantum_ml_config["algorithms"]["quantum_regression"]["epochs"],
                     )
-                    print(f"✅ VQR training complete for {symbol}")
+                    print(f"âœ… VQR training complete for {symbol}")
                 except Exception as e:
-                    print(f"❌ Error training VQR for {symbol}: {e}")
+                    print(f"âŒ Error training VQR for {symbol}: {e}")
 
             # Update training history
             if symbol not in self.state["training_history"]:
@@ -586,10 +586,10 @@ class QuantumMachineLearningAgent(BaseAgent):
             self.state["training_history"][symbol]["last_training"] = datetime.now().isoformat()
             self.state["training_count"] += 1
 
-            print(f"✅ Quantum model training complete for {symbol}")
+            print(f"âœ… Quantum model training complete for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error training quantum models for {symbol}: {e}")
+            print(f"âŒ Error training quantum models for {symbol}: {e}")
 
     async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
         """Get market data for a symbol"""
@@ -618,7 +618,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             return data_points
 
         except Exception as e:
-            print(f"❌ Error getting market data for {symbol}: {e}")
+            print(f"âŒ Error getting market data for {symbol}: {e}")
             return []
 
     async def prepare_training_data(
@@ -679,24 +679,24 @@ class QuantumMachineLearningAgent(BaseAgent):
             return X, y_classification, y_regression
 
         except Exception as e:
-            print(f"❌ Error preparing training data: {e}")
+            print(f"âŒ Error preparing training data: {e}")
             return None, None, None
 
     async def make_quantum_predictions(self):
         """Make quantum predictions for all symbols"""
         try:
-            print(f"🔮 Making quantum predictions for {len(self.trading_symbols)} symbols...")
+            print(f"ðŸ”® Making quantum predictions for {len(self.trading_symbols)} symbols...")
 
             for symbol in self.trading_symbols:
                 try:
                     await self.make_symbol_quantum_predictions(symbol)
                 except Exception as e:
-                    print(f"❌ Error making quantum predictions for {symbol}: {e}")
+                    print(f"âŒ Error making quantum predictions for {symbol}: {e}")
 
-            print("✅ Quantum predictions complete")
+            print("âœ… Quantum predictions complete")
 
         except Exception as e:
-            print(f"❌ Error making quantum predictions: {e}")
+            print(f"âŒ Error making quantum predictions: {e}")
 
     async def make_symbol_quantum_predictions(self, symbol: str):
         """Make quantum predictions for a specific symbol"""
@@ -725,7 +725,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                         "model_type": "quantum_neural_network",
                     }
                 except Exception as e:
-                    print(f"❌ Error making QNN predictions for {symbol}: {e}")
+                    print(f"âŒ Error making QNN predictions for {symbol}: {e}")
 
             # Make QSVC predictions
             if symbol in self.qsvc_models:
@@ -737,7 +737,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                         "model_type": "quantum_support_vector",
                     }
                 except Exception as e:
-                    print(f"❌ Error making QSVC predictions for {symbol}: {e}")
+                    print(f"âŒ Error making QSVC predictions for {symbol}: {e}")
 
             # Make VQR predictions
             if symbol in self.vqr_models:
@@ -749,7 +749,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                         "model_type": "quantum_regression",
                     }
                 except Exception as e:
-                    print(f"❌ Error making VQR predictions for {symbol}: {e}")
+                    print(f"âŒ Error making VQR predictions for {symbol}: {e}")
 
             # Store predictions
             if predictions:
@@ -762,7 +762,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                 await self.broadcast_quantum_predictions(symbol, predictions)
 
         except Exception as e:
-            print(f"❌ Error making quantum predictions for {symbol}: {e}")
+            print(f"âŒ Error making quantum predictions for {symbol}: {e}")
 
     async def prepare_prediction_data(
         self, market_data: List[Dict[str, Any]]
@@ -797,7 +797,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             return feature_vector.reshape(1, -1)
 
         except Exception as e:
-            print(f"❌ Error preparing prediction data: {e}")
+            print(f"âŒ Error preparing prediction data: {e}")
             return None
 
     async def broadcast_quantum_predictions(self, symbol: str, predictions: Dict[str, Any]):
@@ -818,7 +818,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             await self.send_message("risk_agent", prediction_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting quantum predictions: {e}")
+            print(f"âŒ Error broadcasting quantum predictions: {e}")
 
     async def handle_train_quantum_model(self, message: Dict[str, Any]):
         """Handle manual quantum model training request"""
@@ -826,7 +826,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             symbol = message.get("symbol")
             model_type = message.get("model_type")
 
-            print(f"🧠 Manual quantum model training requested for {symbol}")
+            print(f"ðŸ§  Manual quantum model training requested for {symbol}")
 
             if symbol:
                 if model_type:
@@ -849,7 +849,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling quantum model training request: {e}")
+            print(f"âŒ Error handling quantum model training request: {e}")
             await self.broadcast_error(f"Quantum model training error: {e}")
 
     async def train_specific_quantum_model(self, symbol: str, model_type: str):
@@ -868,20 +868,20 @@ class QuantumMachineLearningAgent(BaseAgent):
             if model_type == "qnn" and symbol in self.qnn_models:
                 qnn = self.qnn_models[symbol]
                 qnn.train_qnn(X, y_classification, epochs=100)
-                print(f"✅ QNN training complete for {symbol}")
+                print(f"âœ… QNN training complete for {symbol}")
 
             elif model_type == "qsvc" and symbol in self.qsvc_models:
                 qsvc = self.qsvc_models[symbol]
                 qsvc.train_qsvc(X, y_classification)
-                print(f"✅ QSVC training complete for {symbol}")
+                print(f"âœ… QSVC training complete for {symbol}")
 
             elif model_type == "vqr" and symbol in self.vqr_models:
                 vqr = self.vqr_models[symbol]
                 vqr.train_vqr(X, y_regression, epochs=100)
-                print(f"✅ VQR training complete for {symbol}")
+                print(f"âœ… VQR training complete for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error training specific quantum model: {e}")
+            print(f"âŒ Error training specific quantum model: {e}")
 
     async def handle_quantum_prediction(self, message: Dict[str, Any]):
         """Handle manual quantum prediction request"""
@@ -889,7 +889,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             symbol = message.get("symbol")
             model_type = message.get("model_type")
 
-            print(f"🔮 Manual quantum prediction requested for {symbol}")
+            print(f"ðŸ”® Manual quantum prediction requested for {symbol}")
 
             if symbol:
                 market_data = await self.get_symbol_market_data(symbol)
@@ -943,7 +943,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling quantum prediction request: {e}")
+            print(f"âŒ Error handling quantum prediction request: {e}")
             await self.broadcast_error(f"Quantum prediction error: {e}")
 
     async def make_specific_quantum_prediction(
@@ -983,7 +983,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             return None
 
         except Exception as e:
-            print(f"❌ Error making specific quantum prediction: {e}")
+            print(f"âŒ Error making specific quantum prediction: {e}")
             return None
 
     async def handle_get_quantum_ml_status(self, message: Dict[str, Any]):
@@ -991,7 +991,7 @@ class QuantumMachineLearningAgent(BaseAgent):
         try:
             symbol = message.get("symbol")
 
-            print(f"📊 Quantum ML status requested for {symbol}")
+            print(f"ðŸ“Š Quantum ML status requested for {symbol}")
 
             # Get quantum ML status
             if symbol and symbol in self.state["training_history"]:
@@ -1016,7 +1016,7 @@ class QuantumMachineLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling quantum ML status request: {e}")
+            print(f"âŒ Error handling quantum ML status request: {e}")
             await self.broadcast_error(f"Quantum ML status error: {e}")
 
     async def update_quantum_ml_metrics(self):
@@ -1039,7 +1039,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating quantum ML metrics: {e}")
+            print(f"âŒ Error updating quantum ML metrics: {e}")
 
     async def cleanup_cache(self):
         """Clean up old cache entries"""
@@ -1065,4 +1065,6 @@ class QuantumMachineLearningAgent(BaseAgent):
                         del self.state["training_history"][symbol]
 
         except Exception as e:
-            print(f"❌ Error cleaning up cache: {e}")
+            print(f"âŒ Error cleaning up cache: {e}")
+
+

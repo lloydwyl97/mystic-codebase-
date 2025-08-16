@@ -1,4 +1,4 @@
-"""
+﻿"""
 NLP Orchestrator Agent
 Coordinates all NLP agents and provides unified NLP services
 """
@@ -19,11 +19,11 @@ _ = Optional[str]
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class NLPOrchestrator(BaseAgent):
@@ -109,7 +109,7 @@ class NLPOrchestrator(BaseAgent):
         self.register_handler("agent_heartbeat", self.handle_agent_heartbeat)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"🧠 NLP Orchestrator {agent_id} initialized")
+        print(f"ðŸ§  NLP Orchestrator {agent_id} initialized")
 
     async def initialize(self):
         """Initialize NLP orchestrator resources"""
@@ -123,10 +123,10 @@ class NLPOrchestrator(BaseAgent):
             # Start NLP monitoring
             await self.start_nlp_monitoring()
 
-            print(f"✅ NLP Orchestrator {self.agent_id} initialized successfully")
+            print(f"âœ… NLP Orchestrator {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing NLP Orchestrator: {e}")
+            print(f"âŒ Error initializing NLP Orchestrator: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -151,7 +151,7 @@ class NLPOrchestrator(BaseAgent):
                 await asyncio.sleep(30)  # Check every 30 seconds
 
             except Exception as e:
-                print(f"❌ Error in NLP coordination loop: {e}")
+                print(f"âŒ Error in NLP coordination loop: {e}")
                 await asyncio.sleep(60)
 
     async def load_nlp_config(self):
@@ -168,11 +168,11 @@ class NLPOrchestrator(BaseAgent):
                 self.nlp_services = json.loads(services_data)
 
             print(
-                f"📋 NLP configuration loaded: {len(self.nlp_agents)} agents, {len(self.nlp_services)} services"
+                f"ðŸ“‹ NLP configuration loaded: {len(self.nlp_agents)} agents, {len(self.nlp_services)} services"
             )
 
         except Exception as e:
-            print(f"❌ Error loading NLP configuration: {e}")
+            print(f"âŒ Error loading NLP configuration: {e}")
 
     async def initialize_coordination(self):
         """Initialize NLP coordination systems"""
@@ -183,10 +183,10 @@ class NLPOrchestrator(BaseAgent):
             # Initialize service management
             await self.initialize_service_management()
 
-            print("🧠 NLP coordination systems initialized")
+            print("ðŸ§  NLP coordination systems initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing coordination: {e}")
+            print(f"âŒ Error initializing coordination: {e}")
 
     async def initialize_agent_monitoring(self):
         """Initialize agent monitoring"""
@@ -195,10 +195,10 @@ class NLPOrchestrator(BaseAgent):
             for agent_name, agent_config in self.nlp_agents.items():
                 await self.monitor_agent_health(agent_name, agent_config)
 
-            print("📡 Agent monitoring initialized")
+            print("ðŸ“¡ Agent monitoring initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing agent monitoring: {e}")
+            print(f"âŒ Error initializing agent monitoring: {e}")
 
     async def initialize_service_management(self):
         """Initialize service management"""
@@ -208,10 +208,10 @@ class NLPOrchestrator(BaseAgent):
                 if service_config.get("enabled", False):
                     await self.start_service(service_name, service_config)
 
-            print("⚙️ Service management initialized")
+            print("âš™ï¸ Service management initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing service management: {e}")
+            print(f"âŒ Error initializing service management: {e}")
 
     async def start_nlp_monitoring(self):
         """Start NLP monitoring"""
@@ -225,10 +225,10 @@ class NLPOrchestrator(BaseAgent):
             # Start monitoring listener
             asyncio.create_task(self.listen_nlp_updates(pubsub))
 
-            print("📡 NLP monitoring started")
+            print("ðŸ“¡ NLP monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting NLP monitoring: {e}")
+            print(f"âŒ Error starting NLP monitoring: {e}")
 
     async def listen_nlp_updates(self, pubsub):
         """Listen for NLP updates"""
@@ -250,10 +250,10 @@ class NLPOrchestrator(BaseAgent):
                             await self.handle_sentiment_update(data)
 
                     except json.JSONDecodeError:
-                        print(f"❌ Error decoding NLP update: {message['data']}")
+                        print(f"âŒ Error decoding NLP update: {message['data']}")
 
         except Exception as e:
-            print(f"❌ Error in NLP listener: {e}")
+            print(f"âŒ Error in NLP listener: {e}")
         finally:
             pubsub.close()
 
@@ -272,10 +272,10 @@ class NLPOrchestrator(BaseAgent):
                     agent_config["last_heartbeat"] = timestamp
                     break
 
-            print(f"💓 Agent heartbeat: {agent_id} ({status})")
+            print(f"ðŸ’“ Agent heartbeat: {agent_id} ({status})")
 
         except Exception as e:
-            print(f"❌ Error handling agent heartbeat: {e}")
+            print(f"âŒ Error handling agent heartbeat: {e}")
 
     async def handle_market_data(self, data: Dict[str, Any]):
         """Handle market data for NLP context"""
@@ -288,7 +288,7 @@ class NLPOrchestrator(BaseAgent):
                 await self.update_market_context(symbol, price)
 
         except Exception as e:
-            print(f"❌ Error handling market data: {e}")
+            print(f"âŒ Error handling market data: {e}")
 
     async def handle_sentiment_update(self, data: Dict[str, Any]):
         """Handle aggregated sentiment updates"""
@@ -301,7 +301,7 @@ class NLPOrchestrator(BaseAgent):
                 self.state["unified_sentiment"][symbol] = sentiment
 
         except Exception as e:
-            print(f"❌ Error handling sentiment update: {e}")
+            print(f"âŒ Error handling sentiment update: {e}")
 
     async def update_market_context(self, symbol: str, price: float):
         """Update market context for NLP analysis"""
@@ -321,12 +321,12 @@ class NLPOrchestrator(BaseAgent):
             )
 
         except Exception as e:
-            print(f"❌ Error updating market context: {e}")
+            print(f"âŒ Error updating market context: {e}")
 
     async def coordinate_nlp_agents(self):
         """Coordinate all NLP agents"""
         try:
-            print(f"🧠 Coordinating {len(self.nlp_agents)} NLP agents...")
+            print(f"ðŸ§  Coordinating {len(self.nlp_agents)} NLP agents...")
 
             # Check agent health
             await self.check_agent_health()
@@ -341,10 +341,10 @@ class NLPOrchestrator(BaseAgent):
             self.state["coordination_count"] += 1
             self.state["last_coordination"] = datetime.now().isoformat()
 
-            print("✅ NLP coordination complete")
+            print("âœ… NLP coordination complete")
 
         except Exception as e:
-            print(f"❌ Error coordinating NLP agents: {e}")
+            print(f"âŒ Error coordinating NLP agents: {e}")
 
     async def check_agent_health(self):
         """Check health of all NLP agents"""
@@ -368,11 +368,11 @@ class NLPOrchestrator(BaseAgent):
                     agent_config["status"] = "healthy"
 
                 except Exception as e:
-                    print(f"❌ Agent {agent_id} health check failed: {e}")
+                    print(f"âŒ Agent {agent_id} health check failed: {e}")
                     agent_config["status"] = "unhealthy"
 
         except Exception as e:
-            print(f"❌ Error checking agent health: {e}")
+            print(f"âŒ Error checking agent health: {e}")
 
     async def distribute_coordination_tasks(self):
         """Distribute coordination tasks to agents"""
@@ -416,7 +416,7 @@ class NLPOrchestrator(BaseAgent):
             self.state["coordination_tasks"] = tasks
 
         except Exception as e:
-            print(f"❌ Error distributing coordination tasks: {e}")
+            print(f"âŒ Error distributing coordination tasks: {e}")
 
     async def distribute_task(self, task: Dict[str, Any]):
         """Distribute a single task to target agents"""
@@ -441,10 +441,10 @@ class NLPOrchestrator(BaseAgent):
                     # Send task to agent
                     await self.send_message(agent_id, task_message)
 
-                    print(f"📋 Task {task_type} sent to {agent_name}")
+                    print(f"ðŸ“‹ Task {task_type} sent to {agent_name}")
 
         except Exception as e:
-            print(f"❌ Error distributing task {task.get('type', 'unknown')}: {e}")
+            print(f"âŒ Error distributing task {task.get('type', 'unknown')}: {e}")
 
     async def synchronize_agent_states(self):
         """Synchronize states between NLP agents"""
@@ -486,10 +486,10 @@ class NLPOrchestrator(BaseAgent):
 
                 await self.send_message(agent_id, sync_message)
 
-            print("🔄 Agent states synchronized")
+            print("ðŸ”„ Agent states synchronized")
 
         except Exception as e:
-            print(f"❌ Error synchronizing agent states: {e}")
+            print(f"âŒ Error synchronizing agent states: {e}")
 
     async def update_unified_sentiment(self):
         """Update unified sentiment from all sources"""
@@ -523,7 +523,7 @@ class NLPOrchestrator(BaseAgent):
                         unified_sentiment[agent_name] = mock_sentiment
 
                     except Exception as e:
-                        print(f"❌ Error getting sentiment from {agent_name}: {e}")
+                        print(f"âŒ Error getting sentiment from {agent_name}: {e}")
 
             # Store unified sentiment
             self.state["unified_sentiment"] = unified_sentiment
@@ -532,7 +532,7 @@ class NLPOrchestrator(BaseAgent):
             await self.broadcast_unified_sentiment(unified_sentiment)
 
         except Exception as e:
-            print(f"❌ Error updating unified sentiment: {e}")
+            print(f"âŒ Error updating unified sentiment: {e}")
 
     async def broadcast_unified_sentiment(self, unified_sentiment: Dict[str, Any]):
         """Broadcast unified sentiment to other agents"""
@@ -552,7 +552,7 @@ class NLPOrchestrator(BaseAgent):
             await self.send_message("execution_agent", sentiment_broadcast)
 
         except Exception as e:
-            print(f"❌ Error broadcasting unified sentiment: {e}")
+            print(f"âŒ Error broadcasting unified sentiment: {e}")
 
     async def manage_nlp_services(self):
         """Manage NLP services"""
@@ -562,12 +562,12 @@ class NLPOrchestrator(BaseAgent):
                     await self.update_service(service_name, service_config)
 
         except Exception as e:
-            print(f"❌ Error managing NLP services: {e}")
+            print(f"âŒ Error managing NLP services: {e}")
 
     async def start_service(self, service_name: str, service_config: Dict[str, Any]):
         """Start an NLP service"""
         try:
-            print(f"🚀 Starting NLP service: {service_name}")
+            print(f"ðŸš€ Starting NLP service: {service_name}")
 
             # Create service task
             service_task = {
@@ -584,7 +584,7 @@ class NLPOrchestrator(BaseAgent):
             self.state["nlp_services"]["services"][service_name] = service_task
 
         except Exception as e:
-            print(f"❌ Error starting service {service_name}: {e}")
+            print(f"âŒ Error starting service {service_name}: {e}")
 
     async def update_service(self, service_name: str, service_config: Dict[str, Any]):
         """Update an NLP service"""
@@ -593,10 +593,10 @@ class NLPOrchestrator(BaseAgent):
             update_interval = service_config.get("update_interval", 300)
 
             # For now, just log service status
-            print(f"⚙️ Service {service_name} running (interval: {update_interval}s)")
+            print(f"âš™ï¸ Service {service_name} running (interval: {update_interval}s)")
 
         except Exception as e:
-            print(f"❌ Error updating service {service_name}: {e}")
+            print(f"âŒ Error updating service {service_name}: {e}")
 
     async def monitor_agent_health(self, agent_name: str, agent_config: Dict[str, Any]):
         """Monitor health of a specific agent"""
@@ -612,17 +612,17 @@ class NLPOrchestrator(BaseAgent):
 
             await self.send_message(agent_id, health_check)
 
-            print(f"💓 Monitoring agent: {agent_name} ({agent_id})")
+            print(f"ðŸ’“ Monitoring agent: {agent_name} ({agent_id})")
 
         except Exception as e:
-            print(f"❌ Error monitoring agent {agent_name}: {e}")
+            print(f"âŒ Error monitoring agent {agent_name}: {e}")
 
     async def handle_coordinate_nlp(self, message: Dict[str, Any]):
         """Handle manual NLP coordination request"""
         try:
             coordination_type = message.get("type", "full")
 
-            print(f"🧠 Manual NLP coordination requested: {coordination_type}")
+            print(f"ðŸ§  Manual NLP coordination requested: {coordination_type}")
 
             if coordination_type == "full":
                 await self.coordinate_nlp_agents()
@@ -643,7 +643,7 @@ class NLPOrchestrator(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling NLP coordination request: {e}")
+            print(f"âŒ Error handling NLP coordination request: {e}")
             await self.broadcast_error(f"NLP coordination error: {e}")
 
     async def handle_get_unified_sentiment(self, message: Dict[str, Any]):
@@ -652,7 +652,7 @@ class NLPOrchestrator(BaseAgent):
             symbols = message.get("symbols", [])
             timeframe = message.get("timeframe", "1h")
 
-            print(f"📊 Unified sentiment request for {symbols} ({timeframe})")
+            print(f"ðŸ“Š Unified sentiment request for {symbols} ({timeframe})")
 
             # Get unified sentiment data
             sentiment_data = {
@@ -678,7 +678,7 @@ class NLPOrchestrator(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling unified sentiment request: {e}")
+            print(f"âŒ Error handling unified sentiment request: {e}")
             await self.broadcast_error(f"Unified sentiment request error: {e}")
 
     async def handle_nlp_service_request(self, message: Dict[str, Any]):
@@ -687,7 +687,7 @@ class NLPOrchestrator(BaseAgent):
             service_name = message.get("service")
             parameters = message.get("parameters", {})
 
-            print(f"🔧 NLP service request: {service_name}")
+            print(f"ðŸ”§ NLP service request: {service_name}")
 
             # Route service request to appropriate agent
             service_response = await self.route_service_request(service_name, parameters)
@@ -705,7 +705,7 @@ class NLPOrchestrator(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling NLP service request: {e}")
+            print(f"âŒ Error handling NLP service request: {e}")
             await self.broadcast_error(f"NLP service request error: {e}")
 
     async def route_service_request(
@@ -748,7 +748,7 @@ class NLPOrchestrator(BaseAgent):
                 }
 
         except Exception as e:
-            print(f"❌ Error routing service request: {e}")
+            print(f"âŒ Error routing service request: {e}")
             return {"status": "error", "message": str(e)}
 
     async def update_coordination_metrics(self):
@@ -771,7 +771,7 @@ class NLPOrchestrator(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating coordination metrics: {e}")
+            print(f"âŒ Error updating coordination metrics: {e}")
 
     async def cleanup_tasks(self):
         """Clean up old coordination tasks"""
@@ -783,12 +783,12 @@ class NLPOrchestrator(BaseAgent):
                 self.state["coordination_tasks"] = self.state["coordination_tasks"][-100:]
 
         except Exception as e:
-            print(f"❌ Error cleaning up tasks: {e}")
+            print(f"âŒ Error cleaning up tasks: {e}")
 
     async def process_market_data(self, market_data: Dict[str, Any]):
         """Process incoming market data for NLP coordination"""
         try:
-            print(f"📊 Processing market data for NLP coordination")
+            print(f"ðŸ“Š Processing market data for NLP coordination")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -808,8 +808,10 @@ class NLPOrchestrator(BaseAgent):
             # Update coordination metrics
             await self.update_coordination_metrics()
 
-            print(f"✅ Market data processed for NLP coordination")
+            print(f"âœ… Market data processed for NLP coordination")
 
         except Exception as e:
-            print(f"❌ Error processing market data for NLP coordination: {e}")
+            print(f"âŒ Error processing market data for NLP coordination: {e}")
             await self.broadcast_error(f"NLP coordination market data error: {e}")
+
+

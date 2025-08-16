@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 AI Trading Platform Startup Script
 Run this to start the complete AI trading system
@@ -20,10 +20,10 @@ async def main():
     )
     logger = logging.getLogger(__name__)
 
-    logger.info("🚀 Starting Mystic AI Trading Platform...")
+    logger.info("ðŸš€ Starting Mystic AI Trading Platform...")
 
     # Send startup notification
-    send_alert("🤖 Mystic AI Trading Platform is starting up...")
+    send_alert("ðŸ¤– Mystic AI Trading Platform is starting up...")
 
     # Create backup
     snapshot()
@@ -37,12 +37,14 @@ async def main():
     except KeyboardInterrupt:
         logger.info("Received shutdown signal...")
         ai_trader.stop_trading()
-        send_alert("🛑 Mystic AI Trading Platform shutting down...")
+        send_alert("ðŸ›‘ Mystic AI Trading Platform shutting down...")
     except Exception as e:
         logger.error(f"Fatal error: {e}")
-        send_alert(f"💥 Fatal error in AI Trading Platform: {e}")
+        send_alert(f"ðŸ’¥ Fatal error in AI Trading Platform: {e}")
         raise
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

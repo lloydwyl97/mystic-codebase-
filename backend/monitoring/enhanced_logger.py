@@ -1,4 +1,4 @@
-"""
+﻿"""
 Enhanced Logging System for Mystic Trading Platform
 
 Provides comprehensive logging with:
@@ -389,3 +389,5 @@ class EnhancedLogger:
 
 # Global enhanced logger instance
 enhanced_logger = EnhancedLogger()
+
+

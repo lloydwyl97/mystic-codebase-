@@ -1,4 +1,4 @@
-"""
+﻿"""
 Signal Manager Service
 Handles trading signal processing and management
 """
@@ -120,3 +120,5 @@ class SignalManager:
 
 # Global instance
 signal_manager = SignalManager()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced Analytics Endpoints
 
 Handles all advanced analytics related API endpoints including performance, trade history, and AI insights.
@@ -9,8 +9,8 @@ from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from services.analytics_service import analytics_service
-from services.order_service import order_service
+from backend.services.analytics_service import analytics_service
+from backend.services.order_service import order_service
 
 logger = logging.getLogger(__name__)
 
@@ -132,3 +132,6 @@ async def get_market_analysis(symbol: str = "BTC/USDT"):
     except Exception as e:
         logger.error(f"Error getting market analysis: {str(e)}")
         raise HTTPException(status_code=500, detail="Error getting market analysis")
+
+
+

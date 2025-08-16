@@ -1,4 +1,4 @@
-# hyper_tuner.py
+﻿# hyper_tuner.py
 """
 Hyperparameter Optimization Engine for AI Trading Strategies
 Auto-tunes strategy parameters to maximize profit, win rate, and Sharpe ratio.
@@ -218,8 +218,8 @@ class HyperparameterTuner:
         Returns:
             List of best configurations found
         """
-        print(f"🧬 Starting Random Search Optimization for {strategy_type}")
-        print(f"📊 Testing {rounds} random configurations...")
+        print(f"ðŸ§¬ Starting Random Search Optimization for {strategy_type}")
+        print(f"ðŸ“Š Testing {rounds} random configurations...")
 
         best_configs = []
 
@@ -252,8 +252,8 @@ class HyperparameterTuner:
                     best_configs.sort(key=lambda x: x["total_profit"], reverse=True)
                     best_configs = best_configs[:10]  # Keep top 10
 
-        print("\n🏆 Random Search Complete!")
-        print(f"✅ Found {len(best_configs)} profitable configurations")
+        print("\nðŸ† Random Search Complete!")
+        print(f"âœ… Found {len(best_configs)} profitable configurations")
 
         if best_configs and save_best:
             best_config = best_configs[0]
@@ -261,7 +261,7 @@ class HyperparameterTuner:
                 f"{strategy_type}_optimized_{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}"
             )
             save_strategy_version(config_name, best_config)
-            print(f"💾 Saved best config as: {config_name}")
+            print(f"ðŸ’¾ Saved best config as: {config_name}")
 
         return best_configs
 
@@ -286,8 +286,8 @@ class HyperparameterTuner:
         Returns:
             List of best configurations found
         """
-        print(f"🧬 Starting Genetic Optimization for {strategy_type}")
-        print(f"👥 Population: {population_size} | Generations: {generations}")
+        print(f"ðŸ§¬ Starting Genetic Optimization for {strategy_type}")
+        print(f"ðŸ‘¥ Population: {population_size} | Generations: {generations}")
 
         # Initialize population
         population = []
@@ -299,7 +299,7 @@ class HyperparameterTuner:
         best_configs = []
 
         for generation in range(generations):
-            print(f"\n🔄 Generation {generation + 1}/{generations}")
+            print(f"\nðŸ”„ Generation {generation + 1}/{generations}")
 
             # Sort population by fitness (profit)
             population.sort(key=lambda x: x["total_profit"], reverse=True)
@@ -309,7 +309,7 @@ class HyperparameterTuner:
             best_configs.append(generation_best)
 
             print(
-                f"🏆 Best: ${generation_best['total_profit']:.2f} | "
+                f"ðŸ† Best: ${generation_best['total_profit']:.2f} | "
                 f"Win Rate: {generation_best['win_rate']:.1%} | "
                 f"Sharpe: {generation_best['sharpe_ratio']:.3f}"
             )
@@ -340,8 +340,8 @@ class HyperparameterTuner:
 
             population = new_population
 
-        print("\n🏆 Genetic Optimization Complete!")
-        print(f"✅ Best configuration: ${best_configs[-1]['total_profit']:.2f}")
+        print("\nðŸ† Genetic Optimization Complete!")
+        print(f"âœ… Best configuration: ${best_configs[-1]['total_profit']:.2f}")
 
         if best_configs and save_best:
             best_config = best_configs[-1]
@@ -349,7 +349,7 @@ class HyperparameterTuner:
                 f"{strategy_type}_genetic_{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}"
             )
             save_strategy_version(config_name, best_config)
-            print(f"💾 Saved best config as: {config_name}")
+            print(f"ðŸ’¾ Saved best config as: {config_name}")
 
         return best_configs
 
@@ -370,8 +370,8 @@ class HyperparameterTuner:
         Returns:
             List of best configurations found
         """
-        print(f"🧬 Starting Bayesian Optimization for {strategy_type}")
-        print(f"📊 Running {rounds} optimization rounds...")
+        print(f"ðŸ§¬ Starting Bayesian Optimization for {strategy_type}")
+        print(f"ðŸ“Š Running {rounds} optimization rounds...")
 
         best_configs = []
         explored_configs = []
@@ -405,13 +405,13 @@ class HyperparameterTuner:
                 best_configs.sort(key=lambda x: x["total_profit"], reverse=True)
                 best_configs = best_configs[:10]
 
-        print("\n🏆 Bayesian Optimization Complete!")
+        print("\nðŸ† Bayesian Optimization Complete!")
 
         if not best_configs:
-            print("❌ No profitable configurations found.")
+            print("âŒ No profitable configurations found.")
             return best_configs
 
-        print(f"✅ Best configuration: ${best_configs[0]['total_profit']:.2f}")
+        print(f"âœ… Best configuration: ${best_configs[0]['total_profit']:.2f}")
 
         if best_configs and save_best:
             best_config = best_configs[0]
@@ -419,7 +419,7 @@ class HyperparameterTuner:
                 f"{strategy_type}_bayesian_{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}"
             )
             save_strategy_version(config_name, best_config)
-            print(f"💾 Saved best config as: {config_name}")
+            print(f"ðŸ’¾ Saved best config as: {config_name}")
 
         return best_configs
 
@@ -454,16 +454,16 @@ class HyperparameterTuner:
         optimization_time = time.time() - start_time
 
         if not best_configs:
-            print("❌ No profitable configurations found.")
+            print("âŒ No profitable configurations found.")
             return None
 
         best_config = best_configs[0]
-        print("\n🎯 Optimization Summary:")
-        print(f"⏱️  Time: {optimization_time:.1f} seconds")
-        print(f"💰 Best Profit: ${best_config['total_profit']:.2f}")
-        print(f"📈 Win Rate: {best_config['win_rate']:.1%}")
-        print(f"📊 Sharpe Ratio: {best_config['sharpe_ratio']:.3f}")
-        print(f"🔄 Trades: {best_config['trades_count']}")
+        print("\nðŸŽ¯ Optimization Summary:")
+        print(f"â±ï¸  Time: {optimization_time:.1f} seconds")
+        print(f"ðŸ’° Best Profit: ${best_config['total_profit']:.2f}")
+        print(f"ðŸ“ˆ Win Rate: {best_config['win_rate']:.1%}")
+        print(f"ðŸ“Š Sharpe Ratio: {best_config['sharpe_ratio']:.3f}")
+        print(f"ðŸ”„ Trades: {best_config['trades_count']}")
 
         return best_config
 
@@ -489,19 +489,21 @@ def optimize_macd_crossover(method: str = "genetic", rounds: int = 50) -> Dict[s
 
 # Example usage
 if __name__ == "__main__":
-    print("🧬 Hyperparameter Optimization Engine")
+    print("ðŸ§¬ Hyperparameter Optimization Engine")
     print("=" * 50)
 
     # Test different optimization methods
     methods = ["random", "genetic", "bayesian"]
 
     for method in methods:
-        print(f"\n🔧 Testing {method.upper()} optimization...")
+        print(f"\nðŸ”§ Testing {method.upper()} optimization...")
         try:
             result = optimize_rsi_ema_breakout(method, rounds=20)
             if result:
-                print(f"✅ {method.upper()} completed successfully")
+                print(f"âœ… {method.upper()} completed successfully")
         except Exception as e:
-            print(f"❌ {method.upper()} failed: {e}")
+            print(f"âŒ {method.upper()} failed: {e}")
 
-    print("\n🎉 Optimization testing complete!")
+    print("\nðŸŽ‰ Optimization testing complete!")
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Application Configuration for Mystic Trading
 
 Centralizes application configuration and setup.
@@ -57,3 +57,5 @@ def get_app_settings():
         "api_host": os.getenv("API_HOST", "localhost"),
         "api_port": int(os.getenv("PORT", "8000")),
     }
+
+

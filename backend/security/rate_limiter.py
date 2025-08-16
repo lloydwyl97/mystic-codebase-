@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced Rate Limiter for Mystic Trading Platform
 
 Provides comprehensive rate limiting with:
@@ -408,3 +408,5 @@ class AdvancedRateLimiter:
 
 # Global rate limiter instance
 rate_limiter = AdvancedRateLimiter()
+
+

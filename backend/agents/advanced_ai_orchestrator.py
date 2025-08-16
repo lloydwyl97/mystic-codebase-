@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced AI Orchestrator
 Coordinates all AI agents including deep learning, reinforcement learning, and model management
 """
@@ -20,10 +20,10 @@ root_path = os.path.dirname(backend_path)
 if root_path not in sys.path:
     sys.path.append(root_path)
 
-from agents.base_agent import BaseAgent  # noqa: E402
-from config.coins import FEATURED_SYMBOLS  # noqa: E402
+from backend.agents.base_agent import BaseAgent  # noqa: E402
+from backend.config.coins import FEATURED_SYMBOLS  # noqa: E402
 from typing import Any, Dict, List, Optional
-from services.ai_attribution import save_attribution  # noqa: E402
+from backend.services.ai_attribution import save_attribution  # noqa: E402
 
 # Add usage for unused imports to satisfy F401
 _timedelta: timedelta = timedelta(seconds=0)
@@ -138,7 +138,7 @@ class AdvancedAIOrchestrator(BaseAgent):
         self.register_handler("ai_strategy", self.handle_ai_strategy)
         self.register_handler("model_deployment", self.handle_model_deployment)
 
-        print(f"🎛️ Advanced AI Orchestrator {agent_id} initialized")
+        print(f"ðŸŽ›ï¸ Advanced AI Orchestrator {agent_id} initialized")
 
     async def initialize(self):
         """Initialize advanced AI orchestrator resources"""
@@ -152,10 +152,10 @@ class AdvancedAIOrchestrator(BaseAgent):
             # Start AI coordination
             await self.start_ai_coordination()
 
-            print(f"✅ Advanced AI Orchestrator {self.agent_id} initialized successfully")
+            print(f"âœ… Advanced AI Orchestrator {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Advanced AI Orchestrator: {e}")
+            print(f"âŒ Error initializing Advanced AI Orchestrator: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -180,7 +180,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                 await asyncio.sleep(60)  # Check every minute
 
             except Exception as e:
-                print(f"❌ Error in AI coordination processing loop: {e}")
+                print(f"âŒ Error in AI coordination processing loop: {e}")
                 await asyncio.sleep(120)
 
     async def load_coordination_config(self):
@@ -197,13 +197,13 @@ class AdvancedAIOrchestrator(BaseAgent):
                 self.trading_symbols = json.loads(symbols_data)
 
             print(
-                f"📋 Coordination configuration loaded: "
+                f"ðŸ“‹ Coordination configuration loaded: "
                 f"{len(self.coordination_config['ai_agents'])} AI agents, "
                 f"{len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading coordination configuration: {e}")
+            print(f"âŒ Error loading coordination configuration: {e}")
 
     async def initialize_ai_agents(self):
         """Initialize AI agent connections"""
@@ -221,10 +221,10 @@ class AdvancedAIOrchestrator(BaseAgent):
                     self.agent_weights[agent_name] = agent_config["weight"]
                     self.agent_capabilities[agent_name] = agent_config["capabilities"]
 
-            print(f"🤖 AI agents initialized: {len(self.ai_agents)} agents")
+            print(f"ðŸ¤– AI agents initialized: {len(self.ai_agents)} agents")
 
         except Exception as e:
-            print(f"❌ Error initializing AI agents: {e}")
+            print(f"âŒ Error initializing AI agents: {e}")
 
     async def start_ai_coordination(self):
         """Start AI coordination"""
@@ -238,10 +238,10 @@ class AdvancedAIOrchestrator(BaseAgent):
             # Start coordination listener
             asyncio.create_task(self.listen_ai_updates(pubsub))
 
-            print("📡 AI coordination started")
+            print("ðŸ“¡ AI coordination started")
 
         except Exception as e:
-            print(f"❌ Error starting AI coordination: {e}")
+            print(f"âŒ Error starting AI coordination: {e}")
 
     async def listen_ai_updates(self, pubsub) -> None:
         """Listen for AI agent updates"""
@@ -255,7 +255,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                     await self.process_ai_update(update_data)
 
         except Exception as e:
-            print(f"❌ Error in AI updates listener: {e}")
+            print(f"âŒ Error in AI updates listener: {e}")
         finally:
             pubsub.close()
 
@@ -276,7 +276,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                 await self.handle_model_deployment_update(update_data)
 
         except Exception as e:
-            print(f"❌ Error processing AI update: {e}")
+            print(f"âŒ Error processing AI update: {e}")
 
     async def handle_deep_learning_prediction(self, update_data: Dict[str, Any]):
         """Handle deep learning prediction update"""
@@ -300,10 +300,10 @@ class AdvancedAIOrchestrator(BaseAgent):
                     "last_communication"
                 ] = datetime.now().isoformat()
 
-                print(f"🧠 Deep learning predictions received for {symbol}")
+                print(f"ðŸ§  Deep learning predictions received for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error handling deep learning prediction: {e}")
+            print(f"âŒ Error handling deep learning prediction: {e}")
 
     async def handle_reinforcement_learning_strategy(self, update_data: Dict[str, Any]):
         """Handle reinforcement learning strategy update"""
@@ -327,10 +327,10 @@ class AdvancedAIOrchestrator(BaseAgent):
                     "last_communication"
                 ] = datetime.now().isoformat()
 
-                print(f"🎯 Reinforcement learning strategies received for {symbol}")
+                print(f"ðŸŽ¯ Reinforcement learning strategies received for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error handling reinforcement learning strategy: {e}")
+            print(f"âŒ Error handling reinforcement learning strategy: {e}")
 
     async def handle_nlp_sentiment(self, update_data: Dict[str, Any]):
         """Handle NLP sentiment update"""
@@ -352,10 +352,10 @@ class AdvancedAIOrchestrator(BaseAgent):
                 self.ai_agents["nlp_agent"]["status"] = "active"
                 self.ai_agents["nlp_agent"]["last_communication"] = datetime.now().isoformat()
 
-                print(f"📰 NLP sentiment data received for {symbol}")
+                print(f"ðŸ“° NLP sentiment data received for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error handling NLP sentiment: {e}")
+            print(f"âŒ Error handling NLP sentiment: {e}")
 
     async def handle_computer_vision_analysis(self, update_data: Dict[str, Any]):
         """Handle computer vision analysis update"""
@@ -379,10 +379,10 @@ class AdvancedAIOrchestrator(BaseAgent):
                     "last_communication"
                 ] = datetime.now().isoformat()
 
-                print(f"👁️ Computer vision analysis received for {symbol}")
+                print(f"ðŸ‘ï¸ Computer vision analysis received for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error handling computer vision analysis: {e}")
+            print(f"âŒ Error handling computer vision analysis: {e}")
 
     async def handle_model_deployment_update(self, update_data: Dict[str, Any]):
         """Handle model deployment update"""
@@ -402,15 +402,15 @@ class AdvancedAIOrchestrator(BaseAgent):
                     "deployed_at": datetime.now().isoformat(),
                 }
 
-                print(f"🚀 Model deployment coordinated: {model_id} v{version}")
+                print(f"ðŸš€ Model deployment coordinated: {model_id} v{version}")
 
         except Exception as e:
-            print(f"❌ Error handling model deployment update: {e}")
+            print(f"âŒ Error handling model deployment update: {e}")
 
     async def coordinate_ai_agents(self):
         """Coordinate AI agents"""
         try:
-            print(f"🎛️ Coordinating {len(self.ai_agents)} AI agents...")
+            print(f"ðŸŽ›ï¸ Coordinating {len(self.ai_agents)} AI agents...")
 
             # Check agent health
             await self.check_agent_health()
@@ -422,10 +422,10 @@ class AdvancedAIOrchestrator(BaseAgent):
             self.state["last_coordination"] = datetime.now().isoformat()
             self.state["coordination_count"] += 1
 
-            print("✅ AI coordination complete")
+            print("âœ… AI coordination complete")
 
         except Exception as e:
-            print(f"❌ Error coordinating AI agents: {e}")
+            print(f"âŒ Error coordinating AI agents: {e}")
 
     async def check_agent_health(self):
         """Check health of AI agents"""
@@ -447,7 +447,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                     agent_info["status"] = "unknown"
 
         except Exception as e:
-            print(f"❌ Error checking agent health: {e}")
+            print(f"âŒ Error checking agent health: {e}")
 
     async def request_agent_updates(self):
         """Request updates from AI agents"""
@@ -468,10 +468,10 @@ class AdvancedAIOrchestrator(BaseAgent):
                             elif agent_name == "computer_vision_agent":
                                 await self.request_computer_vision_analysis(agent_name, symbol)
                         except Exception as e:
-                            print(f"❌ Error requesting update from {agent_name} for {symbol}: {e}")
+                            print(f"âŒ Error requesting update from {agent_name} for {symbol}: {e}")
 
         except Exception as e:
-            print(f"❌ Error requesting agent updates: {e}")
+            print(f"âŒ Error requesting agent updates: {e}")
 
     async def request_deep_learning_prediction(self, agent_name: str, symbol: str):
         """Request deep learning prediction"""
@@ -486,7 +486,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             await self.send_message(agent_name, request)
 
         except Exception as e:
-            print(f"❌ Error requesting deep learning prediction: {e}")
+            print(f"âŒ Error requesting deep learning prediction: {e}")
 
     async def request_reinforcement_learning_strategy(self, agent_name: str, symbol: str):
         """Request reinforcement learning strategy"""
@@ -501,7 +501,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             await self.send_message(agent_name, request)
 
         except Exception as e:
-            print(f"❌ Error requesting reinforcement learning strategy: {e}")
+            print(f"âŒ Error requesting reinforcement learning strategy: {e}")
 
     async def request_nlp_sentiment(self, agent_name: str, symbol: str):
         """Request NLP sentiment analysis"""
@@ -516,7 +516,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             await self.send_message(agent_name, request)
 
         except Exception as e:
-            print(f"❌ Error requesting NLP sentiment: {e}")
+            print(f"âŒ Error requesting NLP sentiment: {e}")
 
     async def request_computer_vision_analysis(self, agent_name: str, symbol: str):
         """Request computer vision analysis"""
@@ -531,23 +531,23 @@ class AdvancedAIOrchestrator(BaseAgent):
             await self.send_message(agent_name, request)
 
         except Exception as e:
-            print(f"❌ Error requesting computer vision analysis: {e}")
+            print(f"âŒ Error requesting computer vision analysis: {e}")
 
     async def generate_ai_strategies(self) -> None:
         """Generate AI strategies by combining agent outputs"""
         try:
-            print(f"🎯 Generating AI strategies for {len(FEATURED_SYMBOLS)} symbols...")
+            print(f"ðŸŽ¯ Generating AI strategies for {len(FEATURED_SYMBOLS)} symbols...")
 
             for symbol in FEATURED_SYMBOLS:
                 try:
                     await self.generate_symbol_ai_strategy(symbol)
                 except Exception as e:
-                    print(f"❌ Error generating AI strategy for {symbol}: {e}")
+                    print(f"âŒ Error generating AI strategy for {symbol}: {e}")
 
-            print("✅ AI strategy generation complete")
+            print("âœ… AI strategy generation complete")
 
         except Exception as e:
-            print(f"❌ Error generating AI strategies: {e}")
+            print(f"âŒ Error generating AI strategies: {e}")
 
     async def generate_symbol_ai_strategy(self, symbol: str) -> None:
         """Generate AI strategy for a specific symbol"""
@@ -574,7 +574,7 @@ class AdvancedAIOrchestrator(BaseAgent):
 
             if len(active_agents) < 2:
                 print(
-                    f"⚠️ Insufficient agent data for {symbol}: "
+                    f"âš ï¸ Insufficient agent data for {symbol}: "
                     f"{len(active_agents)} active agents"
                 )
                 return
@@ -597,7 +597,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                 # Broadcast strategy
                 await self.broadcast_ai_strategy(symbol, strategy, active_agents)
 
-                print(f"✅ AI strategy generated for {symbol} with {len(active_agents)} agents")
+                print(f"âœ… AI strategy generated for {symbol} with {len(active_agents)} agents")
 
                 # Save AI attribution for explainability
                 try:
@@ -636,7 +636,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                     pass
 
         except Exception as e:
-            print(f"❌ Error generating AI strategy for {symbol}: {e}")
+            print(f"âŒ Error generating AI strategy for {symbol}: {e}")
 
     async def combine_agent_outputs(
         self, symbol: str, agent_data: Dict[str, Any], active_agents: List[str]
@@ -693,7 +693,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                     return combined_strategy
                 else:
                     print(
-                        f"⚠️ Low confidence strategy for {symbol}: "
+                        f"âš ï¸ Low confidence strategy for {symbol}: "
                         f"{combined_strategy['confidence']:.3f}"
                     )
                     return None
@@ -701,7 +701,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             return None
 
         except Exception as e:
-            print(f"❌ Error combining agent outputs: {e}")
+            print(f"âŒ Error combining agent outputs: {e}")
             return None
 
     async def process_agent_contribution(
@@ -723,7 +723,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                 return None
 
         except Exception as e:
-            print(f"❌ Error processing agent contribution: {e}")
+            print(f"âŒ Error processing agent contribution: {e}")
             return None
 
     async def process_deep_learning_contribution(
@@ -770,7 +770,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error processing deep learning contribution: {e}")
+            print(f"âŒ Error processing deep learning contribution: {e}")
             return None
 
     async def process_reinforcement_learning_contribution(
@@ -823,7 +823,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error processing reinforcement learning contribution: {e}")
+            print(f"âŒ Error processing reinforcement learning contribution: {e}")
             return None
 
     async def process_nlp_contribution(
@@ -866,7 +866,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error processing NLP contribution: {e}")
+            print(f"âŒ Error processing NLP contribution: {e}")
             return None
 
     async def process_computer_vision_contribution(
@@ -920,7 +920,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error processing computer vision contribution: {e}")
+            print(f"âŒ Error processing computer vision contribution: {e}")
             return None
 
     async def broadcast_ai_strategy(
@@ -945,7 +945,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             await self.send_message("risk_agent", strategy_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting AI strategy: {e}")
+            print(f"âŒ Error broadcasting AI strategy: {e}")
 
     async def evaluate_strategy_performance(self):
         """Evaluate performance of AI strategies"""
@@ -987,7 +987,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                         self.performance_history[symbol] = self.performance_history[symbol][-100:]
 
         except Exception as e:
-            print(f"❌ Error evaluating strategy performance: {e}")
+            print(f"âŒ Error evaluating strategy performance: {e}")
 
     async def get_current_market_data(self, symbol: str) -> Optional[Dict[str, Any]]:
         """Get current market data for symbol"""
@@ -1000,7 +1000,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             return None
 
         except Exception as e:
-            print(f"❌ Error getting current market data: {e}")
+            print(f"âŒ Error getting current market data: {e}")
             return None
 
     async def calculate_strategy_performance(
@@ -1034,7 +1034,7 @@ class AdvancedAIOrchestrator(BaseAgent):
             return performance
 
         except Exception as e:
-            print(f"❌ Error calculating strategy performance: {e}")
+            print(f"âŒ Error calculating strategy performance: {e}")
             return 0.0
 
     async def cleanup_old_strategies(self):
@@ -1054,15 +1054,15 @@ class AdvancedAIOrchestrator(BaseAgent):
                 del self.state["ai_strategies"][strategy_id]
 
             if expired_strategies:
-                print(f"🗑️ Cleaned up {len(expired_strategies)} expired strategies")
+                print(f"ðŸ—‘ï¸ Cleaned up {len(expired_strategies)} expired strategies")
 
         except Exception as e:
-            print(f"❌ Error cleaning up old strategies: {e}")
+            print(f"âŒ Error cleaning up old strategies: {e}")
 
     async def handle_coordinate_ai_agents(self, message: Dict[str, Any]):
         """Handle manual AI coordination request"""
         try:
-            print("🎛️ Manual AI coordination requested")
+            print("ðŸŽ›ï¸ Manual AI coordination requested")
 
             # Perform coordination
             await self.coordinate_ai_agents()
@@ -1081,7 +1081,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling AI coordination request: {e}")
+            print(f"âŒ Error handling AI coordination request: {e}")
             await self.broadcast_error(f"AI coordination error: {e}")
 
     async def handle_generate_ai_strategy(self, message: Dict[str, Any]):
@@ -1089,7 +1089,7 @@ class AdvancedAIOrchestrator(BaseAgent):
         try:
             symbol = message.get("symbol")
 
-            print(f"🎯 Manual AI strategy generation requested for {symbol}")
+            print(f"ðŸŽ¯ Manual AI strategy generation requested for {symbol}")
 
             if symbol:
                 await self.generate_symbol_ai_strategy(symbol)
@@ -1114,13 +1114,13 @@ class AdvancedAIOrchestrator(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling AI strategy generation request: {e}")
+            print(f"âŒ Error handling AI strategy generation request: {e}")
             await self.broadcast_error(f"AI strategy generation error: {e}")
 
     async def handle_get_ai_status(self, message: Dict[str, Any]):
         """Handle AI status request"""
         try:
-            print("📊 AI status requested")
+            print("ðŸ“Š AI status requested")
 
             # Get AI status
             ai_status = {
@@ -1142,7 +1142,7 @@ class AdvancedAIOrchestrator(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling AI status request: {e}")
+            print(f"âŒ Error handling AI status request: {e}")
             await self.broadcast_error(f"AI status error: {e}")
 
     async def handle_ai_prediction(self, message: Dict[str, Any]):
@@ -1150,21 +1150,21 @@ class AdvancedAIOrchestrator(BaseAgent):
         try:
             await self.process_ai_update(message)
         except Exception as e:
-            print(f"❌ Error handling AI prediction: {e}")
+            print(f"âŒ Error handling AI prediction: {e}")
 
     async def handle_ai_strategy(self, message: Dict[str, Any]):
         """Handle AI strategy update"""
         try:
             await self.process_ai_update(message)
         except Exception as e:
-            print(f"❌ Error handling AI strategy: {e}")
+            print(f"âŒ Error handling AI strategy: {e}")
 
     async def handle_model_deployment(self, message: Dict[str, Any]):
         """Handle model deployment update"""
         try:
             await self.process_ai_update(message)
         except Exception as e:
-            print(f"❌ Error handling model deployment: {e}")
+            print(f"âŒ Error handling model deployment: {e}")
 
     async def update_coordination_metrics(self):
         """Update coordination metrics"""
@@ -1186,12 +1186,12 @@ class AdvancedAIOrchestrator(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating coordination metrics: {e}")
+            print(f"âŒ Error updating coordination metrics: {e}")
 
     async def process_market_data(self, market_data: Dict[str, Any]):
         """Process incoming market data and coordinate AI agents"""
         try:
-            print(f"📊 Processing market data for {len(market_data)} symbols")
+            print(f"ðŸ“Š Processing market data for {len(market_data)} symbols")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -1215,8 +1215,10 @@ class AdvancedAIOrchestrator(BaseAgent):
             # Update coordination metrics
             await self.update_coordination_metrics()
 
-            print(f"✅ Market data processed successfully")
+            print(f"âœ… Market data processed successfully")
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
             await self.broadcast_error(f"Market data processing error: {e}")
+
+

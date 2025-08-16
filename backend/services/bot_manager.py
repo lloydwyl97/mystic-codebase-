@@ -1,4 +1,4 @@
-"""
+﻿"""
 Bot Management Service
 
 Handles bot control, monitoring, and auto-buy functionality.
@@ -133,3 +133,5 @@ class BotManager:
 
 # Global instance
 bot_manager = BotManager()
+
+

@@ -1,4 +1,4 @@
-def generate_token(name="MYSTIC", symbol="MYST", supply=1_000_000):
+﻿def generate_token(name="MYSTIC", symbol="MYST", supply=1_000_000):
     print(f"[TOKEN] Generating ERC-20 token '{name}' ({symbol}) with supply {supply}")
     contract_code = f"""
     pragma solidity ^0.8.0;
@@ -18,3 +18,5 @@ def generate_token(name="MYSTIC", symbol="MYST", supply=1_000_000):
     with open(f"{symbol}_Token.sol", "w") as f:
         f.write(contract_code)
     print(f"[TOKEN] Contract written to {symbol}_Token.sol")
+
+

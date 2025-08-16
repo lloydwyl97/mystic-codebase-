@@ -1,4 +1,4 @@
-# mutator.py
+﻿# mutator.py
 import random
 import uuid
 import logging
@@ -371,18 +371,18 @@ if __name__ == "__main__":
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
-    logger.info("🧬 Strategy Mutator Service Starting...")
+    logger.info("ðŸ§¬ Strategy Mutator Service Starting...")
 
     def signal_handler(signum, frame):
-        logger.info("🛑 Received shutdown signal, stopping strategy mutator...")
+        logger.info("ðŸ›‘ Received shutdown signal, stopping strategy mutator...")
         sys.exit(0)
 
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
     try:
-        logger.info("✅ Strategy Mutator Service is running")
-        logger.info("🔄 Will run evolution cycles every 30 minutes")
+        logger.info("âœ… Strategy Mutator Service is running")
+        logger.info("ðŸ”„ Will run evolution cycles every 30 minutes")
 
         cycle_count = 0
 
@@ -390,11 +390,11 @@ if __name__ == "__main__":
         while True:
             try:
                 cycle_count += 1
-                logger.info(f"🔄 Starting evolution cycle #{cycle_count}")
+                logger.info(f"ðŸ”„ Starting evolution cycle #{cycle_count}")
 
                 results = run_evolution_cycle()
 
-                logger.info(f"✅ Evolution cycle #{cycle_count} completed:")
+                logger.info(f"âœ… Evolution cycle #{cycle_count} completed:")
                 logger.info(f"   - New strategies created: {results['total_new_strategies']}")
                 logger.info(
                     f"   - Active strategies: {results['population_stats']['active_strategies']}"
@@ -404,16 +404,18 @@ if __name__ == "__main__":
                 )
 
                 # Wait 30 minutes before next cycle
-                logger.info("⏰ Waiting 30 minutes before next evolution cycle...")
+                logger.info("â° Waiting 30 minutes before next evolution cycle...")
                 time.sleep(1800)  # 30 minutes
 
             except Exception as e:
-                logger.error(f"❌ Evolution cycle #{cycle_count} failed: {e}")
-                logger.info("⏰ Waiting 5 minutes before retrying...")
+                logger.error(f"âŒ Evolution cycle #{cycle_count} failed: {e}")
+                logger.info("â° Waiting 5 minutes before retrying...")
                 time.sleep(300)  # 5 minutes
 
     except KeyboardInterrupt:
-        logger.info("🛑 Strategy Mutator Service stopped by user")
+        logger.info("ðŸ›‘ Strategy Mutator Service stopped by user")
     except Exception as e:
-        logger.error(f"❌ Strategy Mutator Service failed: {e}")
+        logger.error(f"âŒ Strategy Mutator Service failed: {e}")
         sys.exit(1)
+
+

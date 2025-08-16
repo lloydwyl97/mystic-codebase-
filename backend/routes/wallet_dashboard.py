@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import sqlite3
 from datetime import datetime
@@ -271,7 +271,7 @@ async def allocate_funds(amount: float, wallet_name: str) -> Dict[str, Any]:
     """Allocate funds to a specific wallet"""
     try:
         # Real allocation using wallet service
-        from services.wallet_service import get_wallet_service
+        from backend.services.wallet_service import get_wallet_service
 
         wallet_service = get_wallet_service()
         allocation_result = await wallet_service.allocate_funds(amount, wallet_name)
@@ -285,10 +285,12 @@ async def rotate_yield_funds() -> Dict[str, Any]:
     """Rotate funds to highest yielding protocol"""
     try:
         # Real rotation using yield service
-        from services.yield_service import get_yield_service
+        from backend.services.yield_service import get_yield_service
 
         yield_service = get_yield_service()
         rotation_result = await yield_service.rotate_funds()
         return rotation_result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error rotating yield funds: {str(e)}")
+
+

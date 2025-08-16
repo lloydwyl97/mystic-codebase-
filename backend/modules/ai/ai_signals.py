@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Signals - Ranked Signals
 
 Generates ranked trading signals based on multiple factors
@@ -67,11 +67,11 @@ def signal_scorer() -> List[str]:
         # Sort by score (highest first)
         scored.sort(key=lambda x: int(x.split()[-1]), reverse=True)
 
-        logger.info(f"✅ Generated {len(scored)} scored signals")
+        logger.info(f"âœ… Generated {len(scored)} scored signals")
         return scored[:10]  # Return top 10
 
     except Exception as e:
-        logger.error(f"❌ Signal scorer error: {e}")
+        logger.error(f"âŒ Signal scorer error: {e}")
         return []
 
 
@@ -124,11 +124,11 @@ def risk_adjusted_signals() -> List[Dict[str, Any]]:
         # Sort by score
         signals.sort(key=lambda x: x["score"], reverse=True)
 
-        logger.info(f"✅ Generated {len(signals)} risk-adjusted signals")
+        logger.info(f"âœ… Generated {len(signals)} risk-adjusted signals")
         return signals[:8]
 
     except Exception as e:
-        logger.error(f"❌ Risk-adjusted signals error: {e}")
+        logger.error(f"âŒ Risk-adjusted signals error: {e}")
         return []
 
 
@@ -204,11 +204,11 @@ def technical_signals() -> List[Dict[str, Any]]:
         # Sort by confidence
         signals.sort(key=lambda x: x["confidence"], reverse=True)
 
-        logger.info(f"✅ Generated {len(signals)} technical signals")
+        logger.info(f"âœ… Generated {len(signals)} technical signals")
         return signals[:10]
 
     except Exception as e:
-        logger.error(f"❌ Technical signals error: {e}")
+        logger.error(f"âŒ Technical signals error: {e}")
         return []
 
 
@@ -285,12 +285,12 @@ def market_strength_signals() -> Dict[str, Any]:
         }
 
         logger.info(
-            f"✅ Market strength analysis: {strong_percentage:.1f}% strong, {weak_percentage:.1f}% weak"
+            f"âœ… Market strength analysis: {strong_percentage:.1f}% strong, {weak_percentage:.1f}% weak"
         )
         return result
 
     except Exception as e:
-        logger.error(f"❌ Market strength signals error: {e}")
+        logger.error(f"âŒ Market strength signals error: {e}")
         return {
             "market_strength": 0,
             "market_weakness": 0,
@@ -363,11 +363,11 @@ def trend_analysis() -> Dict[str, Any]:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-        logger.info(f"✅ Trend analysis: {trend} - {summary}")
+        logger.info(f"âœ… Trend analysis: {trend} - {summary}")
         return result
 
     except Exception as e:
-        logger.error(f"❌ Trend analysis error: {e}")
+        logger.error(f"âŒ Trend analysis error: {e}")
         return {
             "trend": "UNKNOWN",
             "summary": "Unable to analyze trends",
@@ -436,11 +436,11 @@ def mystic_oracle() -> Dict[str, Any]:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-        logger.info(f"✅ Mystic Oracle: {prediction}")
+        logger.info(f"âœ… Mystic Oracle: {prediction}")
         return result
 
     except Exception as e:
-        logger.error(f"❌ Mystic Oracle error: {e}")
+        logger.error(f"âŒ Mystic Oracle error: {e}")
         return {
             "prediction": "Unable to generate prediction",
             "confidence": 0,
@@ -481,12 +481,12 @@ def get_trading_status() -> Dict[str, Any]:
         }
 
         logger.info(
-            f"✅ Trading status: {status} - {binance_symbols} Binance pairs, {coingecko_coins} CoinGecko coins"
+            f"âœ… Trading status: {status} - {binance_symbols} Binance pairs, {coingecko_coins} CoinGecko coins"
         )
         return result
 
     except Exception as e:
-        logger.error(f"❌ Trading status error: {e}")
+        logger.error(f"âŒ Trading status error: {e}")
         return {
             "trading_enabled": False,
             "status": "ERROR",
@@ -533,12 +533,12 @@ def get_trade_summary() -> Dict[str, Any]:
         }
 
         logger.info(
-            f"✅ Trade summary: {total_trades} trades, {win_rate:.1f}% win rate, {total_pnl:.2f} PnL"
+            f"âœ… Trade summary: {total_trades} trades, {win_rate:.1f}% win rate, {total_pnl:.2f} PnL"
         )
         return result
 
     except Exception as e:
-        logger.error(f"❌ Trade summary error: {e}")
+        logger.error(f"âŒ Trade summary error: {e}")
         return {
             "total_trades": 0,
             "win_rate": 0,
@@ -547,3 +547,5 @@ def get_trade_summary() -> Dict[str, Any]:
             "risk_adjusted_signals": 0,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
+
+

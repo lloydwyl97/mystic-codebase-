@@ -1,4 +1,4 @@
-"""
+﻿"""
 Base Agent Class
 Foundation for all AI trading agents
 """
@@ -46,7 +46,7 @@ class BaseAgent(ABC):
         # Register message handlers
         self.register_default_handlers()
 
-        print(f"🤖 Agent {self.agent_id} ({self.agent_type}) initialized")
+        print(f"ðŸ¤– Agent {self.agent_id} ({self.agent_type}) initialized")
 
     def register_default_handlers(self):
         """Register default message handlers"""
@@ -61,7 +61,7 @@ class BaseAgent(ABC):
 
     async def start(self):
         """Start the agent"""
-        print(f"🚀 Starting agent {self.agent_id}")
+        print(f"ðŸš€ Starting agent {self.agent_id}")
         self.running = True
 
         # Start message listener
@@ -79,24 +79,24 @@ class BaseAgent(ABC):
         # Broadcast agent startup
         await self.broadcast_status("started")
 
-        print(f"✅ Agent {self.agent_id} started successfully")
+        print(f"âœ… Agent {self.agent_id} started successfully")
 
     async def stop(self):
         """Stop the agent"""
-        print(f"🛑 Stopping agent {self.agent_id}")
+        print(f"ðŸ›‘ Stopping agent {self.agent_id}")
         self.running = False
 
         # Broadcast agent shutdown
         await self.broadcast_status("stopped")
 
-        print(f"✅ Agent {self.agent_id} stopped")
+        print(f"âœ… Agent {self.agent_id} stopped")
 
     async def listen_for_messages(self):
         """Listen for incoming messages"""
         pubsub = self.redis_client.pubsub()
         pubsub.subscribe(self.input_channel)
 
-        print(f"👂 Agent {self.agent_id} listening on {self.input_channel}")
+        print(f"ðŸ‘‚ Agent {self.agent_id} listening on {self.input_channel}")
 
         try:
             for message in pubsub.listen():
@@ -107,7 +107,7 @@ class BaseAgent(ABC):
                     await self.process_message(json.loads(message["data"]))
 
         except Exception as e:
-            print(f"❌ Error in message listener for {self.agent_id}: {e}")
+            print(f"âŒ Error in message listener for {self.agent_id}: {e}")
         finally:
             pubsub.close()
 
@@ -120,10 +120,10 @@ class BaseAgent(ABC):
             if handler:
                 await handler(message)
             else:
-                print(f"⚠️ No handler for message type: {message_type}")
+                print(f"âš ï¸ No handler for message type: {message_type}")
 
         except Exception as e:
-            print(f"❌ Error processing message in {self.agent_id}: {e}")
+            print(f"âŒ Error processing message in {self.agent_id}: {e}")
             await self.broadcast_error(f"Message processing error: {e}")
 
     async def send_message(self, target_agent: str, message: Dict[str, Any]):
@@ -140,7 +140,7 @@ class BaseAgent(ABC):
             self.redis_client.publish(target_channel, json.dumps(message))
 
         except Exception as e:
-            print(f"❌ Error sending message to {target_agent}: {e}")
+            print(f"âŒ Error sending message to {target_agent}: {e}")
 
     async def broadcast_message(self, message: Dict[str, Any]):
         """Broadcast message to all agents"""
@@ -155,7 +155,7 @@ class BaseAgent(ABC):
             self.redis_client.publish("agent:broadcast", json.dumps(message))
 
         except Exception as e:
-            print(f"❌ Error broadcasting message: {e}")
+            print(f"âŒ Error broadcasting message: {e}")
 
     async def broadcast_status(self, status: str):
         """Broadcast agent status"""
@@ -176,7 +176,7 @@ class BaseAgent(ABC):
             )
 
         except Exception as e:
-            print(f"❌ Error broadcasting status: {e}")
+            print(f"âŒ Error broadcasting status: {e}")
 
     async def broadcast_error(self, error_message: str):
         """Broadcast error message"""
@@ -191,7 +191,7 @@ class BaseAgent(ABC):
             self.redis_client.publish("agent:errors", json.dumps(error_data))
 
         except Exception as e:
-            print(f"❌ Error broadcasting error: {e}")
+            print(f"âŒ Error broadcasting error: {e}")
 
     async def heartbeat_loop(self):
         """Send periodic heartbeat"""
@@ -226,7 +226,7 @@ class BaseAgent(ABC):
                 await asyncio.sleep(30)  # Heartbeat every 30 seconds
 
             except Exception as e:
-                print(f"❌ Error in heartbeat loop for {self.agent_id}: {e}")
+                print(f"âŒ Error in heartbeat loop for {self.agent_id}: {e}")
                 await asyncio.sleep(60)
 
     async def handle_ping(self, message: Dict[str, Any]):
@@ -259,14 +259,14 @@ class BaseAgent(ABC):
 
     async def handle_shutdown(self, message: Dict[str, Any]):
         """Handle shutdown request"""
-        print(f"🛑 Agent {self.agent_id} received shutdown request")
+        print(f"ðŸ›‘ Agent {self.agent_id} received shutdown request")
         await self.stop()
 
     async def handle_state_update(self, message: Dict[str, Any]):
         """Handle state update request"""
         new_state = message.get("state", {})
         self.state.update(new_state)
-        print(f"📝 Agent {self.agent_id} state updated: {new_state}")
+        print(f"ðŸ“ Agent {self.agent_id} state updated: {new_state}")
 
     @abstractmethod
     async def initialize(self):
@@ -286,7 +286,7 @@ class BaseAgent(ABC):
     def update_health_status(self, status: str):
         """Update agent health status"""
         self.health_status = status
-        print(f"🏥 Agent {self.agent_id} health status: {status}")
+        print(f"ðŸ¥ Agent {self.agent_id} health status: {status}")
 
     def get_state(self) -> Dict[str, Any]:
         """Get current agent state"""
@@ -331,7 +331,7 @@ class BaseAgent(ABC):
                                        if k in essential_handlers}
 
         except Exception as e:
-            print(f"⚠️ Memory cleanup error in {self.agent_id}: {e}")
+            print(f"âš ï¸ Memory cleanup error in {self.agent_id}: {e}")
 
     def get_memory_usage(self) -> Dict[str, Any]:
         """Get memory usage statistics"""
@@ -365,5 +365,7 @@ class BaseAgent(ABC):
             return memory_stats
 
         except Exception as e:
-            print(f"⚠️ Error getting memory usage for {self.agent_id}: {e}")
+            print(f"âš ï¸ Error getting memory usage for {self.agent_id}: {e}")
             return {"error": str(e)}
+
+

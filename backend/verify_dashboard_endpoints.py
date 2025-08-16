@@ -1,4 +1,4 @@
-"""
+﻿"""
 Verify Dashboard Endpoints Implementation
 Checks that all new dashboard endpoints can be imported and loaded correctly.
 """
@@ -17,42 +17,42 @@ def test_imports() -> Dict[str, Any]:
 
     # Test the main dashboard missing endpoints module
     try:
-        print("🔄 Testing import of dashboard_missing_endpoints...")
-        from routes.dashboard_missing_endpoints import (
+        print("ðŸ”„ Testing import of dashboard_missing_endpoints...")
+        from backend.routes.dashboard_missing_endpoints import (
             router as dashboard_missing_router,
         )
 
         print(
-            f"✅ Successfully imported dashboard_missing_endpoints with {len(dashboard_missing_router.routes)} routes"
+            f"âœ… Successfully imported dashboard_missing_endpoints with {len(dashboard_missing_router.routes)} routes"
         )
         results["successful_imports"].append("dashboard_missing_endpoints")
         results["total_tests"] += 1
     except Exception as e:
-        print(f"❌ Failed to import dashboard_missing_endpoints: {e}")
+        print(f"âŒ Failed to import dashboard_missing_endpoints: {e}")
         results["failed_imports"].append(("dashboard_missing_endpoints", str(e)))
         results["total_tests"] += 1
 
     # Test importing the router setup
     try:
-        print("🔄 Testing import of router_setup...")
+        print("ðŸ”„ Testing import of router_setup...")
 
-        print("✅ Successfully imported router_setup")
+        print("âœ… Successfully imported router_setup")
         results["successful_imports"].append("router_setup")
         results["total_tests"] += 1
     except Exception as e:
-        print(f"❌ Failed to import router_setup: {e}")
+        print(f"âŒ Failed to import router_setup: {e}")
         results["failed_imports"].append(("router_setup", str(e)))
         results["total_tests"] += 1
 
     # Test importing the app factory
     try:
-        print("🔄 Testing import of app_factory...")
+        print("ðŸ”„ Testing import of app_factory...")
 
-        print("✅ Successfully imported app_factory")
+        print("âœ… Successfully imported app_factory")
         results["successful_imports"].append("app_factory")
         results["total_tests"] += 1
     except Exception as e:
-        print(f"❌ Failed to import app_factory: {e}")
+        print(f"âŒ Failed to import app_factory: {e}")
         results["failed_imports"].append(("app_factory", str(e)))
         results["total_tests"] += 1
 
@@ -64,8 +64,8 @@ def test_router_registration() -> Dict[str, Any]:
     results = {"success": False, "error": None, "routes_count": 0}
 
     try:
-        print("🔄 Testing router registration...")
-        from routes.dashboard_missing_endpoints import (
+        print("ðŸ”„ Testing router registration...")
+        from backend.routes.dashboard_missing_endpoints import (
             router as dashboard_missing_router,
         )
 
@@ -89,8 +89,8 @@ def test_router_registration() -> Dict[str, Any]:
             if hasattr(route, "path"):
                 registered_routes.append(route.path)
 
-        print(f"✅ Router has {len(registered_routes)} routes registered")
-        print(f"📋 Registered routes: {registered_routes}")
+        print(f"âœ… Router has {len(registered_routes)} routes registered")
+        print(f"ðŸ“‹ Registered routes: {registered_routes}")
 
         # Check for expected endpoints
         missing_endpoints = []
@@ -99,15 +99,15 @@ def test_router_registration() -> Dict[str, Any]:
                 missing_endpoints.append(expected)
 
         if missing_endpoints:
-            print(f"⚠️  Missing endpoints: {missing_endpoints}")
+            print(f"âš ï¸  Missing endpoints: {missing_endpoints}")
         else:
-            print("✅ All expected endpoints are registered")
+            print("âœ… All expected endpoints are registered")
 
         results["success"] = True
         results["routes_count"] = len(registered_routes)
 
     except Exception as e:
-        print(f"❌ Router registration test failed: {e}")
+        print(f"âŒ Router registration test failed: {e}")
         results["error"] = str(e)
 
     return results
@@ -135,14 +135,14 @@ def test_data_source_imports() -> Dict[str, Any]:
         try:
             module = importlib.import_module(module_name)
             if hasattr(module, function_name):
-                print(f"✅ {module_name}.{function_name} available")
+                print(f"âœ… {module_name}.{function_name} available")
                 results["available_sources"].append(f"{module_name}.{function_name}")
             else:
-                print(f"⚠️  {module_name}.{function_name} not found")
+                print(f"âš ï¸  {module_name}.{function_name} not found")
                 results["unavailable_sources"].append(f"{module_name}.{function_name}")
             results["total_sources"] += 1
         except ImportError as e:
-            print(f"❌ {module_name}.{function_name} import failed: {e}")
+            print(f"âŒ {module_name}.{function_name} import failed: {e}")
             results["unavailable_sources"].append(f"{module_name}.{function_name}")
             results["total_sources"] += 1
 
@@ -156,14 +156,14 @@ def test_data_source_imports() -> Dict[str, Any]:
         try:
             module = importlib.import_module(module_name)
             if hasattr(module, service_name):
-                print(f"✅ {module_name}.{service_name} available")
+                print(f"âœ… {module_name}.{service_name} available")
                 results["available_sources"].append(f"{module_name}.{service_name}")
             else:
-                print(f"⚠️  {module_name}.{service_name} not found")
+                print(f"âš ï¸  {module_name}.{service_name} not found")
                 results["unavailable_sources"].append(f"{module_name}.{service_name}")
             results["total_sources"] += 1
         except ImportError as e:
-            print(f"❌ {module_name}.{service_name} import failed: {e}")
+            print(f"âŒ {module_name}.{service_name} import failed: {e}")
             results["unavailable_sources"].append(f"{module_name}.{service_name}")
             results["total_sources"] += 1
 
@@ -172,41 +172,41 @@ def test_data_source_imports() -> Dict[str, Any]:
 
 def main():
     """Main verification function"""
-    print("🚀 Starting Dashboard Endpoints Verification...")
+    print("ðŸš€ Starting Dashboard Endpoints Verification...")
     print("=" * 60)
 
     # Test imports
-    print("\n📦 Testing Module Imports...")
+    print("\nðŸ“¦ Testing Module Imports...")
     import_results = test_imports()
 
     # Test router registration
-    print("\n🔧 Testing Router Registration...")
+    print("\nðŸ”§ Testing Router Registration...")
     router_results = test_router_registration()
 
     # Test data sources
-    print("\n📊 Testing Data Sources...")
+    print("\nðŸ“Š Testing Data Sources...")
     data_results = test_data_source_imports()
 
     # Print summary
     print("\n" + "=" * 60)
-    print("📋 VERIFICATION SUMMARY")
+    print("ðŸ“‹ VERIFICATION SUMMARY")
     print("=" * 60)
 
     print(
         f"Module Imports: {len(import_results['successful_imports'])}/{import_results['total_tests']} successful"
     )
-    print(f"Router Registration: {'✅ Success' if router_results['success'] else '❌ Failed'}")
+    print(f"Router Registration: {'âœ… Success' if router_results['success'] else 'âŒ Failed'}")
     print(
         f"Data Sources: {len(data_results['available_sources'])}/{data_results['total_sources']} available"
     )
 
     if import_results["failed_imports"]:
-        print("\n❌ Failed Imports:")
+        print("\nâŒ Failed Imports:")
         for module, error in import_results["failed_imports"]:
             print(f"   - {module}: {error}")
 
     if data_results["unavailable_sources"]:
-        print("\n⚠️  Unavailable Data Sources:")
+        print("\nâš ï¸  Unavailable Data Sources:")
         for source in data_results["unavailable_sources"]:
             print(f"   - {source}")
 
@@ -218,12 +218,14 @@ def main():
     )
 
     if all_successful:
-        print("\n🎉 All verification tests passed! Dashboard endpoints are ready.")
+        print("\nðŸŽ‰ All verification tests passed! Dashboard endpoints are ready.")
         return 0
     else:
-        print("\n⚠️  Some verification tests failed. Check the details above.")
+        print("\nâš ï¸  Some verification tests failed. Check the details above.")
         return 1
 
 
 if __name__ == "__main__":
     exit(main())
+
+

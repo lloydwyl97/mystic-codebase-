@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Mystic Auto-Withdraw System
 Automatically withdraws funds to cold wallet when threshold is reached
@@ -18,7 +18,7 @@ from urllib.parse import urlencode
 
 import requests
 from dotenv import load_dotenv
-from config import settings
+from backend.config import settings
 
 # Load environment variables
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -95,7 +95,7 @@ class AutoWithdrawSystem:
             # Discord notification
             if self.discord_webhook:
                 discord_payload = {
-                    "content": f"🔐 **Mystic Auto-Withdraw**\n{message}",
+                    "content": f"ðŸ” **Mystic Auto-Withdraw**\n{message}",
                     "username": "Mystic Trading Bot",
                 }
                 requests.post(self.discord_webhook, json=discord_payload, timeout=10)
@@ -105,7 +105,7 @@ class AutoWithdrawSystem:
                 telegram_url = f"https://api.telegram.org/bot{self.telegram_token}/sendMessage"
                 telegram_payload = {
                     "chat_id": self.telegram_chat_id,
-                    "text": f"🔐 Mystic Auto-Withdraw\n{message}",
+                    "text": f"ðŸ” Mystic Auto-Withdraw\n{message}",
                     "parse_mode": "HTML",
                 }
                 requests.post(telegram_url, json=telegram_payload, timeout=10)
@@ -210,7 +210,7 @@ class AutoWithdrawSystem:
             result = response.json()
 
             if result.get("id"):
-                message = f"✅ Binance withdrawal successful!\nAmount: ${withdrawal_amount:.2f}\nTransaction ID: {result['id']}"
+                message = f"âœ… Binance withdrawal successful!\nAmount: ${withdrawal_amount:.2f}\nTransaction ID: {result['id']}"
                 self._send_notification(message, "SUCCESS")
                 self._log_withdrawal(withdrawal_amount, "binance", "success", result)
                 logger.info(f"[BINANCE] Withdrawal successful: ${withdrawal_amount:.2f}")
@@ -220,7 +220,7 @@ class AutoWithdrawSystem:
                     "tx_id": result["id"],
                 }
             else:
-                message = f"❌ Binance withdrawal failed: {result}"
+                message = f"âŒ Binance withdrawal failed: {result}"
                 self._send_notification(message, "ERROR")
                 self._log_withdrawal(withdrawal_amount, "binance", "failed", result)
                 logger.error(f"[BINANCE] Withdrawal failed: {result}")
@@ -293,7 +293,7 @@ class AutoWithdrawSystem:
             result = response.json()
 
             if result.get("id"):
-                message = f"✅ Coinbase withdrawal successful!\nAmount: ${withdrawal_amount:.2f}\nTransaction ID: {result['id']}"
+                message = f"âœ… Coinbase withdrawal successful!\nAmount: ${withdrawal_amount:.2f}\nTransaction ID: {result['id']}"
                 self._send_notification(message, "SUCCESS")
                 self._log_withdrawal(withdrawal_amount, "coinbase", "success", result)
                 logger.info(f"[COINBASE] Withdrawal successful: ${withdrawal_amount:.2f}")
@@ -303,7 +303,7 @@ class AutoWithdrawSystem:
                     "tx_id": result["id"],
                 }
             else:
-                message = f"❌ Coinbase withdrawal failed: {result}"
+                message = f"âŒ Coinbase withdrawal failed: {result}"
                 self._send_notification(message, "ERROR")
                 self._log_withdrawal(withdrawal_amount, "coinbase", "failed", result)
                 logger.error(f"[COINBASE] Withdrawal failed: {result}")
@@ -383,3 +383,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

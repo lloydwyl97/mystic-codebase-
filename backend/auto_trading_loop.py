@@ -1,4 +1,4 @@
-"""
+﻿"""
 Auto Trading Loop Service
 Runs every 60 seconds to process signals and execute trades
 Integrates with existing alert and signal systems
@@ -13,7 +13,7 @@ from typing import Any, Dict, List
 
 from ai_strategy_execution import execute_ai_strategy_signal
 from signal_manager import SignalManager
-from utils.alerts import broadcast_alert
+from backend.utils.alerts import broadcast_alert
 from .services.websocket_manager import websocket_manager
 
 logger = logging.getLogger("auto_trading_loop")
@@ -63,11 +63,11 @@ class AutoTradingLoop:
             logger.info("Auto trading is disabled - running in simulation mode")
 
         self.is_running = True
-        logger.info("🚀 Starting Auto Trading Loop (60s intervals)")
+        logger.info("ðŸš€ Starting Auto Trading Loop (60s intervals)")
 
         # Send startup alert
         await broadcast_alert(
-            f"🤖 Auto Trading Loop Started\n"
+            f"ðŸ¤– Auto Trading Loop Started\n"
             f"Trade Amount: ${TRADE_AMOUNT_USD}\n"
             f"Min Confidence: {MIN_SIGNAL_CONFIDENCE}\n"
             f"Mode: {'LIVE' if AUTO_TRADING_ENABLED else 'SIMULATION'}"
@@ -82,11 +82,11 @@ class AutoTradingLoop:
             return
 
         self.is_running = False
-        logger.info("🛑 Auto Trading Loop stopped")
+        logger.info("ðŸ›‘ Auto Trading Loop stopped")
 
         # Send shutdown alert
         await broadcast_alert(
-            f"🛑 Auto Trading Loop Stopped\n"
+            f"ðŸ›‘ Auto Trading Loop Stopped\n"
             f"Total Trades: {self.total_trades}\n"
             f"Success Rate: {(self.successful_trades/self.total_trades*100):.1f}%"
             if self.total_trades > 0
@@ -183,10 +183,10 @@ class AutoTradingLoop:
 
             if success:
                 self.successful_trades += 1
-                logger.info(f"✅ Trade executed successfully: {symbol} via {exchange}")
+                logger.info(f"âœ… Trade executed successfully: {symbol} via {exchange}")
             else:
                 self.failed_trades += 1
-                logger.warning(f"❌ Trade failed: {symbol} via {exchange}")
+                logger.warning(f"âŒ Trade failed: {symbol} via {exchange}")
 
             self.total_trades += 1
 
@@ -228,9 +228,9 @@ class AutoTradingLoop:
         try:
             if not AUTO_TRADING_ENABLED:
                 # Simulation mode
-                logger.info(f"🔄 SIMULATION: Would execute {symbol} trade via {exchange}")
+                logger.info(f"ðŸ”„ SIMULATION: Would execute {symbol} trade via {exchange}")
                 await broadcast_alert(
-                    f"🔄 SIMULATION TRADE\n"
+                    f"ðŸ”„ SIMULATION TRADE\n"
                     f"Symbol: {symbol.upper()}\n"
                     f"Exchange: {exchange.upper()}\n"
                     f"Amount: ${TRADE_AMOUNT_USD}\n"
@@ -239,7 +239,7 @@ class AutoTradingLoop:
                 return True
 
             # Live trading mode
-            logger.info(f"🎯 Executing live trade: {symbol} via {exchange}")
+            logger.info(f"ðŸŽ¯ Executing live trade: {symbol} via {exchange}")
 
             # Map symbol to exchange format
             if exchange == "binance":
@@ -256,7 +256,7 @@ class AutoTradingLoop:
 
             if result and "error" not in result:
                 await broadcast_alert(
-                    f"✅ LIVE TRADE EXECUTED\n"
+                    f"âœ… LIVE TRADE EXECUTED\n"
                     f"Symbol: {symbol.upper()}\n"
                     f"Exchange: {exchange.upper()}\n"
                     f"Amount: ${TRADE_AMOUNT_USD}\n"
@@ -266,7 +266,7 @@ class AutoTradingLoop:
             else:
                 error_msg = result.get("error", "Unknown error") if result else "No result"
                 await broadcast_alert(
-                    f"❌ TRADE FAILED\n"
+                    f"âŒ TRADE FAILED\n"
                     f"Symbol: {symbol.upper()}\n"
                     f"Exchange: {exchange.upper()}\n"
                     f"Error: {error_msg}"
@@ -275,7 +275,7 @@ class AutoTradingLoop:
 
         except Exception as e:
             logger.error(f"Error executing trade for {symbol}: {e}")
-            await broadcast_alert(f"❌ Trade execution error for {symbol}: {str(e)}")
+            await broadcast_alert(f"âŒ Trade execution error for {symbol}: {str(e)}")
             return False
 
     def get_stats(self) -> Dict[str, Any]:
@@ -305,3 +305,5 @@ def get_auto_trading_loop(redis_client: Any) -> AutoTradingLoop:
     if auto_trading_loop is None:
         auto_trading_loop = AutoTradingLoop(redis_client)
     return auto_trading_loop
+
+

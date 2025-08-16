@@ -1,4 +1,4 @@
-"""
+﻿"""
 Simplified API Endpoints for Mystic Trading
 
 Contains core API endpoint definitions that are not covered by modular endpoint files.
@@ -21,4 +21,6 @@ register_shared_endpoints(router, prefix="")
 # Add any simplified-specific endpoints here if needed
 # (These would be endpoints that only exist in the simplified version)
 
-logger.info("✅ Simplified API endpoints loaded with shared endpoint consolidation")
+logger.info("âœ… Simplified API endpoints loaded with shared endpoint consolidation")
+
+

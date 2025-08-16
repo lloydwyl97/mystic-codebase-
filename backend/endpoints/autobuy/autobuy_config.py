@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Binance US Autobuy Configuration
 Configuration for SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT autobuy system
@@ -260,15 +260,15 @@ def validate_and_load_config() -> bool:
     errors = config.validate_config()
 
     if errors:
-        print("❌ Configuration errors found:")
+        print("âŒ Configuration errors found:")
         for error in errors:
             print(f"   - {error}")
         return False
 
-    print("✅ Configuration validated successfully")
-    print(f"📊 Enabled trading pairs: {config.get_enabled_pairs()}")
-    print(f"💰 Trading enabled: {config.trading_enabled}")
-    print(f"🔄 Cycle interval: {config.cycle_interval} seconds")
+    print("âœ… Configuration validated successfully")
+    print(f"ðŸ“Š Enabled trading pairs: {config.get_enabled_pairs()}")
+    print(f"ðŸ’° Trading enabled: {config.trading_enabled}")
+    print(f"ðŸ”„ Cycle interval: {config.cycle_interval} seconds")
 
     return True
 
@@ -296,7 +296,10 @@ def get_autobuy_status() -> Dict[str, Any]:
 if __name__ == "__main__":
     # Test configuration
     if validate_and_load_config():
-        print("\n📋 Configuration Summary:")
+        print("\nðŸ“‹ Configuration Summary:")
         print(json.dumps(config.to_dict(), indent=2))
     else:
-        print("\n❌ Configuration validation failed")
+        print("\nâŒ Configuration validation failed")
+
+
+

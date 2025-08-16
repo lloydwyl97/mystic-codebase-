@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Automated Code Quality Checks for Mystic Trading Platform
 
@@ -66,7 +66,7 @@ class CodeQualityChecker:
             "*.egg-info/*",
         ]
 
-        print("🔍 Mystic Trading Platform - Code Quality Checker")
+        print("ðŸ” Mystic Trading Platform - Code Quality Checker")
         print("=" * 60)
 
     def run_command(
@@ -88,7 +88,7 @@ class CodeQualityChecker:
 
     def check_black(self) -> QualityResult:
         """Check code formatting with black"""
-        print("🎨 Checking code formatting (black)...")
+        print("ðŸŽ¨ Checking code formatting (black)...")
         start_time = time.time()
 
         result = self.run_command(
@@ -115,7 +115,7 @@ class CodeQualityChecker:
 
     def check_isort(self) -> QualityResult:
         """Check import sorting with isort"""
-        print("📦 Checking import sorting (isort)...")
+        print("ðŸ“¦ Checking import sorting (isort)...")
         start_time = time.time()
 
         result = self.run_command(
@@ -142,7 +142,7 @@ class CodeQualityChecker:
 
     def check_flake8(self) -> QualityResult:
         """Check code style with flake8"""
-        print("🔍 Checking code style (flake8)...")
+        print("ðŸ” Checking code style (flake8)...")
         start_time = time.time()
 
         result = self.run_command(
@@ -175,7 +175,7 @@ class CodeQualityChecker:
 
     def check_mypy(self) -> QualityResult:
         """Check type annotations with mypy"""
-        print("🔍 Checking type annotations (mypy)...")
+        print("ðŸ” Checking type annotations (mypy)...")
         start_time = time.time()
 
         result = self.run_command([sys.executable, "-m", "mypy", "--ignore-missing-imports", "."])
@@ -197,7 +197,7 @@ class CodeQualityChecker:
 
     def check_bandit(self) -> QualityResult:
         """Check security with bandit"""
-        print("🔒 Checking security (bandit)...")
+        print("ðŸ”’ Checking security (bandit)...")
         start_time = time.time()
 
         result = self.run_command(
@@ -251,7 +251,7 @@ class CodeQualityChecker:
 
     def check_vulture(self) -> QualityResult:
         """Check for dead code with vulture"""
-        print("💀 Checking for dead code (vulture)...")
+        print("ðŸ’€ Checking for dead code (vulture)...")
         start_time = time.time()
 
         result = self.run_command([sys.executable, "-m", "vulture", ".", "--min-confidence", "80"])
@@ -272,7 +272,7 @@ class CodeQualityChecker:
 
     def check_radon(self) -> QualityResult:
         """Check code complexity with radon"""
-        print("📊 Checking code complexity (radon)...")
+        print("ðŸ“Š Checking code complexity (radon)...")
         start_time = time.time()
 
         result = self.run_command([sys.executable, "-m", "radon", "cc", ".", "-a", "-s"])
@@ -293,7 +293,7 @@ class CodeQualityChecker:
 
     def check_pytest(self) -> QualityResult:
         """Run tests with pytest"""
-        print("🧪 Running tests (pytest)...")
+        print("ðŸ§ª Running tests (pytest)...")
         start_time = time.time()
 
         result = self.run_command([sys.executable, "-m", "pytest", "--tb=short", "-v"])
@@ -310,7 +310,7 @@ class CodeQualityChecker:
 
     def check_coverage(self) -> QualityResult:
         """Check test coverage"""
-        print("📈 Checking test coverage...")
+        print("ðŸ“ˆ Checking test coverage...")
         start_time = time.time()
 
         # Run coverage
@@ -365,14 +365,14 @@ class CodeQualityChecker:
                 result = check()
                 self.results.append(result)
 
-                status = "✅ PASS" if result.success else "❌ FAIL"
+                status = "âœ… PASS" if result.success else "âŒ FAIL"
                 print(f"   {status} ({result.duration:.2f}s)")
 
                 if not result.success and result.output:
                     print(f"   Details: {result.output[:200]}...")
 
             except Exception as e:
-                print(f"   ❌ ERROR: {e}")
+                print(f"   âŒ ERROR: {e}")
                 self.results.append(
                     QualityResult(tool=check.__name__, success=False, output=str(e))
                 )
@@ -391,13 +391,13 @@ class CodeQualityChecker:
 
         # Determine overall status
         if failed == 0:
-            overall_status = "✅ EXCELLENT"
+            overall_status = "âœ… EXCELLENT"
         elif failed <= 2:
-            overall_status = "⚠️  GOOD"
+            overall_status = "âš ï¸  GOOD"
         elif failed <= 4:
-            overall_status = "⚠️  NEEDS IMPROVEMENT"
+            overall_status = "âš ï¸  NEEDS IMPROVEMENT"
         else:
-            overall_status = "❌ POOR"
+            overall_status = "âŒ POOR"
 
         report = {
             "timestamp": datetime.now().isoformat(),
@@ -428,21 +428,21 @@ class CodeQualityChecker:
     def print_summary(self, report: Dict[str, Any]):
         """Print quality check summary"""
         print("\n" + "=" * 60)
-        print("📊 CODE QUALITY SUMMARY")
+        print("ðŸ“Š CODE QUALITY SUMMARY")
         print("=" * 60)
 
         summary = report["summary"]
         print(f"Overall Status: {report['overall_status']}")
         print(f"Total Checks: {summary['total_checks']}")
-        print(f"Passed: {summary['passed']} ✅")
-        print(f"Failed: {summary['failed']} ❌")
+        print(f"Passed: {summary['passed']} âœ…")
+        print(f"Failed: {summary['failed']} âŒ")
         print(f"Total Errors: {summary['total_errors']}")
         print(f"Total Warnings: {summary['total_warnings']}")
         print(f"Total Time: {summary['total_time']:.2f}s")
 
-        print("\n📋 Detailed Results:")
+        print("\nðŸ“‹ Detailed Results:")
         for result in report["results"]:
-            status = "✅ PASS" if result["success"] else "❌ FAIL"
+            status = "âœ… PASS" if result["success"] else "âŒ FAIL"
             print(f"  {result['tool']:<15} {status}")
             if result["error_count"] > 0:
                 print(f"    Errors: {result['error_count']}")
@@ -454,9 +454,9 @@ class CodeQualityChecker:
         try:
             with open(filename, "w") as f:
                 json.dump(report, f, indent=2)
-            print(f"\n📄 Report saved to: {filename}")
+            print(f"\nðŸ“„ Report saved to: {filename}")
         except Exception as e:
-            print(f"\n❌ Failed to save report: {e}")
+            print(f"\nâŒ Failed to save report: {e}")
 
 
 def main():
@@ -480,3 +480,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

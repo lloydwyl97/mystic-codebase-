@@ -1,4 +1,4 @@
-def tag_trade(price: float, recent_prices: list) -> str:
+﻿def tag_trade(price: float, recent_prices: list) -> str:
     if not recent_prices:
         return "unknown"
 
@@ -53,3 +53,5 @@ def get_strategy_confidence(pattern: dict, mystic_signals: dict = None) -> float
             base_confidence += 0.1
 
     return min(1.0, max(0.0, base_confidence))
+
+

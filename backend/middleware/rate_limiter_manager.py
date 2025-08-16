@@ -1,4 +1,4 @@
-"""
+﻿"""
 Rate Limiter Manager
 
 Handles rate limiting logic and request tracking.
@@ -140,3 +140,5 @@ class RateLimiter:
             logger.error(f"Error in rate limiter: {str(e)}")
             # Don't block the request if rate limiter fails
             pass
+
+

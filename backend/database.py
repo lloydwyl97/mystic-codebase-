@@ -1,4 +1,4 @@
-"""
+﻿"""
 Database utilities for Mystic Trading Platform
 
 Provides database connection and management with standardized error handling.
@@ -14,7 +14,7 @@ try:
 except ImportError:
     redis = None
 
-from utils.exceptions import (
+from backend.utils.exceptions import (
     DatabaseConnectionException,
     DatabaseException,
     handle_exception,
@@ -373,3 +373,5 @@ def get_db_context() -> Generator[sqlite3.Connection, None, None]:
 
 # Initialize database on module import
 initialize_database()
+
+

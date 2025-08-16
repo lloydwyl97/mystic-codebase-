@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Strategies Service
 Handles AI-powered trading strategies and predictions
 """
@@ -16,7 +16,7 @@ class AIStrategiesService:
         self.active_ai_models = {}
         self.strategy_performance = {}
         self.supported_pairs = []  # Will be populated dynamically from exchange APIs
-        logger.info("✅ AIStrategiesService initialized")
+        logger.info("âœ… AIStrategiesService initialized")
 
     async def get_ai_status(self) -> Dict[str, Any]:
         """Get status of AI models and strategies"""
@@ -39,10 +39,10 @@ class AIStrategiesService:
                 "direction": random.choice(["bullish", "bearish", "neutral"]),
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
-            logger.info(f"✅ Generated AI prediction for {pair}")
+            logger.info(f"âœ… Generated AI prediction for {pair}")
             return prediction
         except Exception as e:
-            logger.error(f"❌ Error generating prediction: {e}")
+            logger.error(f"âŒ Error generating prediction: {e}")
             return {"error": str(e)}
 
     async def start_ai_strategy(
@@ -59,10 +59,10 @@ class AIStrategiesService:
                 "started_at": datetime.now(timezone.timezone.utc).isoformat(),
                 "performance": {"trades": 0, "win_rate": 0.0, "pnl": 0.0},
             }
-            logger.info(f"✅ Started AI strategy: {strategy_name} for {pair}")
+            logger.info(f"âœ… Started AI strategy: {strategy_name} for {pair}")
             return {"success": True, "strategy_id": strategy_id}
         except Exception as e:
-            logger.error(f"❌ Error starting AI strategy: {e}")
+            logger.error(f"âŒ Error starting AI strategy: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_strategy_performance(self, strategy_id: str = None) -> Dict[str, Any]:
@@ -112,7 +112,7 @@ class AIStrategiesService:
             }
             return sentiment
         except Exception as e:
-            logger.error(f"❌ Error getting market sentiment: {e}")
+            logger.error(f"âŒ Error getting market sentiment: {e}")
             return {"error": str(e)}
 
     # Missing methods that endpoints expect
@@ -266,3 +266,5 @@ async def strategy_builder(strategy_config: Dict[str, Any]) -> Dict[str, Any]:
         strategy_config.get("pair", "BTCUSDT"),
         strategy_config.get("params", {}),
     )
+
+

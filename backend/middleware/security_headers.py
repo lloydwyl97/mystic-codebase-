@@ -1,4 +1,4 @@
-"""
+﻿"""
 Security Headers Middleware
 
 FastAPI middleware for adding security headers.
@@ -62,3 +62,5 @@ async def security_headers_middleware(
         response.headers["Access-Control-Allow-Headers"] = "*"
 
     return response
+
+

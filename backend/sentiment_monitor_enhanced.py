@@ -1,4 +1,4 @@
-import requests
+﻿import requests
 import json
 import sqlite3
 import asyncio
@@ -177,13 +177,13 @@ def fetch_headlines_enhanced() -> Dict[str, List[str]]:
 def detect_language(text: str) -> str:
     """Simple language detection"""
     # Basic language detection using character patterns
-    if re.search(r"[а-яё]", text, re.IGNORECASE):
+    if re.search(r"[Ð°-ÑÑ‘]", text, re.IGNORECASE):
         return "russian"
-    elif re.search(r"[一-龯]", text):
+    elif re.search(r"[ä¸€-é¾¯]", text):
         return "chinese"
-    elif re.search(r"[가-힣]", text):
+    elif re.search(r"[ê°€-íž£]", text):
         return "korean"
-    elif re.search(r"[あ-ん]", text):
+    elif re.search(r"[ã‚-ã‚“]", text):
         return "japanese"
     else:
         return "english"
@@ -193,22 +193,22 @@ def translate_sentiment_keywords(text: str, language: str) -> str:
     """Translate common sentiment keywords for better analysis"""
     translations = {
         "russian": {
-            "bull": "бык",
-            "bear": "медведь",
-            "moon": "луна",
-            "pump": "насос",
-            "dump": "свалка",
-            "crash": "крах",
-            "rally": "ралли",
+            "bull": "Ð±Ñ‹Ðº",
+            "bear": "Ð¼ÐµÐ´Ð²ÐµÐ´ÑŒ",
+            "moon": "Ð»ÑƒÐ½Ð°",
+            "pump": "Ð½Ð°ÑÐ¾Ñ",
+            "dump": "ÑÐ²Ð°Ð»ÐºÐ°",
+            "crash": "ÐºÑ€Ð°Ñ…",
+            "rally": "Ñ€Ð°Ð»Ð»Ð¸",
         },
         "chinese": {
-            "bull": "牛市",
-            "bear": "熊市",
-            "moon": "月亮",
-            "pump": "泵",
-            "dump": "倾倒",
-            "crash": "崩溃",
-            "rally": "集会",
+            "bull": "ç‰›å¸‚",
+            "bear": "ç†Šå¸‚",
+            "moon": "æœˆäº®",
+            "pump": "æ³µ",
+            "dump": "å€¾å€’",
+            "crash": "å´©æºƒ",
+            "rally": "é›†ä¼š",
         },
     }
 
@@ -333,3 +333,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

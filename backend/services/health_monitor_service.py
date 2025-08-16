@@ -1,4 +1,4 @@
-"""
+﻿"""
 Health Monitor Service
 Handles system health monitoring and diagnostics
 """
@@ -18,7 +18,7 @@ class HealthMonitorService:
         self.system_metrics = {}
         self.service_status = {}
         self.last_check = None
-        logger.info("✅ HealthMonitorService initialized")
+        logger.info("âœ… HealthMonitorService initialized")
 
     async def get_system_health(self) -> Dict[str, Any]:
         """Get comprehensive system health status"""
@@ -64,7 +64,7 @@ class HealthMonitorService:
                 "timestamp": self.last_check,
             }
         except Exception as e:
-            logger.error(f"❌ Error getting system health: {e}")
+            logger.error(f"âŒ Error getting system health: {e}")
             return {
                 "status": "error",
                 "error": str(e),
@@ -89,7 +89,7 @@ class HealthMonitorService:
 
             return service_status
         except Exception as e:
-            logger.error(f"❌ Error checking service health for {service_name}: {e}")
+            logger.error(f"âŒ Error checking service health for {service_name}: {e}")
             return {
                 "name": service_name,
                 "status": "error",
@@ -121,7 +121,7 @@ class HealthMonitorService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error getting all services health: {e}")
+            logger.error(f"âŒ Error getting all services health: {e}")
             return {
                 "error": str(e),
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
@@ -146,7 +146,7 @@ class HealthMonitorService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error during self-healing: {e}")
+            logger.error(f"âŒ Error during self-healing: {e}")
             return {
                 "success": False,
                 "error": str(e),
@@ -197,3 +197,5 @@ health_monitor_service = HealthMonitorService()
 def get_health_monitor_service() -> HealthMonitorService:
     """Get the health monitor service instance"""
     return health_monitor_service
+
+

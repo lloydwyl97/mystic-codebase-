@@ -1,4 +1,4 @@
-# models.py
+﻿# models.py
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, Text
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime, timezone
@@ -60,3 +60,5 @@ class StrategyPerformance(Base):
     max_drawdown = Column(Float, default=0.0)
     sharpe_ratio = Column(Float, default=0.0)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Execution Agent
 Handles order execution, trade management, and position tracking
 """
@@ -14,7 +14,7 @@ import sys
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agents.base_agent import BaseAgent
+from backend.agents.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class ExecutionAgent(BaseAgent):
         self.register_handler("portfolio_update", self.handle_portfolio_update)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"⚡ Execution Agent {agent_id} initialized")
+        print(f"âš¡ Execution Agent {agent_id} initialized")
 
     async def initialize(self):
         """Initialize execution agent resources"""
@@ -64,10 +64,10 @@ class ExecutionAgent(BaseAgent):
             # Subscribe to market data
             await self.subscribe_to_market_data()
 
-            print(f"✅ Execution Agent {self.agent_id} initialized successfully")
+            print(f"âœ… Execution Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Execution Agent: {e}")
+            print(f"âŒ Error initializing Execution Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -89,7 +89,7 @@ class ExecutionAgent(BaseAgent):
                 await asyncio.sleep(10)  # Check every 10 seconds
 
             except Exception as e:
-                print(f"❌ Error in execution processing loop: {e}")
+                print(f"âŒ Error in execution processing loop: {e}")
                 await asyncio.sleep(30)
 
     async def load_existing_data(self):
@@ -110,11 +110,11 @@ class ExecutionAgent(BaseAgent):
             self.state["trade_history"] = [json.loads(item) for item in history_data]
 
             print(
-                f"📊 Loaded {len(self.state['positions'])} positions and {len(self.state['active_orders'])} orders"
+                f"ðŸ“Š Loaded {len(self.state['positions'])} positions and {len(self.state['active_orders'])} orders"
             )
 
         except Exception as e:
-            print(f"❌ Error loading existing data: {e}")
+            print(f"âŒ Error loading existing data: {e}")
 
     async def initialize_exchange(self):
         """Initialize exchange connection"""
@@ -133,10 +133,10 @@ class ExecutionAgent(BaseAgent):
 
             self.redis_client.set("exchange_config", json.dumps(exchange_config), ex=3600)
 
-            print("🔗 Exchange connection initialized")
+            print("ðŸ”— Exchange connection initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing exchange: {e}")
+            print(f"âŒ Error initializing exchange: {e}")
             self.state["exchange_status"] = "disconnected"
 
     async def subscribe_to_market_data(self):
@@ -149,10 +149,10 @@ class ExecutionAgent(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 Execution Agent subscribed to market data")
+            print("ðŸ“¡ Execution Agent subscribed to market data")
 
         except Exception as e:
-            print(f"❌ Error subscribing to market data: {e}")
+            print(f"âŒ Error subscribing to market data: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -166,7 +166,7 @@ class ExecutionAgent(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -184,7 +184,7 @@ class ExecutionAgent(BaseAgent):
             await self.check_order_triggers(symbol, price)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def handle_approved_signal(self, message: Dict[str, Any]):
         """Handle approved trading signal"""
@@ -200,7 +200,7 @@ class ExecutionAgent(BaseAgent):
             confidence = signal.get("confidence", 0)
             price = market_data.get("price", 0)
 
-            print(f"🎯 Executing approved signal for {symbol} ({signal_type})")
+            print(f"ðŸŽ¯ Executing approved signal for {symbol} ({signal_type})")
 
             # Execute the trade
             execution_result = await self.execute_trade(
@@ -227,7 +227,7 @@ class ExecutionAgent(BaseAgent):
             await self.broadcast_message({"type": "trade_executed", "execution": execution_result})
 
         except Exception as e:
-            print(f"❌ Error handling approved signal: {e}")
+            print(f"âŒ Error handling approved signal: {e}")
             await self.broadcast_error(f"Execution error: {e}")
 
     async def handle_cancel_order(self, message: Dict[str, Any]):
@@ -235,7 +235,7 @@ class ExecutionAgent(BaseAgent):
         try:
             order_id = message.get("order_id")
 
-            print(f"❌ Cancelling order {order_id}")
+            print(f"âŒ Cancelling order {order_id}")
 
             # Cancel order
             cancellation_result = await self.cancel_order(order_id)
@@ -253,7 +253,7 @@ class ExecutionAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error cancelling order: {e}")
+            print(f"âŒ Error cancelling order: {e}")
             await self.broadcast_error(f"Order cancellation error: {e}")
 
     async def handle_modify_order(self, message: Dict[str, Any]):
@@ -262,7 +262,7 @@ class ExecutionAgent(BaseAgent):
             order_id = message.get("order_id")
             new_params = message.get("new_params", {})
 
-            print(f"✏️ Modifying order {order_id}")
+            print(f"âœï¸ Modifying order {order_id}")
 
             # Modify order
             modification_result = await self.modify_order(order_id, new_params)
@@ -280,7 +280,7 @@ class ExecutionAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error modifying order: {e}")
+            print(f"âŒ Error modifying order: {e}")
             await self.broadcast_error(f"Order modification error: {e}")
 
     async def handle_portfolio_update(self, message: Dict[str, Any]):
@@ -292,7 +292,7 @@ class ExecutionAgent(BaseAgent):
             await self.update_positions_from_portfolio(portfolio)
 
         except Exception as e:
-            print(f"❌ Error handling portfolio update: {e}")
+            print(f"âŒ Error handling portfolio update: {e}")
 
     async def execute_trade(
         self,
@@ -353,7 +353,7 @@ class ExecutionAgent(BaseAgent):
             # Update last execution
             self.state["last_execution"] = execution
 
-            print(f"✅ Trade executed: {execution['execution_id']}")
+            print(f"âœ… Trade executed: {execution['execution_id']}")
 
             return execution
 
@@ -448,7 +448,7 @@ class ExecutionAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error calculating order parameters: {e}")
+            print(f"âŒ Error calculating order parameters: {e}")
             raise
 
     async def place_order(self, order_params: Dict[str, Any]) -> Dict[str, Any]:
@@ -485,12 +485,12 @@ class ExecutionAgent(BaseAgent):
                 ex=3600,
             )
 
-            print(f"📋 Order placed: {order_id}")
+            print(f"ðŸ“‹ Order placed: {order_id}")
 
             return order_result
 
         except Exception as e:
-            print(f"❌ Error placing order: {e}")
+            print(f"âŒ Error placing order: {e}")
             raise
 
     async def cancel_order(self, order_id: str) -> Dict[str, Any]:
@@ -517,12 +517,12 @@ class ExecutionAgent(BaseAgent):
                 ex=3600,
             )
 
-            print(f"❌ Order cancelled: {order_id}")
+            print(f"âŒ Order cancelled: {order_id}")
 
             return cancellation_result
 
         except Exception as e:
-            print(f"❌ Error cancelling order: {e}")
+            print(f"âŒ Error cancelling order: {e}")
             raise
 
     async def modify_order(self, order_id: str, new_params: Dict[str, Any]) -> Dict[str, Any]:
@@ -554,12 +554,12 @@ class ExecutionAgent(BaseAgent):
                 ex=3600,
             )
 
-            print(f"✏️ Order modified: {order_id}")
+            print(f"âœï¸ Order modified: {order_id}")
 
             return modification_result
 
         except Exception as e:
-            print(f"❌ Error modifying order: {e}")
+            print(f"âŒ Error modifying order: {e}")
             raise
 
     async def monitor_active_orders(self):
@@ -575,7 +575,7 @@ class ExecutionAgent(BaseAgent):
                     # Update execution stats
                     self.state["execution_stats"]["successful_trades"] += 1
 
-                    print(f"✅ Order filled: {order_id}")
+                    print(f"âœ… Order filled: {order_id}")
 
                 # Check for order timeouts
                 order_time = datetime.fromisoformat(
@@ -593,7 +593,7 @@ class ExecutionAgent(BaseAgent):
             )
 
         except Exception as e:
-            print(f"❌ Error monitoring active orders: {e}")
+            print(f"âŒ Error monitoring active orders: {e}")
 
     async def update_positions(self):
         """Update position information"""
@@ -608,7 +608,7 @@ class ExecutionAgent(BaseAgent):
             self.redis_client.set("positions", json.dumps(positions), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating positions: {e}")
+            print(f"âŒ Error updating positions: {e}")
 
     async def update_positions_from_portfolio(self, portfolio: Dict[str, Any]):
         """Update positions from portfolio data"""
@@ -628,7 +628,7 @@ class ExecutionAgent(BaseAgent):
             self.redis_client.set("positions", json.dumps(position_dict), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating positions from portfolio: {e}")
+            print(f"âŒ Error updating positions from portfolio: {e}")
 
     async def get_exchange_positions(self) -> Dict[str, Any]:
         """Get current positions from exchange"""
@@ -646,7 +646,7 @@ class ExecutionAgent(BaseAgent):
             return positions
 
         except Exception as e:
-            print(f"❌ Error getting exchange positions: {e}")
+            print(f"âŒ Error getting exchange positions: {e}")
             return {}
 
     async def check_order_timeouts(self):
@@ -661,11 +661,11 @@ class ExecutionAgent(BaseAgent):
 
                 # Cancel orders older than 5 minutes
                 if (current_time - order_time) > timedelta(minutes=5):
-                    print(f"⏰ Order timeout: {order_id}")
+                    print(f"â° Order timeout: {order_id}")
                     await self.cancel_order(order_id)
 
         except Exception as e:
-            print(f"❌ Error checking order timeouts: {e}")
+            print(f"âŒ Error checking order timeouts: {e}")
 
     async def update_order_prices(self, symbol: str, price: float):
         """Update order prices for a symbol"""
@@ -679,7 +679,7 @@ class ExecutionAgent(BaseAgent):
                     await self.check_price_triggers(order_id, order, price)
 
         except Exception as e:
-            print(f"❌ Error updating order prices: {e}")
+            print(f"âŒ Error updating order prices: {e}")
 
     async def check_price_triggers(
         self, order_id: str, order: Dict[str, Any], current_price: float
@@ -689,17 +689,17 @@ class ExecutionAgent(BaseAgent):
             # Check stop loss
             stop_loss = order.get("stop_loss")
             if stop_loss and current_price <= stop_loss:
-                print(f"🛑 Stop loss triggered for order {order_id}")
+                print(f"ðŸ›‘ Stop loss triggered for order {order_id}")
                 await self.cancel_order(order_id)
 
             # Check take profit
             take_profit = order.get("take_profit")
             if take_profit and current_price >= take_profit:
-                print(f"🎯 Take profit triggered for order {order_id}")
+                print(f"ðŸŽ¯ Take profit triggered for order {order_id}")
                 await self.cancel_order(order_id)
 
         except Exception as e:
-            print(f"❌ Error checking price triggers: {e}")
+            print(f"âŒ Error checking price triggers: {e}")
 
     async def check_order_triggers(self, symbol: str, price: float):
         """Check for order triggers"""
@@ -709,7 +709,7 @@ class ExecutionAgent(BaseAgent):
             await self.update_order_prices(symbol, price)
 
         except Exception as e:
-            print(f"❌ Error checking order triggers: {e}")
+            print(f"âŒ Error checking order triggers: {e}")
 
     async def update_execution_metrics(self):
         """Update execution metrics"""
@@ -728,13 +728,13 @@ class ExecutionAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating execution metrics: {e}")
+            print(f"âŒ Error updating execution metrics: {e}")
 
     async def handle_market_data(self, message: Dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})
-            print(f"📊 Execution Agent received market data for {len(market_data)} symbols")
+            print(f"ðŸ“Š Execution Agent received market data for {len(market_data)} symbols")
             
             # Process market data
             await self.process_market_data(market_data)
@@ -749,5 +749,7 @@ class ExecutionAgent(BaseAgent):
             await self.update_execution_metrics()
             
         except Exception as e:
-            print(f"❌ Error handling market data: {e}")
+            print(f"âŒ Error handling market data: {e}")
             await self.broadcast_error(f"Market data handling error: {e}")
+
+

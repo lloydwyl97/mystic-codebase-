@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unified Data Fetcher for Mystic AI Trading Platform
 Fetches live prices from multiple exchanges with rate limiting and stores in persistent cache.
 """
@@ -16,7 +16,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +41,9 @@ class UnifiedFetcher:
             config_path = Path(__file__).parent.parent / 'config' / 'symbols_config.json'
             with open(config_path, 'r') as f:
                 self.config = json.load(f)
-            logger.info("✅ Loaded symbols configuration")
+            logger.info("âœ… Loaded symbols configuration")
         except Exception as e:
-            logger.error(f"❌ Failed to load symbols config: {e}")
+            logger.error(f"âŒ Failed to load symbols config: {e}")
             raise
 
     async def _rate_limit(self, exchange: str):
@@ -202,11 +202,11 @@ class UnifiedFetcher:
 
             for exchange, result in zip(exchanges, results):
                 if isinstance(result, Exception):
-                    logger.error(f"❌ {exchange} fetch failed: {result}")
+                    logger.error(f"âŒ {exchange} fetch failed: {result}")
                     all_prices[exchange] = {}
                 else:
                     all_prices[exchange] = result
-                    logger.info(f"✅ {exchange}: {len(result)} prices fetched")
+                    logger.info(f"âœ… {exchange}: {len(result)} prices fetched")
 
             return all_prices
 
@@ -240,7 +240,7 @@ class UnifiedFetcher:
     async def run_all(self) -> Dict[str, Any]:
         """Run the complete unified fetching process"""
         try:
-            logger.info("🚀 Starting unified data fetch from all exchanges...")
+            logger.info("ðŸš€ Starting unified data fetch from all exchanges...")
             start_time = time.time()
 
             # Fetch from all exchanges
@@ -268,13 +268,13 @@ class UnifiedFetcher:
                 "aggregated_prices": aggregated_prices
             }
 
-            logger.info(f"✅ Unified fetch completed in {duration:.2f}s")
-            logger.info(f"📊 Fetched {len(aggregated_prices)} symbols from {result['exchanges_fetched']} exchanges")
+            logger.info(f"âœ… Unified fetch completed in {duration:.2f}s")
+            logger.info(f"ðŸ“Š Fetched {len(aggregated_prices)} symbols from {result['exchanges_fetched']} exchanges")
 
             return result
 
         except Exception as e:
-            logger.error(f"❌ Unified fetch failed: {e}")
+            logger.error(f"âŒ Unified fetch failed: {e}")
             return {
                 "success": False,
                 "error": str(e),
@@ -300,3 +300,5 @@ if __name__ == "__main__":
     # Test the fetcher
     result = run_all_sync()
     print(json.dumps(result, indent=2))
+
+

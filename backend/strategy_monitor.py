@@ -1,4 +1,4 @@
-"""
+﻿"""
 Strategy Performance Monitor
 Monitors and tracks strategy performance
 """
@@ -28,7 +28,7 @@ class StrategyMonitor:
 
     async def start(self):
         """Start the strategy monitor"""
-        print("🚀 Starting Strategy Performance Monitor...")
+        print("ðŸš€ Starting Strategy Performance Monitor...")
         self.running = True
 
         # Start strategy monitoring
@@ -36,7 +36,7 @@ class StrategyMonitor:
 
     async def monitor_strategies(self):
         """Monitor strategy performance"""
-        print("📊 Starting strategy monitoring...")
+        print("ðŸ“Š Starting strategy monitoring...")
 
         while self.running:
             try:
@@ -52,7 +52,7 @@ class StrategyMonitor:
                 await asyncio.sleep(300)  # Update every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in strategy monitoring: {e}")
+                print(f"âŒ Error in strategy monitoring: {e}")
                 await asyncio.sleep(600)
 
     async def calculate_strategy_performance(self) -> Dict[str, Any]:
@@ -128,7 +128,7 @@ class StrategyMonitor:
 
     async def stop(self):
         """Stop the strategy monitor"""
-        print("🛑 Stopping Strategy Performance Monitor...")
+        print("ðŸ›‘ Stopping Strategy Performance Monitor...")
         self.running = False
 
 
@@ -139,12 +139,14 @@ async def main():
     try:
         await monitor.start()
     except KeyboardInterrupt:
-        print("🛑 Received interrupt signal")
+        print("ðŸ›‘ Received interrupt signal")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
     finally:
         await monitor.stop()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

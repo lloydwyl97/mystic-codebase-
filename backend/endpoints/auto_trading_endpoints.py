@@ -1,4 +1,4 @@
-"""
+﻿"""
 Auto-Trading Endpoints
 
 Handles all auto-trading related API endpoints including start, stop, and status.
@@ -126,3 +126,6 @@ async def update_auto_bot_config(
     except Exception as e:
         logger.error(f"Error updating auto bot config: {str(e)}")
         raise HTTPException(status_code=500, detail="Error updating auto bot config")
+
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Data Service
 Handles live market data fetching and caching
 """
@@ -8,12 +8,12 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from services.market_data_sources import (
+from backend.services.market_data_sources import (
     fetch_from_binance,
     fetch_from_coinbase,
     is_supported,
 )
-from services.websocket_manager import websocket_manager
+from backend.services.websocket_manager import websocket_manager
 
 logger = logging.getLogger(__name__)
 
@@ -25,14 +25,14 @@ class MarketDataService:
         self.cache: Dict[str, Dict[str, Any]] = {}
         self.background_tasks: List[asyncio.Task] = []
         self.is_running = False
-        logger.info("✅ MarketDataService initialized")
+        logger.info("âœ… MarketDataService initialized")
 
     async def initialize(self):
         """Initialize the service and start background updates"""
         logger.info("Initializing MarketDataService...")
         self.is_running = True
         await self.start_background_updates()
-        logger.info("✅ MarketDataService initialized")
+        logger.info("âœ… MarketDataService initialized")
 
     async def close(self):
         """Close the service and stop background tasks"""
@@ -62,7 +62,7 @@ class MarketDataService:
         normal_priority_task = asyncio.create_task(self._update_normal_priority_coins())
         self.background_tasks.append(normal_priority_task)
 
-        logger.info(f"✅ Background tasks started: {len(self.background_tasks)} tasks")
+        logger.info(f"âœ… Background tasks started: {len(self.background_tasks)} tasks")
 
     async def _update_high_priority_coins(self):
         """Update high priority coins every 30 seconds"""
@@ -100,7 +100,7 @@ class MarketDataService:
                 task = asyncio.create_task(self._fetch_coin_data(coin))
                 tasks.append(task)
             else:
-                logger.warning(f"❌ {coin} is not supported")
+                logger.warning(f"âŒ {coin} is not supported")
 
         if tasks:
             results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -108,7 +108,7 @@ class MarketDataService:
                 if isinstance(result, Exception):
                     logger.warning(f"Failed to fetch {coin}: {result}")
                 elif isinstance(result, dict):
-                    logger.info(f"✅ Successfully fetched {coin}: {result.get('price', 'N/A')}")
+                    logger.info(f"âœ… Successfully fetched {coin}: {result.get('price', 'N/A')}")
                     await self._update_cache(coin, result)
                 else:
                     logger.warning(f"No data returned for {coin}")
@@ -279,3 +279,5 @@ class MarketDataService:
 
 # Global instance
 market_data_service = MarketDataService()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Cosmic Pattern Recognizer for Mystic AI Trading Platform
 Analyzes market data for cosmic resonance patterns and generates anomaly flags.
 """
@@ -14,7 +14,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class CosmicPatternRecognizer:
         self.pattern_accuracy = 0.0
         self.last_pattern_time = datetime.now(timezone.utc).isoformat()
 
-        logger.info("✅ CosmicPatternRecognizer initialized")
+        logger.info("âœ… CosmicPatternRecognizer initialized")
 
     def _get_market_data(self, symbol: str, hours: int = 168) -> List[Dict[str, Any]]:
         """Get recent market data from cache"""
@@ -283,7 +283,7 @@ class CosmicPatternRecognizer:
     def analyze_pattern(self, exchange: str, symbol: str) -> Dict[str, Any]:
         """Analyze cosmic patterns for a symbol"""
         try:
-            logger.info(f"🔮 Analyzing cosmic patterns for {symbol} on {exchange}")
+            logger.info(f"ðŸ”® Analyzing cosmic patterns for {symbol} on {exchange}")
 
             # Get market data
             market_data = self._get_market_data(symbol)
@@ -350,7 +350,7 @@ class CosmicPatternRecognizer:
                 metadata=analysis_result
             )
 
-            logger.info(f"✅ Cosmic analysis complete: {anomaly_flag} (CRI: {cri:.3f})")
+            logger.info(f"âœ… Cosmic analysis complete: {anomaly_flag} (CRI: {cri:.3f})")
 
             return analysis_result
 
@@ -479,7 +479,7 @@ def get_cosmic_pattern_recognizer() -> CosmicPatternRecognizer:
 if __name__ == "__main__":
     # Test the cosmic pattern recognizer
     recognizer = CosmicPatternRecognizer()
-    print(f"✅ CosmicPatternRecognizer initialized: {recognizer}")
+    print(f"âœ… CosmicPatternRecognizer initialized: {recognizer}")
 
     # Test pattern analysis
     analysis = recognizer.analyze_pattern('coinbase', 'BTC-USD')
@@ -488,4 +488,6 @@ if __name__ == "__main__":
     # Test status
     status = recognizer.get_cosmic_status()
     print(f"Cosmic status: {status['status']}")
+
+
 

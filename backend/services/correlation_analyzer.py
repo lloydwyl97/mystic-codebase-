@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced Correlation Analysis System
 Tracks relationships between assets and sectors for diversification
 """
@@ -46,7 +46,7 @@ class AdvancedCorrelationAnalyzer:
         """Analyze correlations with major assets and indicators"""
         try:
             # Get real correlation data from correlation service
-            from services.correlation_service import get_correlation_service
+            from backend.services.correlation_service import get_correlation_service
 
             correlation_service = get_correlation_service()
             correlations = await correlation_service.get_correlations(symbol, price)
@@ -105,7 +105,7 @@ class AdvancedCorrelationAnalyzer:
         """Calculate correlation within the same sector"""
         try:
             # Get real sector correlation from sector analysis service
-            from services.sector_analysis_service import (
+            from backend.services.sector_analysis_service import (
                 get_sector_analysis_service,
             )
 
@@ -177,3 +177,5 @@ class AdvancedCorrelationAnalyzer:
 
 # Global correlation analyzer instance
 correlation_analyzer = AdvancedCorrelationAnalyzer()
+
+

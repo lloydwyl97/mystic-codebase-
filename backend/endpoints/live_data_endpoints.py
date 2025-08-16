@@ -1,4 +1,4 @@
-"""
+﻿"""
 Live Data API Endpoints
 Real API endpoints using live market data and trading services
 """
@@ -9,8 +9,8 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 
 # Import live services
-from services.live_market_data import live_market_data_service
-from services.live_trading_service import trading_service
+from backend.services.live_market_data import live_market_data_service
+from backend.services.live_trading_service import trading_service
 
 router = APIRouter(prefix="/live", tags=["Live Data"])
 
@@ -148,3 +148,6 @@ async def get_live_data_status():
         return status
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting status: {str(e)}")
+
+
+

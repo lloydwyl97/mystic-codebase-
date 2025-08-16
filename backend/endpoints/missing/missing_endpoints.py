@@ -1,4 +1,4 @@
-"""
+﻿"""
 Missing API Endpoints for Frontend Integration
 Provides the missing endpoints that the frontend components require for live data.
 """
@@ -9,18 +9,18 @@ from typing import Any, Dict, List
 
 from fastapi import APIRouter, HTTPException
 
-from ai.ai_brains import trend_analysis
-from ai.ai_mystic import mystic_oracle
-from ai.auto_trade import get_trading_status
-from ai.persistent_cache import get_persistent_cache
-from ai.trade_tracker import (
+from backend.ai.ai_brains import trend_analysis
+from backend.ai.ai_mystic import mystic_oracle
+from backend.ai.auto_trade import get_trading_status
+from backend.ai.persistent_cache import get_persistent_cache
+from backend.ai.trade_tracker import (
     get_active_trades,
     get_trade_history,
     get_trade_summary,
 )
 
 # Import actual AI services
-from modules.ai.ai_signals import (
+from backend.modules.ai.ai_signals import (
     market_strength_signals,
     risk_adjusted_signals,
     signal_scorer,
@@ -392,7 +392,7 @@ def get_real_candlestick_data(symbol: str, interval: str) -> List[Dict[str, Any]
     try:
         # Try to get real candlestick data from market data service
         try:
-            from services.market_data_service import MarketDataService
+            from backend.services.market_data_service import MarketDataService
 
             market_data_service = MarketDataService()
             if market_data_service and hasattr(market_data_service, "get_candlestick_data"):
@@ -567,3 +567,6 @@ async def get_alerts() -> List[Dict[str, Any]]:
     except Exception as e:
         logger.error(f"Error getting alerts: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+

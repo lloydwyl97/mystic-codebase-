@@ -1,4 +1,4 @@
-"""
+﻿"""
 Experimental Services API Endpoints
 Provides unified API access to all experimental services in the Mystic AI Trading Platform.
 """
@@ -88,14 +88,14 @@ def initialize_services():
     try:
         if QUANTUM_AVAILABLE:
             quantum_engine = QuantumTradingEngine()
-            print("✅ Quantum Trading Engine initialized")
+            print("âœ… Quantum Trading Engine initialized")
     except Exception as e:
         print(f"\u274c Error initializing Quantum Trading Engine: {e}")
 
     try:
         if AI_SUPER_AVAILABLE:
             ai_super = AISuperMaster()
-            print("✅ AI Super Master initialized")
+            print("âœ… AI Super Master initialized")
     except Exception as e:
         print(f"\u274c Error initializing AI Super Master: {e}")
 
@@ -104,7 +104,7 @@ def initialize_services():
             bitcoin_miner = BitcoinMiner()
             ethereum_miner = EthereumMiner()
             mining_pool = MiningPool()
-            print("✅ Blockchain services initialized")
+            print("âœ… Blockchain services initialized")
     except Exception as e:
         print(f"\u274c Error initializing blockchain services: {e}")
 
@@ -113,7 +113,7 @@ def initialize_services():
             satellite_analytics = SatelliteAnalytics()
             satellite_processor = SatelliteProcessor()
             satellite_receiver = SatelliteReceiver()
-            print("✅ Satellite services initialized")
+            print("âœ… Satellite services initialized")
     except Exception as e:
         print(f"\u274c Error initializing satellite services: {e}")
 
@@ -122,7 +122,7 @@ def initialize_services():
             edge_orchestrator = EdgeOrchestrator()
             edge_node1 = EdgeNode1()
             edge_node2 = EdgeNode2()
-            print("✅ Edge computing services initialized")
+            print("âœ… Edge computing services initialized")
     except Exception as e:
         print(f"\u274c Error initializing edge services: {e}")
 
@@ -131,7 +131,7 @@ def initialize_services():
             fiveg_core = FiveGCore()
             fiveg_ran = FiveGRAN()
             fiveg_slice_manager = FiveGSliceManager()
-            print("✅ 5G services initialized")
+            print("âœ… 5G services initialized")
     except Exception as e:
         print(f"\u274c Error initializing 5G services: {e}")
 
@@ -494,3 +494,6 @@ async def execute_experimental_task(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Task execution failed: {str(e)}")
+
+
+

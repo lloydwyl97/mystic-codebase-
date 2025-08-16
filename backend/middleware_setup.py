@@ -1,8 +1,8 @@
-import logging
+﻿import logging
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from middleware.manager import get_middleware_manager
+from backend.middleware.manager import get_middleware_manager
 
 from .app_factory import app
 
@@ -26,6 +26,8 @@ app.add_middleware(
 try:
     middleware_manager = get_middleware_manager()
     middleware_manager.register_all(app)
-    logger.info("✅ Middleware registered successfully")
+    logger.info("âœ… Middleware registered successfully")
 except Exception as e:
-    logger.warning(f"⚠️ Middleware registration failed: {e}")
+    logger.warning(f"âš ï¸ Middleware registration failed: {e}")
+
+

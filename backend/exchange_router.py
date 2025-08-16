@@ -1,4 +1,4 @@
-import os
+﻿import os
 
 
 class ExchangeRouter:
@@ -53,3 +53,5 @@ class ExchangeRouter:
 
     def is_coinbase(self):
         return self.exchange == "coinbase"
+
+

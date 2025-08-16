@@ -1,4 +1,4 @@
-"""
+﻿"""
 Quantum Algorithm Engine
 Implements quantum algorithms for financial applications
 """
@@ -48,11 +48,11 @@ _ = nn.Linear(2, 1)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class QuantumPortfolioOptimizer:
@@ -90,7 +90,7 @@ class QuantumPortfolioOptimizer:
             return circuit
 
         except Exception as e:
-            print(f"❌ Error creating portfolio circuit: {e}")
+            print(f"âŒ Error creating portfolio circuit: {e}")
             return None
 
     def optimize_portfolio(
@@ -154,7 +154,7 @@ class QuantumPortfolioOptimizer:
             }
 
         except Exception as e:
-            print(f"❌ Error optimizing portfolio: {e}")
+            print(f"âŒ Error optimizing portfolio: {e}")
             return None
 
     def extract_weights_from_counts(self, counts: Dict[str, int]) -> np.ndarray:
@@ -174,7 +174,7 @@ class QuantumPortfolioOptimizer:
             return weights
 
         except Exception as e:
-            print(f"❌ Error extracting weights: {e}")
+            print(f"âŒ Error extracting weights: {e}")
             return np.ones(self.num_assets) / self.num_assets
 
 
@@ -219,7 +219,7 @@ class QuantumFourierTransform:
             return frequencies
 
         except Exception as e:
-            print(f"❌ Error applying QFT: {e}")
+            print(f"âŒ Error applying QFT: {e}")
             return np.fft.fft(data)
 
     def extract_frequencies(self, counts: Dict[str, int]) -> np.ndarray:
@@ -236,7 +236,7 @@ class QuantumFourierTransform:
             return frequencies
 
         except Exception as e:
-            print(f"❌ Error extracting frequencies: {e}")
+            print(f"âŒ Error extracting frequencies: {e}")
             return np.zeros(2**self.num_qubits)
 
 
@@ -270,7 +270,7 @@ class QuantumSearch:
             return result
 
         except Exception as e:
-            print(f"❌ Error in Grover search: {e}")
+            print(f"âŒ Error in Grover search: {e}")
             return None
 
     def quantum_pattern_search(self, data: np.ndarray, pattern: np.ndarray):
@@ -304,7 +304,7 @@ class QuantumSearch:
             return matches
 
         except Exception as e:
-            print(f"❌ Error in quantum pattern search: {e}")
+            print(f"âŒ Error in quantum pattern search: {e}")
             return []
 
 
@@ -391,7 +391,7 @@ class QuantumAlgorithmEngine(BaseAgent):
         self.register_handler("quantum_analysis", self.handle_quantum_analysis)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"⚛️ Quantum Algorithm Engine {agent_id} initialized")
+        print(f"âš›ï¸ Quantum Algorithm Engine {agent_id} initialized")
 
     async def initialize(self):
         """Initialize quantum algorithm engine resources"""
@@ -405,10 +405,10 @@ class QuantumAlgorithmEngine(BaseAgent):
             # Start quantum monitoring
             await self.start_quantum_monitoring()
 
-            print(f"✅ Quantum Algorithm Engine {self.agent_id} initialized successfully")
+            print(f"âœ… Quantum Algorithm Engine {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Quantum Algorithm Engine: {e}")
+            print(f"âŒ Error initializing Quantum Algorithm Engine: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -430,7 +430,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                 await asyncio.sleep(600)  # Check every 10 minutes
 
             except Exception as e:
-                print(f"❌ Error in quantum processing loop: {e}")
+                print(f"âŒ Error in quantum processing loop: {e}")
                 await asyncio.sleep(1200)
 
     async def load_quantum_config(self):
@@ -447,11 +447,11 @@ class QuantumAlgorithmEngine(BaseAgent):
                 self.trading_symbols = json.loads(symbols_data)
 
             print(
-                f"📋 Quantum configuration loaded: {len(self.quantum_config['algorithms'])} algorithms, {len(self.trading_symbols)} symbols"
+                f"ðŸ“‹ Quantum configuration loaded: {len(self.quantum_config['algorithms'])} algorithms, {len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading quantum configuration: {e}")
+            print(f"âŒ Error loading quantum configuration: {e}")
 
     async def initialize_quantum_components(self):
         """Initialize quantum algorithm components"""
@@ -476,10 +476,10 @@ class QuantumAlgorithmEngine(BaseAgent):
                     backend=self.quantum_config["algorithms"]["quantum_search"]["backend"]
                 )
 
-            print("⚛️ Quantum components initialized")
+            print("âš›ï¸ Quantum components initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing quantum components: {e}")
+            print(f"âŒ Error initializing quantum components: {e}")
 
     async def start_quantum_monitoring(self):
         """Start quantum monitoring"""
@@ -491,10 +491,10 @@ class QuantumAlgorithmEngine(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 Quantum monitoring started")
+            print("ðŸ“¡ Quantum monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting quantum monitoring: {e}")
+            print(f"âŒ Error starting quantum monitoring: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -508,7 +508,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -525,7 +525,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                 await self.store_market_data(symbol, price, volume, timestamp)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def store_market_data(self, symbol: str, price: float, volume: float, timestamp: str):
         """Store market data for quantum analysis"""
@@ -555,23 +555,23 @@ class QuantumAlgorithmEngine(BaseAgent):
                 ]["data"][-1000:]
 
         except Exception as e:
-            print(f"❌ Error storing market data: {e}")
+            print(f"âŒ Error storing market data: {e}")
 
     async def execute_quantum_algorithms(self):
         """Execute quantum algorithms for all symbols"""
         try:
-            print(f"⚛️ Executing quantum algorithms for {len(self.trading_symbols)} symbols...")
+            print(f"âš›ï¸ Executing quantum algorithms for {len(self.trading_symbols)} symbols...")
 
             for symbol in self.trading_symbols:
                 try:
                     await self.execute_symbol_quantum_algorithms(symbol)
                 except Exception as e:
-                    print(f"❌ Error executing quantum algorithms for {symbol}: {e}")
+                    print(f"âŒ Error executing quantum algorithms for {symbol}: {e}")
 
-            print("✅ Quantum algorithm execution complete")
+            print("âœ… Quantum algorithm execution complete")
 
         except Exception as e:
-            print(f"❌ Error executing quantum algorithms: {e}")
+            print(f"âŒ Error executing quantum algorithms: {e}")
 
     async def execute_symbol_quantum_algorithms(self, symbol: str):
         """Execute quantum algorithms for a specific symbol"""
@@ -596,7 +596,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                         "frequency_spectrum": frequencies[:10].tolist(),
                     }
                 except Exception as e:
-                    print(f"❌ Error in Fourier transform for {symbol}: {e}")
+                    print(f"âŒ Error in Fourier transform for {symbol}: {e}")
 
             # Execute quantum pattern search
             if self.quantum_search:
@@ -611,7 +611,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                         "pattern_strength": np.mean(matches) if matches else 0,
                     }
                 except Exception as e:
-                    print(f"❌ Error in quantum pattern search for {symbol}: {e}")
+                    print(f"âŒ Error in quantum pattern search for {symbol}: {e}")
 
             # Store results
             if results:
@@ -624,7 +624,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                 await self.broadcast_quantum_results(symbol, results)
 
         except Exception as e:
-            print(f"❌ Error executing quantum algorithms for {symbol}: {e}")
+            print(f"âŒ Error executing quantum algorithms for {symbol}: {e}")
 
     async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
         """Get market data for a symbol"""
@@ -653,13 +653,13 @@ class QuantumAlgorithmEngine(BaseAgent):
             return data_points
 
         except Exception as e:
-            print(f"❌ Error getting market data for {symbol}: {e}")
+            print(f"âŒ Error getting market data for {symbol}: {e}")
             return []
 
     async def optimize_portfolios(self):
         """Optimize portfolios using quantum algorithms"""
         try:
-            print("⚛️ Optimizing portfolios using quantum algorithms...")
+            print("âš›ï¸ Optimizing portfolios using quantum algorithms...")
 
             if not self.portfolio_optimizer:
                 return
@@ -702,10 +702,10 @@ class QuantumAlgorithmEngine(BaseAgent):
                 # Broadcast optimization result
                 await self.broadcast_portfolio_optimization(optimization_result)
 
-                print("✅ Portfolio optimization complete")
+                print("âœ… Portfolio optimization complete")
 
         except Exception as e:
-            print(f"❌ Error optimizing portfolios: {e}")
+            print(f"âŒ Error optimizing portfolios: {e}")
 
     async def broadcast_quantum_results(self, symbol: str, results: Dict[str, Any]):
         """Broadcast quantum analysis results to other agents"""
@@ -725,7 +725,7 @@ class QuantumAlgorithmEngine(BaseAgent):
             await self.send_message("risk_agent", quantum_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting quantum results: {e}")
+            print(f"âŒ Error broadcasting quantum results: {e}")
 
     async def broadcast_portfolio_optimization(self, optimization_result: Dict[str, Any]):
         """Broadcast portfolio optimization results"""
@@ -744,7 +744,7 @@ class QuantumAlgorithmEngine(BaseAgent):
             await self.send_message("execution_agent", optimization_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting portfolio optimization: {e}")
+            print(f"âŒ Error broadcasting portfolio optimization: {e}")
 
     async def handle_execute_quantum_algorithm(self, message: Dict[str, Any]):
         """Handle manual quantum algorithm execution request"""
@@ -752,7 +752,7 @@ class QuantumAlgorithmEngine(BaseAgent):
             algorithm_type = message.get("algorithm_type")
             symbol = message.get("symbol")
 
-            print(f"⚛️ Manual quantum algorithm execution requested: {algorithm_type}")
+            print(f"âš›ï¸ Manual quantum algorithm execution requested: {algorithm_type}")
 
             if algorithm_type and symbol:
                 result = await self.execute_specific_algorithm(algorithm_type, symbol)
@@ -779,7 +779,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling quantum algorithm execution: {e}")
+            print(f"âŒ Error handling quantum algorithm execution: {e}")
             await self.broadcast_error(f"Quantum algorithm execution error: {e}")
 
     async def execute_specific_algorithm(
@@ -820,7 +820,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                 return {"error": f"Unknown algorithm type: {algorithm_type}"}
 
         except Exception as e:
-            print(f"❌ Error executing specific algorithm: {e}")
+            print(f"âŒ Error executing specific algorithm: {e}")
             return {"error": str(e)}
 
     async def handle_optimize_portfolio(self, message: Dict[str, Any]):
@@ -828,7 +828,7 @@ class QuantumAlgorithmEngine(BaseAgent):
         try:
             symbols = message.get("symbols", self.trading_symbols)
 
-            print(f"⚛️ Manual portfolio optimization requested for {len(symbols)} symbols")
+            print(f"âš›ï¸ Manual portfolio optimization requested for {len(symbols)} symbols")
 
             # Get returns data
             returns_data = {}
@@ -873,7 +873,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling portfolio optimization: {e}")
+            print(f"âŒ Error handling portfolio optimization: {e}")
             await self.broadcast_error(f"Portfolio optimization error: {e}")
 
     async def handle_quantum_analysis(self, message: Dict[str, Any]):
@@ -881,7 +881,7 @@ class QuantumAlgorithmEngine(BaseAgent):
         try:
             symbol = message.get("symbol")
 
-            print(f"⚛️ Quantum analysis requested for {symbol}")
+            print(f"âš›ï¸ Quantum analysis requested for {symbol}")
 
             if symbol:
                 await self.execute_symbol_quantum_algorithms(symbol)
@@ -906,7 +906,7 @@ class QuantumAlgorithmEngine(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling quantum analysis: {e}")
+            print(f"âŒ Error handling quantum analysis: {e}")
             await self.broadcast_error(f"Quantum analysis error: {e}")
 
     async def update_quantum_metrics(self):
@@ -926,7 +926,7 @@ class QuantumAlgorithmEngine(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating quantum metrics: {e}")
+            print(f"âŒ Error updating quantum metrics: {e}")
 
     async def cleanup_old_results(self):
         """Clean up old quantum results"""
@@ -945,7 +945,9 @@ class QuantumAlgorithmEngine(BaseAgent):
                 del self.state["optimization_history"][timestamp]
 
             if expired_optimizations:
-                print(f"🗑️ Cleaned up {len(expired_optimizations)} expired optimizations")
+                print(f"ðŸ—‘ï¸ Cleaned up {len(expired_optimizations)} expired optimizations")
 
         except Exception as e:
-            print(f"❌ Error cleaning up old results: {e}")
+            print(f"âŒ Error cleaning up old results: {e}")
+
+

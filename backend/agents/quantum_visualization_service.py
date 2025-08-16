@@ -1,4 +1,4 @@
-import streamlit as st
+﻿import streamlit as st
 import redis.asyncio as redis
 import asyncio
 import numpy as np
@@ -26,9 +26,9 @@ def render_quantum_indicators():
     st.markdown(
         f"""
         <div style='background-color:#1a1d25;padding:0.75em;border-radius:8px;margin-bottom:0.75em'>
-            <span style='color:#7CFC00;font-weight:bold'>⚛ Quantum Signal:</span> {q_signal} |
-            <span style='color:#87CEFA;font-weight:bold'>📈 Trade Probability:</span> {q_prob} |
-            <span style='color:#FF8C00;font-weight:bold'>🌀 Entropy Index:</span> {q_entropy}
+            <span style='color:#7CFC00;font-weight:bold'>âš› Quantum Signal:</span> {q_signal} |
+            <span style='color:#87CEFA;font-weight:bold'>ðŸ“ˆ Trade Probability:</span> {q_prob} |
+            <span style='color:#FF8C00;font-weight:bold'>ðŸŒ€ Entropy Index:</span> {q_entropy}
         </div>
         """,
         unsafe_allow_html=True,
@@ -63,12 +63,12 @@ def render_quantum_waveform_chart():
 
     y = loop.run_until_complete(get_waveform_data())
     if not y:
-        st.info("⚛ No waveform data available yet.")
+        st.info("âš› No waveform data available yet.")
         return
 
     # Validate waveform data
     if any(np.isnan(y)) or any(np.isinf(y)):
-        st.warning("⚠️ Invalid waveform data detected, using fallback")
+        st.warning("âš ï¸ Invalid waveform data detected, using fallback")
         y = [0.0] * len(y) if y else [0.0] * 100
 
     x = list(range(len(y)))
@@ -83,3 +83,5 @@ def render_quantum_waveform_chart():
         showlegend=False,
     )
     st.plotly_chart(fig, use_container_width=True)
+
+

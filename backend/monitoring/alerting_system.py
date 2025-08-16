@@ -1,4 +1,4 @@
-"""
+﻿"""
 Alerting System for Mystic Trading Platform
 
 Provides comprehensive alerting with:
@@ -453,3 +453,5 @@ class AlertingSystem:
 
 # Global alerting system instance
 alerting_system = AlertingSystem()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Cosmic Pattern Recognizer
 Finds repeating archetypal waveforms in financial data correlated to
 lunar cycles, sunspot activity, and Schumann resonance
@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class CosmicPatternRecognizer(BaseAgent):
@@ -95,7 +95,7 @@ class CosmicPatternRecognizer(BaseAgent):
         self.register_handler("get_solar_correlation", self.handle_get_solar_correlation)
         self.register_handler("get_schumann_correlation", self.handle_get_schumann_correlation)
 
-        print(f"🌌 Cosmic Pattern Recognizer {agent_id} initialized")
+        print(f"ðŸŒŒ Cosmic Pattern Recognizer {agent_id} initialized")
 
     async def initialize(self):
         """Initialize cosmic pattern recognizer resources"""
@@ -109,10 +109,10 @@ class CosmicPatternRecognizer(BaseAgent):
             # Start cosmic pattern monitoring
             await self.start_cosmic_monitoring()
 
-            print(f"✅ Cosmic Pattern Recognizer {self.agent_id} initialized successfully")
+            print(f"âœ… Cosmic Pattern Recognizer {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Cosmic Pattern Recognizer: {e}")
+            print(f"âŒ Error initializing Cosmic Pattern Recognizer: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -143,7 +143,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in cosmic pattern processing loop: {e}")
+                print(f"âŒ Error in cosmic pattern processing loop: {e}")
                 await asyncio.sleep(600)
 
     async def load_cosmic_config(self):
@@ -159,10 +159,10 @@ class CosmicPatternRecognizer(BaseAgent):
             if patterns_data:
                 self.archetypal_patterns.update(json.loads(patterns_data))
 
-            print("📋 Cosmic configuration loaded")
+            print("ðŸ“‹ Cosmic configuration loaded")
 
         except Exception as e:
-            print(f"❌ Error loading cosmic configuration: {e}")
+            print(f"âŒ Error loading cosmic configuration: {e}")
 
     async def initialize_cosmic_sources(self):
         """Initialize cosmic data sources"""
@@ -174,10 +174,10 @@ class CosmicPatternRecognizer(BaseAgent):
             self.solar_cycle_start = 2019  # Current solar cycle 25
             self.solar_cycle_length = 11.0
 
-            print("🌞 Cosmic data sources initialized")
+            print("ðŸŒž Cosmic data sources initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing cosmic sources: {e}")
+            print(f"âŒ Error initializing cosmic sources: {e}")
 
     async def start_cosmic_monitoring(self):
         """Start cosmic pattern monitoring"""
@@ -190,10 +190,10 @@ class CosmicPatternRecognizer(BaseAgent):
             # Start cosmic data listener
             asyncio.create_task(self.listen_cosmic_data(pubsub))
 
-            print("📡 Cosmic pattern monitoring started")
+            print("ðŸ“¡ Cosmic pattern monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting cosmic monitoring: {e}")
+            print(f"âŒ Error starting cosmic monitoring: {e}")
 
     async def listen_cosmic_data(self, pubsub):
         """Listen for cosmic data updates"""
@@ -207,7 +207,7 @@ class CosmicPatternRecognizer(BaseAgent):
                     await self.process_cosmic_data(data)
 
         except Exception as e:
-            print(f"❌ Error in cosmic data listener: {e}")
+            print(f"âŒ Error in cosmic data listener: {e}")
         finally:
             pubsub.close()
 
@@ -222,7 +222,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 await self.process_cosmic_update(data)
 
         except Exception as e:
-            print(f"❌ Error processing cosmic data: {e}")
+            print(f"âŒ Error processing cosmic data: {e}")
 
     async def process_market_correlation(self, market_data: Dict[str, Any]):
         """Process market data for cosmic correlation"""
@@ -242,7 +242,7 @@ class CosmicPatternRecognizer(BaseAgent):
             self.redis_client.set(correlation_key, json.dumps(correlations), ex=3600)
 
         except Exception as e:
-            print(f"❌ Error processing market correlation: {e}")
+            print(f"âŒ Error processing market correlation: {e}")
 
     async def process_cosmic_update(self, cosmic_data: Dict[str, Any]):
         """Process cosmic data update"""
@@ -257,7 +257,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 await self.update_schumann_data(cosmic_data)
 
         except Exception as e:
-            print(f"❌ Error processing cosmic update: {e}")
+            print(f"âŒ Error processing cosmic update: {e}")
 
     async def update_lunar_cycles(self):
         """Update lunar cycle data"""
@@ -281,7 +281,7 @@ class CosmicPatternRecognizer(BaseAgent):
             self.redis_client.set("lunar_cycles", json.dumps(lunar_data), ex=3600)
 
         except Exception as e:
-            print(f"❌ Error updating lunar cycles: {e}")
+            print(f"âŒ Error updating lunar cycles: {e}")
 
     def calculate_lunar_phase(self, date: datetime) -> str:
         """Calculate lunar phase for given date"""
@@ -314,7 +314,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 return "new_moon"
 
         except Exception as e:
-            print(f"❌ Error calculating lunar phase: {e}")
+            print(f"âŒ Error calculating lunar phase: {e}")
             return "unknown"
 
     def calculate_lunar_cycle_position(self, date: datetime) -> float:
@@ -332,7 +332,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return cycle_position
 
         except Exception as e:
-            print(f"❌ Error calculating lunar cycle position: {e}")
+            print(f"âŒ Error calculating lunar cycle position: {e}")
             return 0.0
 
     def calculate_lunar_illumination(self, cycle_position: float) -> float:
@@ -343,7 +343,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return max(0.0, min(1.0, illumination))
 
         except Exception as e:
-            print(f"❌ Error calculating lunar illumination: {e}")
+            print(f"âŒ Error calculating lunar illumination: {e}")
             return 0.5
 
     async def update_solar_activity(self):
@@ -372,7 +372,7 @@ class CosmicPatternRecognizer(BaseAgent):
             self.redis_client.set("solar_activity", json.dumps(solar_data), ex=3600)
 
         except Exception as e:
-            print(f"❌ Error updating solar activity: {e}")
+            print(f"âŒ Error updating solar activity: {e}")
 
     def calculate_sunspot_number(self, cycle_position: float) -> int:
         """Calculate sunspot number for cycle position"""
@@ -391,7 +391,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return int(max(0, sunspot_number))
 
         except Exception as e:
-            print(f"❌ Error calculating sunspot number: {e}")
+            print(f"âŒ Error calculating sunspot number: {e}")
             return 50
 
     def calculate_solar_flares(self, cycle_position: float) -> Dict[str, int]:
@@ -416,7 +416,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return flares
 
         except Exception as e:
-            print(f"❌ Error calculating solar flares: {e}")
+            print(f"âŒ Error calculating solar flares: {e}")
             return {"c_class": 0, "m_class": 0, "x_class": 0}
 
     def calculate_solar_activity_level(self, sunspot_number: int) -> str:
@@ -432,7 +432,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 return "minimal"
 
         except Exception as e:
-            print(f"❌ Error calculating solar activity level: {e}")
+            print(f"âŒ Error calculating solar activity level: {e}")
             return "unknown"
 
     async def update_schumann_resonance(self):
@@ -470,7 +470,7 @@ class CosmicPatternRecognizer(BaseAgent):
             self.redis_client.set("schumann_resonance", json.dumps(schumann_data), ex=3600)
 
         except Exception as e:
-            print(f"❌ Error updating Schumann resonance: {e}")
+            print(f"âŒ Error updating Schumann resonance: {e}")
 
     def calculate_schumann_stability(self, amplitude: float) -> str:
         """Calculate Schumann resonance stability"""
@@ -485,13 +485,13 @@ class CosmicPatternRecognizer(BaseAgent):
                 return "very_stable"
 
         except Exception as e:
-            print(f"❌ Error calculating Schumann stability: {e}")
+            print(f"âŒ Error calculating Schumann stability: {e}")
             return "unknown"
 
     async def analyze_cosmic_patterns(self):
         """Analyze cosmic patterns"""
         try:
-            print("🌌 Analyzing cosmic patterns...")
+            print("ðŸŒŒ Analyzing cosmic patterns...")
 
             # Get current cosmic data
             lunar_data = (
@@ -519,10 +519,10 @@ class CosmicPatternRecognizer(BaseAgent):
             self.state["analysis_count"] += 1
             self.state["last_analysis"] = datetime.now().isoformat()
 
-            print(f"✅ Analyzed {len(patterns)} cosmic patterns")
+            print(f"âœ… Analyzed {len(patterns)} cosmic patterns")
 
         except Exception as e:
-            print(f"❌ Error analyzing cosmic patterns: {e}")
+            print(f"âŒ Error analyzing cosmic patterns: {e}")
 
     async def analyze_archetypal_patterns(
         self, lunar_data: Dict, solar_data: Dict, schumann_data: Dict
@@ -552,7 +552,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return patterns
 
         except Exception as e:
-            print(f"❌ Error analyzing archetypal patterns: {e}")
+            print(f"âŒ Error analyzing archetypal patterns: {e}")
             return {}
 
     async def analyze_hero_journey_pattern(
@@ -586,7 +586,7 @@ class CosmicPatternRecognizer(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error analyzing hero journey pattern: {e}")
+            print(f"âŒ Error analyzing hero journey pattern: {e}")
             return {"phase": "unknown", "confidence": 0.0}
 
     async def analyze_death_rebirth_pattern(
@@ -620,7 +620,7 @@ class CosmicPatternRecognizer(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error analyzing death rebirth pattern: {e}")
+            print(f"âŒ Error analyzing death rebirth pattern: {e}")
             return {"phase": "unknown", "confidence": 0.0}
 
     async def analyze_golden_ratio_pattern(
@@ -657,7 +657,7 @@ class CosmicPatternRecognizer(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error analyzing golden ratio pattern: {e}")
+            print(f"âŒ Error analyzing golden ratio pattern: {e}")
             return {"confidence": 0.0}
 
     async def analyze_sacred_geometry_pattern(
@@ -694,7 +694,7 @@ class CosmicPatternRecognizer(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error analyzing sacred geometry pattern: {e}")
+            print(f"âŒ Error analyzing sacred geometry pattern: {e}")
             return {"shape": "unknown", "confidence": 0.0}
 
     async def find_pattern_correlations(self):
@@ -714,7 +714,7 @@ class CosmicPatternRecognizer(BaseAgent):
             self.redis_client.set("pattern_correlations", json.dumps(correlations), ex=3600)
 
         except Exception as e:
-            print(f"❌ Error finding pattern correlations: {e}")
+            print(f"âŒ Error finding pattern correlations: {e}")
 
     async def analyze_pattern_correlations(
         self, market_keys: List, cosmic_keys: List
@@ -757,7 +757,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return correlations
 
         except Exception as e:
-            print(f"❌ Error analyzing pattern correlations: {e}")
+            print(f"âŒ Error analyzing pattern correlations: {e}")
             return {}
 
     async def update_pattern_triggers(self):
@@ -790,7 +790,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 self.state["pattern_triggers"] = self.state["pattern_triggers"][-100:]
 
         except Exception as e:
-            print(f"❌ Error updating pattern triggers: {e}")
+            print(f"âŒ Error updating pattern triggers: {e}")
 
     async def check_trigger_conditions(
         self, lunar_data: Dict, solar_data: Dict, schumann_data: Dict
@@ -838,7 +838,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return triggers
 
         except Exception as e:
-            print(f"❌ Error checking trigger conditions: {e}")
+            print(f"âŒ Error checking trigger conditions: {e}")
             return []
 
     async def cleanup_old_data(self):
@@ -880,7 +880,7 @@ class CosmicPatternRecognizer(BaseAgent):
                     pass
 
         except Exception as e:
-            print(f"❌ Error cleaning up old data: {e}")
+            print(f"âŒ Error cleaning up old data: {e}")
 
     async def calculate_cosmic_correlations(
         self, symbol: str, price_data: List[Dict[str, Any]]
@@ -912,7 +912,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return correlations
 
         except Exception as e:
-            print(f"❌ Error calculating cosmic correlations: {e}")
+            print(f"âŒ Error calculating cosmic correlations: {e}")
             return {"symbol": symbol, "overall_correlation": 0.0}
 
     async def handle_analyze_cosmic_patterns(self, message: Dict[str, Any]):
@@ -921,7 +921,7 @@ class CosmicPatternRecognizer(BaseAgent):
             pattern_type = message.get("pattern_type", "all")
             symbols = message.get("symbols", [])
 
-            print(f"🌌 Manual cosmic pattern analysis requested for {pattern_type}")
+            print(f"ðŸŒŒ Manual cosmic pattern analysis requested for {pattern_type}")
 
             # Perform pattern analysis
             analysis_result = await self.analyze_patterns_by_type(pattern_type, symbols)
@@ -940,7 +940,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling cosmic pattern analysis request: {e}")
+            print(f"âŒ Error handling cosmic pattern analysis request: {e}")
             await self.broadcast_error(f"Cosmic pattern analysis error: {e}")
 
     async def analyze_patterns_by_type(
@@ -965,7 +965,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return analysis_result
 
         except Exception as e:
-            print(f"❌ Error analyzing patterns by type: {e}")
+            print(f"âŒ Error analyzing patterns by type: {e}")
             return {}
 
     async def analyze_lunar_patterns(self, symbols: List[str]) -> Dict[str, Any]:
@@ -995,7 +995,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return lunar_analysis
 
         except Exception as e:
-            print(f"❌ Error analyzing lunar patterns: {e}")
+            print(f"âŒ Error analyzing lunar patterns: {e}")
             return {}
 
     async def analyze_solar_patterns(self, symbols: List[str]) -> Dict[str, Any]:
@@ -1027,7 +1027,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return solar_analysis
 
         except Exception as e:
-            print(f"❌ Error analyzing solar patterns: {e}")
+            print(f"âŒ Error analyzing solar patterns: {e}")
             return {}
 
     async def analyze_schumann_patterns(self, symbols: List[str]) -> Dict[str, Any]:
@@ -1059,7 +1059,7 @@ class CosmicPatternRecognizer(BaseAgent):
             return schumann_analysis
 
         except Exception as e:
-            print(f"❌ Error analyzing Schumann patterns: {e}")
+            print(f"âŒ Error analyzing Schumann patterns: {e}")
             return {}
 
     async def handle_get_lunar_correlation(self, message: Dict[str, Any]):
@@ -1067,7 +1067,7 @@ class CosmicPatternRecognizer(BaseAgent):
         try:
             symbol = message.get("symbol", "BTC")
 
-            print(f"🌙 Lunar correlation request for {symbol}")
+            print(f"ðŸŒ™ Lunar correlation request for {symbol}")
 
             # Get lunar correlation
             lunar_correlation = await self.get_lunar_correlation(symbol)
@@ -1085,7 +1085,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling lunar correlation request: {e}")
+            print(f"âŒ Error handling lunar correlation request: {e}")
             await self.broadcast_error(f"Lunar correlation error: {e}")
 
     async def get_lunar_correlation(self, symbol: str) -> Dict[str, Any]:
@@ -1106,7 +1106,7 @@ class CosmicPatternRecognizer(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error getting lunar correlation: {e}")
+            print(f"âŒ Error getting lunar correlation: {e}")
             return {"correlation": 0.0, "current_phase": "unknown"}
 
     async def handle_get_solar_correlation(self, message: Dict[str, Any]):
@@ -1114,7 +1114,7 @@ class CosmicPatternRecognizer(BaseAgent):
         try:
             symbol = message.get("symbol", "BTC")
 
-            print(f"☀️ Solar correlation request for {symbol}")
+            print(f"â˜€ï¸ Solar correlation request for {symbol}")
 
             # Get solar correlation
             solar_correlation = await self.get_solar_correlation(symbol)
@@ -1132,7 +1132,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling solar correlation request: {e}")
+            print(f"âŒ Error handling solar correlation request: {e}")
             await self.broadcast_error(f"Solar correlation error: {e}")
 
     async def get_solar_correlation(self, symbol: str) -> Dict[str, Any]:
@@ -1155,7 +1155,7 @@ class CosmicPatternRecognizer(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error getting solar correlation: {e}")
+            print(f"âŒ Error getting solar correlation: {e}")
             return {"correlation": 0.0, "activity_level": "unknown"}
 
     async def handle_get_schumann_correlation(self, message: Dict[str, Any]):
@@ -1163,7 +1163,7 @@ class CosmicPatternRecognizer(BaseAgent):
         try:
             symbol = message.get("symbol", "BTC")
 
-            print(f"⚡ Schumann correlation request for {symbol}")
+            print(f"âš¡ Schumann correlation request for {symbol}")
 
             # Get Schumann correlation
             schumann_correlation = await self.get_schumann_correlation(symbol)
@@ -1181,7 +1181,7 @@ class CosmicPatternRecognizer(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling Schumann correlation request: {e}")
+            print(f"âŒ Error handling Schumann correlation request: {e}")
             await self.broadcast_error(f"Schumann correlation error: {e}")
 
     async def get_schumann_correlation(self, symbol: str) -> Dict[str, Any]:
@@ -1204,7 +1204,7 @@ class CosmicPatternRecognizer(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error getting Schumann correlation: {e}")
+            print(f"âŒ Error getting Schumann correlation: {e}")
             return {"correlation": 0.0, "frequency": 7.83}
 
 
@@ -1212,3 +1212,5 @@ if __name__ == "__main__":
     # Run the agent
     recognizer = CosmicPatternRecognizer()
     asyncio.run(recognizer.start())
+
+

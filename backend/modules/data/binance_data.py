@@ -1,4 +1,4 @@
-"""
+﻿"""
 Binance Data Fetcher Module for Mystic Trading Platform
 
 Handles all Binance US API interactions with centralized coin management.
@@ -77,18 +77,18 @@ class BinanceDataFetcher:
         ]
         self.trading_pairs = {coin: f"{coin}/USDT" for coin in self.supported_coins}
         self.client = ccxt.binanceus({"apiKey": "your_api_key", "secret": "your_secret_key"})
-        logger.info(f"✅ BinanceDataFetcher initialized with {len(self.supported_coins)} coins")
+        logger.info(f"âœ… BinanceDataFetcher initialized with {len(self.supported_coins)} coins")
 
     def add_coin(self, coin: str) -> bool:
         try:
             if coin not in self.supported_coins:
                 self.supported_coins.append(coin)
                 self.trading_pairs[coin] = f"{coin}/USDT"
-                logger.info(f"✅ Added coin: {coin}")
+                logger.info(f"âœ… Added coin: {coin}")
                 return True
             return False
         except Exception as e:
-            logger.error(f"❌ Error adding coin {coin}: {str(e)}")
+            logger.error(f"âŒ Error adding coin {coin}: {str(e)}")
             return False
 
     def remove_coin(self, coin: str) -> bool:
@@ -96,11 +96,11 @@ class BinanceDataFetcher:
             if coin in self.supported_coins:
                 self.supported_coins.remove(coin)
                 self.trading_pairs.pop(coin, None)
-                logger.info(f"✅ Removed coin: {coin}")
+                logger.info(f"âœ… Removed coin: {coin}")
                 return True
             return False
         except Exception as e:
-            logger.error(f"❌ Error removing coin {coin}: {str(e)}")
+            logger.error(f"âŒ Error removing coin {coin}: {str(e)}")
             return False
 
     def get_supported_coins(self) -> List[str]:
@@ -128,7 +128,7 @@ class BinanceDataFetcher:
             )
 
         except Exception as e:
-            logger.error(f"❌ Error getting Binance data for {symbol}: {str(e)}")
+            logger.error(f"âŒ Error getting Binance data for {symbol}: {str(e)}")
             return None
 
     async def get_all_market_data(self) -> Dict[str, BinanceMarketData]:
@@ -149,7 +149,7 @@ class BinanceDataFetcher:
             return market_data
 
         except Exception as e:
-            logger.error(f"❌ Error getting all market data: {str(e)}")
+            logger.error(f"âŒ Error getting all market data: {str(e)}")
             raise BinanceDataError("Error getting all market data")
 
     async def get_order_book(self, symbol: str, limit: int = 10) -> Optional[Dict[str, Any]]:
@@ -169,7 +169,7 @@ class BinanceDataFetcher:
                 "exchange": "binance",
             }
         except Exception as e:
-            logger.error(f"❌ Error getting order book for {symbol}: {str(e)}")
+            logger.error(f"âŒ Error getting order book for {symbol}: {str(e)}")
             return None
 
     async def get_recent_trades(
@@ -195,7 +195,7 @@ class BinanceDataFetcher:
                 for trade in trades
             ]
         except Exception as e:
-            logger.error(f"❌ Error getting recent trades for {symbol}: {str(e)}")
+            logger.error(f"âŒ Error getting recent trades for {symbol}: {str(e)}")
             return None
 
     def get_statistics(self) -> Dict[str, Any]:
@@ -267,3 +267,5 @@ except NameError:
         pass
 
 __all__ = list(set([*globals().get('__all__', []), 'BinanceData']))
+
+

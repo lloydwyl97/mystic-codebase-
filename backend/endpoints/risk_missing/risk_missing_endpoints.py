@@ -1,4 +1,4 @@
-"""
+﻿"""
 Missing Risk Management Endpoints
 
 Provides missing risk management endpoints that return live data:
@@ -27,7 +27,7 @@ async def get_risk_status() -> Dict[str, Any]:
     - Risk alerts
     """
     try:
-        from services.risk_service import RiskService
+        from backend.services.risk_service import RiskService
 
         risk_service = RiskService()
         risk_status = await risk_service.get_status()
@@ -35,3 +35,6 @@ async def get_risk_status() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting risk status: {e}")
         raise HTTPException(status_code=500, detail=f"Error getting risk status: {str(e)}")
+
+
+

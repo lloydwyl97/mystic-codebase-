@@ -1,4 +1,4 @@
-"""
+﻿"""
 Secure Logger for Mystic Trading Platform
 
 Provides secure logging with:
@@ -477,3 +477,5 @@ class SecureLogger:
 
 # Global secure logger instance
 secure_logger = SecureLogger()
+
+

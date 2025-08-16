@@ -1,4 +1,4 @@
-"""
+﻿"""
 Exchange Integration Service
 
 Provides exchange integration functionality for the Mystic Trading Platform.
@@ -10,3 +10,5 @@ from exchange_integration import OrderRequest, ExchangeManager
 exchange_manager = ExchangeManager()
 
 __all__ = ["OrderRequest", "exchange_manager"]
+
+

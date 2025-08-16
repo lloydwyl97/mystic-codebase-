@@ -1,4 +1,4 @@
-"""
+﻿"""
 Liquidity Service for Mystic AI Trading Platform
 Provides live liquidity tracking and cross-exchange arbitrage analysis.
 """
@@ -13,12 +13,12 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
 try:
-    from modules.ai.multiversal_liquidity_engine import MultiversalLiquidityEngine
+    from backend.modules.ai.multiversal_liquidity_engine import MultiversalLiquidityEngine
     MULTIVERSAL_AVAILABLE = True
 except ImportError:
     MULTIVERSAL_AVAILABLE = False
@@ -57,7 +57,7 @@ class LiquidityService:
         # Mock order book data for testing
         self.mock_orderbooks = self._generate_mock_orderbooks()
 
-        logger.info("✅ LiquidityService initialized")
+        logger.info("âœ… LiquidityService initialized")
 
     def _generate_mock_orderbooks(self) -> Dict[str, Dict[str, Any]]:
         """Generate mock order book data for testing"""
@@ -470,7 +470,7 @@ class LiquidityService:
     async def store_liquidity_data(self) -> Dict[str, Any]:
         """Store comprehensive liquidity data in cache"""
         try:
-            logger.info("💾 Storing comprehensive liquidity data")
+            logger.info("ðŸ’¾ Storing comprehensive liquidity data")
 
             all_data = {}
             total_snapshots = 0
@@ -516,7 +516,7 @@ class LiquidityService:
                 metadata=summary
             )
 
-            logger.info(f"✅ Stored liquidity data: {total_snapshots} snapshots, {total_opportunities} opportunities")
+            logger.info(f"âœ… Stored liquidity data: {total_snapshots} snapshots, {total_opportunities} opportunities")
             return summary
 
         except Exception as e:
@@ -560,7 +560,7 @@ def get_liquidity_service() -> LiquidityService:
 if __name__ == "__main__":
     # Test the liquidity service
     service = LiquidityService()
-    print(f"✅ LiquidityService initialized: {service}")
+    print(f"âœ… LiquidityService initialized: {service}")
 
     # Test status
     status = service.get_liquidity_status()
@@ -570,3 +570,5 @@ if __name__ == "__main__":
     import asyncio
     snapshot = asyncio.run(service.get_liquidity_snapshot("coinbase", "BTC-USD"))
     print(f"Snapshot: {snapshot}")
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Social Router - Social Trading
 
 Contains leaderboards, copy trading, and trader management endpoints.
@@ -11,10 +11,10 @@ from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException
 
 # Import real services
-from services.redis_service import get_redis_service
+from backend.services.redis_service import get_redis_service
 
-# Import services
-from services.social_trading import social_trading_service
+# import backend.services as services
+from backend.services.social_trading import social_trading_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -164,3 +164,5 @@ async def get_social_performance():
             status_code=500,
             detail=f"Error getting social performance: {str(e)}",
         )
+
+

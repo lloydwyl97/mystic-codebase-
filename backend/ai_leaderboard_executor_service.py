@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 AI Leaderboard Executor Service
 Port 8005 - Standalone AI leaderboard execution service
@@ -20,7 +20,7 @@ import redis
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import AI leaderboard executor
+# import backend.ai as ai leaderboard executor
 from ai_leaderboard_executor import AILeaderboardExecutor
 
 # Configure logging
@@ -59,11 +59,11 @@ class AILeaderboardExecutorService:
             decode_responses=True,
         )
 
-        logger.info("✅ AI Leaderboard Executor Service initialized")
+        logger.info("âœ… AI Leaderboard Executor Service initialized")
 
     async def start(self):
         """Start the service"""
-        logger.info("🚀 Starting AI Leaderboard Executor Service...")
+        logger.info("ðŸš€ Starting AI Leaderboard Executor Service...")
         self.running = True
 
         # Start the executor
@@ -74,13 +74,13 @@ class AILeaderboardExecutorService:
 
     async def stop(self):
         """Stop the service"""
-        logger.info("🛑 Stopping AI Leaderboard Executor Service...")
+        logger.info("ðŸ›‘ Stopping AI Leaderboard Executor Service...")
         self.running = False
         await self.executor.stop()
 
     async def leaderboard_monitor_loop(self):
         """Monitor for leaderboard execution requests"""
-        logger.info("👀 Starting leaderboard monitor loop...")
+        logger.info("ðŸ‘€ Starting leaderboard monitor loop...")
 
         while self.running:
             try:
@@ -95,7 +95,7 @@ class AILeaderboardExecutorService:
                 await asyncio.sleep(30)
 
             except Exception as e:
-                logger.error(f"❌ Error in leaderboard monitor loop: {e}")
+                logger.error(f"âŒ Error in leaderboard monitor loop: {e}")
                 await asyncio.sleep(60)
 
     async def process_leaderboard_request(self, request_data: Dict[str, Any]):
@@ -105,7 +105,7 @@ class AILeaderboardExecutorService:
             symbol = request_data.get("symbol", "ETHUSDT")
             timeframe = request_data.get("timeframe", "1h")
 
-            logger.info(f"🏆 Processing leaderboard request for strategy {strategy_id}")
+            logger.info(f"ðŸ† Processing leaderboard request for strategy {strategy_id}")
 
             # Execute leaderboard analysis
             leaderboard_result = await self.executor.execute_leaderboard_analysis(
@@ -136,12 +136,12 @@ class AILeaderboardExecutorService:
             # Publish result
             self.redis_client.lpush("leaderboard_results", json.dumps(leaderboard_record))
 
-            logger.info(f"✅ Leaderboard processed: {leaderboard_record['status']}")
+            logger.info(f"âœ… Leaderboard processed: {leaderboard_record['status']}")
 
             return leaderboard_record
 
         except Exception as e:
-            logger.error(f"❌ Error processing leaderboard request: {e}")
+            logger.error(f"âŒ Error processing leaderboard request: {e}")
 
             # Record failed leaderboard execution
             leaderboard_record = {
@@ -159,7 +159,7 @@ class AILeaderboardExecutorService:
     ) -> Dict[str, Any]:
         """Execute leaderboard analysis"""
         try:
-            logger.info(f"🏆 Executing leaderboard analysis for {strategy_id}")
+            logger.info(f"ðŸ† Executing leaderboard analysis for {strategy_id}")
 
             # Execute leaderboard analysis
             result = await self.executor.execute_leaderboard_analysis(
@@ -179,12 +179,12 @@ class AILeaderboardExecutorService:
             # Store leaderboard record
             self.leaderboard_history.append(leaderboard_record)
 
-            logger.info(f"✅ Leaderboard analysis executed: {leaderboard_record['status']}")
+            logger.info(f"âœ… Leaderboard analysis executed: {leaderboard_record['status']}")
 
             return leaderboard_record
 
         except Exception as e:
-            logger.error(f"❌ Error executing leaderboard analysis: {e}")
+            logger.error(f"âŒ Error executing leaderboard analysis: {e}")
             raise
 
     async def get_leaderboard_history(self, limit: int = 100) -> List[Dict[str, Any]]:
@@ -193,7 +193,7 @@ class AILeaderboardExecutorService:
             # Return recent leaderboard executions
             return self.leaderboard_history[-limit:] if self.leaderboard_history else []
         except Exception as e:
-            logger.error(f"❌ Error getting leaderboard history: {e}")
+            logger.error(f"âŒ Error getting leaderboard history: {e}")
             return []
 
     async def get_strategy_leaderboard(self, strategy_id: str) -> List[Dict[str, Any]]:
@@ -206,7 +206,7 @@ class AILeaderboardExecutorService:
                     leaderboards.append(json.loads(leaderboard_data))
             return leaderboards
         except Exception as e:
-            logger.error(f"❌ Error getting strategy leaderboard: {e}")
+            logger.error(f"âŒ Error getting strategy leaderboard: {e}")
             return []
 
     async def get_current_leaderboard(self) -> Dict[str, Any]:
@@ -220,7 +220,7 @@ class AILeaderboardExecutorService:
                 "timestamp": datetime.now().isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error getting current leaderboard: {e}")
+            logger.error(f"âŒ Error getting current leaderboard: {e}")
             return {"error": str(e)}
 
 
@@ -235,9 +235,9 @@ async def startup_event():
     try:
         leaderboard_service = AILeaderboardExecutorService()
         await leaderboard_service.start()
-        logger.info("✅ AI Leaderboard Executor Service started")
+        logger.info("âœ… AI Leaderboard Executor Service started")
     except Exception as e:
-        logger.error(f"❌ Failed to start AI Leaderboard Executor Service: {e}")
+        logger.error(f"âŒ Failed to start AI Leaderboard Executor Service: {e}")
         raise
 
 
@@ -247,7 +247,7 @@ async def shutdown_event():
     global leaderboard_service
     if leaderboard_service:
         await leaderboard_service.stop()
-        logger.info("✅ AI Leaderboard Executor Service stopped")
+        logger.info("âœ… AI Leaderboard Executor Service stopped")
 
 
 @app.get("/health")
@@ -297,7 +297,7 @@ async def execute_leaderboard_analysis(
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error in analyze endpoint: {e}")
+        logger.error(f"âŒ Error in analyze endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -315,7 +315,7 @@ async def get_leaderboards(limit: int = 100):
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error getting leaderboards: {e}")
+        logger.error(f"âŒ Error getting leaderboards: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -334,7 +334,7 @@ async def get_strategy_leaderboard(strategy_id: str):
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error getting strategy leaderboard: {e}")
+        logger.error(f"âŒ Error getting strategy leaderboard: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -348,7 +348,7 @@ async def get_current_leaderboard():
         leaderboard = await leaderboard_service.get_current_leaderboard()
         return leaderboard
     except Exception as e:
-        logger.error(f"❌ Error getting current leaderboard: {e}")
+        logger.error(f"âŒ Error getting current leaderboard: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -375,7 +375,7 @@ async def process_leaderboard_queue():
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error processing leaderboard queue: {e}")
+        logger.error(f"âŒ Error processing leaderboard queue: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -383,7 +383,7 @@ if __name__ == "__main__":
     # Get port from environment
     port = int(os.getenv("SERVICE_PORT", 8005))
 
-    logger.info(f"🚀 Starting AI Leaderboard Executor Service on port {port}")
+    logger.info(f"ðŸš€ Starting AI Leaderboard Executor Service on port {port}")
 
     # Start the FastAPI server
     uvicorn.run(
@@ -393,3 +393,5 @@ if __name__ == "__main__":
         log_level="info",
         reload=False,
     )
+
+

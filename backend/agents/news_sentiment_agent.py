@@ -1,4 +1,4 @@
-"""
+﻿"""
 News Sentiment Agent
 Handles financial news analysis and sentiment extraction
 """
@@ -23,11 +23,11 @@ _ = Optional[str]
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class NewsSentimentAgent(BaseAgent):
@@ -105,7 +105,7 @@ class NewsSentimentAgent(BaseAgent):
         self.register_handler("update_sources", self.handle_update_sources)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"📰 News Sentiment Agent {agent_id} initialized")
+        print(f"ðŸ“° News Sentiment Agent {agent_id} initialized")
 
     async def initialize(self):
         """Initialize news sentiment agent resources"""
@@ -119,10 +119,10 @@ class NewsSentimentAgent(BaseAgent):
             # Start news monitoring
             await self.start_news_monitoring()
 
-            print(f"✅ News Sentiment Agent {self.agent_id} initialized successfully")
+            print(f"âœ… News Sentiment Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing News Sentiment Agent: {e}")
+            print(f"âŒ Error initializing News Sentiment Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -141,7 +141,7 @@ class NewsSentimentAgent(BaseAgent):
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in news processing loop: {e}")
+                print(f"âŒ Error in news processing loop: {e}")
                 await asyncio.sleep(600)
 
     async def load_news_config(self):
@@ -158,11 +158,11 @@ class NewsSentimentAgent(BaseAgent):
                 self.trading_symbols = json.loads(symbols_data)
 
             print(
-                f"📋 News configuration loaded: {len(self.news_sources)} sources, {len(self.trading_symbols)} symbols"
+                f"ðŸ“‹ News configuration loaded: {len(self.news_sources)} sources, {len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading news configuration: {e}")
+            print(f"âŒ Error loading news configuration: {e}")
 
     async def initialize_sentiment_models(self):
         """Initialize sentiment analysis models"""
@@ -177,10 +177,10 @@ class NewsSentimentAgent(BaseAgent):
             test_text = "Bitcoin price increases significantly"
             TextBlob(test_text)
 
-            print("🧠 Sentiment models initialized (TextBlob)")
+            print("ðŸ§  Sentiment models initialized (TextBlob)")
 
         except Exception as e:
-            print(f"❌ Error initializing sentiment models: {e}")
+            print(f"âŒ Error initializing sentiment models: {e}")
 
     async def start_news_monitoring(self):
         """Start news monitoring"""
@@ -192,10 +192,10 @@ class NewsSentimentAgent(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 News monitoring started")
+            print("ðŸ“¡ News monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting news monitoring: {e}")
+            print(f"âŒ Error starting news monitoring: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -209,7 +209,7 @@ class NewsSentimentAgent(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -224,23 +224,23 @@ class NewsSentimentAgent(BaseAgent):
                 await self.update_symbol_context(symbol, price)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def handle_market_data(self, message: Dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})
-            print(f"📊 News Sentiment Agent received market data for {len(market_data)} symbols")
+            print(f"ðŸ“Š News Sentiment Agent received market data for {len(market_data)} symbols")
             await self.process_market_data(market_data)
             await self.fetch_and_analyze_news()
         except Exception as e:
-            print(f"❌ Error handling market data: {e}")
+            print(f"âŒ Error handling market data: {e}")
             await self.broadcast_error(f"Market data handling error: {e}")
 
     async def fetch_and_analyze_news(self):
         """Fetch and analyze news from all sources"""
         try:
-            print(f"📰 Fetching news from {len(self.news_sources)} sources...")
+            print(f"ðŸ“° Fetching news from {len(self.news_sources)} sources...")
 
             all_articles = []
 
@@ -250,7 +250,7 @@ class NewsSentimentAgent(BaseAgent):
                     articles = await self.fetch_news_from_source(source)
                     all_articles.extend(articles)
                 except Exception as e:
-                    print(f"❌ Error fetching from {source['name']}: {e}")
+                    print(f"âŒ Error fetching from {source['name']}: {e}")
 
             # Analyze sentiment for all articles
             if all_articles:
@@ -260,10 +260,10 @@ class NewsSentimentAgent(BaseAgent):
                 self.state["analysis_count"] += 1
                 self.state["last_analysis"] = datetime.now().isoformat()
 
-            print(f"✅ Analyzed {len(all_articles)} articles")
+            print(f"âœ… Analyzed {len(all_articles)} articles")
 
         except Exception as e:
-            print(f"❌ Error fetching and analyzing news: {e}")
+            print(f"âŒ Error fetching and analyzing news: {e}")
 
     async def fetch_news_from_source(self, source: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Fetch news from a specific source"""
@@ -293,7 +293,7 @@ class NewsSentimentAgent(BaseAgent):
             return articles
 
         except Exception as e:
-            print(f"❌ Error fetching from {source['name']}: {e}")
+            print(f"âŒ Error fetching from {source['name']}: {e}")
             return []
 
     async def analyze_articles_sentiment(self, articles: List[Dict[str, Any]]):
@@ -313,7 +313,7 @@ class NewsSentimentAgent(BaseAgent):
                 await self.broadcast_sentiment_update(article, sentiment, symbols)
 
         except Exception as e:
-            print(f"❌ Error analyzing articles sentiment: {e}")
+            print(f"âŒ Error analyzing articles sentiment: {e}")
 
     async def analyze_article_sentiment(self, article: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze sentiment for a single article"""
@@ -355,7 +355,7 @@ class NewsSentimentAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error analyzing article sentiment: {e}")
+            print(f"âŒ Error analyzing article sentiment: {e}")
             return {
                 "polarity": 0,
                 "subjectivity": 0.5,
@@ -380,7 +380,7 @@ class NewsSentimentAgent(BaseAgent):
             return text.lower()
 
         except Exception as e:
-            print(f"❌ Error cleaning text: {e}")
+            print(f"âŒ Error cleaning text: {e}")
             return text
 
     async def extract_symbols(self, article: Dict[str, Any]) -> List[str]:
@@ -403,7 +403,7 @@ class NewsSentimentAgent(BaseAgent):
             return list(set(symbols))  # Remove duplicates
 
         except Exception as e:
-            print(f"❌ Error extracting symbols: {e}")
+            print(f"âŒ Error extracting symbols: {e}")
             return []
 
     async def extract_keywords_sentiment(self, text: str) -> Dict[str, float]:
@@ -454,7 +454,7 @@ class NewsSentimentAgent(BaseAgent):
             return keywords_sentiment
 
         except Exception as e:
-            print(f"❌ Error extracting keywords sentiment: {e}")
+            print(f"âŒ Error extracting keywords sentiment: {e}")
             return {}
 
     async def update_sentiment_cache(
@@ -493,7 +493,7 @@ class NewsSentimentAgent(BaseAgent):
             self.redis_client.set(cache_key, json.dumps(cache_entry), ex=3600)
 
         except Exception as e:
-            print(f"❌ Error updating sentiment cache: {e}")
+            print(f"âŒ Error updating sentiment cache: {e}")
 
     async def broadcast_sentiment_update(
         self,
@@ -519,7 +519,7 @@ class NewsSentimentAgent(BaseAgent):
             await self.send_message("risk_agent", sentiment_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting sentiment update: {e}")
+            print(f"âŒ Error broadcasting sentiment update: {e}")
 
     async def update_symbol_context(self, symbol: str, price: float):
         """Update symbol context for sentiment analysis"""
@@ -535,7 +535,7 @@ class NewsSentimentAgent(BaseAgent):
             self.redis_client.set(f"price_context:{symbol}", json.dumps(price_context), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating symbol context: {e}")
+            print(f"âŒ Error updating symbol context: {e}")
 
     async def handle_analyze_news(self, message: Dict[str, Any]):
         """Handle manual news analysis request"""
@@ -543,7 +543,7 @@ class NewsSentimentAgent(BaseAgent):
             source_url = message.get("source_url")
             keywords = message.get("keywords", [])
 
-            print(f"📰 Manual news analysis requested for {source_url}")
+            print(f"ðŸ“° Manual news analysis requested for {source_url}")
 
             # Fetch and analyze news from specified source
             source = {
@@ -569,7 +569,7 @@ class NewsSentimentAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling news analysis request: {e}")
+            print(f"âŒ Error handling news analysis request: {e}")
             await self.broadcast_error(f"News analysis error: {e}")
 
     async def handle_get_sentiment(self, message: Dict[str, Any]):
@@ -578,7 +578,7 @@ class NewsSentimentAgent(BaseAgent):
             symbol = message.get("symbol")
             timeframe = message.get("timeframe", "24h")
 
-            print(f"📊 Sentiment request for {symbol} ({timeframe})")
+            print(f"ðŸ“Š Sentiment request for {symbol} ({timeframe})")
 
             # Get sentiment for symbol
             sentiment_data = await self.get_symbol_sentiment(symbol, timeframe)
@@ -597,7 +597,7 @@ class NewsSentimentAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling sentiment request: {e}")
+            print(f"âŒ Error handling sentiment request: {e}")
             await self.broadcast_error(f"Sentiment request error: {e}")
 
     async def handle_update_sources(self, message: Dict[str, Any]):
@@ -605,7 +605,7 @@ class NewsSentimentAgent(BaseAgent):
         try:
             new_sources = message.get("sources", [])
 
-            print("📋 Updating news sources")
+            print("ðŸ“‹ Updating news sources")
 
             # Update sources
             self.news_sources = new_sources
@@ -625,7 +625,7 @@ class NewsSentimentAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error updating news sources: {e}")
+            print(f"âŒ Error updating news sources: {e}")
             await self.broadcast_error(f"Sources update error: {e}")
 
     async def get_symbol_sentiment(self, symbol: str, timeframe: str) -> Dict[str, Any]:
@@ -688,7 +688,7 @@ class NewsSentimentAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error getting symbol sentiment: {e}")
+            print(f"âŒ Error getting symbol sentiment: {e}")
             return {
                 "average_polarity": 0,
                 "sentiment_category": "neutral",
@@ -713,7 +713,7 @@ class NewsSentimentAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating sentiment metrics: {e}")
+            print(f"âŒ Error updating sentiment metrics: {e}")
 
     async def cleanup_cache(self):
         """Clean up old cache entries"""
@@ -736,4 +736,6 @@ class NewsSentimentAgent(BaseAgent):
                     self.state["symbol_sentiment"][symbol] = sentiments[-100:]
 
         except Exception as e:
-            print(f"❌ Error cleaning up cache: {e}")
+            print(f"âŒ Error cleaning up cache: {e}")
+
+

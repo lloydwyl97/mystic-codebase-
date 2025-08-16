@@ -1,4 +1,4 @@
-"""
+﻿"""
 Secure Error Handler for Mystic Trading Platform
 
 Provides secure error handling with:
@@ -17,7 +17,7 @@ from collections import defaultdict, deque
 import threading
 import hashlib
 
-from utils.exceptions import (
+from backend.utils.exceptions import (
     MysticException
 )
 
@@ -356,3 +356,5 @@ class SecureErrorHandler:
 
 # Global error handler instance
 error_handler = SecureErrorHandler()
+
+

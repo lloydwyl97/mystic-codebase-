@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import asyncio
 import logging
@@ -7,13 +7,13 @@ from typing import Any, Dict, List, Optional, TypeVar, Awaitable
 
 T = TypeVar("T")
 
-from exchanges.binanceus_adapter import BinanceUSAdapter  # type: ignore[import-not-found]
-from exchanges.coinbase_adapter import CoinbaseAdapter  # type: ignore[import-not-found]
-from exchanges.kraken_adapter import KrakenAdapter  # type: ignore[import-not-found]
-from exchanges.coingecko_client import CoinGeckoClient  # type: ignore[import-not-found]
-from exchanges.base_adapter import BaseExchangeAdapter  # type: ignore[import-not-found]
-from models.market_types import Ticker, OHLCV  # type: ignore[import-not-found]
-from utils.symbols import EXCHANGE_TOP4, normalize_symbol_to_dash, is_top4  # type: ignore[import-not-found]
+from backend.exchanges.binanceus_adapter import BinanceUSAdapter  # type: ignore[import-not-found]
+from backend.exchanges.coinbase_adapter import CoinbaseAdapter  # type: ignore[import-not-found]
+from backend.exchanges.kraken_adapter import KrakenAdapter  # type: ignore[import-not-found]
+from backend.exchanges.coingecko_client import CoinGeckoClient  # type: ignore[import-not-found]
+from backend.exchanges.base_adapter import BaseExchangeAdapter  # type: ignore[import-not-found]
+from backend.models.market_types import Ticker, OHLCV  # type: ignore[import-not-found]
+from backend.utils.symbols import EXCHANGE_TOP4, normalize_symbol_to_dash, is_top4  # type: ignore[import-not-found]
 
 logger = logging.getLogger(__name__)
 
@@ -150,5 +150,7 @@ class MarketDataRouter:
             except Exception:
                 continue
         return results
+
+
 
 

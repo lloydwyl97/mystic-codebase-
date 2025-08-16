@@ -1,4 +1,4 @@
-"""
+﻿"""
 Notification Service for Mystic Trading
 
 Handles notifications for signal failures, recoveries, and system events.
@@ -541,3 +541,5 @@ def get_notification_service(
     if notification_service is None:
         notification_service = NotificationService(redis_client)
     return notification_service
+
+

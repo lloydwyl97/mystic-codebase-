@@ -1,4 +1,4 @@
-"""
+﻿"""
 Auto Execution Service for Mystic AI Trading Platform
 Handles live trading execution via CCXT library for multiple exchanges.
 """
@@ -13,7 +13,7 @@ import sys
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -56,12 +56,12 @@ class AutoExecutionService:
         # Initialize exchanges
         self._init_exchanges()
 
-        logger.info(f"✅ AutoExecutionService initialized (test_mode: {test_mode})")
+        logger.info(f"âœ… AutoExecutionService initialized (test_mode: {test_mode})")
 
     def _init_exchanges(self):
         """Initialize exchange connections"""
         if not CCXT_AVAILABLE:
-            logger.error("❌ CCXT library not available")
+            logger.error("âŒ CCXT library not available")
             return
 
         for exchange_id, config in self.exchange_configs.items():
@@ -75,16 +75,16 @@ class AutoExecutionService:
 
                 # Test connection
                 if self.test_mode:
-                    logger.info(f"🔧 {exchange_id} initialized in test mode")
+                    logger.info(f"ðŸ”§ {exchange_id} initialized in test mode")
                 else:
                     # Load markets to test connection
                     exchange.load_markets()
-                    logger.info(f"✅ {exchange_id} connected successfully")
+                    logger.info(f"âœ… {exchange_id} connected successfully")
 
                 self.exchanges[exchange_id] = exchange
 
             except Exception as e:
-                logger.error(f"❌ Failed to initialize {exchange_id}: {e}")
+                logger.error(f"âŒ Failed to initialize {exchange_id}: {e}")
 
     def get_balance(self, exchange: str) -> Dict[str, Any]:
         """Get account balance for specified exchange"""
@@ -118,7 +118,7 @@ class AutoExecutionService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to get balance for {exchange}: {e}")
+            logger.error(f"âŒ Failed to get balance for {exchange}: {e}")
             return {"success": False, "error": str(e)}
 
     def place_buy_order(self, exchange: str, symbol: str, amount_in_usd: float) -> Dict[str, Any]:
@@ -168,7 +168,7 @@ class AutoExecutionService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to place buy order for {symbol}: {e}")
+            logger.error(f"âŒ Failed to place buy order for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
     def place_sell_order(self, exchange: str, symbol: str, amount_in_usd: float) -> Dict[str, Any]:
@@ -218,7 +218,7 @@ class AutoExecutionService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to place sell order for {symbol}: {e}")
+            logger.error(f"âŒ Failed to place sell order for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
     def get_order_status(self, exchange: str, order_id: str) -> Dict[str, Any]:
@@ -252,7 +252,7 @@ class AutoExecutionService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to get order status for {order_id}: {e}")
+            logger.error(f"âŒ Failed to get order status for {order_id}: {e}")
             return {"success": False, "error": str(e)}
 
     def cancel_order(self, exchange: str, order_id: str) -> Dict[str, Any]:
@@ -281,7 +281,7 @@ class AutoExecutionService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to cancel order {order_id}: {e}")
+            logger.error(f"âŒ Failed to cancel order {order_id}: {e}")
             return {"success": False, "error": str(e)}
 
     def get_service_status(self) -> Dict[str, Any]:
@@ -325,7 +325,7 @@ class AutoExecutionService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to get service status: {e}")
+            logger.error(f"âŒ Failed to get service status: {e}")
             return {"success": False, "error": str(e)}
 
     def set_test_mode(self, enabled: bool):
@@ -349,7 +349,7 @@ def get_auto_execution_service() -> AutoExecutionService:
 if __name__ == "__main__":
     # Test the service
     service = AutoExecutionService()
-    print(f"✅ AutoExecutionService initialized: {service}")
+    print(f"âœ… AutoExecutionService initialized: {service}")
 
     # Test balance
     balance = service.get_balance('binance')
@@ -360,3 +360,5 @@ if __name__ == "__main__":
     print(f"Service status: {status['status']}")
     print(f"Test mode: {status['test_mode']}")
     print(f"CCXT available: {status['ccxt_available']}")
+
+

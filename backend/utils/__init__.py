@@ -1,4 +1,4 @@
-"""
+﻿"""
 Utils Module for Mystic Trading Platform
 
 Contains utility functions and classes for the application.
@@ -37,3 +37,5 @@ __all__ = [
     "safe_execute",
     "safe_async_execute",
 ]
+
+

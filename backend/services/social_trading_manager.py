@@ -1,4 +1,4 @@
-"""
+﻿"""
 Social Trading Manager Service
 Handles social trading features and community signals
 """
@@ -15,7 +15,7 @@ class SocialTradingManager:
         self.active_traders = {}
         self.community_signals = []
         self.performance_leaderboard = []
-        logger.info("✅ SocialTradingManager initialized")
+        logger.info("âœ… SocialTradingManager initialized")
 
     async def get_social_status(self) -> Dict[str, Any]:
         """Get status of social trading features"""
@@ -41,10 +41,10 @@ class SocialTradingManager:
                 "joined_at": datetime.now(timezone.timezone.utc).isoformat(),
                 "status": "active",
             }
-            logger.info(f"✅ Added trader: {name}")
+            logger.info(f"âœ… Added trader: {name}")
             return {"success": True, "trader_id": trader_id}
         except Exception as e:
-            logger.error(f"❌ Error adding trader: {e}")
+            logger.error(f"âŒ Error adding trader: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_leaderboard(self) -> List[Dict[str, Any]]:
@@ -67,7 +67,7 @@ class SocialTradingManager:
             leaderboard.sort(key=lambda x: x["pnl"], reverse=True)
             return leaderboard[:10]  # Top 10
         except Exception as e:
-            logger.error(f"❌ Error getting leaderboard: {e}")
+            logger.error(f"âŒ Error getting leaderboard: {e}")
             return []
 
     async def add_community_signal(
@@ -85,10 +85,10 @@ class SocialTradingManager:
                 "votes": 0,
             }
             self.community_signals.append(signal)
-            logger.info(f"✅ Added community signal from {signal['trader_name']}")
+            logger.info(f"âœ… Added community signal from {signal['trader_name']}")
             return {"success": True, "signal_id": len(self.community_signals)}
         except Exception as e:
-            logger.error(f"❌ Error adding community signal: {e}")
+            logger.error(f"âŒ Error adding community signal: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_recent_signals(self, limit: int = 10) -> List[Dict[str, Any]]:
@@ -96,7 +96,7 @@ class SocialTradingManager:
         try:
             return self.community_signals[-limit:] if self.community_signals else []
         except Exception as e:
-            logger.error(f"❌ Error getting recent signals: {e}")
+            logger.error(f"âŒ Error getting recent signals: {e}")
             return []
 
     async def update_trader_performance(
@@ -118,13 +118,15 @@ class SocialTradingManager:
                         wins += 1
                     trader["performance"]["win_rate"] = wins / trader["performance"]["total_trades"]
 
-                logger.info(f"✅ Updated performance for trader {trader_id}")
+                logger.info(f"âœ… Updated performance for trader {trader_id}")
                 return {"success": True}
             return {"success": False, "error": "Trader not found"}
         except Exception as e:
-            logger.error(f"❌ Error updating trader performance: {e}")
+            logger.error(f"âŒ Error updating trader performance: {e}")
             return {"success": False, "error": str(e)}
 
 
 # Global instance
 social_trading_manager = SocialTradingManager()
+
+

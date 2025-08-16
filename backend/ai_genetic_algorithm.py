@@ -1,4 +1,4 @@
-"""
+﻿"""
 Genetic Algorithm Engine for Strategy Evolution
 Advanced genetic algorithm implementation for trading strategy optimization
 """
@@ -98,7 +98,7 @@ class GeneticAlgorithmEngine:
 
     async def start(self):
         """Start the Genetic Algorithm Engine"""
-        print("🧬 Starting Genetic Algorithm Engine...")
+        print("ðŸ§¬ Starting Genetic Algorithm Engine...")
         self.running = True
 
         # Initialize population
@@ -109,7 +109,7 @@ class GeneticAlgorithmEngine:
 
     async def initialize_population(self):
         """Initialize the initial population"""
-        print(f"🎯 Initializing population of {self.population_size} strategies...")
+        print(f"ðŸŽ¯ Initializing population of {self.population_size} strategies...")
 
         self.population = []
         for i in range(self.population_size):
@@ -118,7 +118,7 @@ class GeneticAlgorithmEngine:
 
         # Store initial population
         await self.store_population()
-        print(f"✅ Initialized {len(self.population)} strategies")
+        print(f"âœ… Initialized {len(self.population)} strategies")
 
     def create_random_gene(self, gene_id: str) -> StrategyGene:
         """Create a random strategy gene"""
@@ -134,18 +134,18 @@ class GeneticAlgorithmEngine:
 
     async def evolve_population(self):
         """Main evolution loop"""
-        print("🔄 Starting population evolution...")
+        print("ðŸ”„ Starting population evolution...")
 
         while self.running and self.generation < self.max_generations:
             try:
-                print(f"\n🧬 Generation {self.generation + 1}/{self.max_generations}")
+                print(f"\nðŸ§¬ Generation {self.generation + 1}/{self.max_generations}")
 
                 # Evaluate fitness
                 await self.evaluate_population()
 
                 # Check termination conditions
                 if self.best_fitness >= self.fitness_threshold:
-                    print(f"🎯 Target fitness reached: {self.best_fitness:.4f}")
+                    print(f"ðŸŽ¯ Target fitness reached: {self.best_fitness:.4f}")
                     break
 
                 # Create next generation
@@ -158,12 +158,12 @@ class GeneticAlgorithmEngine:
                 await asyncio.sleep(60)  # 1 minute between generations
 
             except Exception as e:
-                print(f"❌ Error in evolution: {e}")
+                print(f"âŒ Error in evolution: {e}")
                 await asyncio.sleep(300)
 
     async def evaluate_population(self):
         """Evaluate fitness of all individuals in population"""
-        print("📊 Evaluating population fitness...")
+        print("ðŸ“Š Evaluating population fitness...")
 
         evaluation_tasks = []
         for gene in self.population:
@@ -176,7 +176,7 @@ class GeneticAlgorithmEngine:
         # Update fitness scores
         for i, result in enumerate(results):
             if isinstance(result, Exception):
-                print(f"❌ Evaluation error for {self.population[i].id}: {result}")
+                print(f"âŒ Evaluation error for {self.population[i].id}: {result}")
                 self.population[i].fitness = 0.0
             else:
                 self.population[i].fitness = result
@@ -188,8 +188,8 @@ class GeneticAlgorithmEngine:
         if self.population:
             self.best_fitness = self.population[0].fitness
 
-        print(f"🏆 Best fitness: {self.best_fitness:.4f}")
-        print(f"📈 Average fitness: {np.mean([g.fitness for g in self.population]):.4f}")
+        print(f"ðŸ† Best fitness: {self.best_fitness:.4f}")
+        print(f"ðŸ“ˆ Average fitness: {np.mean([g.fitness for g in self.population]):.4f}")
 
     async def evaluate_gene(self, gene: StrategyGene) -> float:
         """Evaluate fitness of a single gene"""
@@ -416,7 +416,7 @@ class GeneticAlgorithmEngine:
 
     async def create_next_generation(self):
         """Create the next generation using genetic operators"""
-        print("🔄 Creating next generation...")
+        print("ðŸ”„ Creating next generation...")
 
         new_population = []
 
@@ -447,7 +447,7 @@ class GeneticAlgorithmEngine:
             if gene.generation < self.generation:
                 gene.generation = self.generation
 
-        print(f"✅ Created generation {self.generation} with {len(self.population)} individuals")
+        print(f"âœ… Created generation {self.generation} with {len(self.population)} individuals")
 
     def select_parent(self) -> StrategyGene:
         """Select parent using tournament selection"""
@@ -568,7 +568,7 @@ class GeneticAlgorithmEngine:
 
     async def stop(self):
         """Stop the Genetic Algorithm Engine"""
-        print("🛑 Stopping Genetic Algorithm Engine...")
+        print("ðŸ›‘ Stopping Genetic Algorithm Engine...")
         self.running = False
 
         # Store final population
@@ -582,12 +582,14 @@ async def main():
     try:
         await ga_engine.start()
     except KeyboardInterrupt:
-        print("🛑 Received interrupt signal")
+        print("ðŸ›‘ Received interrupt signal")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
     finally:
         await ga_engine.stop()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Autobuy Service for Mystic AI Trading Platform
 Monitors cached prices and AI signals to execute automated buy orders.
 """
@@ -13,11 +13,11 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from modules.ai.persistent_cache import PersistentCache
-from services.market_data_router import MarketDataRouter
-from utils.symbols import normalize_symbol_to_dash
-from modules.notifications.alert_manager import AlertManager  # type: ignore[import-not-found]
-from modules.ai.analytics_engine import AnalyticsEngine  # type: ignore[import-not-found]
+from backend.modules.ai.persistent_cache import PersistentCache
+from backend.services.market_data_router import MarketDataRouter
+from backend.utils.symbols import normalize_symbol_to_dash
+from backend.modules.notifications.alert_manager import AlertManager  # type: ignore[import-not-found]
+from backend.modules.ai.analytics_engine import AnalyticsEngine  # type: ignore[import-not-found]
 import asyncio
 
 logger = logging.getLogger(__name__)
@@ -111,7 +111,7 @@ class AutoExecutionService:
             )
 
             if trade_success:
-                logger.info(f"✅ Buy order executed: {symbol} {quantity} @ ${price:.2f} = ${total_value:.2f}")
+                logger.info(f"âœ… Buy order executed: {symbol} {quantity} @ ${price:.2f} = ${total_value:.2f}")
 
                 return {
                     "success": True,
@@ -129,7 +129,7 @@ class AutoExecutionService:
                 return {"success": False, "error": "Failed to log trade"}
 
         except Exception as e:
-            logger.error(f"❌ Failed to execute buy order: {e}")
+            logger.error(f"âŒ Failed to execute buy order: {e}")
             return {"success": False, "error": str(e)}
 
     def set_simulation_mode(self, enabled: bool):
@@ -156,7 +156,7 @@ class AutobuyService:
         self.max_quantity = 1000.0  # Maximum trade amount in USD
         self.quantity_percentage = 0.1  # Percentage of available balance to use
 
-        logger.info("✅ AutobuyService initialized")
+        logger.info("âœ… AutobuyService initialized")
 
     async def warmup(self, symbols: List[str]) -> Dict[str, Any]:
         try:
@@ -273,7 +273,7 @@ class AutobuyService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to check buy conditions for {symbol}: {e}")
+            logger.error(f"âŒ Failed to check buy conditions for {symbol}: {e}")
             return False, {"error": str(e)}
 
     def calculate_trade_quantity(self, symbol: str, price: float) -> float:
@@ -291,7 +291,7 @@ class AutobuyService:
             return quantity
 
         except Exception as e:
-            logger.error(f"❌ Failed to calculate trade quantity for {symbol}: {e}")
+            logger.error(f"âŒ Failed to calculate trade quantity for {symbol}: {e}")
             return 0.0
 
     def execute_autobuy(self, exchange: str, symbol: str) -> Dict[str, Any]:
@@ -337,7 +337,7 @@ class AutobuyService:
             return result
 
         except Exception as e:
-            logger.error(f"❌ Failed to execute autobuy for {symbol}: {e}")
+            logger.error(f"âŒ Failed to execute autobuy for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
     def execute_all_autobuys(self) -> Dict[str, Any]:
@@ -370,7 +370,7 @@ class AutobuyService:
                             break  # Move to next symbol if successful
 
                 except Exception as e:
-                    logger.error(f"❌ Failed to process {symbol}: {e}")
+                    logger.error(f"âŒ Failed to process {symbol}: {e}")
                     results.append({
                         "symbol": symbol,
                         "exchange": "unknown",
@@ -385,11 +385,11 @@ class AutobuyService:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-            logger.info(f"✅ Autobuy execution completed: {successful_trades}/{len(symbols)} successful")
+            logger.info(f"âœ… Autobuy execution completed: {successful_trades}/{len(symbols)} successful")
             return summary
 
         except Exception as e:
-            logger.error(f"❌ Failed to execute all autobuys: {e}")
+            logger.error(f"âŒ Failed to execute all autobuys: {e}")
             return {"success": False, "error": str(e)}
 
     def get_open_orders(self) -> List[Dict[str, Any]]:
@@ -409,7 +409,7 @@ class AutobuyService:
                 for order in self.active_orders
             ]
         except Exception as e:
-            logger.error(f"❌ Failed to get open orders: {e}")
+            logger.error(f"âŒ Failed to get open orders: {e}")
             return []
 
     def get_trigger_stats(self) -> Dict[str, Any]:
@@ -430,7 +430,7 @@ class AutobuyService:
                 "recent_triggers": autobuy_signals[:10]
             }
         except Exception as e:
-            logger.error(f"❌ Failed to get trigger stats: {e}")
+            logger.error(f"âŒ Failed to get trigger stats: {e}")
             return {
                 "total_triggers": 0,
                 "successful_triggers": 0,
@@ -468,7 +468,7 @@ class AutobuyService:
             }
 
         except Exception as e:
-            logger.error(f"❌ Failed to get service status: {e}")
+            logger.error(f"âŒ Failed to get service status: {e}")
             return {"success": False, "error": str(e)}
 
     # Methods expected by endpoints
@@ -544,10 +544,12 @@ def get_autobuy_service() -> AutobuyService:
 if __name__ == "__main__":
     # Test the service
     service = AutobuyService()
-    print(f"✅ AutobuyService initialized: {service}")
+    print(f"âœ… AutobuyService initialized: {service}")
 
     # Test status
     status = service.get_service_status()
     print(f"Service status: {status['status']}")
     print(f"Simulation mode: {status['simulation_mode']}")
     print(f"Active orders: {status['active_orders']}")
+
+

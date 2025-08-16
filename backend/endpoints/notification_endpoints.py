@@ -1,4 +1,4 @@
-"""
+﻿"""
 Notification Endpoints
 
 Handles all notification-related API endpoints including fetching and marking as read.
@@ -53,3 +53,6 @@ async def mark_notifications_read(
     except Exception as e:
         logger.error(f"Error marking notifications as read: {e}")
         raise HTTPException(status_code=500, detail="Failed to mark notifications as read")
+
+
+

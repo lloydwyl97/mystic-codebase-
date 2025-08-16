@@ -1,4 +1,4 @@
-"""
+﻿"""
 Notification Manager
 
 Handles business logic for notification operations including validation,
@@ -170,3 +170,5 @@ class NotificationManager:
 
 # Global instance
 notification_manager = NotificationManager()
+
+

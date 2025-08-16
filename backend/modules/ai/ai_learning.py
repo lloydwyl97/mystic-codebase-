@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Learning Module
 ==================
 
@@ -24,7 +24,7 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 
 # Real AI learning implementation - no mocks in production
 
-from utils.exceptions import AIException
+from backend.utils.exceptions import AIException
 
 logger = logging.getLogger(__name__)
 
@@ -463,3 +463,5 @@ class AILearner:
         if not self.model:
             metadata["error"] = "No model available"
         return metadata
+
+

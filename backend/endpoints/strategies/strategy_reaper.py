@@ -1,4 +1,4 @@
-# strategy_reaper.py
+﻿# strategy_reaper.py
 """
 Strategy Reaper - Strategy Killer and Cleanup System
 Removes underperforming strategies and maintains strategy quality.
@@ -191,3 +191,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+

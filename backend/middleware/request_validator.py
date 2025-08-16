@@ -1,4 +1,4 @@
-"""
+﻿"""
 Request Validator Middleware
 
 FastAPI middleware for request validation.
@@ -62,3 +62,5 @@ async def request_validator_middleware(
     except Exception as e:
         logger.error(f"Request validator error: {str(e)}")
         return await call_next(request)
+
+

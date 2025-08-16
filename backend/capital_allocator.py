@@ -1,4 +1,4 @@
-# capital_allocator.py
+﻿# capital_allocator.py
 """
 Smart Capital Allocator
 Manages capital distribution across multiple trading strategies based on performance.
@@ -51,7 +51,7 @@ class CapitalAllocator:
             ]
 
             if not winners:
-                print("⚠️ No winning strategies found for allocation")
+                print("âš ï¸ No winning strategies found for allocation")
                 return {}
 
             # Sort by total profit
@@ -76,7 +76,7 @@ class CapitalAllocator:
             return allocations
 
         except Exception as e:
-            print(f"❌ Error in performance-based allocation: {e}")
+            print(f"âŒ Error in performance-based allocation: {e}")
             return {}
 
     def allocate_by_risk_parity(self, target_volatility: float = 0.15) -> Dict[str, float]:
@@ -133,7 +133,7 @@ class CapitalAllocator:
             return final_allocations
 
         except Exception as e:
-            print(f"❌ Error in risk parity allocation: {e}")
+            print(f"âŒ Error in risk parity allocation: {e}")
             return {}
 
     def allocate_by_equal_weight(self) -> Dict[str, float]:
@@ -164,7 +164,7 @@ class CapitalAllocator:
             return allocations
 
         except Exception as e:
-            print(f"❌ Error in equal weight allocation: {e}")
+            print(f"âŒ Error in equal weight allocation: {e}")
             return {}
 
     def allocate_by_kelly_criterion(self) -> Dict[str, float]:
@@ -225,7 +225,7 @@ class CapitalAllocator:
             return final_allocations
 
         except Exception as e:
-            print(f"❌ Error in Kelly criterion allocation: {e}")
+            print(f"âŒ Error in Kelly criterion allocation: {e}")
             return {}
 
     def allocate_by_momentum(self, momentum_period: int = 7) -> Dict[str, float]:
@@ -291,7 +291,7 @@ class CapitalAllocator:
             return allocations
 
         except Exception as e:
-            print(f"❌ Error in momentum allocation: {e}")
+            print(f"âŒ Error in momentum allocation: {e}")
             return {}
 
     def rebalance_portfolio(
@@ -309,7 +309,7 @@ class CapitalAllocator:
         Returns:
             New capital allocations
         """
-        print(f"🔄 Rebalancing portfolio using {method} method...")
+        print(f"ðŸ”„ Rebalancing portfolio using {method} method...")
 
         if method == "performance":
             new_allocations = self.allocate_by_performance()
@@ -363,7 +363,7 @@ class CapitalAllocator:
         self.allocation_history.append(log_entry)
         self.current_allocations = allocations
 
-        print(f"💰 Capital allocated using {method}:")
+        print(f"ðŸ’° Capital allocated using {method}:")
         for strategy, amount in allocations.items():
             percentage = (amount / self.total_capital) * 100
             print(f"   {strategy}: ${amount} ({percentage:.1f}%)")
@@ -386,11 +386,11 @@ class CapitalAllocator:
         self.allocation_history.append(log_entry)
 
         if trades:
-            print("🔄 Rebalancing trades needed:")
+            print("ðŸ”„ Rebalancing trades needed:")
             for strategy, trade in trades.items():
                 print(f"   {strategy}: {trade['action'].upper()} ${abs(trade['difference'])}")
         else:
-            print("✅ No rebalancing needed")
+            print("âœ… No rebalancing needed")
 
     def get_allocation_history(self, limit: int = 50) -> List[Dict[str, Any]]:
         """Get allocation history."""
@@ -463,7 +463,7 @@ def rebalance_portfolio(
 
 # Example usage
 if __name__ == "__main__":
-    print("💰 Smart Capital Allocator")
+    print("ðŸ’° Smart Capital Allocator")
     print("=" * 40)
 
     # Test different allocation methods
@@ -477,17 +477,19 @@ if __name__ == "__main__":
     ]
 
     for method in methods:
-        print(f"\n📊 Testing {method.upper()} allocation...")
+        print(f"\nðŸ“Š Testing {method.upper()} allocation...")
         try:
             allocations = allocate_capital(total_capital, method)
             if allocations:
-                print(f"✅ {method.upper()} allocation successful")
+                print(f"âœ… {method.upper()} allocation successful")
                 for strategy, amount in list(allocations.items())[:3]:  # Show top 3
                     percentage = (amount / total_capital) * 100
                     print(f"   {strategy}: ${amount} ({percentage:.1f}%)")
             else:
-                print(f"⚠️ No allocations found for {method}")
+                print(f"âš ï¸ No allocations found for {method}")
         except Exception as e:
-            print(f"❌ {method} failed: {e}")
+            print(f"âŒ {method} failed: {e}")
 
-    print("\n🎯 Capital allocation testing complete!")
+    print("\nðŸŽ¯ Capital allocation testing complete!")
+
+

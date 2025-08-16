@@ -1,4 +1,4 @@
-"""
+﻿"""
 Strategy Analyzer for Mystic Trading Platform
 
 Contains strategy analysis and performance evaluation logic.
@@ -572,3 +572,5 @@ class StrategyAnalyzer:
             },
             "metrics": {},
         }
+
+

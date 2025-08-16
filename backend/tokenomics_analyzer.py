@@ -1,4 +1,4 @@
-"""
+﻿"""
 Tokenomics Analyzer Module
 
 Provides utilities for analyzing token economics and calculating risk scores.
@@ -241,3 +241,5 @@ if __name__ == "__main__":
         current_supply=5e8,
     )
     print(f"[TOKENOMICS] Analysis: {analysis}")
+
+

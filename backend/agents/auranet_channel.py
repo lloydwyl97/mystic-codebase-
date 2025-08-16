@@ -1,4 +1,4 @@
-"""
+﻿"""
 AuraNet Channel Interface
 Biofeedback/EEG-driven API interface for personal energy tuning and system alignment
 """
@@ -14,7 +14,7 @@ import sys
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agents.base_agent import BaseAgent
+from backend.agents.base_agent import BaseAgent
 
 
 class AuraNetChannel(BaseAgent):
@@ -37,15 +37,15 @@ class AuraNetChannel(BaseAgent):
         self.register_handler("sync_energy_status", self.handle_sync_energy_status)
         self.register_handler("get_alignment_metrics", self.handle_get_alignment_metrics)
         self.register_handler("update_biofeedback", self.handle_update_biofeedback)
-        print(f"🌀 AuraNet Channel Interface {agent_id} initialized")
+        print(f"ðŸŒ€ AuraNet Channel Interface {agent_id} initialized")
 
     async def initialize(self):
         try:
             await self.load_auranet_config()
             await self.start_biofeedback_monitoring()
-            print(f"✅ AuraNet Channel Interface {self.agent_id} initialized successfully")
+            print(f"âœ… AuraNet Channel Interface {self.agent_id} initialized successfully")
         except Exception as e:
-            print(f"❌ Error initializing AuraNet Channel: {e}")
+            print(f"âŒ Error initializing AuraNet Channel: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -56,7 +56,7 @@ class AuraNetChannel(BaseAgent):
                 await self.cleanup_old_data()
                 await asyncio.sleep(60)
             except Exception as e:
-                print(f"❌ Error in AuraNet processing loop: {e}")
+                print(f"âŒ Error in AuraNet processing loop: {e}")
                 await asyncio.sleep(120)
 
     async def load_auranet_config(self):
@@ -66,16 +66,16 @@ class AuraNetChannel(BaseAgent):
                 self.state["energy_status"].update(json.loads(config_data))
             print("AuraNet config loaded")
         except Exception as e:
-            print(f"❌ Error loading AuraNet config: {e}")
+            print(f"âŒ Error loading AuraNet config: {e}")
 
     async def start_biofeedback_monitoring(self):
         try:
             pubsub = self.redis_client.pubsub()
             pubsub.subscribe("biofeedback_data")
             asyncio.create_task(self.listen_biofeedback_data(pubsub))
-            print("📡 Biofeedback monitoring started")
+            print("ðŸ“¡ Biofeedback monitoring started")
         except Exception as e:
-            print(f"❌ Error starting biofeedback monitoring: {e}")
+            print(f"âŒ Error starting biofeedback monitoring: {e}")
 
     async def listen_biofeedback_data(self, pubsub):
         try:
@@ -86,7 +86,7 @@ class AuraNetChannel(BaseAgent):
                     data = json.loads(message["data"])
                     await self.process_biofeedback_data(data)
         except Exception as e:
-            print(f"❌ Error in biofeedback data listener: {e}")
+            print(f"âŒ Error in biofeedback data listener: {e}")
         finally:
             pubsub.close()
 
@@ -116,7 +116,7 @@ class AuraNetChannel(BaseAgent):
                 ex=3600,
             )
         except Exception as e:
-            print(f"❌ Error processing biofeedback data: {e}")
+            print(f"âŒ Error processing biofeedback data: {e}")
 
     async def monitor_biofeedback(self):
         try:
@@ -140,7 +140,7 @@ class AuraNetChannel(BaseAgent):
                 ex=600,
             )
         except Exception as e:
-            print(f"❌ Error monitoring biofeedback: {e}")
+            print(f"âŒ Error monitoring biofeedback: {e}")
 
     async def update_alignment_metrics(self):
         try:
@@ -160,7 +160,7 @@ class AuraNetChannel(BaseAgent):
             self.state["alignment_metrics"] = alignment
             self.redis_client.set("auranet_alignment_metrics", json.dumps(alignment), ex=600)
         except Exception as e:
-            print(f"❌ Error updating alignment metrics: {e}")
+            print(f"âŒ Error updating alignment metrics: {e}")
 
     async def cleanup_old_data(self):
         try:
@@ -168,7 +168,7 @@ class AuraNetChannel(BaseAgent):
             if len(self.state["biofeedback_history"]) > 100:
                 self.state["biofeedback_history"] = self.state["biofeedback_history"][-100:]
         except Exception as e:
-            print(f"❌ Error cleaning up old data: {e}")
+            print(f"âŒ Error cleaning up old data: {e}")
 
     async def handle_sync_energy_status(self, message: Dict[str, Any]):
         try:
@@ -177,7 +177,7 @@ class AuraNetChannel(BaseAgent):
             focus = message.get("focus", 0.5)
             stress = message.get("stress", 0.5)
             print(
-                f"🌀 Manual energy sync: {input_type}, energy={energy_level}, "
+                f"ðŸŒ€ Manual energy sync: {input_type}, energy={energy_level}, "
                 f"focus={focus}, stress={stress}"
             )
             entry = {
@@ -206,12 +206,12 @@ class AuraNetChannel(BaseAgent):
             if sender:
                 await self.send_message(sender, response)
         except Exception as e:
-            print(f"❌ Error handling energy sync: {e}")
+            print(f"âŒ Error handling energy sync: {e}")
             await self.broadcast_error(f"Energy sync error: {e}")
 
     async def handle_get_alignment_metrics(self, message: Dict[str, Any]):
         try:
-            print("🌀 Alignment metrics requested")
+            print("ðŸŒ€ Alignment metrics requested")
             response = {
                 "type": "alignment_metrics_response",
                 "alignment_metrics": self.state["alignment_metrics"],
@@ -221,12 +221,12 @@ class AuraNetChannel(BaseAgent):
             if sender:
                 await self.send_message(sender, response)
         except Exception as e:
-            print(f"❌ Error handling alignment metrics request: {e}")
+            print(f"âŒ Error handling alignment metrics request: {e}")
             await self.broadcast_error(f"Alignment metrics error: {e}")
 
     async def handle_update_biofeedback(self, message: Dict[str, Any]):
         try:
-            print("🌀 Biofeedback update received")
+            print("ðŸŒ€ Biofeedback update received")
             await self.process_biofeedback_data(message)
             response = {
                 "type": "biofeedback_update_complete",
@@ -236,10 +236,12 @@ class AuraNetChannel(BaseAgent):
             if sender:
                 await self.send_message(sender, response)
         except Exception as e:
-            print(f"❌ Error handling biofeedback update: {e}")
+            print(f"âŒ Error handling biofeedback update: {e}")
             await self.broadcast_error(f"Biofeedback update error: {e}")
 
 
 if __name__ == "__main__":
     agent = AuraNetChannel()
     asyncio.run(agent.start())
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Dashboard API Endpoints - Mystic AI Trading Platform
 
 Provides overview, performance metrics, alerts, activity feed, summary, and trends
@@ -12,7 +12,7 @@ from typing import Any, Dict, List
 
 from fastapi import APIRouter, HTTPException
 
-from services.live_market_data import live_market_data_service
+from backend.services.live_market_data import live_market_data_service
 
 router = APIRouter()
 logger = logging.getLogger("dashboard_api")
@@ -407,3 +407,5 @@ async def get_dashboard_trends() -> Dict[str, Any]:
     except Exception as e:
         logger.exception("Error in get_dashboard_trends")
         raise HTTPException(status_code=500, detail=str(e))
+
+

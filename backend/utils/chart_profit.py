@@ -1,4 +1,4 @@
-"""
+﻿"""
 Chart Profit - Profit Tracker Chart
 
 Renders profit charts from trade logs
@@ -92,11 +92,11 @@ def plot_profits(output_file: str = "profit_chart.png") -> bool:
         plt.savefig(output_file, dpi=300, bbox_inches="tight")
         plt.close()
 
-        logger.info(f"✅ Profit chart saved to {output_file}")
+        logger.info(f"âœ… Profit chart saved to {output_file}")
         return True
 
     except Exception as e:
-        logger.error(f"❌ Error plotting profits: {e}")
+        logger.error(f"âŒ Error plotting profits: {e}")
         return False
 
 
@@ -131,7 +131,7 @@ def load_trade_data() -> List[Dict[str, Any]]:
         return trades
 
     except Exception as e:
-        logger.error(f"❌ Error loading trade data: {e}")
+        logger.error(f"âŒ Error loading trade data: {e}")
         return []
 
 
@@ -140,7 +140,7 @@ def plot_market_performance(
 ) -> bool:
     """Plot market performance comparison"""
     try:
-        from ai.poller import get_cache
+        from backend.ai.poller import get_cache
 
         cache = get_cache()
         if not cache.coingecko:
@@ -184,18 +184,18 @@ def plot_market_performance(
         plt.savefig(output_file, dpi=300, bbox_inches="tight")
         plt.close()
 
-        logger.info(f"✅ Market performance chart saved to {output_file}")
+        logger.info(f"âœ… Market performance chart saved to {output_file}")
         return True
 
     except Exception as e:
-        logger.error(f"❌ Error plotting market performance: {e}")
+        logger.error(f"âŒ Error plotting market performance: {e}")
         return False
 
 
 def generate_trading_report() -> Dict[str, Any]:
     """Generate comprehensive trading report"""
     try:
-        from ai.trade_tracker import (
+        from backend.ai.trade_tracker import (
             get_active_trades,
             get_trade_history,
             get_trade_summary,
@@ -230,7 +230,7 @@ def generate_trading_report() -> Dict[str, Any]:
         return report
 
     except Exception as e:
-        logger.error(f"❌ Error generating trading report: {e}")
+        logger.error(f"âŒ Error generating trading report: {e}")
         return {"error": str(e)}
 
 
@@ -239,3 +239,5 @@ if __name__ == "__main__":
     plot_profits()
     plot_market_performance()
     print("Charts generated successfully!")
+
+

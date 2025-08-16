@@ -1,4 +1,4 @@
-"""
+﻿"""
 Quantum Optimization Agent
 Implements quantum optimization algorithms for trading strategies
 """
@@ -53,11 +53,11 @@ _ = StandardScaler()
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class QuantumAnnealingOptimizer:
@@ -127,7 +127,7 @@ class QuantumAnnealingOptimizer:
             }
 
         except Exception as e:
-            print(f"❌ Error in quantum annealing optimization: {e}")
+            print(f"âŒ Error in quantum annealing optimization: {e}")
             return None
 
     def extract_weights_from_counts(self, counts: Dict[str, int], num_assets: int) -> np.ndarray:
@@ -147,7 +147,7 @@ class QuantumAnnealingOptimizer:
             return weights
 
         except Exception as e:
-            print(f"❌ Error extracting weights: {e}")
+            print(f"âŒ Error extracting weights: {e}")
             return np.ones(num_assets) / num_assets
 
 
@@ -196,7 +196,7 @@ class VariationalQuantumOptimizer:
             }
 
         except Exception as e:
-            print(f"❌ Error in VQE optimization: {e}")
+            print(f"âŒ Error in VQE optimization: {e}")
             return None
 
     def create_strategy_hamiltonian(self, strategy_params: Dict[str, Any]):
@@ -218,7 +218,7 @@ class VariationalQuantumOptimizer:
             return hamiltonian
 
         except Exception as e:
-            print(f"❌ Error creating strategy Hamiltonian: {e}")
+            print(f"âŒ Error creating strategy Hamiltonian: {e}")
             return None
 
     def simulate_strategy_performance(self, params: np.ndarray, market_data: np.ndarray) -> float:
@@ -240,7 +240,7 @@ class VariationalQuantumOptimizer:
             return performance
 
         except Exception as e:
-            print(f"❌ Error simulating strategy performance: {e}")
+            print(f"âŒ Error simulating strategy performance: {e}")
             return 0.0
 
 
@@ -300,7 +300,7 @@ class QuantumConstraintOptimizer:
             }
 
         except Exception as e:
-            print(f"❌ Error in quantum constraint optimization: {e}")
+            print(f"âŒ Error in quantum constraint optimization: {e}")
             return None
 
     def apply_constraint(self, circuit: QuantumCircuit, qr: QuantumRegister, constraint: Dict):
@@ -322,7 +322,7 @@ class QuantumConstraintOptimizer:
             return circuit
 
         except Exception as e:
-            print(f"❌ Error applying constraint: {e}")
+            print(f"âŒ Error applying constraint: {e}")
             return circuit
 
     def apply_cost_function(self, circuit: QuantumCircuit, qr: QuantumRegister, objective_func):
@@ -336,7 +336,7 @@ class QuantumConstraintOptimizer:
             return circuit
 
         except Exception as e:
-            print(f"❌ Error applying cost function: {e}")
+            print(f"âŒ Error applying cost function: {e}")
             return circuit
 
     def extract_solution_from_counts(
@@ -360,7 +360,7 @@ class QuantumConstraintOptimizer:
             return solution
 
         except Exception as e:
-            print(f"❌ Error extracting solution: {e}")
+            print(f"âŒ Error extracting solution: {e}")
             return np.zeros(num_variables)
 
     def check_constraints(self, solution: np.ndarray, constraints: List[Dict]) -> bool:
@@ -382,7 +382,7 @@ class QuantumConstraintOptimizer:
             return True
 
         except Exception as e:
-            print(f"❌ Error checking constraints: {e}")
+            print(f"âŒ Error checking constraints: {e}")
             return False
 
 
@@ -465,7 +465,7 @@ class QuantumOptimizationAgent(BaseAgent):
         self.register_handler("get_optimization_status", self.handle_get_optimization_status)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"⚛️ Quantum Optimization Agent {agent_id} initialized")
+        print(f"âš›ï¸ Quantum Optimization Agent {agent_id} initialized")
 
     async def initialize(self):
         """Initialize quantum optimization agent resources"""
@@ -479,10 +479,10 @@ class QuantumOptimizationAgent(BaseAgent):
             # Start quantum optimization monitoring
             await self.start_quantum_opt_monitoring()
 
-            print(f"✅ Quantum Optimization Agent {self.agent_id} initialized successfully")
+            print(f"âœ… Quantum Optimization Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Quantum Optimization Agent: {e}")
+            print(f"âŒ Error initializing Quantum Optimization Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -504,7 +504,7 @@ class QuantumOptimizationAgent(BaseAgent):
                 await asyncio.sleep(1800)  # Check every 30 minutes
 
             except Exception as e:
-                print(f"❌ Error in quantum optimization processing loop: {e}")
+                print(f"âŒ Error in quantum optimization processing loop: {e}")
                 await asyncio.sleep(3600)
 
     async def load_quantum_opt_config(self):
@@ -521,11 +521,11 @@ class QuantumOptimizationAgent(BaseAgent):
                 self.trading_symbols = json.loads(symbols_data)
 
             print(
-                f"📋 Quantum optimization configuration loaded: {len(self.quantum_opt_config['algorithms'])} algorithms, {len(self.trading_symbols)} symbols"
+                f"ðŸ“‹ Quantum optimization configuration loaded: {len(self.quantum_opt_config['algorithms'])} algorithms, {len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading quantum optimization configuration: {e}")
+            print(f"âŒ Error loading quantum optimization configuration: {e}")
 
     async def initialize_quantum_opt_components(self):
         """Initialize quantum optimization components"""
@@ -550,10 +550,10 @@ class QuantumOptimizationAgent(BaseAgent):
                     ]
                 )
 
-            print("⚛️ Quantum optimization components initialized")
+            print("âš›ï¸ Quantum optimization components initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing quantum optimization components: {e}")
+            print(f"âŒ Error initializing quantum optimization components: {e}")
 
     async def start_quantum_opt_monitoring(self):
         """Start quantum optimization monitoring"""
@@ -565,10 +565,10 @@ class QuantumOptimizationAgent(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 Quantum optimization monitoring started")
+            print("ðŸ“¡ Quantum optimization monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting quantum optimization monitoring: {e}")
+            print(f"âŒ Error starting quantum optimization monitoring: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -582,7 +582,7 @@ class QuantumOptimizationAgent(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -599,7 +599,7 @@ class QuantumOptimizationAgent(BaseAgent):
                 await self.store_market_data(symbol, price, volume, timestamp)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def store_market_data(self, symbol: str, price: float, volume: float, timestamp: str):
         """Store market data for optimization"""
@@ -629,12 +629,12 @@ class QuantumOptimizationAgent(BaseAgent):
                 ][symbol]["data"][-1000:]
 
         except Exception as e:
-            print(f"❌ Error storing market data: {e}")
+            print(f"âŒ Error storing market data: {e}")
 
     async def perform_portfolio_optimizations(self):
         """Perform portfolio optimizations using quantum algorithms"""
         try:
-            print("⚛️ Performing portfolio optimizations...")
+            print("âš›ï¸ Performing portfolio optimizations...")
 
             if not self.quantum_annealing:
                 return
@@ -677,10 +677,10 @@ class QuantumOptimizationAgent(BaseAgent):
                 # Broadcast optimization result
                 await self.broadcast_portfolio_optimization(optimization_result)
 
-                print("✅ Portfolio optimization complete")
+                print("âœ… Portfolio optimization complete")
 
         except Exception as e:
-            print(f"❌ Error performing portfolio optimizations: {e}")
+            print(f"âŒ Error performing portfolio optimizations: {e}")
 
     async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
         """Get market data for a symbol"""
@@ -709,13 +709,13 @@ class QuantumOptimizationAgent(BaseAgent):
             return data_points
 
         except Exception as e:
-            print(f"❌ Error getting market data for {symbol}: {e}")
+            print(f"âŒ Error getting market data for {symbol}: {e}")
             return []
 
     async def optimize_trading_strategies(self):
         """Optimize trading strategies using quantum algorithms"""
         try:
-            print("⚛️ Optimizing trading strategies...")
+            print("âš›ï¸ Optimizing trading strategies...")
 
             if not self.variational_optimizer:
                 return
@@ -752,10 +752,10 @@ class QuantumOptimizationAgent(BaseAgent):
                 # Broadcast optimization result
                 await self.broadcast_strategy_optimization(optimization_result)
 
-                print("✅ Strategy optimization complete")
+                print("âœ… Strategy optimization complete")
 
         except Exception as e:
-            print(f"❌ Error optimizing trading strategies: {e}")
+            print(f"âŒ Error optimizing trading strategies: {e}")
 
     async def get_combined_market_data(self) -> Optional[np.ndarray]:
         """Get combined market data for all symbols"""
@@ -774,7 +774,7 @@ class QuantumOptimizationAgent(BaseAgent):
             return None
 
         except Exception as e:
-            print(f"❌ Error getting combined market data: {e}")
+            print(f"âŒ Error getting combined market data: {e}")
             return None
 
     async def broadcast_portfolio_optimization(self, optimization_result: Dict[str, Any]):
@@ -794,7 +794,7 @@ class QuantumOptimizationAgent(BaseAgent):
             await self.send_message("execution_agent", optimization_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting portfolio optimization: {e}")
+            print(f"âŒ Error broadcasting portfolio optimization: {e}")
 
     async def broadcast_strategy_optimization(self, optimization_result: Dict[str, Any]):
         """Broadcast strategy optimization results"""
@@ -813,14 +813,14 @@ class QuantumOptimizationAgent(BaseAgent):
             await self.send_message("execution_agent", optimization_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting strategy optimization: {e}")
+            print(f"âŒ Error broadcasting strategy optimization: {e}")
 
     async def handle_optimize_portfolio(self, message: Dict[str, Any]):
         """Handle manual portfolio optimization request"""
         try:
             symbols = message.get("symbols", self.trading_symbols)
 
-            print(f"⚛️ Manual portfolio optimization requested for {len(symbols)} symbols")
+            print(f"âš›ï¸ Manual portfolio optimization requested for {len(symbols)} symbols")
 
             if not self.quantum_annealing:
                 response = {
@@ -878,7 +878,7 @@ class QuantumOptimizationAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling portfolio optimization: {e}")
+            print(f"âŒ Error handling portfolio optimization: {e}")
             await self.broadcast_error(f"Portfolio optimization error: {e}")
 
     async def handle_optimize_strategy(self, message: Dict[str, Any]):
@@ -886,7 +886,7 @@ class QuantumOptimizationAgent(BaseAgent):
         try:
             strategy_params = message.get("strategy_params", {})
 
-            print("⚛️ Manual strategy optimization requested")
+            print("âš›ï¸ Manual strategy optimization requested")
 
             if not self.variational_optimizer:
                 response = {
@@ -923,7 +923,7 @@ class QuantumOptimizationAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling strategy optimization: {e}")
+            print(f"âŒ Error handling strategy optimization: {e}")
             await self.broadcast_error(f"Strategy optimization error: {e}")
 
     async def handle_constraint_optimization(self, message: Dict[str, Any]):
@@ -934,7 +934,7 @@ class QuantumOptimizationAgent(BaseAgent):
             bounds = message.get("bounds", [])
             initial_guess = message.get("initial_guess", [])
 
-            print("⚛️ Constraint optimization requested")
+            print("âš›ï¸ Constraint optimization requested")
 
             if not self.constraint_optimizer:
                 response = {
@@ -963,7 +963,7 @@ class QuantumOptimizationAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling constraint optimization: {e}")
+            print(f"âŒ Error handling constraint optimization: {e}")
             await self.broadcast_error(f"Constraint optimization error: {e}")
 
     async def handle_get_optimization_status(self, message: Dict[str, Any]):
@@ -971,7 +971,7 @@ class QuantumOptimizationAgent(BaseAgent):
         try:
             optimization_type = message.get("optimization_type")
 
-            print(f"📊 Optimization status requested for {optimization_type}")
+            print(f"ðŸ“Š Optimization status requested for {optimization_type}")
 
             if optimization_type and optimization_type in self.state["optimal_solutions"]:
                 status = self.state["optimal_solutions"][optimization_type]
@@ -995,7 +995,7 @@ class QuantumOptimizationAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling optimization status request: {e}")
+            print(f"âŒ Error handling optimization status request: {e}")
             await self.broadcast_error(f"Optimization status error: {e}")
 
     async def update_quantum_opt_metrics(self):
@@ -1018,7 +1018,7 @@ class QuantumOptimizationAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating quantum optimization metrics: {e}")
+            print(f"âŒ Error updating quantum optimization metrics: {e}")
 
     async def cleanup_old_optimizations(self):
         """Clean up old optimization results"""
@@ -1044,4 +1044,6 @@ class QuantumOptimizationAgent(BaseAgent):
                         del self.state["optimizations_performed"][symbol]
 
         except Exception as e:
-            print(f"❌ Error cleaning up old optimizations: {e}")
+            print(f"âŒ Error cleaning up old optimizations: {e}")
+
+

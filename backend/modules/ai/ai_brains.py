@@ -1,7 +1,7 @@
-# Copied from backend/ai/ai_brains.py for modularization
+﻿# Copied from backend/ai/ai_brains.py for modularization
 # ... existing code from backend/ai/ai_brains.py ...
 
-from utils.exceptions import AIException
+from backend.utils.exceptions import AIException
 
 
 class AIBrain:
@@ -126,3 +126,5 @@ class AIBrain:
     def reset_model(self):
         self.prediction_history = []
         self.performance_metrics = {}
+
+

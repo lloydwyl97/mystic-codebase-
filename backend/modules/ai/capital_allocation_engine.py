@@ -1,4 +1,4 @@
-"""
+﻿"""
 Capital Allocation Engine for Mystic AI Trading Platform
 Calculates optimal USD allocation per symbol based on risk, confidence, and diversification.
 """
@@ -13,7 +13,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class CapitalAllocationEngine:
         # Exchange diversification
         self.exchanges = ['coinbase', 'binanceus', 'kraken']
 
-        logger.info("✅ CapitalAllocationEngine initialized")
+        logger.info("âœ… CapitalAllocationEngine initialized")
 
     def _get_signal_confidence(self, symbol: str) -> float:
         """Get confidence score from SignalEngine"""
@@ -277,7 +277,7 @@ class CapitalAllocationEngine:
     def get_allocation_plan(self, portfolio_balance: float) -> Dict[str, Any]:
         """Get optimal allocation plan for portfolio"""
         try:
-            logger.info(f"💰 Calculating allocation plan for ${portfolio_balance:,.2f} portfolio")
+            logger.info(f"ðŸ’° Calculating allocation plan for ${portfolio_balance:,.2f} portfolio")
 
             # Calculate allocation scores for all symbols
             allocation_scores = {}
@@ -327,7 +327,7 @@ class CapitalAllocationEngine:
                 metadata=allocation_plan
             )
 
-            logger.info(f"✅ Allocation plan complete: ${total_allocated:,.2f} allocated across {len(final_allocations)} symbols")
+            logger.info(f"âœ… Allocation plan complete: ${total_allocated:,.2f} allocated across {len(final_allocations)} symbols")
 
             return allocation_plan
 
@@ -347,7 +347,7 @@ class CapitalAllocationEngine:
     def allocate_for_symbol(self, symbol: str, balance: float) -> Dict[str, Any]:
         """Get allocation recommendation for a specific symbol"""
         try:
-            logger.info(f"💰 Calculating allocation for {symbol} with ${balance:,.2f}")
+            logger.info(f"ðŸ’° Calculating allocation for {symbol} with ${balance:,.2f}")
 
             # Calculate allocation score
             allocation_score = self._calculate_allocation_score(symbol)
@@ -395,7 +395,7 @@ class CapitalAllocationEngine:
                 metadata=recommendation
             )
 
-            logger.info(f"✅ Allocation recommendation: ${final_allocation:,.2f} ({recommendation['allocation_percentage']:.1f}%)")
+            logger.info(f"âœ… Allocation recommendation: ${final_allocation:,.2f} ({recommendation['allocation_percentage']:.1f}%)")
 
             return recommendation
 
@@ -466,7 +466,7 @@ def get_capital_allocation_engine() -> CapitalAllocationEngine:
 if __name__ == "__main__":
     # Test the capital allocation engine
     engine = CapitalAllocationEngine()
-    print(f"✅ CapitalAllocationEngine initialized: {engine}")
+    print(f"âœ… CapitalAllocationEngine initialized: {engine}")
 
     # Test allocation plan
     plan = engine.get_allocation_plan(1000)
@@ -479,3 +479,5 @@ if __name__ == "__main__":
     # Test status
     status = engine.get_engine_status()
     print(f"Engine status: {status['status']}")
+
+

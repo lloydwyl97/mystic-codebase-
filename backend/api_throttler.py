@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Throttling System for Mystic Trading Platform
 
 Provides intelligent API call throttling with:
@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Deque, Dict, List, Optional
 
-from utils.exceptions import RateLimitException, handle_exception
+from backend.utils.exceptions import RateLimitException, handle_exception
 from trading_config import trading_config
 
 logger = logging.getLogger(__name__)
@@ -115,12 +115,12 @@ class AdaptiveThrottler:
         self.adaptation_thread = threading.Thread(target=self._adaptation_loop, daemon=True)
         self.adaptation_thread.start()
 
-        logger.info(f"✅ AdaptiveThrottler initialized with {self.throttle_level.value} level")
+        logger.info(f"âœ… AdaptiveThrottler initialized with {self.throttle_level.value} level")
 
     def set_throttle_level(self, level: ThrottleLevel):
         """Set throttling level"""
         self.throttle_level = level
-        logger.info(f"✅ Throttle level set to {level.value}")
+        logger.info(f"âœ… Throttle level set to {level.value}")
 
     def get_current_config(self) -> ThrottleConfig:
         """Get current throttling configuration"""
@@ -129,7 +129,7 @@ class AdaptiveThrottler:
     def set_endpoint_limit(self, endpoint: str, config: ThrottleConfig):
         """Set custom limits for specific endpoint"""
         self.endpoint_limits[endpoint] = config
-        logger.info(f"✅ Custom limits set for {endpoint}: {config.requests_per_second} req/s")
+        logger.info(f"âœ… Custom limits set for {endpoint}: {config.requests_per_second} req/s")
 
     def _can_make_request(self, endpoint: str) -> bool:
         """Check if request can be made based on rate limits"""
@@ -358,9 +358,9 @@ class AdaptiveThrottler:
         current_index = levels.index(self.throttle_level)
         if current_index < len(levels) - 1:
             self.set_throttle_level(levels[current_index + 1])
-            logger.info(f"✅ Throttling increased to {self.throttle_level.value}")
+            logger.info(f"âœ… Throttling increased to {self.throttle_level.value}")
         else:
-            logger.info("✅ Already at maximum throttling level")
+            logger.info("âœ… Already at maximum throttling level")
 
     def decrease_throttling(self):
         """Manually decrease throttling level"""
@@ -368,10 +368,12 @@ class AdaptiveThrottler:
         current_index = levels.index(self.throttle_level)
         if current_index > 0:
             self.set_throttle_level(levels[current_index - 1])
-            logger.info(f"✅ Throttling decreased to {self.throttle_level.value}")
+            logger.info(f"âœ… Throttling decreased to {self.throttle_level.value}")
         else:
-            logger.info("✅ Already at minimum throttling level")
+            logger.info("âœ… Already at minimum throttling level")
 
 
 # Global throttler instance
 api_throttler = AdaptiveThrottler()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Mutation Manager for AI Strategy Evolution
 
 Manages the AI mutation system, including strategy evolution cycles,
@@ -62,17 +62,17 @@ class MutationManager:
 
             conn.commit()
             conn.close()
-            logger.info("✅ Mutation database initialized")
+            logger.info("âœ… Mutation database initialized")
 
         except Exception as e:
-            logger.error(f"❌ Error initializing mutation database: {e}")
+            logger.error(f"âŒ Error initializing mutation database: {e}")
 
     def start_mutation_engine(self):
         """Start the mutation engine"""
         if not self.is_running:
             self.is_running = True
             self.mutation_task = asyncio.create_task(self._mutation_loop())
-            logger.info("🚀 Mutation engine started")
+            logger.info("ðŸš€ Mutation engine started")
 
     def stop_mutation_engine(self):
         """Stop the mutation engine"""
@@ -80,7 +80,7 @@ class MutationManager:
             self.is_running = False
             if self.mutation_task:
                 self.mutation_task.cancel()
-            logger.info("🛑 Mutation engine stopped")
+            logger.info("ðŸ›‘ Mutation engine stopped")
 
     async def _mutation_loop(self):
         """Main mutation loop"""
@@ -91,7 +91,7 @@ class MutationManager:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"❌ Error in mutation loop: {e}")
+                logger.error(f"âŒ Error in mutation loop: {e}")
                 await asyncio.sleep(60)  # Wait 1 minute before retrying
 
     async def run_single_cycle(self) -> Dict[str, Any]:
@@ -100,7 +100,7 @@ class MutationManager:
             self.cycle_count += 1
             self.last_cycle_time = datetime.now(timezone.utc)
 
-            logger.info(f"🔄 Running mutation cycle {self.cycle_count}")
+            logger.info(f"ðŸ”„ Running mutation cycle {self.cycle_count}")
 
             # Generate new strategies
             new_strategies = []
@@ -126,7 +126,7 @@ class MutationManager:
             # Promote best strategies
             await self._promote_best_strategies()
 
-            logger.info(f"✅ Mutation cycle {self.cycle_count} completed")
+            logger.info(f"âœ… Mutation cycle {self.cycle_count} completed")
             return {
                 "cycle_number": self.cycle_count,
                 "strategies_generated": len(new_strategies),
@@ -135,7 +135,7 @@ class MutationManager:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error in mutation cycle: {e}")
+            logger.error(f"âŒ Error in mutation cycle: {e}")
             return {"error": str(e)}
 
     async def _generate_ai_strategies(self) -> List[Dict[str, Any]]:
@@ -189,7 +189,7 @@ class MutationManager:
                 strategies.append(mutated_strategy)
 
             except Exception as e:
-                logger.error(f"❌ Error mutating base strategy: {e}")
+                logger.error(f"âŒ Error mutating base strategy: {e}")
 
         return strategies
 
@@ -316,7 +316,7 @@ class MutationManager:
             conn.close()
 
         except Exception as e:
-            logger.error(f"❌ Error saving mutation: {e}")
+            logger.error(f"âŒ Error saving mutation: {e}")
 
     async def _promote_best_strategies(self):
         """Promote the best performing strategies"""
@@ -356,13 +356,13 @@ class MutationManager:
                         (strategy_id,),
                     )
 
-                    logger.info(f"🎉 Promoted strategy: {strategy_file}")
+                    logger.info(f"ðŸŽ‰ Promoted strategy: {strategy_file}")
 
             conn.commit()
             conn.close()
 
         except Exception as e:
-            logger.error(f"❌ Error promoting strategies: {e}")
+            logger.error(f"âŒ Error promoting strategies: {e}")
 
     def get_mutation_stats(self) -> Dict[str, Any]:
         """Get mutation system statistics"""
@@ -401,7 +401,7 @@ class MutationManager:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error getting mutation stats: {e}")
+            logger.error(f"âŒ Error getting mutation stats: {e}")
             return {
                 "total_mutations": 0,
                 "promoted_mutations": 0,
@@ -449,9 +449,11 @@ class MutationManager:
             return mutations
 
         except Exception as e:
-            logger.error(f"❌ Error getting recent mutations: {e}")
+            logger.error(f"âŒ Error getting recent mutations: {e}")
             return []
 
 
 # Singleton instance
 mutation_manager = MutationManager()
+
+

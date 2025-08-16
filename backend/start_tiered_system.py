@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Startup Script for Tiered Signal System
 Demonstrates how to initialize and run the new tiered signal architecture
@@ -11,7 +11,7 @@ from typing import Any, Optional
 
 import redis.asyncio as redis
 
-from services.market_data import MarketDataService
+from backend.services.market_data import MarketDataService
 from .services.notification import get_notification_service
 from .services.service_manager import service_manager
 from .services.trading import get_trading_service
@@ -79,7 +79,7 @@ class TieredSystemManager:
 
     async def start_system(self) -> bool:
         """Start the complete tiered signal system"""
-        logger.info("🚀 Starting Tiered Signal System...")
+        logger.info("ðŸš€ Starting Tiered Signal System...")
 
         try:
             # Initialize Redis
@@ -130,7 +130,7 @@ class TieredSystemManager:
 
     async def stop_system(self) -> None:
         """Stop the tiered signal system"""
-        logger.info("🛑 Stopping Tiered Signal System...")
+        logger.info("ðŸ›‘ Stopping Tiered Signal System...")
         self.is_running = False
 
         if self.unified_manager:
@@ -143,7 +143,7 @@ class TieredSystemManager:
 
     async def run_demo(self) -> None:
         """Run a demonstration of the tiered system"""
-        logger.info("🎯 Running Tiered System Demo...")
+        logger.info("ðŸŽ¯ Running Tiered System Demo...")
 
         try:
             # Start the system
@@ -191,7 +191,7 @@ class TieredSystemManager:
 
     async def run_continuous(self) -> None:
         """Run the system continuously"""
-        logger.info("🔄 Running Tiered System Continuously...")
+        logger.info("ðŸ”„ Running Tiered System Continuously...")
 
         try:
             # Start the system
@@ -219,41 +219,41 @@ def print_system_info() -> None:
     """Print information about the tiered system"""
     print(
         """
-🔧 TIERED SIGNAL SYSTEM - MYSTIC TRADING PLATFORM
+ðŸ”§ TIERED SIGNAL SYSTEM - MYSTIC TRADING PLATFORM
 ================================================
 
-📊 SYSTEM ARCHITECTURE:
-├── Tier 1: Real-Time Signals (5-15 sec)
-│   ├── Price data (5-10 sec)
-│   ├── Momentum spikes (10-15 sec)
-│   └── Order book depth (15 sec)
-│
-├── Tier 2: Tactical Strategy (1-5 min)
-│   ├── RSI / MACD (1-3 min)
-│   ├── 24h Volume (2-3 min)
-│   ├── Volatility Index (2-5 min)
-│   └── Time-based changes (1-3 min)
-│
-└── Tier 3: Mystic/Cosmic (30 min - 1 hr)
-    ├── Schumann Resonance (1 hr)
-    ├── Solar Flare Index (1 hr)
-    └── Pineal Alignment (1+ hr)
+ðŸ“Š SYSTEM ARCHITECTURE:
+â”œâ”€â”€ Tier 1: Real-Time Signals (5-15 sec)
+â”‚   â”œâ”€â”€ Price data (5-10 sec)
+â”‚   â”œâ”€â”€ Momentum spikes (10-15 sec)
+â”‚   â””â”€â”€ Order book depth (15 sec)
+â”‚
+â”œâ”€â”€ Tier 2: Tactical Strategy (1-5 min)
+â”‚   â”œâ”€â”€ RSI / MACD (1-3 min)
+â”‚   â”œâ”€â”€ 24h Volume (2-3 min)
+â”‚   â”œâ”€â”€ Volatility Index (2-5 min)
+â”‚   â””â”€â”€ Time-based changes (1-3 min)
+â”‚
+â””â”€â”€ Tier 3: Mystic/Cosmic (30 min - 1 hr)
+    â”œâ”€â”€ Schumann Resonance (1 hr)
+    â”œâ”€â”€ Solar Flare Index (1 hr)
+    â””â”€â”€ Pineal Alignment (1+ hr)
 
-🎯 TRADE DECISION ENGINE:
-├── Combines all three tiers
-├── Makes decisions every 3-10 seconds
-├── Provides unified coin state objects
-└── Generates confidence-based signals
+ðŸŽ¯ TRADE DECISION ENGINE:
+â”œâ”€â”€ Combines all three tiers
+â”œâ”€â”€ Makes decisions every 3-10 seconds
+â”œâ”€â”€ Provides unified coin state objects
+â””â”€â”€ Generates confidence-based signals
 
-📈 API ENDPOINTS:
-├── /api/signals/tier1 - Real-time price signals
-├── /api/signals/tier2 - Technical indicators
-├── /api/signals/tier3 - Cosmic/mystic signals
-├── /api/signals/unified - Combined signals
-├── /api/signals/trade-decisions - Trading decisions
-└── /api/signals/summary - System status
+ðŸ“ˆ API ENDPOINTS:
+â”œâ”€â”€ /api/signals/tier1 - Real-time price signals
+â”œâ”€â”€ /api/signals/tier2 - Technical indicators
+â”œâ”€â”€ /api/signals/tier3 - Cosmic/mystic signals
+â”œâ”€â”€ /api/signals/unified - Combined signals
+â”œâ”€â”€ /api/signals/trade-decisions - Trading decisions
+â””â”€â”€ /api/signals/summary - System status
 
-🚀 USAGE:
+ðŸš€ USAGE:
 python start_tiered_system.py [demo|continuous]
     """
     )
@@ -302,3 +302,5 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(f"Fatal error: {e}")
         exit(1)
+
+

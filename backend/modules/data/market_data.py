@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Data Manager Module for Mystic Trading Platform
 
 Extracted from data_fetchers.py and cosmic_fetcher.py to improve modularity.
@@ -11,7 +11,7 @@ import time
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from utils.exceptions import MarketDataException, handle_async_exception
+from backend.utils.exceptions import MarketDataException, handle_async_exception
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ class MarketDataManager:
         self.last_update: Dict[str, float] = {}
         self.update_interval = 30  # seconds
         self.supported_symbols = ["BTC", "ETH", "ADA", "DOT", "SOL", "MATIC"]
-        logger.info("✅ Live MarketDataManager initialized")
+        logger.info("âœ… Live MarketDataManager initialized")
 
     @handle_async_exception("Failed to get market data for symbol", MarketDataException)
     async def get_market_data(self, symbol: str) -> Optional[MarketData]:
@@ -70,7 +70,7 @@ class MarketDataManager:
 
             return None
         except Exception as e:
-            logger.error(f"❌ Error getting live market data for {symbol}: {str(e)}")
+            logger.error(f"âŒ Error getting live market data for {symbol}: {str(e)}")
             raise MarketDataException(
                 message=f"Failed to get market data for {symbol}",
                 details={"symbol": symbol, "error": str(e)},
@@ -94,7 +94,7 @@ class MarketDataManager:
 
             return market_data
         except Exception as e:
-            logger.error(f"❌ Error getting all live market data: {str(e)}")
+            logger.error(f"âŒ Error getting all live market data: {str(e)}")
             raise MarketDataException(
                 message="Failed to get all market data",
                 details={"error": str(e)},
@@ -122,7 +122,7 @@ class MarketDataManager:
                 "live_data": True,
             }
         except Exception as e:
-            logger.error(f"❌ Error getting live market summary: {str(e)}")
+            logger.error(f"âŒ Error getting live market summary: {str(e)}")
             return {
                 "symbols": [],
                 "total_symbols": 0,
@@ -156,7 +156,7 @@ class MarketDataManager:
                     data = await source(symbol)
                     if data:
                         logger.debug(
-                            f"✅ Fetched live market data for {symbol} from {source.__name__}"
+                            f"âœ… Fetched live market data for {symbol} from {source.__name__}"
                         )
                         return data
                 except Exception as e:
@@ -167,7 +167,7 @@ class MarketDataManager:
             return None
 
         except Exception as e:
-            logger.error(f"❌ Error fetching live market data for {symbol}: {str(e)}")
+            logger.error(f"âŒ Error fetching live market data for {symbol}: {str(e)}")
             raise MarketDataException(
                 message=f"Failed to fetch live market data for {symbol}",
                 details={"symbol": symbol, "error": str(e)},
@@ -284,11 +284,11 @@ class MarketDataManager:
         try:
             if symbol not in self.supported_symbols:
                 self.supported_symbols.append(symbol)
-                logger.info(f"✅ Added symbol: {symbol}")
+                logger.info(f"âœ… Added symbol: {symbol}")
                 return True
             return False
         except Exception as e:
-            logger.error(f"❌ Error adding symbol {symbol}: {str(e)}")
+            logger.error(f"âŒ Error adding symbol {symbol}: {str(e)}")
             return False
 
     def remove_symbol(self, symbol: str) -> bool:
@@ -300,11 +300,11 @@ class MarketDataManager:
                     del self.market_data[symbol]
                 if symbol in self.last_update:
                     del self.last_update[symbol]
-                logger.info(f"✅ Removed symbol: {symbol}")
+                logger.info(f"âœ… Removed symbol: {symbol}")
                 return True
             return False
         except Exception as e:
-            logger.error(f"❌ Error removing symbol {symbol}: {str(e)}")
+            logger.error(f"âŒ Error removing symbol {symbol}: {str(e)}")
             return False
 
     def get_statistics(self) -> Dict[str, Any]:
@@ -318,9 +318,11 @@ class MarketDataManager:
                 "live_data": True,
             }
         except Exception as e:
-            logger.error(f"❌ Error getting market data statistics: {str(e)}")
+            logger.error(f"âŒ Error getting market data statistics: {str(e)}")
             return {}
 
 
 # Global market data manager instance
 market_data_manager = MarketDataManager()
+
+

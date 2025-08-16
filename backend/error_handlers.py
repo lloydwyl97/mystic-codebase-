@@ -1,4 +1,4 @@
-"""
+﻿"""
 Error Handlers for Mystic Trading
 
 Centralized error handling for the application using standardized exceptions.
@@ -13,7 +13,7 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse
 from slowapi.errors import RateLimitExceeded
 
-from utils.exceptions import (
+from backend.utils.exceptions import (
     ErrorCode,
     MysticException,
     _get_status_code_for_error_code,
@@ -145,3 +145,5 @@ def register_error_handlers(app: FastAPI):
 
     # Register generic exception handler
     app.exception_handler(Exception)(generic_exception_handler)
+
+

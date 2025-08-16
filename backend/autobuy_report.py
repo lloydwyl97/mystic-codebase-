@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Binance US Autobuy Report Generator
 Comprehensive reporting for SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT autobuy system
@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 
-from endpoints.autobuy.autobuy_config import get_config
+from backend.endpoints.autobuy.autobuy_config import get_config
 from binance_us_autobuy import autobuy_system
 
 # Configure logging
@@ -340,17 +340,17 @@ class AutobuyReporter:
         with open(filepath, "w") as f:
             json.dump(asdict(report), f, indent=2, default=str)
 
-        logger.info(f"📄 Report saved to {filepath}")
+        logger.info(f"ðŸ“„ Report saved to {filepath}")
         return filepath
 
     def print_report(self, report: SystemReport):
         """Print a formatted report to console"""
         print("\n" + "=" * 80)
-        print("🚀 BINANCE US AUTOBUY SYSTEM REPORT")
+        print("ðŸš€ BINANCE US AUTOBUY SYSTEM REPORT")
         print("=" * 80)
 
         # Overall Summary
-        print("\n📊 OVERALL SUMMARY:")
+        print("\nðŸ“Š OVERALL SUMMARY:")
         print(f"   Total Trades: {report.total_trades}")
         print(f"   Successful: {report.successful_trades}")
         print(f"   Failed: {report.failed_trades}")
@@ -361,18 +361,18 @@ class AutobuyReporter:
 
         # System Health
         health = report.system_health
-        print("\n🏥 SYSTEM HEALTH:")
+        print("\nðŸ¥ SYSTEM HEALTH:")
         print(f"   Status: {health['status']} ({health['score']}/100)")
         if health["issues"]:
             print(f"   Issues: {', '.join(health['issues'])}")
 
         # Pair Performance
-        print("\n📈 PAIR PERFORMANCE:")
+        print("\nðŸ“ˆ PAIR PERFORMANCE:")
         for symbol, pair_report in report.pairs_performance.items():
             status = (
-                "✅"
+                "âœ…"
                 if pair_report.success_rate >= 70
-                else "⚠️" if pair_report.success_rate >= 50 else "❌"
+                else "âš ï¸" if pair_report.success_rate >= 50 else "âŒ"
             )
             print(f"   {status} {pair_report.name} ({symbol}):")
             print(
@@ -384,18 +384,18 @@ class AutobuyReporter:
 
         # Recent Trades
         if report.recent_trades:
-            print("\n🕒 RECENT TRADES:")
+            print("\nðŸ•’ RECENT TRADES:")
             for trade in report.recent_trades[-5:]:  # Last 5 trades
-                status = "✅" if trade.status == "executed" else "❌"
+                status = "âœ…" if trade.status == "executed" else "âŒ"
                 print(
                     f"   {status} {trade.symbol}: ${trade.amount_usd} @ ${trade.price} ({trade.confidence:.1f}%)"
                 )
 
         # Recommendations
         if report.recommendations:
-            print("\n💡 RECOMMENDATIONS:")
+            print("\nðŸ’¡ RECOMMENDATIONS:")
             for rec in report.recommendations:
-                print(f"   • {rec}")
+                print(f"   â€¢ {rec}")
 
         print("\n" + "=" * 80)
 
@@ -415,6 +415,8 @@ def generate_and_save_report() -> str:
 
 
 if __name__ == "__main__":
-    print("📊 Generating Binance US Autobuy Report...")
+    print("ðŸ“Š Generating Binance US Autobuy Report...")
     report_file = generate_and_save_report()
-    print(f"✅ Report generated and saved to: {report_file}")
+    print(f"âœ… Report generated and saved to: {report_file}")
+
+

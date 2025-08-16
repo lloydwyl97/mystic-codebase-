@@ -1,4 +1,4 @@
-"""
+﻿"""
 Machine Learning Signal Enhancement Service
 Uses advanced ML models to increase signal accuracy and win percentage
 """
@@ -301,3 +301,5 @@ class MLSignalEnhancer:
 
 # Global ML enhancer instance
 ml_enhancer = MLSignalEnhancer()
+
+

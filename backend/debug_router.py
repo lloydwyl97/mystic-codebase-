@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+﻿from fastapi import FastAPI, APIRouter
 
 # Create a simple test router
 test_router = APIRouter()
@@ -34,3 +34,5 @@ try:
 
 except Exception as e:
     print(f"Error including AI strategy router: {e}")
+
+

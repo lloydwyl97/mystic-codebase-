@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Experimental Services Integration
 Integrates quantum, blockchain, satellite, and 5G services with autobuy decisions
@@ -45,25 +45,25 @@ class ExperimentalIntegration:
         self.integration_cache: Dict[str, Any] = {}
         self.cache_ttl = 300  # 5 minutes
 
-        logger.info("✅ Experimental Services Integration initialized")
+        logger.info("âœ… Experimental Services Integration initialized")
 
     async def start(self):
         """Start the experimental services integration"""
         self.is_running = True
-        logger.info("🚀 Starting Experimental Services Integration")
+        logger.info("ðŸš€ Starting Experimental Services Integration")
 
         while self.is_running:
             try:
                 await self.collect_experimental_data()
                 await asyncio.sleep(60)  # Check every minute
             except Exception as e:
-                logger.error(f"❌ Error in experimental integration: {e}")
+                logger.error(f"âŒ Error in experimental integration: {e}")
                 await asyncio.sleep(30)
 
     async def stop(self):
         """Stop the experimental services integration"""
         self.is_running = False
-        logger.info("🛑 Experimental Services Integration stopped")
+        logger.info("ðŸ›‘ Experimental Services Integration stopped")
 
     async def collect_experimental_data(self):
         """Collect data from all experimental services"""
@@ -98,10 +98,10 @@ class ExperimentalIntegration:
             self.integration_cache = experimental_data
             self.last_integration = current_time
 
-            logger.debug(f"✅ Collected experimental data for {current_time}")
+            logger.debug(f"âœ… Collected experimental data for {current_time}")
 
         except Exception as e:
-            logger.error(f"❌ Error collecting experimental data: {e}")
+            logger.error(f"âŒ Error collecting experimental data: {e}")
 
     async def _collect_quantum_data(self) -> Dict[str, Any]:
         """Collect data from quantum services"""
@@ -126,7 +126,7 @@ class ExperimentalIntegration:
                 "status": "offline",
                 "error": str(e),
             }
-            logger.warning(f"⚠️ Quantum service unavailable: {e}")
+            logger.warning(f"âš ï¸ Quantum service unavailable: {e}")
             return {}
 
     async def _collect_blockchain_data(self) -> Dict[str, Any]:
@@ -152,7 +152,7 @@ class ExperimentalIntegration:
                 "status": "offline",
                 "error": str(e),
             }
-            logger.warning(f"⚠️ Blockchain service unavailable: {e}")
+            logger.warning(f"âš ï¸ Blockchain service unavailable: {e}")
             return {}
 
     async def _collect_satellite_data(self) -> Dict[str, Any]:
@@ -178,7 +178,7 @@ class ExperimentalIntegration:
                 "status": "offline",
                 "error": str(e),
             }
-            logger.warning(f"⚠️ Satellite service unavailable: {e}")
+            logger.warning(f"âš ï¸ Satellite service unavailable: {e}")
             return {}
 
     async def _collect_5g_data(self) -> Dict[str, Any]:
@@ -201,7 +201,7 @@ class ExperimentalIntegration:
                     return {}
         except Exception as e:
             self.service_status["5g"] = {"status": "offline", "error": str(e)}
-            logger.warning(f"⚠️ 5G service unavailable: {e}")
+            logger.warning(f"âš ï¸ 5G service unavailable: {e}")
             return {}
 
     async def _collect_ai_super_data(self) -> Dict[str, Any]:
@@ -227,7 +227,7 @@ class ExperimentalIntegration:
                 "status": "offline",
                 "error": str(e),
             }
-            logger.warning(f"⚠️ AI Super service unavailable: {e}")
+            logger.warning(f"âš ï¸ AI Super service unavailable: {e}")
             return {}
 
     async def _combine_experimental_signals(
@@ -345,7 +345,7 @@ class ExperimentalIntegration:
             return combined_signals
 
         except Exception as e:
-            logger.error(f"❌ Error combining experimental signals: {e}")
+            logger.error(f"âŒ Error combining experimental signals: {e}")
             return {
                 "overall_signal": "NEUTRAL",
                 "confidence": 0.5,
@@ -386,7 +386,7 @@ class ExperimentalIntegration:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error processing quantum signal: {e}")
+            logger.error(f"âŒ Error processing quantum signal: {e}")
             return {
                 "signal": "HOLD",
                 "confidence": 0.5,
@@ -425,7 +425,7 @@ class ExperimentalIntegration:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error processing blockchain signal: {e}")
+            logger.error(f"âŒ Error processing blockchain signal: {e}")
             return {
                 "signal": "HOLD",
                 "confidence": 0.5,
@@ -464,7 +464,7 @@ class ExperimentalIntegration:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error processing satellite signal: {e}")
+            logger.error(f"âŒ Error processing satellite signal: {e}")
             return {
                 "signal": "HOLD",
                 "confidence": 0.5,
@@ -503,7 +503,7 @@ class ExperimentalIntegration:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error processing 5G signal: {e}")
+            logger.error(f"âŒ Error processing 5G signal: {e}")
             return {
                 "signal": "HOLD",
                 "confidence": 0.5,
@@ -542,7 +542,7 @@ class ExperimentalIntegration:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error processing AI super signal: {e}")
+            logger.error(f"âŒ Error processing AI super signal: {e}")
             return {
                 "signal": "HOLD",
                 "confidence": 0.5,
@@ -581,7 +581,7 @@ class ExperimentalIntegration:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error getting experimental influence: {e}")
+            logger.error(f"âŒ Error getting experimental influence: {e}")
             return {
                 "influence": 0.0,
                 "recommendation": "HOLD",
@@ -624,3 +624,5 @@ def get_experimental_integration() -> ExperimentalIntegration:
     if experimental_integration is None:
         experimental_integration = ExperimentalIntegration()
     return experimental_integration
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Live Trading Service
 Connects to real trading APIs for live trading operations
 """
@@ -418,3 +418,5 @@ class LiveTradingService:
 
 # Global instance
 trading_service = LiveTradingService()
+
+

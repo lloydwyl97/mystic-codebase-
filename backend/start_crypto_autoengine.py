@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 CRYPTO AUTOENGINE Startup Script
 Main entry point for the complete system
@@ -184,3 +184,5 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(f"CRYPTO AUTOENGINE failed: {e}")
         sys.exit(1)
+
+

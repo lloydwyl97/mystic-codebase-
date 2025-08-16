@@ -1,4 +1,4 @@
-"""
+﻿"""
 Exchange Integration Module
 
 Provides real trading capabilities through multiple exchange APIs.
@@ -388,3 +388,5 @@ async def initialize_exchanges():
 
 # Remove the problematic asyncio.create_task call
 # The exchanges will be initialized when the service manager starts up
+
+

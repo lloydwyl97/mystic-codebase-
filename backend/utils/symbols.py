@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from typing import Dict, List
 
@@ -34,5 +34,7 @@ def to_exchange_symbol(exchange: str, symbol_dash: str) -> str:
 def is_top4(exchange: str, symbol_dash: str) -> bool:
     dash = normalize_symbol_to_dash(symbol_dash)
     return dash in EXCHANGE_TOP4.get(exchange.lower(), [])
+
+
 
 

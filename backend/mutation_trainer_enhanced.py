@@ -1,4 +1,4 @@
-import numpy as np
+﻿import numpy as np
 import time
 import json
 import sqlite3
@@ -569,3 +569,5 @@ def train_mutations_enhanced():
 while True:
     train_mutations_enhanced()
     time.sleep(TRAINER_INTERVAL)
+
+

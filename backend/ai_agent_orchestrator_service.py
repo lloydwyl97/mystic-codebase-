@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 AI Agent Orchestrator Service
 Port 8006 - Orchestrates all AI agents in a single service
@@ -20,10 +20,10 @@ import redis
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import AI agents
-from agents.ai_model_manager import AIModelManager
-from agents.agent_orchestrator import AgentOrchestrator
-from agents.advanced_ai_orchestrator import AdvancedAIOrchestrator
+# import backend.ai as ai agents
+from backend.agents.ai_model_manager import AIModelManager
+from backend.agents.agent_orchestrator import AgentOrchestrator
+from backend.agents.advanced_ai_orchestrator import AdvancedAIOrchestrator
 
 # Configure logging
 logging.basicConfig(
@@ -67,16 +67,16 @@ class AIAgentOrchestratorService:
             self.agents["orchestrator"] = AgentOrchestrator()
             self.agents["advanced_orchestrator"] = AdvancedAIOrchestrator()
 
-            logger.info("✅ All AI agents initialized successfully")
+            logger.info("âœ… All AI agents initialized successfully")
         except Exception as e:
-            logger.error(f"❌ Error initializing AI agents: {e}")
+            logger.error(f"âŒ Error initializing AI agents: {e}")
             raise
 
-        logger.info("✅ AI Agent Orchestrator Service initialized")
+        logger.info("âœ… AI Agent Orchestrator Service initialized")
 
     async def start(self):
         """Start the service"""
-        logger.info("🚀 Starting AI Agent Orchestrator Service...")
+        logger.info("ðŸš€ Starting AI Agent Orchestrator Service...")
         self.running = True
 
         # Start all agents
@@ -84,16 +84,16 @@ class AIAgentOrchestratorService:
             try:
                 if hasattr(agent, "start"):
                     await agent.start()
-                logger.info(f"✅ Started agent: {agent_name}")
+                logger.info(f"âœ… Started agent: {agent_name}")
             except Exception as e:
-                logger.error(f"❌ Error starting agent {agent_name}: {e}")
+                logger.error(f"âŒ Error starting agent {agent_name}: {e}")
 
         # Start agent monitoring loop
         asyncio.create_task(self.agent_monitor_loop())
 
     async def stop(self):
         """Stop the service"""
-        logger.info("🛑 Stopping AI Agent Orchestrator Service...")
+        logger.info("ðŸ›‘ Stopping AI Agent Orchestrator Service...")
         self.running = False
 
         # Stop all agents
@@ -101,13 +101,13 @@ class AIAgentOrchestratorService:
             try:
                 if hasattr(agent, "stop"):
                     await agent.stop()
-                logger.info(f"✅ Stopped agent: {agent_name}")
+                logger.info(f"âœ… Stopped agent: {agent_name}")
             except Exception as e:
-                logger.error(f"❌ Error stopping agent {agent_name}: {e}")
+                logger.error(f"âŒ Error stopping agent {agent_name}: {e}")
 
     async def agent_monitor_loop(self):
         """Monitor for agent requests"""
-        logger.info("👀 Starting agent monitor loop...")
+        logger.info("ðŸ‘€ Starting agent monitor loop...")
 
         while self.running:
             try:
@@ -122,7 +122,7 @@ class AIAgentOrchestratorService:
                 await asyncio.sleep(10)
 
             except Exception as e:
-                logger.error(f"❌ Error in agent monitor loop: {e}")
+                logger.error(f"âŒ Error in agent monitor loop: {e}")
                 await asyncio.sleep(30)
 
     async def process_agent_request(self, request_data: Dict[str, Any]):
@@ -133,7 +133,7 @@ class AIAgentOrchestratorService:
             data = request_data.get("data", {})
             request_id = request_data.get("request_id", f"req_{int(time.time())}")
 
-            logger.info(f"🤖 Processing {agent_type} agent request: {action}")
+            logger.info(f"ðŸ¤– Processing {agent_type} agent request: {action}")
 
             # Process with appropriate agent
             if agent_type == "model_manager":
@@ -161,12 +161,12 @@ class AIAgentOrchestratorService:
             # Publish result
             self.redis_client.lpush("agent_results", json.dumps(agent_record))
 
-            logger.info(f"✅ Agent request processed: {agent_record['status']}")
+            logger.info(f"âœ… Agent request processed: {agent_record['status']}")
 
             return agent_record
 
         except Exception as e:
-            logger.error(f"❌ Error processing agent request: {e}")
+            logger.error(f"âŒ Error processing agent request: {e}")
 
             # Record failed agent execution
             agent_record = {
@@ -185,7 +185,7 @@ class AIAgentOrchestratorService:
     ) -> Dict[str, Any]:
         """Execute an agent action"""
         try:
-            logger.info(f"🤖 Executing {agent_type} agent action: {action}")
+            logger.info(f"ðŸ¤– Executing {agent_type} agent action: {action}")
 
             # Execute with appropriate agent
             if agent_type == "model_manager":
@@ -210,12 +210,12 @@ class AIAgentOrchestratorService:
             # Store agent record
             self.agent_history.append(agent_record)
 
-            logger.info(f"✅ Agent action executed: {agent_record['status']}")
+            logger.info(f"âœ… Agent action executed: {agent_record['status']}")
 
             return agent_record
 
         except Exception as e:
-            logger.error(f"❌ Error executing agent action: {e}")
+            logger.error(f"âŒ Error executing agent action: {e}")
             raise
 
     async def get_agent_history(self, limit: int = 100) -> List[Dict[str, Any]]:
@@ -224,7 +224,7 @@ class AIAgentOrchestratorService:
             # Return recent agent executions
             return self.agent_history[-limit:] if self.agent_history else []
         except Exception as e:
-            logger.error(f"❌ Error getting agent history: {e}")
+            logger.error(f"âŒ Error getting agent history: {e}")
             return []
 
     async def get_agent_status(self) -> Dict[str, Any]:
@@ -250,7 +250,7 @@ class AIAgentOrchestratorService:
                 "timestamp": datetime.now().isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error getting agent status: {e}")
+            logger.error(f"âŒ Error getting agent status: {e}")
             return {"error": str(e)}
 
 
@@ -265,9 +265,9 @@ async def startup_event():
     try:
         agent_service = AIAgentOrchestratorService()
         await agent_service.start()
-        logger.info("✅ AI Agent Orchestrator Service started")
+        logger.info("âœ… AI Agent Orchestrator Service started")
     except Exception as e:
-        logger.error(f"❌ Failed to start AI Agent Orchestrator Service: {e}")
+        logger.error(f"âŒ Failed to start AI Agent Orchestrator Service: {e}")
         raise
 
 
@@ -277,7 +277,7 @@ async def shutdown_event():
     global agent_service
     if agent_service:
         await agent_service.stop()
-        logger.info("✅ AI Agent Orchestrator Service stopped")
+        logger.info("âœ… AI Agent Orchestrator Service stopped")
 
 
 @app.get("/health")
@@ -311,7 +311,7 @@ async def service_status():
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error getting service status: {e}")
+        logger.error(f"âŒ Error getting service status: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -330,7 +330,7 @@ async def execute_agent_action(agent_type: str, action: str, data: Dict[str, Any
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error in execute endpoint: {e}")
+        logger.error(f"âŒ Error in execute endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -344,7 +344,7 @@ async def get_agents():
         agent_status = await agent_service.get_agent_status()
         return agent_status
     except Exception as e:
-        logger.error(f"❌ Error getting agents: {e}")
+        logger.error(f"âŒ Error getting agents: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -362,7 +362,7 @@ async def get_agent_history(limit: int = 100):
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error getting agent history: {e}")
+        logger.error(f"âŒ Error getting agent history: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -389,7 +389,7 @@ async def process_agent_queue():
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error processing agent queue: {e}")
+        logger.error(f"âŒ Error processing agent queue: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -397,7 +397,7 @@ if __name__ == "__main__":
     # Get port from environment
     port = int(os.getenv("SERVICE_PORT", 8006))
 
-    logger.info(f"🚀 Starting AI Agent Orchestrator Service on port {port}")
+    logger.info(f"ðŸš€ Starting AI Agent Orchestrator Service on port {port}")
 
     # Start the FastAPI server
     uvicorn.run(
@@ -407,3 +407,5 @@ if __name__ == "__main__":
         log_level="info",
         reload=False,
     )
+
+

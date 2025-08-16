@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Social Trading Service
 Handles social trading functionality including leaderboards, copy trading, and trader management
@@ -61,7 +61,7 @@ class SocialTradingService:
         """Start copying a trader's trades"""
         try:
             # Get real copy trading service
-            from services.copy_trading_service import get_copy_trading_service
+            from backend.services.copy_trading_service import get_copy_trading_service
 
             copy_service = get_copy_trading_service()
             result = await copy_service.start_copy_trading(copy_data)
@@ -82,7 +82,7 @@ class SocialTradingService:
         """Stop copying a trader's trades"""
         try:
             # Get real copy trading service
-            from services.copy_trading_service import get_copy_trading_service
+            from backend.services.copy_trading_service import get_copy_trading_service
 
             copy_service = get_copy_trading_service()
             result = await copy_service.stop_copy_trading(copy_data)
@@ -102,3 +102,5 @@ class SocialTradingService:
 
 # Create service instance
 social_trading_service = SocialTradingService()
+
+

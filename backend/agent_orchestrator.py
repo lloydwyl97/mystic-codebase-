@@ -1,4 +1,4 @@
-"""
+﻿"""
 Agent Orchestrator
 Coordinates all AI agents in the Mystic AI Trading Platform
 """
@@ -33,15 +33,15 @@ class AgentOrchestrator:
                 decode_responses=True,
             )
             self.redis_client.ping()
-            print("✅ Redis connection established")
+            print("âœ… Redis connection established")
         except Exception as e:
-            print(f"⚠️ Redis not available: {e}")
+            print(f"âš ï¸ Redis not available: {e}")
             self.redis_client = None
 
     async def initialize_agents(self) -> None:
         """Initialize all AI agents"""
         try:
-            print("🚀 Initializing AI Agents...")
+            print("ðŸš€ Initializing AI Agents...")
 
             # Phase 5 Agents
             await self.initialize_phase5_agents()
@@ -49,25 +49,25 @@ class AgentOrchestrator:
             # Other AI Agents
             await self.initialize_other_agents()
 
-            print(f"✅ Initialized {len(self.agents)} agents")
+            print(f"âœ… Initialized {len(self.agents)} agents")
 
         except Exception as e:
-            print(f"❌ Error initializing agents: {e}")
+            print(f"âŒ Error initializing agents: {e}")
 
     async def initialize_phase5_agents(self) -> None:
         """Initialize Phase 5 interdimensional agents"""
         try:
             # Import Phase 5 agents
-            from agents.interdimensional_signal_decoder import (
+            from backend.agents.interdimensional_signal_decoder import (
                 InterdimensionalSignalDecoder,
             )  # noqa: E402
-            from agents.neuro_synchronization_engine import (
+            from backend.agents.neuro_synchronization_engine import (
                 NeuroSynchronizationEngine,
             )  # noqa: E402
-            from agents.cosmic_pattern_recognizer import (
+            from backend.agents.cosmic_pattern_recognizer import (
                 CosmicPatternRecognizer,
             )  # noqa: E402
-            from agents.auranet_channel_interface import (
+            from backend.agents.auranet_channel_interface import (
                 AuraNetChannelInterface,
             )  # noqa: E402
 
@@ -77,10 +77,10 @@ class AgentOrchestrator:
             self.agents["cosmic_pattern_recognizer"] = CosmicPatternRecognizer()
             self.agents["auranet_channel_interface"] = AuraNetChannelInterface()
 
-            print("✅ Phase 5 agents initialized")
+            print("âœ… Phase 5 agents initialized")
 
         except Exception as e:
-            print(f"⚠️ Phase 5 agents not available: {e}")
+            print(f"âš ï¸ Phase 5 agents not available: {e}")
 
     async def initialize_other_agents(self) -> None:
         """Initialize other AI agents"""
@@ -113,18 +113,18 @@ class AgentOrchestrator:
                         ]:
                             agent_instance = attr()
                             self.agents[agent_instance.agent_id] = agent_instance
-                            print(f"✅ Loaded agent: {agent_instance.agent_id}")
+                            print(f"âœ… Loaded agent: {agent_instance.agent_id}")
                             break
                 except Exception as e:
-                    print(f"⚠️ Could not load {module_name}: {e}")
+                    print(f"âš ï¸ Could not load {module_name}: {e}")
 
         except Exception as e:
-            print(f"⚠️ Other agents not available: {e}")
+            print(f"âš ï¸ Other agents not available: {e}")
 
     async def start_agents(self) -> None:
         """Start all agents"""
         try:
-            print("🚀 Starting all agents...")
+            print("ðŸš€ Starting all agents...")
             self.running = True
 
             # Start each agent
@@ -139,15 +139,15 @@ class AgentOrchestrator:
                     task = asyncio.create_task(self.run_agent_loop(agent))
                     self.agent_tasks.append(task)
 
-                    print(f"✅ Started agent: {agent_id}")
+                    print(f"âœ… Started agent: {agent_id}")
 
                 except Exception as e:
-                    print(f"❌ Failed to start agent {agent_id}: {e}")
+                    print(f"âŒ Failed to start agent {agent_id}: {e}")
 
-            print(f"✅ Started {len(self.agent_tasks)} agent tasks")
+            print(f"âœ… Started {len(self.agent_tasks)} agent tasks")
 
         except Exception as e:
-            print(f"❌ Error starting agents: {e}")
+            print(f"âŒ Error starting agents: {e}")
 
     async def run_agent_loop(self, agent: Any) -> None:
         """Run agent processing loop"""
@@ -162,12 +162,12 @@ class AgentOrchestrator:
                     await asyncio.sleep(1)
 
         except Exception as e:
-            print(f"❌ Agent loop error for {agent.agent_id}: {e}")
+            print(f"âŒ Agent loop error for {agent.agent_id}: {e}")
 
     async def stop_agents(self) -> None:
         """Stop all agents"""
         try:
-            print("🛑 Stopping all agents...")
+            print("ðŸ›‘ Stopping all agents...")
             self.running = False
 
             # Stop each agent
@@ -175,18 +175,18 @@ class AgentOrchestrator:
                 try:
                     if hasattr(agent, "stop"):
                         await agent.stop()
-                    print(f"✅ Stopped agent: {agent_id}")
+                    print(f"âœ… Stopped agent: {agent_id}")
                 except Exception as e:
-                    print(f"❌ Failed to stop agent {agent_id}: {e}")
+                    print(f"âŒ Failed to stop agent {agent_id}: {e}")
 
             # Cancel all tasks
             for task in self.agent_tasks:
                 task.cancel()
 
-            print("✅ All agents stopped")
+            print("âœ… All agents stopped")
 
         except Exception as e:
-            print(f"❌ Error stopping agents: {e}")
+            print(f"âŒ Error stopping agents: {e}")
 
     async def get_agent_status(self) -> Dict[str, Any]:
         """Get status of all agents"""
@@ -234,7 +234,7 @@ class AgentOrchestrator:
                 status["agent_types"] = optional_agent_types
             return status
         except Exception as e:
-            print(f"❌ Error getting agent status: {e}")
+            print(f"âŒ Error getting agent status: {e}")
             return {}
 
     async def broadcast_message(self, message: Dict[str, Any]) -> None:
@@ -245,14 +245,14 @@ class AgentOrchestrator:
                     if hasattr(agent, "handle_message"):
                         await agent.handle_message(message)
                 except Exception as e:
-                    print(f"❌ Failed to send message to {agent_id}: {e}")
+                    print(f"âŒ Failed to send message to {agent_id}: {e}")
         except Exception as e:
-            print(f"❌ Error broadcasting message: {e}")
+            print(f"âŒ Error broadcasting message: {e}")
 
     async def run(self) -> None:
         """Main orchestrator run loop"""
         try:
-            print("🎯 Agent Orchestrator starting...")
+            print("ðŸŽ¯ Agent Orchestrator starting...")
 
             # Initialize agents
             await self.initialize_agents()
@@ -272,11 +272,11 @@ class AgentOrchestrator:
                     await asyncio.sleep(30)  # Check every 30 seconds
 
                 except Exception as e:
-                    print(f"❌ Orchestrator loop error: {e}")
+                    print(f"âŒ Orchestrator loop error: {e}")
                     await asyncio.sleep(60)
 
         except Exception as e:
-            print(f"❌ Orchestrator run error: {e}")
+            print(f"âŒ Orchestrator run error: {e}")
         finally:
             await self.stop_agents()
 
@@ -294,7 +294,7 @@ class AgentOrchestrator:
                 self.redis_client.set("orchestrator_status", json.dumps(status), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating orchestrator status: {e}")
+            print(f"âŒ Error updating orchestrator status: {e}")
 
     async def check_agent_health(self) -> None:
         """Check health of all agents"""
@@ -304,12 +304,12 @@ class AgentOrchestrator:
                     if hasattr(agent, "health_status"):
                         health = agent.health_status
                         if health == "error":
-                            print(f"⚠️ Agent {agent_id} has health issues")
+                            print(f"âš ï¸ Agent {agent_id} has health issues")
                 except Exception as e:
-                    print(f"❌ Health check failed for {agent_id}: {e}")
+                    print(f"âŒ Health check failed for {agent_id}: {e}")
 
         except Exception as e:
-            print(f"❌ Error checking agent health: {e}")
+            print(f"âŒ Error checking agent health: {e}")
 
 
 # Global orchestrator instance
@@ -321,11 +321,13 @@ async def main() -> None:
     try:
         await orchestrator.run()
     except KeyboardInterrupt:
-        print("🛑 Orchestrator interrupted by user")
+        print("ðŸ›‘ Orchestrator interrupted by user")
         await orchestrator.stop_agents()
     except Exception as e:
-        print(f"❌ Orchestrator main error: {e}")
+        print(f"âŒ Orchestrator main error: {e}")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

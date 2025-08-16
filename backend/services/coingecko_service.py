@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 from typing import Any, Optional, Dict
 
 # Prefer delegating to the existing client if present
@@ -6,7 +6,7 @@ try:
     from backend.exchanges.coingecko_client import CoinGeckoClient as _CGClient  # type: ignore[import-not-found]
 except Exception:
     try:
-        from exchanges.coingecko_client import CoinGeckoClient as _CGClient  # type: ignore[import-not-found]
+        from backend.exchanges.coingecko_client import CoinGeckoClient as _CGClient  # type: ignore[import-not-found]
     except Exception:
         _CGClient = None  # type: ignore[assignment]
 
@@ -46,5 +46,7 @@ class CoingeckoService:
 CoinGeckoService = CoingeckoService
 
 __all__ = ["CoingeckoService", "CoinGeckoService"]
+
+
 
 

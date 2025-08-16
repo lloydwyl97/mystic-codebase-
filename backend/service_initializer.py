@@ -1,4 +1,4 @@
-"""
+﻿"""
 Service Initializer
 Handles initialization of all services and managers
 """
@@ -23,7 +23,7 @@ class ServiceInitializer:
 
             self.service_manager = service_manager
             self.services["service_manager"] = service_manager
-            logger.info("✅ Service manager initialized")
+            logger.info("âœ… Service manager initialized")
             return True
         except ImportError as e:
             logger.error(f"Failed to import service manager: {e}")
@@ -108,12 +108,12 @@ class ServiceInitializer:
                 service_instance = service_class()
 
             self.services[service_name] = service_instance
-            logger.info(f"✅ {class_name} initialized")
+            logger.info(f"âœ… {class_name} initialized")
 
         except ImportError as e:
-            logger.warning(f"⚠️ {class_name} not available: {e}")
+            logger.warning(f"âš ï¸ {class_name} not available: {e}")
         except Exception as e:
-            logger.warning(f"⚠️ {class_name} initialization failed: {e}")
+            logger.warning(f"âš ï¸ {class_name} initialization failed: {e}")
 
     def get_service(self, service_name: str) -> Optional[Any]:
         """Get a service by name"""
@@ -126,3 +126,5 @@ class ServiceInitializer:
 
 # Global service initializer instance
 service_initializer = ServiceInitializer()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Live Data Manager
 
 Handles business logic for live data operations including data processing,
@@ -9,7 +9,7 @@ import logging
 import time
 from typing import Any, Dict, List, Optional
 
-from services.market_data_sources import (
+from backend.services.market_data_sources import (
     SUPPORTED_COINS,
     get_coin_support_summary,
 )
@@ -215,3 +215,5 @@ def get_live_data_manager(market_data_service: Any) -> LiveDataManager:
     if live_data_manager is None:
         live_data_manager = LiveDataManager(market_data_service)
     return live_data_manager
+
+

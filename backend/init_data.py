@@ -1,4 +1,4 @@
-"""
+﻿"""
 Initialize Data Cache
 Populates the AI cache with live data from real APIs
 """
@@ -7,7 +7,7 @@ import asyncio
 import logging
 from datetime import datetime
 
-from ai.poller import cache
+from backend.ai.poller import cache
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ async def init_live_data():
             "coingecko": datetime.timezone.utcnow().isoformat(),
         }
 
-        logger.info("✅ Live data cache initialized:")
+        logger.info("âœ… Live data cache initialized:")
         logger.info("   Binance: Ready for live data")
         logger.info("   Coinbase: Ready for live data")
         logger.info("   CoinGecko: Ready for live data")
@@ -36,7 +36,7 @@ async def init_live_data():
         return True
 
     except Exception as e:
-        logger.error(f"❌ Error initializing live data cache: {e}")
+        logger.error(f"âŒ Error initializing live data cache: {e}")
         return False
 
 
@@ -48,3 +48,5 @@ if __name__ == "__main__":
 
 def init_sample_data():
     print("Sample data initialized (placeholder).")
+
+

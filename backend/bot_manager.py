@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Bot Manager - Coordinates Coinbase and Binance trading bots
 Ensures bots run independently without bandwidth conflicts
@@ -17,7 +17,7 @@ from binance_bot import BinanceBot
 from coinbase_bot import CoinbaseBot
 
 # Import rotated logging system
-from utils.log_rotation_manager import get_log_rotation_manager
+from backend.utils.log_rotation_manager import get_log_rotation_manager
 
 # Configure logging with rotation
 log_manager = get_log_rotation_manager()
@@ -217,3 +217,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

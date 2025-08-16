@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trading Service for Mystic Trading
 
 Provides centralized trading functionality including order management,
@@ -10,8 +10,8 @@ from datetime import datetime, timezone
 from typing import Any, Dict
 
 from enhanced_logging import log_operation_performance
-from services.trading_manager import trading_manager
-from services.websocket_manager import websocket_manager
+from backend.services.trading_manager import trading_manager
+from backend.services.websocket_manager import websocket_manager
 
 logger = logging.getLogger(__name__)
 
@@ -213,3 +213,5 @@ def get_trading_service(redis_client: Any) -> TradingService:
     if trading_service is None:
         trading_service = TradingService(redis_client)
     return trading_service
+
+

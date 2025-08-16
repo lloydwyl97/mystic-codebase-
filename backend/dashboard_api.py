@@ -1,4 +1,4 @@
-# dashboard_api.py
+﻿# dashboard_api.py
 """
 FastAPI Dashboard Backend
 Real-time monitoring and control interface for the AI trading system.
@@ -402,7 +402,7 @@ async def dashboard_html():
     <body>
         <div class="container">
             <div class="header">
-                <h1>🚀 Mystic AI Trading Dashboard</h1>
+                <h1>ðŸš€ Mystic AI Trading Dashboard</h1>
                 <p>Real-time monitoring and control for AI crypto trading system</p>
             </div>
 
@@ -426,19 +426,19 @@ async def dashboard_html():
             </div>
 
             <div class="section">
-                <h2>📊 Strategy Leaderboard</h2>
+                <h2>ðŸ“Š Strategy Leaderboard</h2>
                 <button class="refresh-btn" onclick="loadLeaderboard()">Refresh</button>
                 <div id="leaderboard">Loading...</div>
             </div>
 
             <div class="section">
-                <h2>💰 Recent Trades</h2>
+                <h2>ðŸ’° Recent Trades</h2>
                 <button class="refresh-btn" onclick="loadTrades()">Refresh</button>
                 <div id="trades">Loading...</div>
             </div>
 
             <div class="section">
-                <h2>🛡️ System Health</h2>
+                <h2>ðŸ›¡ï¸ System Health</h2>
                 <button class="refresh-btn" onclick="loadSystemHealth()">Refresh</button>
                 <div id="system-status">Loading...</div>
             </div>
@@ -544,3 +544,5 @@ async def dashboard_html():
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+

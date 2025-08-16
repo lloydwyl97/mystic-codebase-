@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Routers for Mystic Trading Platform
 
 Centralized router management to reduce code duplication and improve modularity.
@@ -75,9 +75,9 @@ def register_api_endpoints(router: APIRouter, prefix: str = "/api") -> None:
 
         register_shared_endpoints(router, prefix)
 
-        logger.info(f"✅ API endpoints registered with prefix: {prefix}")
+        logger.info(f"âœ… API endpoints registered with prefix: {prefix}")
     except Exception as e:
-        logger.error(f"❌ Failed to register API endpoints: {str(e)}")
+        logger.error(f"âŒ Failed to register API endpoints: {str(e)}")
         raise
 
 
@@ -119,3 +119,5 @@ def create_social_router(prefix: str = "/api") -> APIRouter:
     # This reduces duplication from shared_endpoints.py
 
     return router
+
+

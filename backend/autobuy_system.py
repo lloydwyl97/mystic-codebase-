@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Autobuy System for Mystic Trading Platform
 
@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional
 
 # Use absolute imports
 from crypto_autoengine_config import get_config
-from services.mystic_signal_engine import mystic_signal_engine
+from backend.services.mystic_signal_engine import mystic_signal_engine
 from shared_cache import SharedCache
 from strategy_system import StrategyManager
 from websocket_manager import websocket_manager
@@ -105,25 +105,25 @@ class AutobuySystem:
         if self.ai_learning_enabled:
             try:
                 asyncio.create_task(self.ai_training_pipeline.start())
-                logger.info("✅ AI Training Pipeline started")
+                logger.info("âœ… AI Training Pipeline started")
             except Exception as e:
-                logger.error(f"❌ Failed to start AI Training Pipeline: {e}")
+                logger.error(f"âŒ Failed to start AI Training Pipeline: {e}")
 
         # Start experimental integration
         if self.experimental_influence_enabled:
             try:
                 asyncio.create_task(self.experimental_integration.start())
-                logger.info("✅ Experimental Integration started")
+                logger.info("âœ… Experimental Integration started")
             except Exception as e:
-                logger.error(f"❌ Failed to start Experimental Integration: {e}")
+                logger.error(f"âŒ Failed to start Experimental Integration: {e}")
 
         # Start auto-optimization task
         if self.model_performance_tracking:
             try:
                 asyncio.create_task(self._auto_optimize_models())
-                logger.info("✅ Model Auto-Optimization started")
+                logger.info("âœ… Model Auto-Optimization started")
             except Exception as e:
-                logger.error(f"❌ Failed to start Model Auto-Optimization: {e}")
+                logger.error(f"âŒ Failed to start Model Auto-Optimization: {e}")
 
         while self.is_running:
             try:
@@ -142,24 +142,24 @@ class AutobuySystem:
         if self.ai_training_pipeline:
             try:
                 await self.ai_training_pipeline.stop()
-                logger.info("✅ AI Training Pipeline stopped")
+                logger.info("âœ… AI Training Pipeline stopped")
             except Exception as e:
-                logger.error(f"❌ Error stopping AI Training Pipeline: {e}")
+                logger.error(f"âŒ Error stopping AI Training Pipeline: {e}")
 
         # Stop experimental integration
         if self.experimental_integration:
             try:
                 await self.experimental_integration.stop()
-                logger.info("✅ Experimental Integration stopped")
+                logger.info("âœ… Experimental Integration stopped")
             except Exception as e:
-                logger.error(f"❌ Error stopping Experimental Integration: {e}")
+                logger.error(f"âŒ Error stopping Experimental Integration: {e}")
 
         logger.info("Autobuy system and all integrated systems stopped")
 
     async def emergency_stop(self):
         """Emergency stop the autobuy system - cancels all pending orders and stops trading"""
         try:
-            logger.warning("🚨 EMERGENCY STOP ACTIVATED - Cancelling all pending orders")
+            logger.warning("ðŸš¨ EMERGENCY STOP ACTIVATED - Cancelling all pending orders")
 
             # Stop the system
             self.is_running = False
@@ -177,7 +177,7 @@ class AutobuySystem:
                     cancelled_orders.append(symbol)
 
                     logger.warning(
-                        f"🚨 Cancelled pending order for {symbol}: {order.amount} @ {order.price}"
+                        f"ðŸš¨ Cancelled pending order for {symbol}: {order.amount} @ {order.price}"
                     )
 
                 except Exception as e:
@@ -199,7 +199,7 @@ class AutobuySystem:
             )
 
             logger.warning(
-                f"🚨 Emergency stop completed - {len(cancelled_orders)} orders cancelled"
+                f"ðŸš¨ Emergency stop completed - {len(cancelled_orders)} orders cancelled"
             )
 
         except Exception as e:
@@ -217,7 +217,7 @@ class AutobuySystem:
 
                     if optimization_result.get("actions_taken"):
                         logger.info(
-                            f"🤖 Auto-optimization completed: {optimization_result['actions_taken']}"
+                            f"ðŸ¤– Auto-optimization completed: {optimization_result['actions_taken']}"
                         )
 
                         # Broadcast optimization results
@@ -229,7 +229,7 @@ class AutobuySystem:
                         )
 
             except Exception as e:
-                logger.error(f"❌ Error in auto-optimization: {e}")
+                logger.error(f"âŒ Error in auto-optimization: {e}")
                 await asyncio.sleep(300)  # 5 minutes on error
 
     async def process_strategy_signals(self):
@@ -251,7 +251,7 @@ class AutobuySystem:
                     await self.experimental_integration.get_experimental_influence("BTCUSDT")
                 )
             except Exception as e:
-                logger.error(f"❌ Error getting experimental influence: {e}")
+                logger.error(f"âŒ Error getting experimental influence: {e}")
 
         # Get all strategy signals
         strategy_results = self.strategy_manager.run_all_strategies()
@@ -271,7 +271,7 @@ class AutobuySystem:
                     strategy_results, mystic_signal, experimental_influence
                 )
             except Exception as e:
-                logger.error(f"❌ Error updating AI training data: {e}")
+                logger.error(f"âŒ Error updating AI training data: {e}")
 
     async def _get_mystic_signal(self) -> Optional[Any]:
         """Get current mystic signal with caching"""
@@ -648,7 +648,7 @@ class AutobuySystem:
         """Execute trade on Binance US (real trading)"""
         try:
             # Import Binance US API
-            from ai.auto_trade import BinanceUSAPI
+            from backend.ai.auto_trade import BinanceUSAPI
 
             async with BinanceUSAPI() as binance:
                 # Get current price
@@ -695,13 +695,13 @@ class AutobuySystem:
                     if response.status == 200:
                         result = await response.json()
                         logger.info(
-                            f"✅ Real trade executed: {order.symbol} {order.side} ${order.amount}"
+                            f"âœ… Real trade executed: {order.symbol} {order.side} ${order.amount}"
                         )
                         logger.info(f"Order result: {result}")
                         return True
                     else:
                         error_text = await response.text()
-                        logger.error(f"❌ Trade execution failed: {response.status} - {error_text}")
+                        logger.error(f"âŒ Trade execution failed: {response.status} - {error_text}")
                         return False
 
         except Exception as e:
@@ -753,7 +753,7 @@ class AutobuySystem:
             return stats
 
         except Exception as e:
-            logger.error(f"❌ Error getting trading stats: {e}")
+            logger.error(f"âŒ Error getting trading stats: {e}")
             return {"error": str(e)}
 
     def get_recent_orders(self, limit: int = 10) -> List[Dict[str, Any]]:
@@ -856,7 +856,7 @@ class AutobuySystem:
                 evaluation = await self.ai_model_versioning.evaluate_model_performance(active_model)
 
                 if evaluation.get("recommendation") == "deactivate":
-                    logger.warning(f"⚠️ Model {active_model} underperforming - consider rollback")
+                    logger.warning(f"âš ï¸ Model {active_model} underperforming - consider rollback")
 
             # Store training data for future model training
             {
@@ -870,11 +870,11 @@ class AutobuySystem:
             # This would normally be stored in the AI training pipeline
             # For now, we'll log it
             logger.debug(
-                f"📊 Updated AI training data: {len(strategy_results)} strategies, {trading_performance['total_trades']} trades"
+                f"ðŸ“Š Updated AI training data: {len(strategy_results)} strategies, {trading_performance['total_trades']} trades"
             )
 
         except Exception as e:
-            logger.error(f"❌ Error updating AI training data: {e}")
+            logger.error(f"âŒ Error updating AI training data: {e}")
 
     def _calculate_max_drawdown(self) -> float:
         """Calculate maximum drawdown from executed trades"""
@@ -912,7 +912,7 @@ class AutobuySystem:
             return max_drawdown
 
         except Exception as e:
-            logger.error(f"❌ Error calculating max drawdown: {e}")
+            logger.error(f"âŒ Error calculating max drawdown: {e}")
             return 0.0
 
 
@@ -965,3 +965,5 @@ class AutobuyManager:
     def cancel_all_pending_orders(self):
         """Cancel all pending orders"""
         self.autobuy_system.cancel_all_pending_orders()
+
+

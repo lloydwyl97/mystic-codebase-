@@ -1,4 +1,4 @@
-import uvicorn
+﻿import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
@@ -45,3 +45,5 @@ def quantum_execute(num_qubits: int = 2, shots: int = 1024):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8087))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
+

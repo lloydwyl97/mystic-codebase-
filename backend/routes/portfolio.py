@@ -1,4 +1,4 @@
-"""
+﻿"""
 Portfolio Router - Portfolio Management
 
 Contains portfolio views, positions, and summary endpoints.
@@ -12,13 +12,13 @@ from typing import Any, Dict, Union
 from fastapi import APIRouter, Depends, HTTPException
 
 # Import real services
-from services.redis_service import get_redis_service
+from backend.services.redis_service import get_redis_service
 
-# Import services
-from services.portfolio_service import portfolio_service
-from config import settings
-from services.binance_trading import get_binance_trading_service
-from services.coinbase_trading import get_coinbase_trading_service
+# import backend.services as services
+from backend.services.portfolio_service import portfolio_service
+from backend.config import settings
+from backend.services.binance_trading import get_binance_trading_service
+from backend.services.coinbase_trading import get_coinbase_trading_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -510,3 +510,5 @@ async def get_portfolio_transactions() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting portfolio transactions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+

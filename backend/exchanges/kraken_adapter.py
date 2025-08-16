@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Literal, cast
@@ -6,8 +6,8 @@ from typing import Any, Dict, List, Literal, cast
 import aiohttp
 
 from .base_adapter import AbstractExchangeAdapter
-from models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
-from utils.symbols import to_exchange_symbol, normalize_symbol_to_dash  # type: ignore[import-not-found]
+from backend.models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
+from backend.utils.symbols import to_exchange_symbol, normalize_symbol_to_dash  # type: ignore[import-not-found]
 
 
 class KrakenAdapter(AbstractExchangeAdapter):
@@ -117,5 +117,7 @@ class KrakenAdapter(AbstractExchangeAdapter):
             ts=ts,
             raw={},
         )
+
+
 
 

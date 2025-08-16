@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Database Initialization Script for Mystic Trading Platform
 Creates and initializes the database with required tables and data
@@ -27,11 +27,11 @@ def init_database():
 
         # Initialize database
         init_db()
-        logger.info("✓ Database initialized")
+        logger.info("âœ“ Database initialized")
 
         # Create tables
         create_tables()
-        logger.info("✓ Tables created")
+        logger.info("âœ“ Tables created")
 
         return True
 
@@ -54,7 +54,7 @@ def create_initial_data():
 
         # Initialize with live data sources
         asyncio.run(init_sample_data())
-        logger.info("✓ Initial data created")
+        logger.info("âœ“ Initial data created")
         return True
 
     except ImportError as e:
@@ -67,7 +67,7 @@ def create_initial_data():
 
 def main():
     """Main database initialization procedure"""
-    logger.info("🗄️  Starting Database Initialization")
+    logger.info("ðŸ—„ï¸  Starting Database Initialization")
 
     # Change to backend directory if needed
     if not Path("main.py").exists():
@@ -83,9 +83,11 @@ def main():
     # Create initial data (optional)
     create_initial_data()
 
-    logger.info("🎉 Database initialization completed successfully!")
+    logger.info("ðŸŽ‰ Database initialization completed successfully!")
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
+

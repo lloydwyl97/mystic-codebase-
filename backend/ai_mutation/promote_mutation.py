@@ -1,4 +1,4 @@
-"""
+﻿"""
 Strategy Promotion Module
 
 Handles the promotion of strategies from testing to live trading,
@@ -71,7 +71,7 @@ class StrategyPromoter:
             with open(promoted_path, "w") as f:
                 json.dump(strategy_data, f, indent=2)
 
-            logger.info(f"🎉 Strategy promoted: {strategy_file}")
+            logger.info(f"ðŸŽ‰ Strategy promoted: {strategy_file}")
 
             return {
                 "success": True,
@@ -82,7 +82,7 @@ class StrategyPromoter:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error promoting strategy: {e}")
+            logger.error(f"âŒ Error promoting strategy: {e}")
             return {"success": False, "error": str(e)}
 
     def demote_strategy(self, strategy_file: str, reason: str = "") -> Dict[str, Any]:
@@ -113,7 +113,7 @@ class StrategyPromoter:
             with open(testing_path, "w") as f:
                 json.dump(strategy_data, f, indent=2)
 
-            logger.info(f"📉 Strategy demoted: {strategy_file}")
+            logger.info(f"ðŸ“‰ Strategy demoted: {strategy_file}")
 
             return {
                 "success": True,
@@ -123,7 +123,7 @@ class StrategyPromoter:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error demoting strategy: {e}")
+            logger.error(f"âŒ Error demoting strategy: {e}")
             return {"success": False, "error": str(e)}
 
     def get_promoted_strategies(self) -> List[Dict[str, Any]]:
@@ -147,7 +147,7 @@ class StrategyPromoter:
                 )
 
             except Exception as e:
-                logger.error(f"❌ Error loading promoted strategy {strategy_file}: {e}")
+                logger.error(f"âŒ Error loading promoted strategy {strategy_file}: {e}")
 
         return strategies
 
@@ -228,7 +228,7 @@ class StrategyPromoter:
             restored_path = self.promoted_strategies_dir / strategy_file
             shutil.copy2(backup_path, restored_path)
 
-            logger.info(f"🔄 Strategy rollback completed: {strategy_file}")
+            logger.info(f"ðŸ”„ Strategy rollback completed: {strategy_file}")
 
             return {
                 "success": True,
@@ -238,9 +238,11 @@ class StrategyPromoter:
             }
 
         except Exception as e:
-            logger.error(f"❌ Error rolling back promotion: {e}")
+            logger.error(f"âŒ Error rolling back promotion: {e}")
             return {"success": False, "error": str(e)}
 
 
 # Global instance
 strategy_promoter = StrategyPromoter()
+
+

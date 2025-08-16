@@ -1,4 +1,4 @@
-"""
+﻿"""
 Exchange Router - Exchange Integration
 
 Contains exchange integration endpoints for Binance, Coinbase, and other exchanges.
@@ -10,7 +10,7 @@ from datetime import timezone, datetime
 from fastapi import APIRouter, HTTPException
 
 # Import real services
-from services.redis_service import get_redis_service
+from backend.services.redis_service import get_redis_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -212,3 +212,5 @@ async def get_coinbase_market_data(symbol: str = "BTC-USD"):
             status_code=500,
             detail=f"Error getting Coinbase market data: {str(e)}",
         )
+
+

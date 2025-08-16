@@ -1,4 +1,4 @@
-"""
+﻿"""
 Price Fetcher Service
 Handles fetching live prices from multiple exchanges
 """
@@ -99,3 +99,5 @@ class PriceFetcher:
 
 # Global instance
 price_fetcher = PriceFetcher()
+
+

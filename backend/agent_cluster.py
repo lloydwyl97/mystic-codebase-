@@ -1,4 +1,4 @@
-class MemoryAgent:
+﻿class MemoryAgent:
     def __init__(self, id):
         self.id = id
         self.memory = []
@@ -11,3 +11,5 @@ class MemoryAgent:
         if "attack" in self.memory[-1]:
             return "defend"
         return "trade"
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Social Trading Endpoints
 
 Handles all social trading-related API endpoints including leaders and feed.
@@ -51,3 +51,6 @@ async def get_social_feed() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error fetching social feed: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch social feed")
+
+
+

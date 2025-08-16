@@ -1,4 +1,4 @@
-import sqlite3
+﻿import sqlite3
 from datetime import datetime, timedelta
 import os
 
@@ -62,7 +62,7 @@ def evolve_strategies():
 
 def mutate_from_template(strategy_name):
     """Mutate a strategy from a winning template"""
-    print(f"[MUTATE] Cloning {strategy_name} → new version")
+    print(f"[MUTATE] Cloning {strategy_name} â†’ new version")
     # Add your strategy duplication and mutation logic here
     # This would copy the strategy config and apply random mutations
 
@@ -114,3 +114,5 @@ def run_mutation_cycle():
 
 if __name__ == "__main__":
     run_mutation_cycle()
+
+

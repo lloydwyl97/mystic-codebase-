@@ -1,4 +1,4 @@
-"""
+﻿"""
 Enhanced Logging System for Mystic Trading
 
 Provides advanced logging capabilities with Redis integration for distributed logging.
@@ -717,3 +717,5 @@ def setup_basic_logging():
         )
         logging.warning(f"Basic logging setup failed: {e}")
         return {}
+
+

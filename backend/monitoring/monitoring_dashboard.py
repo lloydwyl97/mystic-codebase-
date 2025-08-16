@@ -1,4 +1,4 @@
-"""
+﻿"""
 Monitoring Dashboard for Mystic Trading Platform
 
 Integrates all monitoring components:
@@ -17,10 +17,10 @@ from typing import Any, Dict, List
 from dataclasses import dataclass
 from collections import deque
 
-from monitoring.enhanced_logger import enhanced_logger
-from monitoring.performance_metrics import metrics_collector
-from monitoring.health_checks import health_checker
-from monitoring.alerting_system import alerting_system, AlertSeverity, AlertChannel
+from backend.monitoring.enhanced_logger import enhanced_logger
+from backend.monitoring.performance_metrics import metrics_collector
+from backend.monitoring.health_checks import health_checker
+from backend.monitoring.alerting_system import alerting_system, AlertSeverity, AlertChannel
 
 logger = logging.getLogger(__name__)
 
@@ -349,3 +349,5 @@ class MonitoringDashboard:
 
 # Global monitoring dashboard instance
 monitoring_dashboard = MonitoringDashboard()
+
+

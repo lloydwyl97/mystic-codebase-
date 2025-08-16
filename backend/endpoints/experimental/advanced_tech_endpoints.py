@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced Tech Endpoints
 Consolidated quantum computing, blockchain, mining, and experimental features
 All endpoints return live data - no stubs or placeholders
@@ -38,7 +38,7 @@ try:
     blockchain_service = BlockchainService()
     mining_service = MiningService()
     experimental_service = ExperimentalService()
-    logger.info("✅ Advanced tech services initialized successfully")
+    logger.info("âœ… Advanced tech services initialized successfully")
 except Exception as e:
     logger.warning(f"Could not initialize some advanced tech services: {e}")
 
@@ -1021,3 +1021,6 @@ async def test_experimental_endpoint() -> Dict[str, Any]:
         "message": "Experimental router is working!",
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
+
+
+

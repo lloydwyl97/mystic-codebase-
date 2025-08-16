@@ -1,4 +1,4 @@
-import json
+﻿import json
 import logging
 import os
 import sys
@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import redis
 
-from config import settings
+from backend.config import settings
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -215,7 +215,7 @@ class StrategyRunner:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Trade execution failed: {e}")
+            logger.error(f"âŒ Trade execution failed: {e}")
             return False
 
     def update_leaderboard(self):
@@ -331,3 +331,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+

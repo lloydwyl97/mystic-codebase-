@@ -1,4 +1,4 @@
-"""
+﻿"""
 Validator Staking Module
 
 Provides utilities for staking operations to validator nodes across different blockchains.
@@ -41,7 +41,7 @@ def stake_to_validator(
     # Real blockchain staking implementation
     try:
         # Connect to blockchain network
-        from services.blockchain_service import BlockchainService
+        from backend.services.blockchain_service import BlockchainService
 
         blockchain_service = BlockchainService()
 
@@ -130,7 +130,7 @@ def get_staking_rewards(validator_address: str, chain: str = "Ethereum") -> Dict
     # Real blockchain staking rewards implementation
     try:
         # Connect to blockchain network
-        from services.blockchain_service import BlockchainService
+        from backend.services.blockchain_service import BlockchainService
 
         blockchain_service = BlockchainService()
 
@@ -188,3 +188,5 @@ if __name__ == "__main__":
     # Test the staking module
     result = auto_stake_if_idle(1000, 500)
     print(f"Auto-stake result: {result}")
+
+

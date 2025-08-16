@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Sentiment Agent
 Handles aggregated market sentiment analysis from multiple sources
 """
@@ -22,11 +22,11 @@ _ = defaultdict(list)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class MarketSentimentAgent(BaseAgent):
@@ -84,7 +84,7 @@ class MarketSentimentAgent(BaseAgent):
         self.register_handler("social_sentiment_update", self.handle_social_sentiment_update)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"📊 Market Sentiment Agent {agent_id} initialized")
+        print(f"ðŸ“Š Market Sentiment Agent {agent_id} initialized")
 
     async def initialize(self):
         """Initialize market sentiment agent resources"""
@@ -98,10 +98,10 @@ class MarketSentimentAgent(BaseAgent):
             # Start sentiment monitoring
             await self.start_sentiment_monitoring()
 
-            print(f"✅ Market Sentiment Agent {self.agent_id} initialized successfully")
+            print(f"âœ… Market Sentiment Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Market Sentiment Agent: {e}")
+            print(f"âŒ Error initializing Market Sentiment Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -126,7 +126,7 @@ class MarketSentimentAgent(BaseAgent):
                 await asyncio.sleep(60)  # Check every minute
 
             except Exception as e:
-                print(f"❌ Error in sentiment aggregation loop: {e}")
+                print(f"âŒ Error in sentiment aggregation loop: {e}")
                 await asyncio.sleep(120)
 
     async def load_sentiment_config(self):
@@ -148,13 +148,13 @@ class MarketSentimentAgent(BaseAgent):
                 self.fear_greed_thresholds = json.loads(thresholds_data)
 
             print(
-                "📋 Sentiment configuration loaded: {} sources, {} symbols".format(
+                "ðŸ“‹ Sentiment configuration loaded: {} sources, {} symbols".format(
                     len(self.source_weights), len(self.trading_symbols)
                 )
             )
 
         except Exception as e:
-            print(f"❌ Error loading sentiment configuration: {e}")
+            print(f"âŒ Error loading sentiment configuration: {e}")
 
     async def initialize_aggregation_models(self):
         """Initialize sentiment aggregation models"""
@@ -166,10 +166,10 @@ class MarketSentimentAgent(BaseAgent):
             # - Machine learning models for sentiment prediction
 
             # For now, using weighted averaging as baseline
-            print("🧠 Sentiment aggregation models initialized")
+            print("ðŸ§  Sentiment aggregation models initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing aggregation models: {e}")
+            print(f"âŒ Error initializing aggregation models: {e}")
 
     async def start_sentiment_monitoring(self):
         """Start sentiment monitoring"""
@@ -183,10 +183,10 @@ class MarketSentimentAgent(BaseAgent):
             # Start sentiment listener
             asyncio.create_task(self.listen_sentiment_updates(pubsub))
 
-            print("📡 Sentiment monitoring started")
+            print("ðŸ“¡ Sentiment monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting sentiment monitoring: {e}")
+            print(f"âŒ Error starting sentiment monitoring: {e}")
 
     async def listen_sentiment_updates(self, pubsub):
         """Listen for sentiment updates from other agents"""
@@ -208,10 +208,10 @@ class MarketSentimentAgent(BaseAgent):
                             await self.handle_market_data(data)
 
                     except json.JSONDecodeError:
-                        print(f"❌ Error decoding sentiment update: {message['data']}")
+                        print(f"âŒ Error decoding sentiment update: {message['data']}")
 
         except Exception as e:
-            print(f"❌ Error in sentiment listener: {e}")
+            print(f"âŒ Error in sentiment listener: {e}")
         finally:
             pubsub.close()
 
@@ -242,10 +242,10 @@ class MarketSentimentAgent(BaseAgent):
                     }
                 )
 
-            print(f"📰 News sentiment update for {symbols}: {sentiment.get('category', 'neutral')}")
+            print(f"ðŸ“° News sentiment update for {symbols}: {sentiment.get('category', 'neutral')}")
 
         except Exception as e:
-            print(f"❌ Error handling news sentiment update: {e}")
+            print(f"âŒ Error handling news sentiment update: {e}")
 
     async def handle_social_sentiment_update(self, data: Dict[str, Any]):
         """Handle social media sentiment updates"""
@@ -274,11 +274,11 @@ class MarketSentimentAgent(BaseAgent):
                 )
 
             print(
-                f"📱 Social sentiment update for {symbols}: {sentiment.get('category', 'neutral')}"
+                f"ðŸ“± Social sentiment update for {symbols}: {sentiment.get('category', 'neutral')}"
             )
 
         except Exception as e:
-            print(f"❌ Error handling social sentiment update: {e}")
+            print(f"âŒ Error handling social sentiment update: {e}")
 
     async def handle_market_data(self, data: Dict[str, Any]):
         """Handle market data for sentiment correlation"""
@@ -315,7 +315,7 @@ class MarketSentimentAgent(BaseAgent):
                 )
 
         except Exception as e:
-            print(f"❌ Error handling market data: {e}")
+            print(f"âŒ Error handling market data: {e}")
 
     async def calculate_market_sentiment(
         self, symbol: str, price: float, volume: float, change_24h: float
@@ -355,7 +355,7 @@ class MarketSentimentAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error calculating market sentiment: {e}")
+            print(f"âŒ Error calculating market sentiment: {e}")
             return {
                 "polarity": 0,
                 "subjectivity": 0.5,
@@ -376,7 +376,7 @@ class MarketSentimentAgent(BaseAgent):
             return []
 
         except Exception as e:
-            print(f"❌ Error getting price history: {e}")
+            print(f"âŒ Error getting price history: {e}")
             return []
 
     async def calculate_price_momentum(
@@ -406,7 +406,7 @@ class MarketSentimentAgent(BaseAgent):
             return np.clip(momentum_score, -1, 1)
 
         except Exception as e:
-            print(f"❌ Error calculating price momentum: {e}")
+            print(f"âŒ Error calculating price momentum: {e}")
             return 0.0
 
     async def calculate_volume_sentiment(
@@ -444,7 +444,7 @@ class MarketSentimentAgent(BaseAgent):
                 return -0.3
 
         except Exception as e:
-            print(f"❌ Error calculating volume sentiment: {e}")
+            print(f"âŒ Error calculating volume sentiment: {e}")
             return 0.0
 
     async def calculate_volatility_sentiment(self, price_history: List[float]) -> float:
@@ -477,13 +477,13 @@ class MarketSentimentAgent(BaseAgent):
                 return -0.4
 
         except Exception as e:
-            print(f"❌ Error calculating volatility sentiment: {e}")
+            print(f"âŒ Error calculating volatility sentiment: {e}")
             return 0.0
 
     async def aggregate_all_sentiment(self):
         """Aggregate sentiment from all sources for all symbols"""
         try:
-            print("📊 Aggregating sentiment for {} symbols...".format(len(self.trading_symbols)))
+            print("ðŸ“Š Aggregating sentiment for {} symbols...".format(len(self.trading_symbols)))
 
             for symbol in self.trading_symbols:
                 await self.aggregate_symbol_sentiment(symbol)
@@ -492,10 +492,10 @@ class MarketSentimentAgent(BaseAgent):
             self.state["aggregation_count"] += 1
             self.state["last_aggregation"] = datetime.now().isoformat()
 
-            print("✅ Sentiment aggregation complete")
+            print("âœ… Sentiment aggregation complete")
 
         except Exception as e:
-            print("❌ Error aggregating sentiment: {}".format(e))
+            print("âŒ Error aggregating sentiment: {}".format(e))
 
     async def aggregate_symbol_sentiment(self, symbol: str):
         """Aggregate sentiment for a specific symbol"""
@@ -528,7 +528,7 @@ class MarketSentimentAgent(BaseAgent):
             await self.broadcast_aggregated_sentiment(symbol, aggregated_sentiment)
 
         except Exception as e:
-            print("❌ Error aggregating sentiment for {}: {}".format(symbol, e))
+            print("âŒ Error aggregating sentiment for {}: {}".format(symbol, e))
 
     def get_recent_sentiment(
         self, sentiment_list: List[Dict[str, Any]], hours: int
@@ -546,7 +546,7 @@ class MarketSentimentAgent(BaseAgent):
             return recent_sentiments
 
         except Exception as e:
-            print(f"❌ Error getting recent sentiment: {e}")
+            print(f"âŒ Error getting recent sentiment: {e}")
             return []
 
     async def calculate_weighted_sentiment(
@@ -616,7 +616,7 @@ class MarketSentimentAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error calculating weighted sentiment: {e}")
+            print(f"âŒ Error calculating weighted sentiment: {e}")
             return {
                 "polarity": 0,
                 "confidence": 0,
@@ -644,7 +644,7 @@ class MarketSentimentAgent(BaseAgent):
             await self.send_message("execution_agent", sentiment_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting aggregated sentiment: {e}")
+            print(f"âŒ Error broadcasting aggregated sentiment: {e}")
 
     async def calculate_fear_greed_index(self):
         """Calculate Fear & Greed Index for the market"""
@@ -688,10 +688,10 @@ class MarketSentimentAgent(BaseAgent):
             # Store in Redis
             self.redis_client.set("market_fear_greed_index", json.dumps(fear_greed_data), ex=300)
 
-            print(f"😨 Fear & Greed Index: {fear_greed_score} ({category})")
+            print(f"ðŸ˜¨ Fear & Greed Index: {fear_greed_score} ({category})")
 
         except Exception as e:
-            print(f"❌ Error calculating Fear & Greed Index: {e}")
+            print(f"âŒ Error calculating Fear & Greed Index: {e}")
 
     async def generate_sentiment_signals(self):
         """Generate trading signals based on sentiment"""
@@ -710,7 +710,7 @@ class MarketSentimentAgent(BaseAgent):
                 await self.broadcast_sentiment_signals(signals)
 
         except Exception as e:
-            print(f"❌ Error generating sentiment signals: {e}")
+            print(f"âŒ Error generating sentiment signals: {e}")
 
     async def generate_symbol_signal(
         self, symbol: str, sentiment: Dict[str, Any]
@@ -761,7 +761,7 @@ class MarketSentimentAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error generating signal for {symbol}: {e}")
+            print(f"âŒ Error generating signal for {symbol}: {e}")
             return None
 
     async def broadcast_sentiment_signals(self, signals: Dict[str, Any]):
@@ -781,14 +781,14 @@ class MarketSentimentAgent(BaseAgent):
             await self.send_message("execution_agent", signals_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting sentiment signals: {e}")
+            print(f"âŒ Error broadcasting sentiment signals: {e}")
 
     async def handle_aggregate_sentiment(self, message: Dict[str, Any]):
         """Handle manual sentiment aggregation request"""
         try:
             symbol = message.get("symbol")
 
-            print(f"📊 Manual sentiment aggregation requested for {symbol}")
+            print(f"ðŸ“Š Manual sentiment aggregation requested for {symbol}")
 
             if symbol:
                 await self.aggregate_symbol_sentiment(symbol)
@@ -807,7 +807,7 @@ class MarketSentimentAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling sentiment aggregation request: {e}")
+            print(f"âŒ Error handling sentiment aggregation request: {e}")
             await self.broadcast_error(f"Sentiment aggregation error: {e}")
 
     async def handle_get_market_sentiment(self, message: Dict[str, Any]):
@@ -816,7 +816,7 @@ class MarketSentimentAgent(BaseAgent):
             symbol = message.get("symbol")
             timeframe = message.get("timeframe", "1h")
 
-            print(f"📊 Market sentiment request for {symbol} ({timeframe})")
+            print(f"ðŸ“Š Market sentiment request for {symbol} ({timeframe})")
 
             # Get aggregated sentiment
             if symbol:
@@ -841,7 +841,7 @@ class MarketSentimentAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling market sentiment request: {e}")
+            print(f"âŒ Error handling market sentiment request: {e}")
             await self.broadcast_error(f"Market sentiment request error: {e}")
 
     async def handle_update_weights(self, message: Dict[str, Any]):
@@ -849,7 +849,7 @@ class MarketSentimentAgent(BaseAgent):
         try:
             new_weights = message.get("weights", {})
 
-            print("⚖️ Updating sentiment source weights")
+            print("âš–ï¸ Updating sentiment source weights")
 
             # Update weights
             self.source_weights.update(new_weights)
@@ -873,7 +873,7 @@ class MarketSentimentAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error updating source weights: {e}")
+            print(f"âŒ Error updating source weights: {e}")
             await self.broadcast_error(f"Weights update error: {e}")
 
     async def update_sentiment_metrics(self):
@@ -895,7 +895,7 @@ class MarketSentimentAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating sentiment metrics: {e}")
+            print(f"âŒ Error updating sentiment metrics: {e}")
 
     async def cleanup_history(self):
         """Clean up old sentiment history"""
@@ -911,12 +911,12 @@ class MarketSentimentAgent(BaseAgent):
                         self.state["sentiment_history"][symbol][source] = history[-1000:]
 
         except Exception as e:
-            print(f"❌ Error cleaning up history: {e}")
+            print(f"âŒ Error cleaning up history: {e}")
 
     async def process_market_data(self, market_data: Dict[str, Any]):
         """Process incoming market data for sentiment analysis"""
         try:
-            print(f"📊 Processing market data for sentiment analysis")
+            print(f"ðŸ“Š Processing market data for sentiment analysis")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -954,8 +954,10 @@ class MarketSentimentAgent(BaseAgent):
             # Update sentiment metrics
             await self.update_sentiment_metrics()
 
-            print(f"✅ Market data processed for sentiment analysis")
+            print(f"âœ… Market data processed for sentiment analysis")
 
         except Exception as e:
-            print(f"❌ Error processing market data for sentiment analysis: {e}")
+            print(f"âŒ Error processing market data for sentiment analysis: {e}")
             await self.broadcast_error(f"Sentiment analysis market data error: {e}")
+
+

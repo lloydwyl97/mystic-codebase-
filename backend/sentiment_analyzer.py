@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Sentiment Analysis Service
 Analyzes market sentiment from multiple sources
 """
@@ -30,7 +30,7 @@ class SentimentAnalyzer:
 
     async def start(self):
         """Start the sentiment analyzer"""
-        print("🚀 Starting Market Sentiment Analyzer...")
+        print("ðŸš€ Starting Market Sentiment Analyzer...")
         self.running = True
         self.session = aiohttp.ClientSession()
 
@@ -39,7 +39,7 @@ class SentimentAnalyzer:
 
     async def analyze_sentiment(self):
         """Analyze market sentiment"""
-        print("📊 Starting sentiment analysis...")
+        print("ðŸ“Š Starting sentiment analysis...")
 
         while self.running:
             try:
@@ -55,7 +55,7 @@ class SentimentAnalyzer:
                 await asyncio.sleep(300)  # Update every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in sentiment analysis: {e}")
+                print(f"âŒ Error in sentiment analysis: {e}")
                 await asyncio.sleep(600)
 
     async def calculate_sentiment(self) -> Dict[str, Any]:
@@ -106,7 +106,7 @@ class SentimentAnalyzer:
 
     async def stop(self):
         """Stop the sentiment analyzer"""
-        print("🛑 Stopping Market Sentiment Analyzer...")
+        print("ðŸ›‘ Stopping Market Sentiment Analyzer...")
         self.running = False
         if self.session:
             await self.session.close()
@@ -119,12 +119,14 @@ async def main():
     try:
         await analyzer.start()
     except KeyboardInterrupt:
-        print("🛑 Received interrupt signal")
+        print("ðŸ›‘ Received interrupt signal")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
     finally:
         await analyzer.stop()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

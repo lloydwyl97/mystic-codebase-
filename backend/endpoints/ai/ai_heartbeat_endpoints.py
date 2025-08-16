@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any, Dict
@@ -12,7 +12,7 @@ router = APIRouter()
 async def get_ai_heartbeat() -> Dict[str, Any]:
     try:
         try:
-            from services.autobuy_service import autobuy_service  # type: ignore[import-not-found]
+            from backend.services.autobuy_service import autobuy_service  # type: ignore[import-not-found]
             hb: Dict[str, Any] = await autobuy_service.heartbeat()  # type: ignore[attr-defined]
             running = str(hb.get("status", "")) == "ready"
             return {
@@ -24,7 +24,7 @@ async def get_ai_heartbeat() -> Dict[str, Any]:
             }
         except Exception:
             # Back-compat: try autobuy status
-            from endpoints.trading.autobuy_endpoints import get_autobuy_status  # type: ignore
+            from backend.endpoints.trading.autobuy_endpoints import get_autobuy_status  # type: ignore
 
             st: Dict[str, Any] = await get_autobuy_status()  # type: ignore[assignment]
             svc: Dict[str, Any] = st.get("service_status", {}) if isinstance(st, dict) else {}
@@ -38,4 +38,7 @@ async def get_ai_heartbeat() -> Dict[str, Any]:
             }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"AI heartbeat failed: {str(e)}")
+
+
+
 

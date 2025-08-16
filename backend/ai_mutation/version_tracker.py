@@ -1,4 +1,4 @@
-"""
+﻿"""
 Version Tracker Module
 
 Tracks strategy versions, manages version history, and provides
@@ -72,7 +72,7 @@ def get_strategy_versions(strategy_name: str = None) -> List[Dict[str, Any]]:
         return versions
 
     except Exception as e:
-        logger.error(f"❌ Error getting strategy versions: {e}")
+        logger.error(f"âŒ Error getting strategy versions: {e}")
         return []
 
 
@@ -173,7 +173,7 @@ def get_version_comparison(strategy_name: str, version1: str, version2: str) -> 
         return comparison
 
     except Exception as e:
-        logger.error(f"❌ Error comparing versions: {e}")
+        logger.error(f"âŒ Error comparing versions: {e}")
         return {"error": str(e)}
 
 
@@ -232,7 +232,7 @@ def rollback_to_version(strategy_name: str, target_version: str) -> Dict[str, An
 
         set_live_strategy(target_file)
 
-        logger.info(f"🔄 Rolled back to version: {target_version}")
+        logger.info(f"ðŸ”„ Rolled back to version: {target_version}")
 
         return {
             "success": True,
@@ -243,7 +243,7 @@ def rollback_to_version(strategy_name: str, target_version: str) -> Dict[str, An
         }
 
     except Exception as e:
-        logger.error(f"❌ Error rolling back to version: {e}")
+        logger.error(f"âŒ Error rolling back to version: {e}")
         return {"success": False, "error": str(e)}
 
 
@@ -288,7 +288,7 @@ def get_version_history(strategy_name: str) -> List[Dict[str, Any]]:
         return history
 
     except Exception as e:
-        logger.error(f"❌ Error getting version history: {e}")
+        logger.error(f"âŒ Error getting version history: {e}")
         return []
 
 
@@ -301,7 +301,7 @@ def get_latest_version(strategy_name: str) -> Optional[Dict[str, Any]]:
         return None
 
     except Exception as e:
-        logger.error(f"❌ Error getting latest version: {e}")
+        logger.error(f"âŒ Error getting latest version: {e}")
         return None
 
 
@@ -344,7 +344,7 @@ def get_promoted_versions() -> List[Dict[str, Any]]:
         return promoted_versions
 
     except Exception as e:
-        logger.error(f"❌ Error getting promoted versions: {e}")
+        logger.error(f"âŒ Error getting promoted versions: {e}")
         return []
 
 
@@ -369,11 +369,11 @@ def create_version_tag(strategy_file: str, tag: str, description: str = "") -> b
         with open(tag_file, "w") as f:
             json.dump(tag_data, f, indent=2)
 
-        logger.info(f"🏷️ Created version tag: {tag}")
+        logger.info(f"ðŸ·ï¸ Created version tag: {tag}")
         return True
 
     except Exception as e:
-        logger.error(f"❌ Error creating version tag: {e}")
+        logger.error(f"âŒ Error creating version tag: {e}")
         return False
 
 
@@ -391,10 +391,12 @@ def get_version_tags() -> List[Dict[str, Any]]:
                     tag_data = json.load(f)
                 tags.append(tag_data)
             except Exception as e:
-                logger.error(f"❌ Error loading tag {tag_file}: {e}")
+                logger.error(f"âŒ Error loading tag {tag_file}: {e}")
 
         return tags
 
     except Exception as e:
-        logger.error(f"❌ Error getting version tags: {e}")
+        logger.error(f"âŒ Error getting version tags: {e}")
         return []
+
+

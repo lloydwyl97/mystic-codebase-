@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Prediction Service (compat shim)
 Provides a minimal AIPredictionService expected by endpoints.
 """
@@ -14,5 +14,7 @@ class AIPredictionService:
 
     async def get_prediction_accuracy(self) -> Dict[str, Any]:
         return {"accuracy": {}}
+
+
 
 

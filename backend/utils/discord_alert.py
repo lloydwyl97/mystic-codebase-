@@ -1,4 +1,4 @@
-"""
+﻿"""
 Discord Alert Module
 ===================
 
@@ -62,13 +62,13 @@ class DiscordNotifier:
 
         # Create performance emoji
         if total_profit > 10:
-            performance_emoji = "🚀"
+            performance_emoji = "ðŸš€"
         elif total_profit > 5:
-            performance_emoji = "📈"
+            performance_emoji = "ðŸ“ˆ"
         elif total_profit > 0:
-            performance_emoji = "📊"
+            performance_emoji = "ðŸ“Š"
         else:
-            performance_emoji = "⚠️"
+            performance_emoji = "âš ï¸"
 
         embed = {
             "title": f"{performance_emoji} New AI Strategy Promoted!",
@@ -78,47 +78,47 @@ class DiscordNotifier:
             "color": color,
             "fields": [
                 {
-                    "name": "💰 Total Profit",
+                    "name": "ðŸ’° Total Profit",
                     "value": f"`${total_profit:.2f}`",
                     "inline": True,
                 },
                 {
-                    "name": "📊 Win Rate",
+                    "name": "ðŸ“Š Win Rate",
                     "value": f"`{win_rate:.1%}`",
                     "inline": True,
                 },
                 {
-                    "name": "📈 Total Trades",
+                    "name": "ðŸ“ˆ Total Trades",
                     "value": f"`{num_trades}`",
                     "inline": True,
                 },
                 {
-                    "name": "⚡ Sharpe Ratio",
+                    "name": "âš¡ Sharpe Ratio",
                     "value": f"`{sharpe_ratio:.2f}`",
                     "inline": True,
                 },
                 {
-                    "name": "📉 Max Drawdown",
+                    "name": "ðŸ“‰ Max Drawdown",
                     "value": f"`{max_drawdown:.1%}`",
                     "inline": True,
                 },
                 {
-                    "name": "🎯 Strategy Type",
+                    "name": "ðŸŽ¯ Strategy Type",
                     "value": f"`{strategy_type}`",
                     "inline": True,
                 },
                 {
-                    "name": "🔧 Trading Pair",
+                    "name": "ðŸ”§ Trading Pair",
                     "value": f"`{symbol}`",
                     "inline": True,
                 },
                 {
-                    "name": "🤖 AI Engine",
+                    "name": "ðŸ¤– AI Engine",
                     "value": "`Mystic AI Mutator v2.0`",
                     "inline": True,
                 },
                 {
-                    "name": "⏰ Promotion Time",
+                    "name": "â° Promotion Time",
                     "value": f"<t:{int(datetime.now().timestamp())}:F>",
                     "inline": True,
                 },
@@ -177,16 +177,16 @@ class DiscordNotifier:
         # Determine color based on performance
         if promotion_rate > 0.3:  # 30% promotion rate
             color = 0x00FF00  # Green
-            cycle_emoji = "🎉"
+            cycle_emoji = "ðŸŽ‰"
         elif promotion_rate > 0.1:  # 10% promotion rate
             color = 0x00FF88  # Light green
-            cycle_emoji = "📈"
+            cycle_emoji = "ðŸ“ˆ"
         elif promotion_rate > 0:  # Any promotions
             color = 0xFFFF00  # Yellow
-            cycle_emoji = "📊"
+            cycle_emoji = "ðŸ“Š"
         else:
             color = 0xFF8800  # Orange
-            cycle_emoji = "⚠️"
+            cycle_emoji = "âš ï¸"
 
         # Get best performing mutation
         best_mutation = None
@@ -204,34 +204,34 @@ class DiscordNotifier:
             "color": color,
             "fields": [
                 {
-                    "name": "🧬 Total Mutations",
+                    "name": "ðŸ§¬ Total Mutations",
                     "value": f"`{total_mutations}`",
                     "inline": True,
                 },
                 {
-                    "name": "✅ Promoted Strategies",
+                    "name": "âœ… Promoted Strategies",
                     "value": f"`{promoted_mutations}`",
                     "inline": True,
                 },
                 {
-                    "name": "📈 Promotion Rate",
+                    "name": "ðŸ“ˆ Promotion Rate",
                     "value": f"`{promotion_rate:.1%}`",
                     "inline": True,
                 },
                 {
-                    "name": "💰 Average Profit",
+                    "name": "ðŸ’° Average Profit",
                     "value": f"`${avg_profit:.2f}`",
                     "inline": True,
                 },
                 {
-                    "name": "🤖 AI Generations",
+                    "name": "ðŸ¤– AI Generations",
                     "value": (
                         f"`{len([m for m in mutations if m.get('source') == 'ai_generation'])}`"
                     ),
                     "inline": True,
                 },
                 {
-                    "name": "🔄 Mutations",
+                    "name": "ðŸ”„ Mutations",
                     "value": (f"`{len([m for m in mutations if m.get('source') == 'mutation'])}`"),
                     "inline": True,
                 },
@@ -248,7 +248,7 @@ class DiscordNotifier:
             best_results = best_mutation["backtest_results"]
             embed["fields"].append(
                 {
-                    "name": "🏆 Best Performer",
+                    "name": "ðŸ† Best Performer",
                     "value": (
                         f"**{best_mutation.get('strategy_name', 'Unknown')}**\nProfit: `${best_results.get('total_profit', 0):.2f}` | Win Rate: {best_results.get('win_rate', 0):.1%}"
                     ),
@@ -259,7 +259,7 @@ class DiscordNotifier:
         # Add error summary if any
         if errors:
             error_summary = f"**{len(errors)} errors** occurred during the cycle."
-            embed["fields"].append({"name": "⚠️ Errors", "value": error_summary, "inline": False})
+            embed["fields"].append({"name": "âš ï¸ Errors", "value": error_summary, "inline": False})
 
         payload = {
             "embeds": [embed],
@@ -283,34 +283,34 @@ class DiscordNotifier:
             return False
 
         embed = {
-            "title": "🚀 Mystic AI Trading System Started",
+            "title": "ðŸš€ Mystic AI Trading System Started",
             "description": (
                 "The AI mutation system has been successfully initialized and is now running."
             ),
             "color": 0x00FF00,  # Green
             "fields": [
                 {
-                    "name": "🤖 AI Engine",
+                    "name": "ðŸ¤– AI Engine",
                     "value": "`Mystic AI Mutator v2.0`",
                     "inline": True,
                 },
                 {
-                    "name": "📊 Live Data",
+                    "name": "ðŸ“Š Live Data",
                     "value": "`Binance US`",
                     "inline": True,
                 },
                 {
-                    "name": "🔄 Mutation Interval",
+                    "name": "ðŸ”„ Mutation Interval",
                     "value": f"`{system_info.get('cycle_interval', 300)}s`",
                     "inline": True,
                 },
                 {
-                    "name": "🎯 Risk Level",
+                    "name": "ðŸŽ¯ Risk Level",
                     "value": f"`{system_info.get('risk_level', 'MODERATE')}`",
                     "inline": True,
                 },
                 {
-                    "name": "📈 AI Generation",
+                    "name": "ðŸ“ˆ AI Generation",
                     "value": (
                         "`Enabled`"
                         if system_info.get("enable_ai_generation", True)
@@ -319,7 +319,7 @@ class DiscordNotifier:
                     "inline": True,
                 },
                 {
-                    "name": "🔧 Auto Trading",
+                    "name": "ðŸ”§ Auto Trading",
                     "value": "`Connected`",
                     "inline": True,
                 },
@@ -362,13 +362,13 @@ class DiscordNotifier:
         # Determine color based on success rate
         if success_rate > 0.3:
             color = 0x00FF00  # Green
-            summary_emoji = "🎉"
+            summary_emoji = "ðŸŽ‰"
         elif success_rate > 0.1:
             color = 0x00FF88  # Light green
-            summary_emoji = "📈"
+            summary_emoji = "ðŸ“ˆ"
         else:
             color = 0xFFFF00  # Yellow
-            summary_emoji = "📊"
+            summary_emoji = "ðŸ“Š"
 
         embed = {
             "title": f"{summary_emoji} AI System Performance Summary",
@@ -376,22 +376,22 @@ class DiscordNotifier:
             "color": color,
             "fields": [
                 {
-                    "name": "🧬 Total Mutations",
+                    "name": "ðŸ§¬ Total Mutations",
                     "value": f"`{total_mutations}`",
                     "inline": True,
                 },
                 {
-                    "name": "✅ Promoted Strategies",
+                    "name": "âœ… Promoted Strategies",
                     "value": f"`{promoted_mutations}`",
                     "inline": True,
                 },
                 {
-                    "name": "📈 Success Rate",
+                    "name": "ðŸ“ˆ Success Rate",
                     "value": f"`{success_rate:.1%}`",
                     "inline": True,
                 },
                 {
-                    "name": "💰 Average Profit",
+                    "name": "ðŸ’° Average Profit",
                     "value": f"`${average_profit:.2f}`",
                     "inline": True,
                 },
@@ -407,7 +407,7 @@ class DiscordNotifier:
         if best_strategy and best_strategy.get("name"):
             embed["fields"].append(
                 {
-                    "name": "🏆 Best Strategy",
+                    "name": "ðŸ† Best Strategy",
                     "value": (
                         f"**{best_strategy['name']}**\nProfit: `${best_strategy.get('profit', 0):.2f}` | Win Rate: {best_strategy.get('win_rate', 0):.1%}"
                     ),
@@ -438,12 +438,12 @@ class DiscordNotifier:
             return False
 
         embed = {
-            "title": "⚠️ AI Mutation Error",
+            "title": "âš ï¸ AI Mutation Error",
             "description": f"An error occurred in the **{context}**",
             "color": 0xFF0000,  # Red
             "fields": [
                 {
-                    "name": "🚨 Error",
+                    "name": "ðŸš¨ Error",
                     "value": f"```{error_message[:1000]}```",  # Limit length
                     "inline": False,
                 }
@@ -481,22 +481,22 @@ class DiscordNotifier:
         color = status_colors.get(status.lower(), 0x808080)
 
         embed = {
-            "title": f"🔧 System Status: {status.upper()}",
+            "title": f"ðŸ”§ System Status: {status.upper()}",
             "description": "Mystic AI Mutation System Status Update",
             "color": color,
             "fields": [
                 {
-                    "name": "📊 Active Strategies",
+                    "name": "ðŸ“Š Active Strategies",
                     "value": f"`{details.get('active_strategies', 0)}`",
                     "inline": True,
                 },
                 {
-                    "name": "🧬 Total Mutations",
+                    "name": "ðŸ§¬ Total Mutations",
                     "value": f"`{details.get('total_mutations', 0)}`",
                     "inline": True,
                 },
                 {
-                    "name": "✅ Success Rate",
+                    "name": "âœ… Success Rate",
                     "value": f"`{details.get('success_rate', 0):.1%}`",
                     "inline": True,
                 },
@@ -547,3 +547,5 @@ discord_notifier = DiscordNotifier()
 def send_discord_alert(strategy_name: str, results: Dict[str, Any]) -> bool:
     """Simple Discord alert function for backward compatibility"""
     return discord_notifier.send_strategy_promoted_alert(strategy_name, results)
+
+

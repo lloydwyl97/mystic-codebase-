@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Setup script for Mystic AI Wallet System
 Initializes database tables and sample data for the real-time wallet panel
@@ -78,7 +78,7 @@ def setup_database():
 
     conn.commit()
     conn.close()
-    print("✅ Database tables created successfully")
+    print("âœ… Database tables created successfully")
 
 
 def insert_live_data():
@@ -128,7 +128,7 @@ def insert_live_data():
 
     conn.commit()
     conn.close()
-    print("✅ Live data tables initialized - waiting for real-time data connections")
+    print("âœ… Live data tables initialized - waiting for real-time data connections")
     print("   Note: Data will be populated by live trading system and API connections")
 
 
@@ -152,7 +152,7 @@ def create_ai_model_state():
     with open("ai_model_state.json", "w") as f:
         json.dump(model_state, f, indent=2)
 
-    print("✅ AI model state file created")
+    print("âœ… AI model state file created")
 
 
 def create_config_files():
@@ -181,12 +181,12 @@ MAX_YIELD_ALLOCATION=0.4
     with open("env.example", "w") as f:
         f.write(env_template)
 
-    print("✅ Configuration files created")
+    print("âœ… Configuration files created")
 
 
 def main():
     """Main setup function"""
-    print("🚀 Setting up Mystic AI Wallet System...")
+    print("ðŸš€ Setting up Mystic AI Wallet System...")
 
     try:
         setup_database()
@@ -194,8 +194,8 @@ def main():
         create_ai_model_state()
         create_config_files()
 
-        print("\n🎉 Setup completed successfully!")
-        print("\n📋 Next steps:")
+        print("\nðŸŽ‰ Setup completed successfully!")
+        print("\nðŸ“‹ Next steps:")
         print("1. Copy env.example to .env and configure your settings")
         print("2. Start the backend: uvicorn main:app --reload")
         print("3. Start the frontend: npm start")
@@ -203,7 +203,7 @@ def main():
         print("5. View API docs at: http://localhost:8000/docs")
 
     except Exception as e:
-        print(f"❌ Setup failed: {str(e)}")
+        print(f"âŒ Setup failed: {str(e)}")
         return False
 
     return True
@@ -211,3 +211,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

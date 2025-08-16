@@ -1,4 +1,4 @@
-import base64
+﻿import base64
 import hashlib
 import hmac
 
@@ -35,3 +35,5 @@ def create_signature(api_secret: str, message: str) -> str:
 
 class SignatureManager:
     pass
+
+

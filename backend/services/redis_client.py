@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from typing import Any
 
@@ -13,6 +13,8 @@ class DummyRedis:
 
 def get_redis_client() -> Any:  # noqa: ANN401
     return DummyRedis()
+
+
 
 
 

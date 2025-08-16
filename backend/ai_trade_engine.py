@@ -1,4 +1,4 @@
-import hashlib
+﻿import hashlib
 import hmac
 import json
 import logging
@@ -9,7 +9,7 @@ from urllib.parse import urlencode
 
 import requests
 from dotenv import load_dotenv
-from config import settings
+from backend.config import settings
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
@@ -352,3 +352,5 @@ def test_connections():
 if __name__ == "__main__":
     test_connections()
     trade_loop()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Notification Service
 Handles notifications and alerts
 """
@@ -22,7 +22,7 @@ class NotificationService:
             "price_alerts": True,
             "system_alerts": True,
         }
-        logger.info("✅ NotificationService initialized")
+        logger.info("âœ… NotificationService initialized")
 
     async def create_notification(
         self,
@@ -48,11 +48,11 @@ class NotificationService:
             }
 
             self.notifications[notification_id] = notification
-            logger.info(f"✅ Created notification: {notification_id}")
+            logger.info(f"âœ… Created notification: {notification_id}")
 
             return {"success": True, "notification": notification}
         except Exception as e:
-            logger.error(f"❌ Error creating notification: {e}")
+            logger.error(f"âŒ Error creating notification: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_notifications(
@@ -86,7 +86,7 @@ class NotificationService:
                 "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error getting notifications: {e}")
+            logger.error(f"âŒ Error getting notifications: {e}")
             return {"error": str(e)}
 
     async def mark_notification_read(self, notification_id: str) -> Dict[str, Any]:
@@ -97,12 +97,12 @@ class NotificationService:
                 self.notifications[notification_id]["read_at"] = datetime.now(
                     timezone.utc
                 ).isoformat()
-                logger.info(f"✅ Marked notification as read: {notification_id}")
+                logger.info(f"âœ… Marked notification as read: {notification_id}")
                 return {"success": True, "notification_id": notification_id}
             else:
                 return {"success": False, "error": "Notification not found"}
         except Exception as e:
-            logger.error(f"❌ Error marking notification as read: {e}")
+            logger.error(f"âŒ Error marking notification as read: {e}")
             return {"success": False, "error": str(e)}
 
     async def mark_all_notifications_read(self, user_id: Optional[str] = None) -> Dict[str, Any]:
@@ -116,10 +116,10 @@ class NotificationService:
                         notification["read_at"] = datetime.now(timezone.utc).isoformat()
                         count += 1
 
-            logger.info(f"✅ Marked {count} notifications as read")
+            logger.info(f"âœ… Marked {count} notifications as read")
             return {"success": True, "count": count}
         except Exception as e:
-            logger.error(f"❌ Error marking all notifications as read: {e}")
+            logger.error(f"âŒ Error marking all notifications as read: {e}")
             return {"success": False, "error": str(e)}
 
     async def delete_notification(self, notification_id: str) -> Dict[str, Any]:
@@ -127,12 +127,12 @@ class NotificationService:
         try:
             if notification_id in self.notifications:
                 del self.notifications[notification_id]
-                logger.info(f"✅ Deleted notification: {notification_id}")
+                logger.info(f"âœ… Deleted notification: {notification_id}")
                 return {"success": True, "notification_id": notification_id}
             else:
                 return {"success": False, "error": "Notification not found"}
         except Exception as e:
-            logger.error(f"❌ Error deleting notification: {e}")
+            logger.error(f"âŒ Error deleting notification: {e}")
             return {"success": False, "error": str(e)}
 
     async def clear_all_notifications(self, user_id: Optional[str] = None) -> Dict[str, Any]:
@@ -149,10 +149,10 @@ class NotificationService:
                 del self.notifications[notification_id]
                 count += 1
 
-            logger.info(f"✅ Cleared {count} notifications")
+            logger.info(f"âœ… Cleared {count} notifications")
             return {"success": True, "count": count}
         except Exception as e:
-            logger.error(f"❌ Error clearing notifications: {e}")
+            logger.error(f"âŒ Error clearing notifications: {e}")
             return {"success": False, "error": str(e)}
 
     async def create_trade_alert(
@@ -237,14 +237,14 @@ class NotificationService:
         """Update notification settings"""
         try:
             self.alert_settings.update(settings)
-            logger.info(f"✅ Updated notification settings: {settings}")
+            logger.info(f"âœ… Updated notification settings: {settings}")
             return {
                 "success": True,
                 "settings": self.alert_settings,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error updating notification settings: {e}")
+            logger.error(f"âŒ Error updating notification settings: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_notification_stats(self) -> Dict[str, Any]:
@@ -269,7 +269,7 @@ class NotificationService:
                 "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error getting notification stats: {e}")
+            logger.error(f"âŒ Error getting notification stats: {e}")
             return {"error": str(e)}
 
 
@@ -280,3 +280,5 @@ notification_service = NotificationService()
 def get_notification_service() -> NotificationService:
     """Get the notification service instance"""
     return notification_service
+
+

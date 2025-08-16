@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Unified Trade Decision Engine
 Combines all three tiers of signals and makes trading decisions every 3-10 seconds
@@ -488,3 +488,5 @@ class TradeEngine:
         except Exception as e:
             logger.error(f"Error getting trade decisions: {e}")
             return []
+
+

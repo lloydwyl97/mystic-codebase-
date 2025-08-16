@@ -1,4 +1,4 @@
-import time
+﻿import time
 from typing import Dict
 
 last_call: Dict[str, float] = {}
@@ -18,3 +18,5 @@ def throttle(provider: str) -> None:
     if diff < wait:
         time.sleep(wait - diff)
     last_call[provider] = time.time()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Global Overlord for Mystic AI Trading Platform
 Orchestrates AI decisions from multiple agents using weighted voting and confidence scoring.
 """
@@ -13,9 +13,9 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from modules.ai.persistent_cache import PersistentCache
-from modules.ai.signal_engine import SignalEngine
-from modules.ai.self_replication_engine import SelfReplicationEngine
+from backend.modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.signal_engine import SignalEngine
+from backend.modules.ai.self_replication_engine import SelfReplicationEngine
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +100,7 @@ class GlobalOverlord:
             logger.warning(f"Cosmic pattern recognizer not available: {e}")
             self.cosmic_available = False
 
-        logger.info("✅ GlobalOverlord initialized")
+        logger.info("âœ… GlobalOverlord initialized")
 
     def _collect_signal_engine_signals(self, exchange: str, symbol: str) -> List[Dict[str, Any]]:
         """Collect signals from the signal engine"""
@@ -376,7 +376,7 @@ class GlobalOverlord:
     def decide_trade(self, exchange: str, symbol: str) -> Dict[str, Any]:
         """Make final trading decision using weighted voting"""
         try:
-            logger.info(f"🤖 GlobalOverlord making decision for {symbol}")
+            logger.info(f"ðŸ¤– GlobalOverlord making decision for {symbol}")
 
             # Collect signals from all sources
             signal_engine_signals = self._collect_signal_engine_signals(exchange, symbol)
@@ -411,7 +411,7 @@ class GlobalOverlord:
                 metadata=overlord_decision
             )
 
-            logger.info(f"✅ Overlord decision: {decision_result['decision']} with {decision_result['confidence']:.1f}% confidence")
+            logger.info(f"âœ… Overlord decision: {decision_result['decision']} with {decision_result['confidence']:.1f}% confidence")
 
             return overlord_decision
 
@@ -539,7 +539,7 @@ def get_global_overlord() -> GlobalOverlord:
 if __name__ == "__main__":
     # Test the global overlord
     overlord = GlobalOverlord()
-    print(f"✅ GlobalOverlord initialized: {overlord}")
+    print(f"âœ… GlobalOverlord initialized: {overlord}")
 
     # Test decision making
     decision = overlord.decide_trade('coinbase', 'BTC-USD')
@@ -549,3 +549,5 @@ if __name__ == "__main__":
     status = overlord.get_overlord_status()
     print(f"Overlord status: {status['status']}")
     print(f"Cosmic available: {status['cosmic_available']}")
+
+

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Trading Bots Startup Script
 Runs both Coinbase and Binance bots with proper error handling
@@ -14,7 +14,7 @@ from typing import Any
 from bot_manager import BotManager
 
 # Import rotated logging system
-from utils.log_rotation_manager import get_log_rotation_manager
+from backend.utils.log_rotation_manager import get_log_rotation_manager
 
 # Configure logging with rotation
 log_manager = get_log_rotation_manager()
@@ -87,3 +87,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

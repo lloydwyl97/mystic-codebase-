@@ -1,4 +1,4 @@
-"""
+﻿"""
 Auto Trading Service
 Handles automated trading operations and bot management
 """
@@ -29,7 +29,7 @@ class AutoTradingService:
             "total_pnl": 0.0,
             "win_rate": 0.0,
         }
-        logger.info("✅ AutoTradingService initialized")
+        logger.info("âœ… AutoTradingService initialized")
 
     async def get_auto_trading_status(self) -> Dict[str, Any]:
         """Get comprehensive auto trading status"""
@@ -57,7 +57,7 @@ class AutoTradingService:
                 "pnl": 0.0,
             }
 
-            logger.info(f"✅ Started auto trading bot: {bot_id}")
+            logger.info(f"âœ… Started auto trading bot: {bot_id}")
             return {
                 "success": True,
                 "bot_id": bot_id,
@@ -65,7 +65,7 @@ class AutoTradingService:
                 "config": self.trading_config,
             }
         except Exception as e:
-            logger.error(f"❌ Error starting auto trading: {e}")
+            logger.error(f"âŒ Error starting auto trading: {e}")
             return {"success": False, "error": str(e)}
 
     async def stop_auto_trading(self, bot_id: str = None) -> Dict[str, Any]:
@@ -74,7 +74,7 @@ class AutoTradingService:
             if bot_id:
                 if bot_id in self.active_bots:
                     del self.active_bots[bot_id]
-                    logger.info(f"✅ Stopped auto trading bot: {bot_id}")
+                    logger.info(f"âœ… Stopped auto trading bot: {bot_id}")
                     return {
                         "success": True,
                         "bot_id": bot_id,
@@ -86,14 +86,14 @@ class AutoTradingService:
                 # Stop all bots
                 stopped_bots = list(self.active_bots.keys())
                 self.active_bots.clear()
-                logger.info(f"✅ Stopped all auto trading bots: {stopped_bots}")
+                logger.info(f"âœ… Stopped all auto trading bots: {stopped_bots}")
                 return {
                     "success": True,
                     "stopped_bots": stopped_bots,
                     "status": "all_stopped",
                 }
         except Exception as e:
-            logger.error(f"❌ Error stopping auto trading: {e}")
+            logger.error(f"âŒ Error stopping auto trading: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_bot_performance(self, bot_id: str = None) -> Dict[str, Any]:
@@ -127,14 +127,14 @@ class AutoTradingService:
         """Update trading configuration"""
         try:
             self.trading_config.update(new_config)
-            logger.info(f"✅ Updated trading config: {new_config}")
+            logger.info(f"âœ… Updated trading config: {new_config}")
             return {
                 "success": True,
                 "config": self.trading_config,
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error updating trading config: {e}")
+            logger.error(f"âŒ Error updating trading config: {e}")
             return {"success": False, "error": str(e)}
 
     async def execute_trade(
@@ -169,10 +169,10 @@ class AutoTradingService:
                 / self.performance_metrics["total_trades"]
             )
 
-            logger.info(f"✅ Executed trade: {trade_id} for {symbol}")
+            logger.info(f"âœ… Executed trade: {trade_id} for {symbol}")
             return {"success": True, "trade": trade}
         except Exception as e:
-            logger.error(f"❌ Error executing trade: {e}")
+            logger.error(f"âŒ Error executing trade: {e}")
             return {"success": False, "error": str(e)}
 
 
@@ -183,3 +183,5 @@ auto_trading_service = AutoTradingService()
 def get_auto_trading_service() -> AutoTradingService:
     """Get the auto trading service instance"""
     return auto_trading_service
+
+

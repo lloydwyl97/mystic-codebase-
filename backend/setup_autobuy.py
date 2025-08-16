@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Binance US Autobuy Setup Script
 Setup and configuration for SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT autobuy system
@@ -29,7 +29,7 @@ class AutobuySetup:
         for directory in directories:
             dir_path = self.project_root / directory
             dir_path.mkdir(exist_ok=True)
-            logger.info(f"✅ Created directory: {directory}")
+            logger.info(f"âœ… Created directory: {directory}")
 
     def create_env_template(self):
         """Create .env template file"""
@@ -86,10 +86,10 @@ MAX_LOSS_PER_TRADE=10.0
         if not self.env_file.exists():
             with open(self.env_file, "w") as f:
                 f.write(env_template)
-            logger.info("✅ Created .env template file")
-            logger.info("⚠️  Please configure your API keys in .env file")
+            logger.info("âœ… Created .env template file")
+            logger.info("âš ï¸  Please configure your API keys in .env file")
         else:
-            logger.info("ℹ️  .env file already exists")
+            logger.info("â„¹ï¸  .env file already exists")
 
     def create_config_file(self):
         """Create configuration file"""
@@ -154,7 +154,7 @@ MAX_LOSS_PER_TRADE=10.0
         with open(self.config_file, "w") as f:
             json.dump(config, f, indent=2)
 
-        logger.info("✅ Created configuration file")
+        logger.info("âœ… Created configuration file")
 
     def create_requirements_file(self):
         """Create requirements.txt file"""
@@ -186,7 +186,7 @@ structlog>=21.5.0
         with open(requirements_file, "w") as f:
             f.write(requirements)
 
-        logger.info("✅ Created requirements_autobuy.txt")
+        logger.info("âœ… Created requirements_autobuy.txt")
 
     def create_startup_scripts(self):
         """Create startup scripts"""
@@ -226,7 +226,7 @@ Read-Host "Press Enter to exit"
         with open(powershell_file, "w") as f:
             f.write(powershell_script)
 
-        logger.info("✅ Created startup scripts")
+        logger.info("âœ… Created startup scripts")
 
     def create_readme(self):
         """Create README file"""
@@ -236,12 +236,12 @@ Read-Host "Press Enter to exit"
 Automated trading system for Binance US focusing on SOLUSDT, BTCUSDT, ETHUSDT, and AVAXUSDT with aggressive autobuy strategy.
 
 ## Features
-- 🎯 Focused on 4 major trading pairs
-- 💰 Aggressive autobuy strategy
-- 📊 Real-time dashboard monitoring
-- 🔔 Telegram/Discord notifications
-- 🛡️ Risk management controls
-- 📈 Performance reporting
+- ðŸŽ¯ Focused on 4 major trading pairs
+- ðŸ’° Aggressive autobuy strategy
+- ðŸ“Š Real-time dashboard monitoring
+- ðŸ”” Telegram/Discord notifications
+- ðŸ›¡ï¸ Risk management controls
+- ðŸ“ˆ Performance reporting
 
 ## Quick Start
 
@@ -299,25 +299,25 @@ Open http://localhost:8080 in your browser
 - Take profit: 10%
 
 ## Safety Features
-- ⚠️ Emergency stop capability
-- 🛡️ Maximum loss per trade limits
-- 📊 Real-time monitoring
-- 🔔 Instant notifications
-- 📈 Performance tracking
+- âš ï¸ Emergency stop capability
+- ðŸ›¡ï¸ Maximum loss per trade limits
+- ðŸ“Š Real-time monitoring
+- ðŸ”” Instant notifications
+- ðŸ“ˆ Performance tracking
 
 ## Files Structure
 ```
 backend/
-├── binance_us_autobuy.py      # Main autobuy engine
-├── autobuy_config.py          # Configuration management
-├── autobuy_dashboard.py       # Web dashboard
-├── autobuy_report.py          # Reporting system
-├── launch_autobuy.py          # System launcher
-├── setup_autobuy.py           # Setup script
-├── .env                       # Environment variables
-├── logs/                      # Log files
-├── reports/                   # Performance reports
-└── data/                      # Data storage
+â”œâ”€â”€ binance_us_autobuy.py      # Main autobuy engine
+â”œâ”€â”€ autobuy_config.py          # Configuration management
+â”œâ”€â”€ autobuy_dashboard.py       # Web dashboard
+â”œâ”€â”€ autobuy_report.py          # Reporting system
+â”œâ”€â”€ launch_autobuy.py          # System launcher
+â”œâ”€â”€ setup_autobuy.py           # Setup script
+â”œâ”€â”€ .env                       # Environment variables
+â”œâ”€â”€ logs/                      # Log files
+â”œâ”€â”€ reports/                   # Performance reports
+â””â”€â”€ data/                      # Data storage
 ```
 
 ## Monitoring
@@ -333,7 +333,7 @@ TELEGRAM_CHAT_ID=your_chat_id
 DISCORD_WEBHOOK_URL=your_webhook_url
 ```
 
-## ⚠️ WARNING
+## âš ï¸ WARNING
 This system executes real trades with real money. Ensure you:
 - Understand the risks involved
 - Start with small amounts
@@ -352,7 +352,7 @@ This software is for educational purposes. Use at your own risk.
         with open(readme_file, "w") as f:
             f.write(readme)
 
-        logger.info("✅ Created README_AUTOBUY.md")
+        logger.info("âœ… Created README_AUTOBUY.md")
 
     def validate_setup(self) -> bool:
         """Validate the setup"""
@@ -378,19 +378,19 @@ This software is for educational purposes. Use at your own risk.
                 missing_dirs.append(directory)
 
         if missing_files or missing_dirs:
-            logger.error("❌ Setup validation failed:")
+            logger.error("âŒ Setup validation failed:")
             if missing_files:
                 logger.error(f"   Missing files: {', '.join(missing_files)}")
             if missing_dirs:
                 logger.error(f"   Missing directories: {', '.join(missing_dirs)}")
             return False
 
-        logger.info("✅ Setup validation passed")
+        logger.info("âœ… Setup validation passed")
         return True
 
     def run_setup(self):
         """Run complete setup"""
-        logger.info("🚀 Starting Binance US Autobuy System Setup...")
+        logger.info("ðŸš€ Starting Binance US Autobuy System Setup...")
         logger.info("=" * 60)
 
         try:
@@ -410,20 +410,20 @@ This software is for educational purposes. Use at your own risk.
 
             # Validate setup
             if self.validate_setup():
-                logger.info("✅ Setup completed successfully!")
+                logger.info("âœ… Setup completed successfully!")
                 logger.info("=" * 60)
-                logger.info("📋 Next steps:")
+                logger.info("ðŸ“‹ Next steps:")
                 logger.info("1. Configure your API keys in .env file")
                 logger.info("2. Install dependencies: pip install -r requirements_autobuy.txt")
                 logger.info("3. Start the system: python launch_autobuy.py")
                 logger.info("4. Access dashboard: http://localhost:8080")
                 logger.info("=" * 60)
             else:
-                logger.error("❌ Setup validation failed")
+                logger.error("âŒ Setup validation failed")
                 return False
 
         except Exception as e:
-            logger.error(f"❌ Setup failed: {e}")
+            logger.error(f"âŒ Setup failed: {e}")
             return False
 
         return True
@@ -434,13 +434,15 @@ def main():
     setup = AutobuySetup()
 
     if setup.run_setup():
-        print("\n🎉 Setup completed successfully!")
-        print("📖 Check README_AUTOBUY.md for detailed instructions")
+        print("\nðŸŽ‰ Setup completed successfully!")
+        print("ðŸ“– Check README_AUTOBUY.md for detailed instructions")
         return 0
     else:
-        print("\n❌ Setup failed!")
+        print("\nâŒ Setup failed!")
         return 1
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
+

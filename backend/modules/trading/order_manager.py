@@ -1,4 +1,4 @@
-"""
+﻿"""
 Order Manager Module for Mystic Trading Platform
 
 Extracted from trade_engine.py and auto_trading_manager.py to improve modularity.
@@ -65,7 +65,7 @@ class OrderManager:
     def __init__(self):
         self.orders: Dict[str, Order] = {}
         self.order_counter = 0
-        logger.info("✅ OrderManager initialized")
+        logger.info("âœ… OrderManager initialized")
 
     def create_order(
         self,
@@ -92,11 +92,11 @@ class OrderManager:
             )
 
             self.orders[order_id] = order
-            logger.info(f"✅ Order created: {order_id} - {symbol} {side.value} {quantity}")
+            logger.info(f"âœ… Order created: {order_id} - {symbol} {side.value} {quantity}")
 
             return order
         except Exception as e:
-            logger.error(f"❌ Error creating order: {str(e)}")
+            logger.error(f"âŒ Error creating order: {str(e)}")
             raise
 
     def get_order(self, order_id: str) -> Optional[Order]:
@@ -121,7 +121,7 @@ class OrderManager:
 
             return orders[:limit]
         except Exception as e:
-            logger.error(f"❌ Error getting orders: {str(e)}")
+            logger.error(f"âŒ Error getting orders: {str(e)}")
             return []
 
     def update_order_status(self, order_id: str, status: OrderStatus) -> bool:
@@ -129,11 +129,11 @@ class OrderManager:
         try:
             if order_id in self.orders:
                 self.orders[order_id].status = status
-                logger.info(f"✅ Order {order_id} status updated to {status.value}")
+                logger.info(f"âœ… Order {order_id} status updated to {status.value}")
                 return True
             return False
         except Exception as e:
-            logger.error(f"❌ Error updating order status: {str(e)}")
+            logger.error(f"âŒ Error updating order status: {str(e)}")
             return False
 
     def cancel_order(self, order_id: str) -> bool:
@@ -141,11 +141,11 @@ class OrderManager:
         try:
             if order_id in self.orders:
                 self.orders[order_id].status = OrderStatus.CANCELLED
-                logger.info(f"✅ Order {order_id} cancelled")
+                logger.info(f"âœ… Order {order_id} cancelled")
                 return True
             return False
         except Exception as e:
-            logger.error(f"❌ Error cancelling order: {str(e)}")
+            logger.error(f"âŒ Error cancelling order: {str(e)}")
             return False
 
     def get_order_history(
@@ -163,7 +163,7 @@ class OrderManager:
                 "offset": offset,
             }
         except Exception as e:
-            logger.error(f"❌ Error getting order history: {str(e)}")
+            logger.error(f"âŒ Error getting order history: {str(e)}")
             return {"orders": [], "total": 0, "limit": limit, "offset": offset}
 
     def _order_to_dict(self, order: Order) -> Dict[str, Any]:
@@ -200,9 +200,11 @@ class OrderManager:
                 "fill_rate": (filled_orders / total_orders if total_orders > 0 else 0),
             }
         except Exception as e:
-            logger.error(f"❌ Error getting order statistics: {str(e)}")
+            logger.error(f"âŒ Error getting order statistics: {str(e)}")
             return {}
 
 
 # Global order manager instance
 order_manager = OrderManager()
+
+

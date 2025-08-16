@@ -1,4 +1,4 @@
-import logging
+﻿import logging
 import time
 from typing import Any
 
@@ -50,3 +50,5 @@ async def metrics_middleware(request: Request, call_next: Any):
         metrics_collector.metrics["errors"][f"{request.method} {request.url.path}"] += 1
         logger.error(f"Metrics error: {str(e)}")
         return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
+

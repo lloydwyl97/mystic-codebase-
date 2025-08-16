@@ -1,4 +1,4 @@
-"""
+﻿"""
 Core Router - Health, Version, and Common APIs
 
 Contains health checks, version information, and common API endpoints.
@@ -10,14 +10,14 @@ from datetime import timezone, datetime
 from typing import Any, Dict, Optional, Union
 
 from fastapi import APIRouter, HTTPException, Request
-from middleware.rate_limiter import rate_limit
+from backend.middleware.rate_limiter import rate_limit
 
 # Rate limiting configuration
 default_rate_limit = 60  # requests per minute
 
 # Import live services
 try:
-    from modules.data.market_data import market_data_manager
+    from backend.modules.data.market_data import market_data_manager
 
     live_services_available = True
 except ImportError:
@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 def get_redis_client():
     """Get Redis client"""
     try:
-        from services.redis_service import get_redis_service
+        from backend.services.redis_service import get_redis_service
 
         return get_redis_service()
     except Exception as e:
@@ -193,3 +193,5 @@ async def get_live_data_status():
     except Exception as e:
         logger.error(f"Error getting live data status: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error getting live data status: {str(e)}")
+
+

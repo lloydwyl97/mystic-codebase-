@@ -1,4 +1,4 @@
-class AIWorldSystem:
+﻿class AIWorldSystem:
     def __init__(self, name="NovaTerra"):
         self.name = name
         self.citizens = []
@@ -11,3 +11,5 @@ class AIWorldSystem:
 
     def assign_task(self, mission):
         print(f"[WORLD] Assigning mission: {mission}")
+
+

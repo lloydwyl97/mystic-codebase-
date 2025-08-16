@@ -1,4 +1,4 @@
-"""
+﻿"""
 Deep Learning Agent
 Handles deep learning models for price prediction and pattern recognition
 """
@@ -21,7 +21,7 @@ import joblib
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agents.base_agent import BaseAgent
+from backend.agents.base_agent import BaseAgent
 
 
 class LSTMModel(nn.Module):
@@ -169,7 +169,7 @@ class DeepLearningAgent(BaseAgent):
         self.register_handler("get_model_status", self.handle_get_model_status)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"🧠 Deep Learning Agent {agent_id} initialized on {self.device}")
+        print(f"ðŸ§  Deep Learning Agent {agent_id} initialized on {self.device}")
 
     async def initialize(self):
         """Initialize deep learning agent resources"""
@@ -186,10 +186,10 @@ class DeepLearningAgent(BaseAgent):
             # Start model monitoring
             await self.start_model_monitoring()
 
-            print(f"✅ Deep Learning Agent {self.agent_id} initialized successfully")
+            print(f"âœ… Deep Learning Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Deep Learning Agent: {e}")
+            print(f"âŒ Error initializing Deep Learning Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -211,7 +211,7 @@ class DeepLearningAgent(BaseAgent):
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in deep learning processing loop: {e}")
+                print(f"âŒ Error in deep learning processing loop: {e}")
                 await asyncio.sleep(600)
 
     async def load_model_config(self):
@@ -228,11 +228,11 @@ class DeepLearningAgent(BaseAgent):
                 self.trading_symbols = json.loads(symbols_data)
 
             print(
-                f"📋 Model configuration loaded: {len(self.model_config['models'])} models, {len(self.trading_symbols)} symbols"
+                f"ðŸ“‹ Model configuration loaded: {len(self.model_config['models'])} models, {len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading model configuration: {e}")
+            print(f"âŒ Error loading model configuration: {e}")
 
     async def initialize_models(self):
         """Initialize deep learning models"""
@@ -246,10 +246,10 @@ class DeepLearningAgent(BaseAgent):
                         # Initialize scaler for this model
                         self.scalers[model_name] = MinMaxScaler()
 
-            print(f"🧠 Models initialized: {len(self.models)} models")
+            print(f"ðŸ§  Models initialized: {len(self.models)} models")
 
         except Exception as e:
-            print(f"❌ Error initializing models: {e}")
+            print(f"âŒ Error initializing models: {e}")
 
     async def create_model(
         self, model_name: str, model_config: Dict[str, Any]
@@ -271,16 +271,16 @@ class DeepLearningAgent(BaseAgent):
                     num_classes=model_config["num_classes"],
                 )
             else:
-                print(f"❌ Unknown model type: {model_type}")
+                print(f"âŒ Unknown model type: {model_type}")
                 return None
 
             model = model.to(self.device)
-            print(f"✅ Created {model_type} model: {model_name}")
+            print(f"âœ… Created {model_type} model: {model_name}")
 
             return model
 
         except Exception as e:
-            print(f"❌ Error creating model {model_name}: {e}")
+            print(f"âŒ Error creating model {model_name}: {e}")
             return None
 
     async def load_pretrained_models(self):
@@ -303,10 +303,10 @@ class DeepLearningAgent(BaseAgent):
                     if os.path.exists(scaler_path):
                         self.scalers[model_name] = joblib.load(scaler_path)
 
-                    print(f"✅ Loaded pre-trained model: {model_name}")
+                    print(f"âœ… Loaded pre-trained model: {model_name}")
 
         except Exception as e:
-            print(f"❌ Error loading pre-trained models: {e}")
+            print(f"âŒ Error loading pre-trained models: {e}")
 
     async def start_model_monitoring(self):
         """Start model monitoring"""
@@ -318,10 +318,10 @@ class DeepLearningAgent(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 Model monitoring started")
+            print("ðŸ“¡ Model monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting model monitoring: {e}")
+            print(f"âŒ Error starting model monitoring: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -335,7 +335,7 @@ class DeepLearningAgent(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -352,7 +352,7 @@ class DeepLearningAgent(BaseAgent):
                 await self.store_market_data(symbol, price, volume, timestamp)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def store_market_data(self, symbol: str, price: float, volume: float, timestamp: str):
         """Store market data for model training"""
@@ -380,7 +380,7 @@ class DeepLearningAgent(BaseAgent):
                 self.state["model_cache"][symbol] = self.state["model_cache"][symbol][-2000:]
 
         except Exception as e:
-            print(f"❌ Error storing market data: {e}")
+            print(f"âŒ Error storing market data: {e}")
 
     async def train_models_if_needed(self):
         """Train models if they need updating"""
@@ -400,7 +400,7 @@ class DeepLearningAgent(BaseAgent):
                             await self.train_symbol_models(symbol)
 
         except Exception as e:
-            print(f"❌ Error training models: {e}")
+            print(f"âŒ Error training models: {e}")
 
     def should_retrain_model(self, symbol: str, last_training: str) -> bool:
         """Check if model should be retrained"""
@@ -415,13 +415,13 @@ class DeepLearningAgent(BaseAgent):
             return (current_time - last_training_time).total_seconds() > 86400
 
         except Exception as e:
-            print(f"❌ Error checking retrain condition: {e}")
+            print(f"âŒ Error checking retrain condition: {e}")
             return True
 
     async def train_symbol_models(self, symbol: str):
         """Train models for a specific symbol"""
         try:
-            print(f"🏋️ Training models for {symbol}...")
+            print(f"ðŸ‹ï¸ Training models for {symbol}...")
 
             # Get market data
             market_data = await self.get_symbol_market_data(symbol)
@@ -437,7 +437,7 @@ class DeepLearningAgent(BaseAgent):
                 try:
                     await self.train_model(symbol, model_name, model, market_data)
                 except Exception as e:
-                    print(f"❌ Error training {model_name} for {symbol}: {e}")
+                    print(f"âŒ Error training {model_name} for {symbol}: {e}")
 
             # Update training history
             if symbol not in self.state["training_history"]:
@@ -446,10 +446,10 @@ class DeepLearningAgent(BaseAgent):
             self.state["training_history"][symbol]["last_training"] = datetime.now().isoformat()
             self.state["training_count"] += 1
 
-            print(f"✅ Model training complete for {symbol}")
+            print(f"âœ… Model training complete for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error training models for {symbol}: {e}")
+            print(f"âŒ Error training models for {symbol}: {e}")
 
     async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
         """Get market data for a symbol"""
@@ -478,7 +478,7 @@ class DeepLearningAgent(BaseAgent):
             return data_points
 
         except Exception as e:
-            print(f"❌ Error getting market data for {symbol}: {e}")
+            print(f"âŒ Error getting market data for {symbol}: {e}")
             return []
 
     async def train_model(
@@ -567,12 +567,12 @@ class DeepLearningAgent(BaseAgent):
                     patience_counter += 1
 
                 if patience_counter >= training_config["early_stopping_patience"]:
-                    print(f"🛑 Early stopping at epoch {epoch}")
+                    print(f"ðŸ›‘ Early stopping at epoch {epoch}")
                     break
 
                 if epoch % 10 == 0:
                     print(
-                        f"📊 Epoch {epoch}: Train Loss: {train_loss/len(train_loader):.6f}, Val Loss: {val_loss/len(val_loader):.6f}"
+                        f"ðŸ“Š Epoch {epoch}: Train Loss: {train_loss/len(train_loader):.6f}, Val Loss: {val_loss/len(val_loader):.6f}"
                     )
 
             # Update training history
@@ -585,10 +585,10 @@ class DeepLearningAgent(BaseAgent):
                 "epochs_trained": epoch + 1,
             }
 
-            print(f"✅ {model_name} training complete for {symbol}")
+            print(f"âœ… {model_name} training complete for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error training {model_name} for {symbol}: {e}")
+            print(f"âŒ Error training {model_name} for {symbol}: {e}")
 
     async def prepare_training_data(
         self, symbol: str, model_name: str, market_data: List[Dict[str, Any]]
@@ -611,7 +611,7 @@ class DeepLearningAgent(BaseAgent):
                 return None, None
 
         except Exception as e:
-            print(f"❌ Error preparing training data: {e}")
+            print(f"âŒ Error preparing training data: {e}")
             return None, None
 
     async def prepare_lstm_data(
@@ -662,7 +662,7 @@ class DeepLearningAgent(BaseAgent):
             return features_normalized, targets
 
         except Exception as e:
-            print(f"❌ Error preparing LSTM data: {e}")
+            print(f"âŒ Error preparing LSTM data: {e}")
             return None, None
 
     async def prepare_cnn_data(
@@ -717,24 +717,24 @@ class DeepLearningAgent(BaseAgent):
             return features_normalized, np.array(labels)
 
         except Exception as e:
-            print(f"❌ Error preparing CNN data: {e}")
+            print(f"âŒ Error preparing CNN data: {e}")
             return None, None
 
     async def make_all_predictions(self):
         """Make predictions for all symbols"""
         try:
-            print(f"🔮 Making predictions for {len(self.trading_symbols)} symbols...")
+            print(f"ðŸ”® Making predictions for {len(self.trading_symbols)} symbols...")
 
             for symbol in self.trading_symbols:
                 try:
                     await self.make_symbol_predictions(symbol)
                 except Exception as e:
-                    print(f"❌ Error making predictions for {symbol}: {e}")
+                    print(f"âŒ Error making predictions for {symbol}: {e}")
 
-            print("✅ Predictions complete")
+            print("âœ… Predictions complete")
 
         except Exception as e:
-            print(f"❌ Error making all predictions: {e}")
+            print(f"âŒ Error making all predictions: {e}")
 
     async def make_symbol_predictions(self, symbol: str):
         """Make predictions for a specific symbol"""
@@ -756,7 +756,7 @@ class DeepLearningAgent(BaseAgent):
                     if prediction:
                         predictions[model_name] = prediction
                 except Exception as e:
-                    print(f"❌ Error making prediction with {model_name} for {symbol}: {e}")
+                    print(f"âŒ Error making prediction with {model_name} for {symbol}: {e}")
 
             # Store predictions
             if predictions:
@@ -769,7 +769,7 @@ class DeepLearningAgent(BaseAgent):
                 await self.broadcast_predictions(symbol, predictions)
 
         except Exception as e:
-            print(f"❌ Error making predictions for {symbol}: {e}")
+            print(f"âŒ Error making predictions for {symbol}: {e}")
 
     async def make_model_prediction(
         self,
@@ -812,7 +812,7 @@ class DeepLearningAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error making prediction with {model_name}: {e}")
+            print(f"âŒ Error making prediction with {model_name}: {e}")
             return None
 
     async def prepare_lstm_prediction_data(
@@ -856,7 +856,7 @@ class DeepLearningAgent(BaseAgent):
             return feature_seq
 
         except Exception as e:
-            print(f"❌ Error preparing LSTM prediction data: {e}")
+            print(f"âŒ Error preparing LSTM prediction data: {e}")
             return None
 
     async def prepare_cnn_prediction_data(
@@ -900,7 +900,7 @@ class DeepLearningAgent(BaseAgent):
             return feature_seq.T.reshape(1, 5, -1)
 
         except Exception as e:
-            print(f"❌ Error preparing CNN prediction data: {e}")
+            print(f"âŒ Error preparing CNN prediction data: {e}")
             return None
 
     async def broadcast_predictions(self, symbol: str, predictions: Dict[str, Any]):
@@ -921,7 +921,7 @@ class DeepLearningAgent(BaseAgent):
             await self.send_message("risk_agent", prediction_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting predictions: {e}")
+            print(f"âŒ Error broadcasting predictions: {e}")
 
     async def handle_train_model(self, message: Dict[str, Any]):
         """Handle manual model training request"""
@@ -929,7 +929,7 @@ class DeepLearningAgent(BaseAgent):
             symbol = message.get("symbol")
             model_name = message.get("model_name")
 
-            print(f"🏋️ Manual model training requested for {symbol}")
+            print(f"ðŸ‹ï¸ Manual model training requested for {symbol}")
 
             if symbol:
                 if model_name and model_name in self.models:
@@ -959,7 +959,7 @@ class DeepLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling model training request: {e}")
+            print(f"âŒ Error handling model training request: {e}")
             await self.broadcast_error(f"Model training error: {e}")
 
     async def handle_make_prediction(self, message: Dict[str, Any]):
@@ -968,7 +968,7 @@ class DeepLearningAgent(BaseAgent):
             symbol = message.get("symbol")
             model_name = message.get("model_name")
 
-            print(f"🔮 Manual prediction requested for {symbol}")
+            print(f"ðŸ”® Manual prediction requested for {symbol}")
 
             if symbol:
                 market_data = await self.get_symbol_market_data(symbol)
@@ -1025,7 +1025,7 @@ class DeepLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling prediction request: {e}")
+            print(f"âŒ Error handling prediction request: {e}")
             await self.broadcast_error(f"Prediction error: {e}")
 
     async def handle_get_model_status(self, message: Dict[str, Any]):
@@ -1033,7 +1033,7 @@ class DeepLearningAgent(BaseAgent):
         try:
             symbol = message.get("symbol")
 
-            print(f"📊 Model status requested for {symbol}")
+            print(f"ðŸ“Š Model status requested for {symbol}")
 
             # Get model status
             if symbol and symbol in self.state["training_history"]:
@@ -1058,7 +1058,7 @@ class DeepLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling model status request: {e}")
+            print(f"âŒ Error handling model status request: {e}")
             await self.broadcast_error(f"Model status error: {e}")
 
     async def update_model_metrics(self):
@@ -1080,7 +1080,7 @@ class DeepLearningAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating model metrics: {e}")
+            print(f"âŒ Error updating model metrics: {e}")
 
     async def cleanup_cache(self):
         """Clean up old cache entries"""
@@ -1105,13 +1105,13 @@ class DeepLearningAgent(BaseAgent):
                     del self.state["model_cache"][symbol]
 
         except Exception as e:
-            print(f"❌ Error cleaning up cache: {e}")
+            print(f"âŒ Error cleaning up cache: {e}")
 
     async def handle_market_data(self, message: Dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})
-            print(f"📊 Deep Learning Agent received market data for {len(market_data)} symbols")
+            print(f"ðŸ“Š Deep Learning Agent received market data for {len(market_data)} symbols")
             
             # Process market data
             await self.process_market_data(market_data)
@@ -1132,5 +1132,7 @@ class DeepLearningAgent(BaseAgent):
             await self.make_all_predictions()
             
         except Exception as e:
-            print(f"❌ Error handling market data: {e}")
+            print(f"âŒ Error handling market data: {e}")
             await self.broadcast_error(f"Market data handling error: {e}")
+
+

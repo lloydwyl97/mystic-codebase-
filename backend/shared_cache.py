@@ -1,4 +1,4 @@
-"""
+﻿"""
 Shared Cache System for Mystic AI Trading Platform
 Provides a centralized cache for market data, cosmic data, and other shared information.
 """
@@ -46,21 +46,21 @@ class SharedCache:
                         # Test connection
                         self.redis_client.ping()
                         logger.info(
-                            f"✅ Redis connection established for SharedCache using {host}:{redis_port}"
+                            f"âœ… Redis connection established for SharedCache using {host}:{redis_port}"
                         )
                         break
                     except Exception as e:
-                        logger.warning(f"❌ Redis connection failed for {host}:{redis_port} - {e}")
+                        logger.warning(f"âŒ Redis connection failed for {host}:{redis_port} - {e}")
                         continue
 
                 if not self.redis_client:
                     logger.warning(
-                        "❌ All Redis connection attempts failed - using memory cache only"
+                        "âŒ All Redis connection attempts failed - using memory cache only"
                     )
                     self.redis_client = None
 
             except Exception as e:
-                logger.warning(f"❌ Redis connection failed for SharedCache: {e}")
+                logger.warning(f"âŒ Redis connection failed for SharedCache: {e}")
                 self.redis_client = None
 
     def update_market_data(self, data: Dict[str, Any]) -> None:
@@ -72,9 +72,9 @@ class SharedCache:
             if self.redis_client:
                 self.redis_client.setex("market_data", 300, json.dumps(data))  # 5 minutes expiry
 
-            logger.debug("✅ Market data updated in SharedCache")
+            logger.debug("âœ… Market data updated in SharedCache")
         except Exception as e:
-            logger.error(f"❌ Error updating market data in SharedCache: {e}")
+            logger.error(f"âŒ Error updating market data in SharedCache: {e}")
 
     def update_price(self, symbol: str, price: float) -> None:
         """Update price for a specific symbol"""
@@ -93,9 +93,9 @@ class SharedCache:
                     "timestamp": datetime.now().isoformat()
                 }))
 
-            logger.debug(f"✅ Price updated for {symbol}: {price}")
+            logger.debug(f"âœ… Price updated for {symbol}: {price}")
         except Exception as e:
-            logger.error(f"❌ Error updating price for {symbol}: {e}")
+            logger.error(f"âŒ Error updating price for {symbol}: {e}")
 
     def should_update_indicators(self, symbol: str) -> bool:
         """Check if indicators should be updated for a symbol"""
@@ -108,7 +108,7 @@ class SharedCache:
                 return age < 300  # Update if price is less than 5 minutes old
             return False
         except Exception as e:
-            logger.error(f"❌ Error checking indicator update for {symbol}: {e}")
+            logger.error(f"âŒ Error checking indicator update for {symbol}: {e}")
             return False
 
     def should_update_volume(self, symbol: str) -> bool:
@@ -122,7 +122,7 @@ class SharedCache:
                 return age > 180  # Update if volume is older than 3 minutes
             return True  # Update if no volume data exists
         except Exception as e:
-            logger.error(f"❌ Error checking volume update for {symbol}: {e}")
+            logger.error(f"âŒ Error checking volume update for {symbol}: {e}")
             return True
 
     def update_volume(self, symbol: str, volume: float) -> None:
@@ -142,9 +142,9 @@ class SharedCache:
                     "timestamp": datetime.now().isoformat()
                 }))
 
-            logger.debug(f"✅ Volume updated for {symbol}: {volume}")
+            logger.debug(f"âœ… Volume updated for {symbol}: {volume}")
         except Exception as e:
-            logger.error(f"❌ Error updating volume for {symbol}: {e}")
+            logger.error(f"âŒ Error updating volume for {symbol}: {e}")
 
     def get_coin_cache(self, symbol: str) -> Dict[str, Any]:
         """Get coin cache data for a specific symbol"""
@@ -165,7 +165,7 @@ class SharedCache:
 
             return coin_data
         except Exception as e:
-            logger.error(f"❌ Error getting coin cache for {symbol}: {e}")
+            logger.error(f"âŒ Error getting coin cache for {symbol}: {e}")
             return {}
 
     def update_indicators(self, symbol: str, rsi: float, macd: Dict[str, float], volatility: float) -> None:
@@ -189,9 +189,9 @@ class SharedCache:
                     "timestamp": datetime.now().isoformat()
                 }))
 
-            logger.debug(f"✅ Indicators updated for {symbol}: RSI={rsi}, MACD={macd}, Vol={volatility}")
+            logger.debug(f"âœ… Indicators updated for {symbol}: RSI={rsi}, MACD={macd}, Vol={volatility}")
         except Exception as e:
-            logger.error(f"❌ Error updating indicators for {symbol}: {e}")
+            logger.error(f"âŒ Error updating indicators for {symbol}: {e}")
 
     def get_market_data(self) -> Dict[str, Any]:
         """Get market data from cache"""
@@ -205,7 +205,7 @@ class SharedCache:
             # Fallback to memory cache
             return self.memory_cache.get("market_data", {})
         except Exception as e:
-            logger.error(f"❌ Error getting market data from SharedCache: {e}")
+            logger.error(f"âŒ Error getting market data from SharedCache: {e}")
             return {}
 
     def update_cosmic_data(self, data: Dict[str, Any]) -> None:
@@ -217,9 +217,9 @@ class SharedCache:
             if self.redis_client:
                 self.redis_client.setex("cosmic_data", 3600, json.dumps(data))  # 1 hour expiry
 
-            logger.debug("✅ Cosmic data updated in SharedCache")
+            logger.debug("âœ… Cosmic data updated in SharedCache")
         except Exception as e:
-            logger.error(f"❌ Error updating cosmic data in SharedCache: {e}")
+            logger.error(f"âŒ Error updating cosmic data in SharedCache: {e}")
 
     def get_cosmic_data(self) -> Dict[str, Any]:
         """Get cosmic data from cache"""
@@ -233,7 +233,7 @@ class SharedCache:
             # Fallback to memory cache
             return self.memory_cache.get("cosmic_data", {})
         except Exception as e:
-            logger.error(f"❌ Error getting cosmic data from SharedCache: {e}")
+            logger.error(f"âŒ Error getting cosmic data from SharedCache: {e}")
             return {}
 
     def update_indicator_data(self, symbol: str, data: Dict[str, Any]) -> None:
@@ -250,9 +250,9 @@ class SharedCache:
                     f"indicator_data:{symbol}", 300, json.dumps(data)
                 )  # 5 minutes expiry
 
-            logger.debug(f"✅ Indicator data updated for {symbol} in SharedCache")
+            logger.debug(f"âœ… Indicator data updated for {symbol} in SharedCache")
         except Exception as e:
-            logger.error(f"❌ Error updating indicator data for {symbol} in SharedCache: {e}")
+            logger.error(f"âŒ Error updating indicator data for {symbol} in SharedCache: {e}")
 
     def get_indicator_data(self, symbol: str) -> Dict[str, Any]:
         """Get indicator data for a specific symbol"""
@@ -266,7 +266,7 @@ class SharedCache:
             # Fallback to memory cache
             return self.memory_cache.get("indicator_data", {}).get(symbol, {})
         except Exception as e:
-            logger.error(f"❌ Error getting indicator data for {symbol} from SharedCache: {e}")
+            logger.error(f"âŒ Error getting indicator data for {symbol} from SharedCache: {e}")
             return {}
 
     def update_volume_data(self, symbol: str, data: Dict[str, Any]) -> None:
@@ -283,9 +283,9 @@ class SharedCache:
                     f"volume_data:{symbol}", 300, json.dumps(data)
                 )  # 5 minutes expiry
 
-            logger.debug(f"✅ Volume data updated for {symbol} in SharedCache")
+            logger.debug(f"âœ… Volume data updated for {symbol} in SharedCache")
         except Exception as e:
-            logger.error(f"❌ Error updating volume data for {symbol} in SharedCache: {e}")
+            logger.error(f"âŒ Error updating volume data for {symbol} in SharedCache: {e}")
 
     def get_volume_data(self, symbol: str) -> Dict[str, Any]:
         """Get volume data for a specific symbol"""
@@ -299,7 +299,7 @@ class SharedCache:
             # Fallback to memory cache
             return self.memory_cache.get("volume_data", {}).get(symbol, {})
         except Exception as e:
-            logger.error(f"❌ Error getting volume data for {symbol} from SharedCache: {e}")
+            logger.error(f"âŒ Error getting volume data for {symbol} from SharedCache: {e}")
             return {}
 
     def get_cache_status(self) -> Dict[str, Any]:
@@ -327,7 +327,7 @@ class SharedCache:
 
             return status
         except Exception as e:
-            logger.error(f"❌ Error getting cache status: {e}")
+            logger.error(f"âŒ Error getting cache status: {e}")
             return {"error": str(e)}
 
     def clear_cache(self, cache_type: Optional[str] = None) -> None:
@@ -336,7 +336,7 @@ class SharedCache:
             if cache_type:
                 if cache_type in self.memory_cache:
                     self.memory_cache[cache_type] = {}
-                    logger.info(f"✅ Cleared {cache_type} cache")
+                    logger.info(f"âœ… Cleared {cache_type} cache")
             else:
                 self.memory_cache = {
                     "market_data": {},
@@ -346,9 +346,9 @@ class SharedCache:
                     "last_update": {},
                     "created_at": datetime.now().isoformat(),
                 }
-                logger.info("✅ Cleared all cache data")
+                logger.info("âœ… Cleared all cache data")
         except Exception as e:
-            logger.error(f"❌ Error clearing cache: {e}")
+            logger.error(f"âŒ Error clearing cache: {e}")
 
     def is_fresh(self, cache_type: str, max_age_seconds: int = 300) -> bool:
         """Check if cache data is fresh (updated within max_age_seconds)"""
@@ -361,7 +361,7 @@ class SharedCache:
             age = (datetime.now() - update_time).total_seconds()
             return age < max_age_seconds
         except Exception as e:
-            logger.error(f"❌ Error checking cache freshness: {e}")
+            logger.error(f"âŒ Error checking cache freshness: {e}")
             return False
 
 
@@ -379,9 +379,9 @@ class CoinCache:
             market_data[symbol] = data
             self.shared_cache.update_market_data(market_data)
 
-            logger.debug(f"✅ Coin data updated for {symbol}")
+            logger.debug(f"âœ… Coin data updated for {symbol}")
         except Exception as e:
-            logger.error(f"❌ Error updating coin data for {symbol}: {e}")
+            logger.error(f"âŒ Error updating coin data for {symbol}: {e}")
 
     def get_coin_data(self, symbol: str) -> Dict[str, Any]:
         """Get data for a specific coin"""
@@ -389,7 +389,7 @@ class CoinCache:
             market_data = self.shared_cache.get_market_data()
             return market_data.get(symbol, {})
         except Exception as e:
-            logger.error(f"❌ Error getting coin data for {symbol}: {e}")
+            logger.error(f"âŒ Error getting coin data for {symbol}: {e}")
             return {}
 
     def get_all_coins(self) -> Dict[str, Any]:
@@ -397,5 +397,7 @@ class CoinCache:
         try:
             return self.shared_cache.get_market_data()
         except Exception as e:
-            logger.error(f"❌ Error getting all coins data: {e}")
+            logger.error(f"âŒ Error getting all coins data: {e}")
             return {}
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Gunicorn configuration for Mystic Trading Platform
 Production deployment configuration
 """
@@ -47,3 +47,5 @@ max_requests_jitter = 50
 
 # Environment variables
 raw_env = ["ENVIRONMENT=production", "LOG_LEVEL=INFO"]
+
+

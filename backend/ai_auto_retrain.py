@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Auto-Retrain Service
 Automatic model retraining and optimization system
 """
@@ -67,7 +67,7 @@ class AutoRetrainService:
 
     async def start(self):
         """Start the Auto-Retrain Service"""
-        print("🔄 Starting Auto-Retrain Service...")
+        print("ðŸ”„ Starting Auto-Retrain Service...")
         self.running = True
 
         # Start monitoring and retraining
@@ -75,7 +75,7 @@ class AutoRetrainService:
 
     async def monitor_and_retrain(self):
         """Monitor model performance and trigger retraining"""
-        print("👀 Monitoring model performance...")
+        print("ðŸ‘€ Monitoring model performance...")
 
         while self.running:
             try:
@@ -94,7 +94,7 @@ class AutoRetrainService:
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in monitoring: {e}")
+                print(f"âŒ Error in monitoring: {e}")
                 await asyncio.sleep(600)
 
     async def check_model_performance(self, model_id: str):
@@ -114,7 +114,7 @@ class AutoRetrainService:
 
             # Check if performance has degraded
             if await self.should_retrain(model, recent_performance):
-                print(f"🔄 Model {model_id} needs retraining")
+                print(f"ðŸ”„ Model {model_id} needs retraining")
 
                 # Add to retrain queue
                 retrain_request = {
@@ -215,12 +215,12 @@ class AutoRetrainService:
             model_id = request_data.get("model_id")
             reason = request_data.get("reason", "unknown")
 
-            print(f"🔄 Processing retrain request for {model_id} - Reason: {reason}")
+            print(f"ðŸ”„ Processing retrain request for {model_id} - Reason: {reason}")
 
             # Get model data
             model_data = self.redis_client.get(f"ai_strategy:{model_id}")
             if not model_data:
-                print(f"❌ Model {model_id} not found")
+                print(f"âŒ Model {model_id} not found")
                 return
 
             model = json.loads(model_data)
@@ -235,9 +235,9 @@ class AutoRetrainService:
                 # Notify versioning service
                 self.redis_client.lpush("new_models_queue", json.dumps(retrained_model))
 
-                print(f"✅ Successfully retrained model {model_id}")
+                print(f"âœ… Successfully retrained model {model_id}")
             else:
-                print(f"❌ Failed to retrain model {model_id}")
+                print(f"âŒ Failed to retrain model {model_id}")
 
         except Exception as e:
             print(f"Error processing retrain request: {e}")
@@ -248,20 +248,20 @@ class AutoRetrainService:
             model_type = model.get("type", "lstm")
             symbol = model.get("symbol", "BTC/USDT")
 
-            print(f"🔄 Retraining {model_type} model for {symbol}")
+            print(f"ðŸ”„ Retraining {model_type} model for {symbol}")
 
             # Get new training data
             new_data = await self.get_training_data(symbol)
 
             if new_data.empty:
-                print("❌ No new training data available")
+                print("âŒ No new training data available")
                 return None
 
             # Prepare features
             features = self.prepare_features(new_data)
 
             if len(features[0]) == 0:
-                print("❌ Failed to prepare features")
+                print("âŒ Failed to prepare features")
                 return None
 
             # Train new model
@@ -270,7 +270,7 @@ class AutoRetrainService:
             )
 
             if new_model is None:
-                print("❌ Failed to train new model")
+                print("âŒ Failed to train new model")
                 return None
 
             # Evaluate new model
@@ -597,7 +597,7 @@ class AutoRetrainService:
             # Save scaler
             joblib.dump(scaler, model_data["scaler_path"])
 
-            print(f"✅ Saved retrained model: {model_data['model_path']}")
+            print(f"âœ… Saved retrained model: {model_data['model_path']}")
 
         except Exception as e:
             print(f"Error saving model: {e}")
@@ -718,7 +718,7 @@ class AutoRetrainService:
 
     async def stop(self):
         """Stop the Auto-Retrain Service"""
-        print("🛑 Stopping Auto-Retrain Service...")
+        print("ðŸ›‘ Stopping Auto-Retrain Service...")
         self.running = False
 
 
@@ -729,12 +729,14 @@ async def main():
     try:
         await retrain_service.start()
     except KeyboardInterrupt:
-        print("🛑 Received interrupt signal")
+        print("ðŸ›‘ Received interrupt signal")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
     finally:
         await retrain_service.stop()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

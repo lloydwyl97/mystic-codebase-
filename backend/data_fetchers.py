@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Data Fetchers for Mystic Trading Platform
 
@@ -551,19 +551,19 @@ class MysticFetcher:
                     # Test connection
                     self.redis_client.ping()
                     logger.info(
-                        f"✅ Redis connection established for MysticFetcher using {host}:{redis_port}"
+                        f"âœ… Redis connection established for MysticFetcher using {host}:{redis_port}"
                     )
                     break
                 except Exception as e:
-                    logger.warning(f"❌ Redis connection failed for {host}:{redis_port} - {e}")
+                    logger.warning(f"âŒ Redis connection failed for {host}:{redis_port} - {e}")
                     continue
 
             if not hasattr(self, "redis_client") or self.redis_client is None:
-                logger.warning("❌ All Redis connection attempts failed for MysticFetcher")
+                logger.warning("âŒ All Redis connection attempts failed for MysticFetcher")
                 self.redis_client = None
 
         except Exception as e:
-            logger.error(f"❌ Redis connection failed for MysticFetcher: {e}")
+            logger.error(f"âŒ Redis connection failed for MysticFetcher: {e}")
             self.redis_client = None
 
         self.last_fetch = 0
@@ -729,3 +729,5 @@ class DataFetcherManager:
                 "last_fetch": self.mystic_fetcher.last_fetch,
             },
         }
+
+

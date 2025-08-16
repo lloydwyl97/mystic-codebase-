@@ -1,4 +1,4 @@
-# anomaly_guardian.py
+﻿# anomaly_guardian.py
 """
 Anomaly Guardian - Market Anomaly Detection System
 Detects unusual price movements and market behavior using machine learning.
@@ -85,9 +85,9 @@ def detect_anomaly(df):
 
 def main():
     """Main execution loop"""
-    logger.info("🚀 Anomaly Guardian started")
-    logger.info(f"⏰ Check interval: {CHECK_INTERVAL} seconds")
-    logger.info(f"🔍 Monitoring symbols: {SYMBOLS}")
+    logger.info("ðŸš€ Anomaly Guardian started")
+    logger.info(f"â° Check interval: {CHECK_INTERVAL} seconds")
+    logger.info(f"ðŸ” Monitoring symbols: {SYMBOLS}")
 
     anomaly_count = 0
 
@@ -112,18 +112,20 @@ def main():
             create_ping_file(anomaly_count, symbols_checked)
 
             if current_anomalies > 0:
-                logger.info(f"🚨 {current_anomalies} anomalies detected in this cycle")
+                logger.info(f"ðŸš¨ {current_anomalies} anomalies detected in this cycle")
             else:
-                logger.info(f"✅ No anomalies detected. Checked {symbols_checked} symbols.")
+                logger.info(f"âœ… No anomalies detected. Checked {symbols_checked} symbols.")
 
         except KeyboardInterrupt:
-            logger.info("🛑 Shutting down...")
+            logger.info("ðŸ›‘ Shutting down...")
             break
         except Exception as e:
-            logger.error(f"❌ Main loop error: {e}")
+            logger.error(f"âŒ Main loop error: {e}")
 
         time.sleep(CHECK_INTERVAL)
 
 
 if __name__ == "__main__":
     main()
+
+

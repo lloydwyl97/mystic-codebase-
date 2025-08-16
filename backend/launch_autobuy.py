@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Binance US Autobuy Launcher
 Main launcher for the SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT autobuy system
@@ -12,7 +12,7 @@ import sys
 from datetime import datetime, timezone
 from typing import Optional
 
-from endpoints.autobuy.autobuy_config import (
+from backend.endpoints.autobuy.autobuy_config import (
     validate_and_load_config,
     get_config,
 )
@@ -45,15 +45,15 @@ class AutobuyLauncher:
     async def start_autobuy_system(self):
         """Start the autobuy system"""
         try:
-            logger.info("🚀 Starting Binance US Autobuy System...")
+            logger.info("ðŸš€ Starting Binance US Autobuy System...")
             await autobuy_system.run()
         except Exception as e:
-            logger.error(f"❌ Autobuy system error: {e}")
+            logger.error(f"âŒ Autobuy system error: {e}")
 
     async def start_dashboard(self):
         """Start the dashboard server"""
         try:
-            logger.info("🌐 Starting Autobuy Dashboard...")
+            logger.info("ðŸŒ Starting Autobuy Dashboard...")
             config = uvicorn.Config(
                 dashboard_app,
                 host="0.0.0.0",
@@ -64,17 +64,17 @@ class AutobuyLauncher:
             server = uvicorn.Server(config)
             await server.serve()
         except Exception as e:
-            logger.error(f"❌ Dashboard error: {e}")
+            logger.error(f"âŒ Dashboard error: {e}")
 
     async def run_system(self):
         """Run the complete autobuy system"""
         try:
             # Validate configuration
             if not validate_and_load_config():
-                logger.error("❌ Configuration validation failed")
+                logger.error("âŒ Configuration validation failed")
                 return
 
-            logger.info("✅ Configuration validated successfully")
+            logger.info("âœ… Configuration validated successfully")
 
             # Start both autobuy system and dashboard
             self.autobuy_task = asyncio.create_task(self.start_autobuy_system())
@@ -86,15 +86,15 @@ class AutobuyLauncher:
             await asyncio.gather(self.autobuy_task, self.dashboard_task)
 
         except KeyboardInterrupt:
-            logger.info("⏹️ Shutdown requested...")
+            logger.info("â¹ï¸ Shutdown requested...")
         except Exception as e:
-            logger.error(f"❌ System error: {e}")
+            logger.error(f"âŒ System error: {e}")
         finally:
             await self.shutdown()
 
     async def shutdown(self):
         """Shutdown the system gracefully"""
-        logger.info("🔄 Shutting down autobuy system...")
+        logger.info("ðŸ”„ Shutting down autobuy system...")
 
         self.is_running = False
 
@@ -120,7 +120,7 @@ class AutobuyLauncher:
         # Cleanup autobuy system
         await autobuy_system.cleanup()
 
-        logger.info("✅ System shutdown complete")
+        logger.info("âœ… System shutdown complete")
 
     def get_status(self) -> dict:
         """Get system status"""
@@ -142,7 +142,7 @@ launcher = AutobuyLauncher()
 
 def signal_handler(signum, frame):
     """Handle shutdown signals"""
-    logger.info(f"📡 Received signal {signum}, shutting down...")
+    logger.info(f"ðŸ“¡ Received signal {signum}, shutting down...")
     asyncio.create_task(launcher.shutdown())
 
 
@@ -152,41 +152,41 @@ async def main():
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
-    logger.info("🚀 Binance US Autobuy Launcher Starting...")
+    logger.info("ðŸš€ Binance US Autobuy Launcher Starting...")
     logger.info("=" * 60)
-    logger.info("🎯 Trading Pairs: SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT")
-    logger.info("💰 Strategy: Aggressive Autobuy")
-    logger.info("🌐 Dashboard: http://localhost:8080")
+    logger.info("ðŸŽ¯ Trading Pairs: SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT")
+    logger.info("ðŸ’° Strategy: Aggressive Autobuy")
+    logger.info("ðŸŒ Dashboard: http://localhost:8080")
     logger.info("=" * 60)
 
     try:
         await launcher.run_system()
     except Exception as e:
-        logger.error(f"❌ Fatal error: {e}")
+        logger.error(f"âŒ Fatal error: {e}")
         sys.exit(1)
 
 
 def print_banner():
     """Print startup banner"""
     banner = """
-    ╔══════════════════════════════════════════════════════════════╗
-    ║                    BINANCE US AUTOBUY SYSTEM                 ║
-    ║                                                              ║
-    ║  🎯 Trading Pairs: SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT      ║
-    ║  💰 Strategy: Aggressive Autobuy                            ║
-    ║  🌐 Dashboard: http://localhost:8080                        ║
-    ║  📊 Real-time monitoring and control                        ║
-    ║                                                              ║
-    ║  ⚠️  WARNING: This system executes real trades!              ║
-    ║  💡 Ensure proper API configuration before starting        ║
-    ╚══════════════════════════════════════════════════════════════╝
+    â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+    â•‘                    BINANCE US AUTOBUY SYSTEM                 â•‘
+    â•‘                                                              â•‘
+    â•‘  ðŸŽ¯ Trading Pairs: SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT      â•‘
+    â•‘  ðŸ’° Strategy: Aggressive Autobuy                            â•‘
+    â•‘  ðŸŒ Dashboard: http://localhost:8080                        â•‘
+    â•‘  ðŸ“Š Real-time monitoring and control                        â•‘
+    â•‘                                                              â•‘
+    â•‘  âš ï¸  WARNING: This system executes real trades!              â•‘
+    â•‘  ðŸ’¡ Ensure proper API configuration before starting        â•‘
+    â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     """
     print(banner)
 
 
 def check_environment():
     """Check environment setup"""
-    print("🔍 Checking environment...")
+    print("ðŸ” Checking environment...")
 
     # Check required environment variables
     required_vars = ["BINANCE_US_API_KEY", "BINANCE_US_SECRET_KEY"]
@@ -197,13 +197,13 @@ def check_environment():
             missing_vars.append(var)
 
     if missing_vars:
-        print("❌ Missing required environment variables:")
+        print("âŒ Missing required environment variables:")
         for var in missing_vars:
             print(f"   - {var}")
-        print("\n💡 Please set these variables in your .env file")
+        print("\nðŸ’¡ Please set these variables in your .env file")
         return False
 
-    print("✅ Environment check passed")
+    print("âœ… Environment check passed")
     return True
 
 
@@ -216,7 +216,9 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\n⏹️ Shutdown requested by user")
+        print("\nâ¹ï¸ Shutdown requested by user")
     except Exception as e:
-        print(f"\n❌ Fatal error: {e}")
+        print(f"\nâŒ Fatal error: {e}")
         sys.exit(1)
+
+

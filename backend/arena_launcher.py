@@ -1,4 +1,4 @@
-import os
+﻿import os
 import json
 import time
 import redis
@@ -212,7 +212,7 @@ class StrategyArena:
 
     def launch_arena(self, num_strategies: int = 100, base_capital: float = 1000.0):
         """Launch the full strategy arena"""
-        logger.info(f"🚀 Launching Strategy Arena with {num_strategies} strategies")
+        logger.info(f"ðŸš€ Launching Strategy Arena with {num_strategies} strategies")
 
         # Generate strategies
         strategies = self.generate_strategy_army(base_capital)[:num_strategies]
@@ -231,11 +231,11 @@ class StrategyArena:
             try:
                 container_id = future.result()
                 if container_id:
-                    logger.info("✅ Strategy container launched successfully")
+                    logger.info("âœ… Strategy container launched successfully")
             except Exception as e:
-                logger.error(f"❌ Failed to launch strategy: {e}")
+                logger.error(f"âŒ Failed to launch strategy: {e}")
 
-        logger.info(f"🎯 Arena launched with {len(self.active_containers)} active strategies")
+        logger.info(f"ðŸŽ¯ Arena launched with {len(self.active_containers)} active strategies")
         return len(self.active_containers)
 
     def get_leaderboard(self, limit: int = 20) -> List[Dict]:
@@ -267,7 +267,7 @@ class StrategyArena:
             eliminated = leaderboard[num_survivors:]
 
             logger.info(
-                f"🏆 Survivor Selection: {len(survivors)} survivors, {len(eliminated)} eliminated"
+                f"ðŸ† Survivor Selection: {len(survivors)} survivors, {len(eliminated)} eliminated"
             )
 
             # Terminate eliminated strategies
@@ -281,7 +281,7 @@ class StrategyArena:
                         container.stop(timeout=10)
                         container.remove()
                         del self.active_containers[strategy_name]
-                        logger.info(f"💀 Eliminated strategy: {strategy_name}")
+                        logger.info(f"ðŸ’€ Eliminated strategy: {strategy_name}")
                     except Exception as e:
                         logger.error(f"Failed to terminate {strategy_name}: {e}")
 
@@ -293,7 +293,7 @@ class StrategyArena:
 
     def monitor_arena(self, check_interval: int = 60):
         """Monitor arena health and performance"""
-        logger.info("👁️ Starting arena monitoring...")
+        logger.info("ðŸ‘ï¸ Starting arena monitoring...")
 
         while True:
             try:
@@ -318,18 +318,18 @@ class StrategyArena:
                 leaderboard = self.get_leaderboard(10)
 
                 logger.info(
-                    f"📊 Arena Status: {healthy_containers}/{len(self.active_containers)} containers healthy"
+                    f"ðŸ“Š Arena Status: {healthy_containers}/{len(self.active_containers)} containers healthy"
                 )
                 if leaderboard:
                     top_strategy = leaderboard[0]
                     logger.info(
-                        f"🥇 Top Strategy: {top_strategy['strategy_name']} - Profit: ${top_strategy['profit']:.2f}"
+                        f"ðŸ¥‡ Top Strategy: {top_strategy['strategy_name']} - Profit: ${top_strategy['profit']:.2f}"
                     )
 
                 time.sleep(check_interval)
 
             except KeyboardInterrupt:
-                logger.info("🛑 Arena monitoring stopped")
+                logger.info("ðŸ›‘ Arena monitoring stopped")
                 break
             except Exception as e:
                 logger.error(f"Monitoring error: {e}")
@@ -344,13 +344,15 @@ def main():
     num_launched = arena.launch_arena(num_strategies=100, base_capital=1000.0)
 
     if num_launched > 0:
-        logger.info(f"🎯 Arena successfully launched with {num_launched} strategies")
+        logger.info(f"ðŸŽ¯ Arena successfully launched with {num_launched} strategies")
 
         # Start monitoring
         arena.monitor_arena()
     else:
-        logger.error("❌ Failed to launch arena")
+        logger.error("âŒ Failed to launch arena")
 
 
 if __name__ == "__main__":
     main()
+
+

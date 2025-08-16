@@ -1,4 +1,4 @@
-"""
+﻿"""
 Mystic AI Trading Platform - App Factory
 Creates and configures the FastAPI application with all routes and middleware.
 """
@@ -11,6 +11,11 @@ import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+# Max symbols per exchange for comprehensive market data (configurable via env)
+MAX_PER_EXCHANGE = int(os.getenv("COMPREHENSIVE_MAX_PER_EXCHANGE", "10"))
+MAX_BINANCEUS = int(os.getenv("COMPREHENSIVE_MAX_BINANCEUS", MAX_PER_EXCHANGE))
+MAX_COINBASE = int(os.getenv("COMPREHENSIVE_MAX_COINBASE", MAX_PER_EXCHANGE))
 
 # Add modules directory to Python path
 modules_path = os.path.join(os.path.dirname(__file__), '..', 'modules')
@@ -83,13 +88,14 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    logger.info("✅ FastAPI app created")
+    logger.info("âœ… FastAPI app created")
+    logger.info(f"Comprehensive fetch limits — binanceus={MAX_BINANCEUS}, coinbase={MAX_COINBASE}")
 
     # Initialize comprehensive data fetchers for live market data
     async def start_data_fetchers():
         global data_fetcher_manager
         try:
-            logger.info("🔄 Initializing comprehensive market data fetchers...")
+            logger.info("ðŸ”„ Initializing comprehensive market data fetchers...")
 
             # Initialize the proper DataFetcherManager
             try:
@@ -104,10 +110,10 @@ def create_app() -> FastAPI:
 
                 # Start all data fetchers
                 await data_fetcher_manager.start_all()
-                logger.info("✅ DataFetcherManager initialized and started")
+                logger.info("âœ… DataFetcherManager initialized and started")
 
             except Exception as e:
-                logger.error(f"❌ Error initializing DataFetcherManager: {e}")
+                logger.error(f"âŒ Error initializing DataFetcherManager: {e}")
                 data_fetcher_manager = None
 
             # Start a comprehensive background task to fetch market data
@@ -122,7 +128,7 @@ def create_app() -> FastAPI:
                     ai_path = os.path.join(os.path.dirname(__file__), '..', 'ai')
                     if ai_path not in sys.path:
                         sys.path.insert(0, ai_path)
-                    from ai.persistent_cache import get_persistent_cache
+                    from backend.ai.persistent_cache import get_persistent_cache
                     cache = get_persistent_cache()
                 except ImportError as e:
                     logger.warning(f"persistent_cache not available: {e}, skipping comprehensive market data")
@@ -142,7 +148,7 @@ def create_app() -> FastAPI:
                                 "ETHUSDT",
                             ]
 
-                            for symbol in binance_symbols:
+                            for symbol in binance_symbols[:MAX_BINANCEUS]:
                                 try:
                                     # Get 24hr ticker data (includes price, volume, change, high, low)
                                     url = f"https://api.binance.us/api/v3/ticker/24hr?symbol={symbol}"
@@ -183,7 +189,7 @@ def create_app() -> FastAPI:
                                 "ETH-USD",
                             ]
 
-                            for symbol in coinbase_symbols:
+                            for symbol in coinbase_symbols[:MAX_COINBASE]:
                                 try:
                                     # Get data from Coinbase Exchange API (public endpoints)
                                     ticker_url = f"https://api.exchange.coinbase.com/products/{symbol}/ticker"
@@ -211,10 +217,10 @@ def create_app() -> FastAPI:
                                             }
                                         else:
                                             logger.error(
-                                                f"❌ Coinbase ticker API error for {symbol}: HTTP {response.status}"
+                                                f"âŒ Coinbase ticker API error for {symbol}: HTTP {response.status}"
                                             )
                                 except Exception as e:
-                                    logger.error(f"❌ Error fetching Coinbase data for {symbol}: {e}")
+                                    logger.error(f"âŒ Error fetching Coinbase data for {symbol}: {e}")
 
                                 # Rate limiting: 3 second delay for Coinbase (respectful to 3 req/sec limit)
                                 await asyncio.sleep(3)
@@ -262,19 +268,19 @@ def create_app() -> FastAPI:
                             if binance_data:
                                 cache.update_binance(binance_data)
                                 logger.info(
-                                    f"✅ Updated Binance US data: {len(binance_data)} symbols with comprehensive data"
+                                    f"âœ… Updated Binance US data: {len(binance_data)} symbols with comprehensive data"
                                 )
 
                             if coinbase_data:
                                 cache.update_coinbase(coinbase_data)
                                 logger.info(
-                                    f"✅ Updated Coinbase data: {len(coinbase_data)} symbols with comprehensive data"
+                                    f"âœ… Updated Coinbase data: {len(coinbase_data)} symbols with comprehensive data"
                                 )
 
                             if coingecko_data:
                                 cache.update_coingecko(coingecko_data)
                                 logger.info(
-                                    f"✅ Updated CoinGecko data: {len(coingecko_data)} coins with market cap, rank, and comprehensive data"
+                                    f"âœ… Updated CoinGecko data: {len(coingecko_data)} coins with market cap, rank, and comprehensive data"
                                 )
 
                             # Wait 120 seconds before next fetch (very respectful to APIs)
@@ -292,10 +298,10 @@ def create_app() -> FastAPI:
 
             # Start the comprehensive market data fetcher as a background task
             asyncio.create_task(fetch_comprehensive_market_data())
-            logger.info("✅ Comprehensive market data fetcher started")
+            logger.info("âœ… Comprehensive market data fetcher started")
 
         except Exception as e:
-            logger.error(f"❌ Error starting comprehensive data fetchers: {e}")
+            logger.error(f"âŒ Error starting comprehensive data fetchers: {e}")
 
     # Start data fetchers on app startup
     @app.on_event("startup")
@@ -304,12 +310,12 @@ def create_app() -> FastAPI:
 
     # Include consolidated router - replaces all individual router loading
     try:
-        logger.info("🔄 Loading consolidated endpoints...")
-        from endpoints.consolidated_router import router as consolidated_router
+        logger.info("ðŸ”„ Loading consolidated endpoints...")
+        from backend.endpoints.consolidated_router import router as consolidated_router
 
         app.include_router(consolidated_router, prefix="/api")
         logger.info(
-            f"✅ Included consolidated router with {len(consolidated_router.routes)} routes"
+            f"âœ… Included consolidated router with {len(consolidated_router.routes)} routes"
         )
 
         # Also include Crypto Autoengine router directly to expose single-prefix /api routes
@@ -317,106 +323,106 @@ def create_app() -> FastAPI:
             from crypto_autoengine_api import router as crypto_router
 
             app.include_router(crypto_router)
-            logger.info("✅ Included Crypto Autoengine router (single /api prefix)")
+            logger.info("âœ… Included Crypto Autoengine router (single /api prefix)")
         except Exception as e2:
-            logger.error(f"❌ Error loading Crypto Autoengine router: {e2}")
+            logger.error(f"âŒ Error loading Crypto Autoengine router: {e2}")
 
         # Add UI routes to main router
         try:
-            from routes.ui import router as ui_router
+            from backend.routes.ui import router as ui_router
 
             app.include_router(ui_router)
-            logger.info("✅ Included UI router")
+            logger.info("âœ… Included UI router")
         except Exception as e2:
-            logger.error(f"❌ Error loading UI router: {e2}")
+            logger.error(f"âŒ Error loading UI router: {e2}")
 
         # Register AI explain router
         try:
-            from endpoints.ai_explain import router as ai_explain_router
+            from backend.endpoints.ai_explain import router as ai_explain_router
 
             app.include_router(ai_explain_router)
-            logger.info("✅ Included AI explain router")
+            logger.info("âœ… Included AI explain router")
         except Exception as e2:
-            logger.error(f"❌ Error loading AI explain router: {e2}")
+            logger.error(f"âŒ Error loading AI explain router: {e2}")
 
         try:
-            from endpoints.dashboard_missing.dashboard_missing_endpoints import router as dashboard_missing_router
+            from backend.endpoints.dashboard_missing.dashboard_missing_endpoints import router as dashboard_missing_router
 
             app.include_router(dashboard_missing_router)
-            logger.info("✅ Included dashboard missing endpoints router")
+            logger.info("âœ… Included dashboard missing endpoints router")
         except Exception as e2:
-            logger.error(f"❌ Error loading dashboard missing endpoints router: {e2}")
+            logger.error(f"âŒ Error loading dashboard missing endpoints router: {e2}")
 
         try:
-            from routes.ai_dashboard import router as ai_dashboard_router
+            from backend.routes.ai_dashboard import router as ai_dashboard_router
 
             app.include_router(ai_dashboard_router)
-            logger.info("✅ Included AI dashboard router")
+            logger.info("âœ… Included AI dashboard router")
         except Exception as e2:
-            logger.error(f"❌ Error loading AI dashboard router: {e2}")
+            logger.error(f"âŒ Error loading AI dashboard router: {e2}")
 
         # Register AI explain router
         try:
-            from endpoints.ai_explain import router as ai_explain_router
+            from backend.endpoints.ai_explain import router as ai_explain_router
 
             app.include_router(ai_explain_router)
-            logger.info("✅ Included AI explain router (fallback)")
+            logger.info("âœ… Included AI explain router (fallback)")
         except Exception as e2:
-            logger.error(f"❌ Error loading AI explain router (fallback): {e2}")
+            logger.error(f"âŒ Error loading AI explain router (fallback): {e2}")
 
         try:
-            from routes.websocket import router as websocket_router
+            from backend.routes.websocket import router as websocket_router
 
             app.include_router(websocket_router)
-            logger.info("✅ Included WebSocket router")
+            logger.info("âœ… Included WebSocket router")
         except Exception as e2:
-            logger.error(f"❌ Error loading WebSocket router: {e2}")
+            logger.error(f"âŒ Error loading WebSocket router: {e2}")
 
     except Exception as e:
-        logger.error(f"❌ Error loading consolidated endpoints: {e}")
+        logger.error(f"âŒ Error loading consolidated endpoints: {e}")
 
         # Fallback to individual routers if consolidated router fails
-        logger.info("🔄 Falling back to individual routers...")
+        logger.info("ðŸ”„ Falling back to individual routers...")
         try:
-            from routes.dashboard import router as dashboard_router
+            from backend.routes.dashboard import router as dashboard_router
 
             app.include_router(dashboard_router, prefix="/api")
-            logger.info("✅ Included dashboard router (fallback)")
+            logger.info("âœ… Included dashboard router (fallback)")
         except Exception as e2:
-            logger.error(f"❌ Error loading dashboard router (fallback): {e2}")
+            logger.error(f"âŒ Error loading dashboard router (fallback): {e2}")
 
         try:
             from api_endpoints import router as main_api_router
 
             app.include_router(main_api_router, prefix="/api")
-            logger.info("✅ Included main API router (fallback)")
+            logger.info("âœ… Included main API router (fallback)")
         except Exception as e2:
-            logger.error(f"❌ Error loading main API router (fallback): {e2}")
+            logger.error(f"âŒ Error loading main API router (fallback): {e2}")
 
         # Add missing UI routes
         try:
-            from routes.ui import router as ui_router
+            from backend.routes.ui import router as ui_router
 
             app.include_router(ui_router)
-            logger.info("✅ Included UI router")
+            logger.info("âœ… Included UI router")
         except Exception as e2:
-            logger.error(f"❌ Error loading UI router: {e2}")
+            logger.error(f"âŒ Error loading UI router: {e2}")
 
         try:
-            from endpoints.dashboard_missing.dashboard_missing_endpoints import router as dashboard_missing_router
+            from backend.endpoints.dashboard_missing.dashboard_missing_endpoints import router as dashboard_missing_router
 
             app.include_router(dashboard_missing_router)
-            logger.info("✅ Included dashboard missing endpoints router")
+            logger.info("âœ… Included dashboard missing endpoints router")
         except Exception as e2:
-            logger.error(f"❌ Error loading dashboard missing endpoints router: {e2}")
+            logger.error(f"âŒ Error loading dashboard missing endpoints router: {e2}")
 
         try:
-            from routes.ai_dashboard import router as ai_dashboard_router
+            from backend.routes.ai_dashboard import router as ai_dashboard_router
 
             app.include_router(ai_dashboard_router)
-            logger.info("✅ Included AI dashboard router")
+            logger.info("âœ… Included AI dashboard router")
         except Exception as e2:
-            logger.error(f"❌ Error loading AI dashboard router: {e2}")
+            logger.error(f"âŒ Error loading AI dashboard router: {e2}")
 
     # Health check endpoint
     @app.get("/health")
@@ -440,5 +446,7 @@ def create_app() -> FastAPI:
             "timestamp": time.time(),
         }
 
-    logger.info("✅ App factory completed successfully")
+    logger.info("âœ… App factory completed successfully")
     return app
+
+

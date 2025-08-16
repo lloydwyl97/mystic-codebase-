@@ -1,4 +1,4 @@
-"""
+﻿"""
 Response Sanitizer Middleware
 
 FastAPI middleware for response sanitization.
@@ -74,3 +74,5 @@ def _sanitize_data(data: Any) -> Any:
         return [_sanitize_data(item) for item in data]
     else:
         return data
+
+

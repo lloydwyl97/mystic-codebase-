@@ -1,4 +1,4 @@
-"""
+﻿"""
 Optimized Database Manager for Mystic Trading Platform
 
 Provides high-performance database operations with:
@@ -24,7 +24,7 @@ try:
 except ImportError:
     redis = None
 
-from utils.exceptions import DatabaseException
+from backend.utils.exceptions import DatabaseException
 from trading_config import trading_config
 
 logger = logging.getLogger(__name__)
@@ -221,7 +221,7 @@ class OptimizedDatabaseManager:
 
         # Initialize database
         self._initialize_database()
-        logger.info("✅ OptimizedDatabaseManager initialized")
+        logger.info("âœ… OptimizedDatabaseManager initialized")
 
     def _initialize_database(self):
         """Initialize database with optimized schema"""
@@ -318,7 +318,7 @@ class OptimizedDatabaseManager:
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_trades_status ON trades(status)")
 
             conn.commit()
-            logger.info("✅ Database initialized with optimized schema")
+            logger.info("âœ… Database initialized with optimized schema")
 
     @contextmanager
     def get_connection(self):
@@ -758,7 +758,7 @@ class OptimizedDatabaseManager:
     def clear_cache(self):
         """Clear query cache"""
         self.query_cache.clear()
-        logger.info("✅ Query cache cleared")
+        logger.info("âœ… Query cache cleared")
 
     def optimize_database(self):
         """Run database optimization"""
@@ -784,7 +784,7 @@ class OptimizedDatabaseManager:
                     cursor.execute(index_sql)
 
                 conn.commit()
-            logger.info("✅ Database optimization completed")
+            logger.info("âœ… Database optimization completed")
         except Exception as e:
             logger.error(f"Database optimization failed: {e}")
 
@@ -843,3 +843,5 @@ class OptimizedDatabaseManager:
 
 # Global optimized database manager instance
 optimized_db_manager = OptimizedDatabaseManager()
+
+

@@ -1,4 +1,4 @@
-import pandas as pd
+﻿import pandas as pd
 import time
 import requests
 from datetime import datetime
@@ -443,3 +443,5 @@ def monitor_anomalies_enhanced():
 while True:
     monitor_anomalies_enhanced()
     time.sleep(CHECK_INTERVAL)
+
+

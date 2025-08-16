@@ -1,4 +1,4 @@
-import numpy as np
+﻿import numpy as np
 import pandas as pd
 import time
 import json
@@ -513,3 +513,5 @@ def balance_portfolio_enhanced():
 while True:
     balance_portfolio_enhanced()
     time.sleep(BALANCE_INTERVAL)
+
+

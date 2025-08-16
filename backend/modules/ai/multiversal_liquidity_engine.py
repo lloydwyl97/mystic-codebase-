@@ -1,4 +1,4 @@
-"""
+﻿"""
 Multiversal Liquidity Engine for Mystic AI Trading Platform
 Analyzes cross-exchange liquidity and identifies arbitrage opportunities.
 """
@@ -13,7 +13,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ class MultiversalLiquidityEngine:
         self.exchange_instances = {}
         self._init_exchanges()
 
-        logger.info("✅ MultiversalLiquidityEngine initialized")
+        logger.info("âœ… MultiversalLiquidityEngine initialized")
 
     def _init_exchanges(self):
         """Initialize exchange instances"""
@@ -90,7 +90,7 @@ class MultiversalLiquidityEngine:
                     })
 
                     self.exchange_instances[exchange_id] = exchange
-                    logger.info(f"✅ Initialized {config['name']}")
+                    logger.info(f"âœ… Initialized {config['name']}")
 
                 except Exception as e:
                     logger.error(f"Failed to initialize {config['name']}: {e}")
@@ -390,7 +390,7 @@ class MultiversalLiquidityEngine:
     async def find_arbitrage_opportunities(self) -> List[Dict[str, Any]]:
         """Find arbitrage opportunities across all exchanges"""
         try:
-            logger.info("🔍 Searching for arbitrage opportunities...")
+            logger.info("ðŸ” Searching for arbitrage opportunities...")
 
             # Fetch all orderbooks
             orderbooks = await self._fetch_all_orderbooks()
@@ -415,7 +415,7 @@ class MultiversalLiquidityEngine:
                         metadata=opportunity
                     )
 
-            logger.info(f"✅ Found {len(opportunities)} arbitrage opportunities")
+            logger.info(f"âœ… Found {len(opportunities)} arbitrage opportunities")
             return opportunities
 
         except Exception as e:
@@ -579,7 +579,7 @@ def get_multiversal_liquidity_engine() -> MultiversalLiquidityEngine:
 async def main():
     """Test the multiversal liquidity engine"""
     engine = MultiversalLiquidityEngine()
-    print(f"✅ MultiversalLiquidityEngine initialized: {engine}")
+    print(f"âœ… MultiversalLiquidityEngine initialized: {engine}")
 
     # Test arbitrage opportunities
     opportunities = await engine.find_arbitrage_opportunities()
@@ -599,3 +599,5 @@ async def main():
 if __name__ == "__main__":
     # Run async test
     asyncio.run(main())
+
+

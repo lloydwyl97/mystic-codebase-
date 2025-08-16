@@ -1,4 +1,4 @@
-"""
+﻿"""
 Order Service
 
 Handles order operations and order management.
@@ -94,3 +94,5 @@ class OrderService:
 
 # Global instance
 order_service = OrderService()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Request Logger Middleware
 
 FastAPI middleware for logging requests.
@@ -56,3 +56,5 @@ async def request_logger_middleware(
 
         # Return error response
         return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
+

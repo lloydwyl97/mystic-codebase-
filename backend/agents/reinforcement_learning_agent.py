@@ -1,4 +1,4 @@
-"""
+﻿"""
 Reinforcement Learning Agent
 Handles reinforcement learning for trading strategy optimization
 """
@@ -24,7 +24,7 @@ import joblib
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agents.base_agent import BaseAgent
+from backend.agents.base_agent import BaseAgent
 
 
 class DQNetwork(nn.Module):
@@ -278,7 +278,7 @@ class ReinforcementLearningAgent(BaseAgent):
         self.register_handler("get_rl_status", self.handle_get_rl_status)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"🎯 Reinforcement Learning Agent {agent_id} initialized on {self.device}")
+        print(f"ðŸŽ¯ Reinforcement Learning Agent {agent_id} initialized on {self.device}")
 
     async def initialize(self):
         """Initialize reinforcement learning agent resources"""
@@ -295,10 +295,10 @@ class ReinforcementLearningAgent(BaseAgent):
             # Start RL monitoring
             await self.start_rl_monitoring()
 
-            print(f"✅ Reinforcement Learning Agent {self.agent_id} initialized successfully")
+            print(f"âœ… Reinforcement Learning Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Reinforcement Learning Agent: {e}")
+            print(f"âŒ Error initializing Reinforcement Learning Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -320,7 +320,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in RL processing loop: {e}")
+                print(f"âŒ Error in RL processing loop: {e}")
                 await asyncio.sleep(600)
 
     async def load_rl_config(self):
@@ -337,11 +337,11 @@ class ReinforcementLearningAgent(BaseAgent):
                 self.trading_symbols = json.loads(symbols_data)
 
             print(
-                f"📋 RL configuration loaded: {len(self.rl_config['algorithms'])} algorithms, {len(self.trading_symbols)} symbols"
+                f"ðŸ“‹ RL configuration loaded: {len(self.rl_config['algorithms'])} algorithms, {len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading RL configuration: {e}")
+            print(f"âŒ Error loading RL configuration: {e}")
 
     async def initialize_models(self):
         """Initialize reinforcement learning models"""
@@ -361,10 +361,10 @@ class ReinforcementLearningAgent(BaseAgent):
                         # Initialize scaler
                         self.scalers[algorithm_name] = StandardScaler()
 
-            print(f"🧠 RL models initialized: {len(self.models)} models")
+            print(f"ðŸ§  RL models initialized: {len(self.models)} models")
 
         except Exception as e:
-            print(f"❌ Error initializing RL models: {e}")
+            print(f"âŒ Error initializing RL models: {e}")
 
     async def create_rl_model(
         self, algorithm_name: str, algorithm_config: Dict[str, Any]
@@ -429,14 +429,14 @@ class ReinforcementLearningAgent(BaseAgent):
                 }
 
             else:
-                print(f"❌ Unknown algorithm type: {algorithm_type}")
+                print(f"âŒ Unknown algorithm type: {algorithm_type}")
                 return None
 
-            print(f"✅ Created {algorithm_type} model: {algorithm_name}")
+            print(f"âœ… Created {algorithm_type} model: {algorithm_name}")
             return model
 
         except Exception as e:
-            print(f"❌ Error creating RL model {algorithm_name}: {e}")
+            print(f"âŒ Error creating RL model {algorithm_name}: {e}")
             return None
 
     async def load_pretrained_models(self):
@@ -464,10 +464,10 @@ class ReinforcementLearningAgent(BaseAgent):
                     if os.path.exists(scaler_path):
                         self.scalers[algorithm_name] = joblib.load(scaler_path)
 
-                    print(f"✅ Loaded pre-trained RL model: {algorithm_name}")
+                    print(f"âœ… Loaded pre-trained RL model: {algorithm_name}")
 
         except Exception as e:
-            print(f"❌ Error loading pre-trained RL models: {e}")
+            print(f"âŒ Error loading pre-trained RL models: {e}")
 
     async def start_rl_monitoring(self):
         """Start RL monitoring"""
@@ -479,10 +479,10 @@ class ReinforcementLearningAgent(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 RL monitoring started")
+            print("ðŸ“¡ RL monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting RL monitoring: {e}")
+            print(f"âŒ Error starting RL monitoring: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -496,7 +496,7 @@ class ReinforcementLearningAgent(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -513,7 +513,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 await self.store_market_data(symbol, price, volume, timestamp)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def store_market_data(self, symbol: str, price: float, volume: float, timestamp: str):
         """Store market data for RL training"""
@@ -543,7 +543,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 ]["data"][-2000:]
 
         except Exception as e:
-            print(f"❌ Error storing market data: {e}")
+            print(f"âŒ Error storing market data: {e}")
 
     async def train_models_if_needed(self):
         """Train RL models if they need updating"""
@@ -561,7 +561,7 @@ class ReinforcementLearningAgent(BaseAgent):
                             await self.train_symbol_models(symbol)
 
         except Exception as e:
-            print(f"❌ Error training RL models: {e}")
+            print(f"âŒ Error training RL models: {e}")
 
     def should_retrain_model(self, symbol: str, last_training: str) -> bool:
         """Check if RL model should be retrained"""
@@ -576,13 +576,13 @@ class ReinforcementLearningAgent(BaseAgent):
             return (current_time - last_training_time).total_seconds() > 43200
 
         except Exception as e:
-            print(f"❌ Error checking retrain condition: {e}")
+            print(f"âŒ Error checking retrain condition: {e}")
             return True
 
     async def train_symbol_models(self, symbol: str):
         """Train RL models for a specific symbol"""
         try:
-            print(f"🏋️ Training RL models for {symbol}...")
+            print(f"ðŸ‹ï¸ Training RL models for {symbol}...")
 
             # Get market data
             market_data = await self.get_symbol_market_data(symbol)
@@ -606,7 +606,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 try:
                     await self.train_rl_model(symbol, algorithm_name, model, environment)
                 except Exception as e:
-                    print(f"❌ Error training {algorithm_name} for {symbol}: {e}")
+                    print(f"âŒ Error training {algorithm_name} for {symbol}: {e}")
 
             # Update training history
             if symbol not in self.state["training_history"]:
@@ -615,10 +615,10 @@ class ReinforcementLearningAgent(BaseAgent):
             self.state["training_history"][symbol]["last_training"] = datetime.now().isoformat()
             self.state["training_count"] += 1
 
-            print(f"✅ RL model training complete for {symbol}")
+            print(f"âœ… RL model training complete for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error training RL models for {symbol}: {e}")
+            print(f"âŒ Error training RL models for {symbol}: {e}")
 
     async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
         """Get market data for a symbol"""
@@ -647,7 +647,7 @@ class ReinforcementLearningAgent(BaseAgent):
             return data_points
 
         except Exception as e:
-            print(f"❌ Error getting market data for {symbol}: {e}")
+            print(f"âŒ Error getting market data for {symbol}: {e}")
             return []
 
     async def train_rl_model(
@@ -670,7 +670,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 )
 
         except Exception as e:
-            print(f"❌ Error training RL model {algorithm_name}: {e}")
+            print(f"âŒ Error training RL model {algorithm_name}: {e}")
 
     async def train_dqn(
         self,
@@ -756,12 +756,12 @@ class ReinforcementLearningAgent(BaseAgent):
                     patience_counter += 1
 
                 if patience_counter >= training_config["early_stopping_patience"]:
-                    print(f"🛑 Early stopping at episode {episode}")
+                    print(f"ðŸ›‘ Early stopping at episode {episode}")
                     break
 
                 if episode % 100 == 0:
                     print(
-                        f"📊 Episode {episode}: Total Reward: {total_reward:.2f}, Epsilon: {config['epsilon']:.3f}"
+                        f"ðŸ“Š Episode {episode}: Total Reward: {total_reward:.2f}, Epsilon: {config['epsilon']:.3f}"
                     )
 
             # Update training history
@@ -774,10 +774,10 @@ class ReinforcementLearningAgent(BaseAgent):
                 "episodes_trained": episode + 1,
             }
 
-            print(f"✅ DQN training complete for {symbol}")
+            print(f"âœ… DQN training complete for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error training DQN for {symbol}: {e}")
+            print(f"âŒ Error training DQN for {symbol}: {e}")
 
     async def train_dqn_step(
         self,
@@ -816,7 +816,7 @@ class ReinforcementLearningAgent(BaseAgent):
             optimizer.step()
 
         except Exception as e:
-            print(f"❌ Error in DQN training step: {e}")
+            print(f"âŒ Error in DQN training step: {e}")
 
     async def train_actor_critic(
         self,
@@ -900,11 +900,11 @@ class ReinforcementLearningAgent(BaseAgent):
                     patience_counter += 1
 
                 if patience_counter >= training_config["early_stopping_patience"]:
-                    print(f"🛑 Early stopping at episode {episode}")
+                    print(f"ðŸ›‘ Early stopping at episode {episode}")
                     break
 
                 if episode % 100 == 0:
-                    print(f"📊 Episode {episode}: Total Reward: {total_reward:.2f}")
+                    print(f"ðŸ“Š Episode {episode}: Total Reward: {total_reward:.2f}")
 
             # Update training history
             if symbol not in self.state["training_history"]:
@@ -916,26 +916,26 @@ class ReinforcementLearningAgent(BaseAgent):
                 "episodes_trained": episode + 1,
             }
 
-            print(f"✅ Actor-Critic training complete for {symbol}")
+            print(f"âœ… Actor-Critic training complete for {symbol}")
 
         except Exception as e:
-            print(f"❌ Error training Actor-Critic for {symbol}: {e}")
+            print(f"âŒ Error training Actor-Critic for {symbol}: {e}")
 
     async def generate_all_strategies(self):
         """Generate strategies for all symbols"""
         try:
-            print(f"🎯 Generating strategies for {len(self.trading_symbols)} symbols...")
+            print(f"ðŸŽ¯ Generating strategies for {len(self.trading_symbols)} symbols...")
 
             for symbol in self.trading_symbols:
                 try:
                     await self.generate_symbol_strategy(symbol)
                 except Exception as e:
-                    print(f"❌ Error generating strategy for {symbol}: {e}")
+                    print(f"âŒ Error generating strategy for {symbol}: {e}")
 
-            print("✅ Strategy generation complete")
+            print("âœ… Strategy generation complete")
 
         except Exception as e:
-            print(f"❌ Error generating all strategies: {e}")
+            print(f"âŒ Error generating all strategies: {e}")
 
     async def generate_symbol_strategy(self, symbol: str):
         """Generate strategy for a specific symbol"""
@@ -957,7 +957,7 @@ class ReinforcementLearningAgent(BaseAgent):
                     if strategy:
                         strategies[algorithm_name] = strategy
                 except Exception as e:
-                    print(f"❌ Error generating strategy with {algorithm_name} for {symbol}: {e}")
+                    print(f"âŒ Error generating strategy with {algorithm_name} for {symbol}: {e}")
 
             # Store strategies
             if strategies:
@@ -970,7 +970,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 await self.broadcast_strategies(symbol, strategies)
 
         except Exception as e:
-            print(f"❌ Error generating strategy for {symbol}: {e}")
+            print(f"âŒ Error generating strategy for {symbol}: {e}")
 
     async def generate_model_strategy(
         self,
@@ -1041,7 +1041,7 @@ class ReinforcementLearningAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error generating strategy with {algorithm_name}: {e}")
+            print(f"âŒ Error generating strategy with {algorithm_name}: {e}")
             return None
 
     async def broadcast_strategies(self, symbol: str, strategies: Dict[str, Any]):
@@ -1062,7 +1062,7 @@ class ReinforcementLearningAgent(BaseAgent):
             await self.send_message("execution_agent", strategy_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting strategies: {e}")
+            print(f"âŒ Error broadcasting strategies: {e}")
 
     async def handle_train_rl_model(self, message: Dict[str, Any]):
         """Handle manual RL model training request"""
@@ -1070,7 +1070,7 @@ class ReinforcementLearningAgent(BaseAgent):
             symbol = message.get("symbol")
             algorithm_name = message.get("algorithm_name")
 
-            print(f"🏋️ Manual RL model training requested for {symbol}")
+            print(f"ðŸ‹ï¸ Manual RL model training requested for {symbol}")
 
             if symbol:
                 if algorithm_name and algorithm_name in self.models:
@@ -1105,7 +1105,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling RL model training request: {e}")
+            print(f"âŒ Error handling RL model training request: {e}")
             await self.broadcast_error(f"RL model training error: {e}")
 
     async def handle_generate_strategy(self, message: Dict[str, Any]):
@@ -1114,7 +1114,7 @@ class ReinforcementLearningAgent(BaseAgent):
             symbol = message.get("symbol")
             algorithm_name = message.get("algorithm_name")
 
-            print(f"🎯 Manual strategy generation requested for {symbol}")
+            print(f"ðŸŽ¯ Manual strategy generation requested for {symbol}")
 
             if symbol:
                 market_data = await self.get_symbol_market_data(symbol)
@@ -1171,7 +1171,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling strategy generation request: {e}")
+            print(f"âŒ Error handling strategy generation request: {e}")
             await self.broadcast_error(f"Strategy generation error: {e}")
 
     async def handle_get_rl_status(self, message: Dict[str, Any]):
@@ -1179,7 +1179,7 @@ class ReinforcementLearningAgent(BaseAgent):
         try:
             symbol = message.get("symbol")
 
-            print(f"📊 RL status requested for {symbol}")
+            print(f"ðŸ“Š RL status requested for {symbol}")
 
             # Get RL status
             if symbol and symbol in self.state["training_history"]:
@@ -1204,7 +1204,7 @@ class ReinforcementLearningAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling RL status request: {e}")
+            print(f"âŒ Error handling RL status request: {e}")
             await self.broadcast_error(f"RL status error: {e}")
 
     async def update_rl_metrics(self):
@@ -1225,7 +1225,7 @@ class ReinforcementLearningAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating RL metrics: {e}")
+            print(f"âŒ Error updating RL metrics: {e}")
 
     async def cleanup_cache(self):
         """Clean up old cache entries"""
@@ -1251,13 +1251,13 @@ class ReinforcementLearningAgent(BaseAgent):
                         del self.state["training_history"][symbol]
 
         except Exception as e:
-            print(f"❌ Error cleaning up cache: {e}")
+            print(f"âŒ Error cleaning up cache: {e}")
 
     async def handle_market_data(self, message: Dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})
-            print(f"📊 Reinforcement Learning Agent received market data for {len(market_data)} symbols")
+            print(f"ðŸ“Š Reinforcement Learning Agent received market data for {len(market_data)} symbols")
             
             # Process market data
             await self.process_market_data(market_data)
@@ -1278,5 +1278,7 @@ class ReinforcementLearningAgent(BaseAgent):
             await self.generate_all_strategies()
             
         except Exception as e:
-            print(f"❌ Error handling market data: {e}")
+            print(f"âŒ Error handling market data: {e}")
             await self.broadcast_error(f"Market data handling error: {e}")
+
+

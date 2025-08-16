@@ -1,2 +1,4 @@
-# Copied from backend/ai/live_trader.py for modularization
+﻿# Copied from backend/ai/live_trader.py for modularization
 # ... existing code from backend/ai/live_trader.py ...
+
+

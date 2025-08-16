@@ -1,4 +1,4 @@
-"""
+﻿"""
 Health Check System for Mystic Trading Platform
 
 Provides comprehensive health monitoring with:
@@ -423,3 +423,5 @@ class HealthChecker:
 
 # Global health checker instance
 health_checker = HealthChecker()
+
+

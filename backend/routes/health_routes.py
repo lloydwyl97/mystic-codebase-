@@ -1,4 +1,4 @@
-"""
+﻿"""
 Health Routes
 Health check and monitoring endpoints
 """
@@ -97,3 +97,5 @@ async def services_health_check() -> Dict[str, Any]:
         "timestamp": time.time(),
         "services": services_health,
     }
+
+

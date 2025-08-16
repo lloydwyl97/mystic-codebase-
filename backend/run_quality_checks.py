@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Comprehensive Code Quality Check Script for Mystic Trading Platform
 Runs all professional-grade code quality tools in sequence.
@@ -43,7 +43,7 @@ class QualityChecker:
             success = result.returncode == 0
             output = result.stdout + result.stderr
 
-            print(f"✅ {name} completed successfully" if success else f"❌ {name} failed")
+            print(f"âœ… {name} completed successfully" if success else f"âŒ {name} failed")
             if output.strip():
                 print(output)
 
@@ -55,7 +55,7 @@ class QualityChecker:
             }
 
         except subprocess.TimeoutExpired:
-            print(f"⏰ {name} timed out after 5 minutes")
+            print(f"â° {name} timed out after 5 minutes")
             return {
                 "success": False,
                 "returncode": -1,
@@ -63,7 +63,7 @@ class QualityChecker:
                 "command": " ".join(command),
             }
         except Exception as e:
-            print(f"💥 {name} failed with exception: {e}")
+            print(f"ðŸ’¥ {name} failed with exception: {e}")
             return {
                 "success": False,
                 "returncode": -1,
@@ -73,7 +73,7 @@ class QualityChecker:
 
     def run_python_checks(self):
         """Run all Python code quality checks"""
-        print("\n🐍 Running Python Code Quality Checks...")
+        print("\nðŸ Running Python Code Quality Checks...")
 
         # Code formatting
         self.results["black"] = self.run_command(
@@ -151,7 +151,7 @@ class QualityChecker:
 
     def run_node_checks(self):
         """Run Node.js code quality checks"""
-        print("\n🟢 Running Node.js Code Quality Checks...")
+        print("\nðŸŸ¢ Running Node.js Code Quality Checks...")
 
         # Code duplication detection
         self.results["jscpd"] = self.run_command(
@@ -162,7 +162,7 @@ class QualityChecker:
 
     def run_tests(self):
         """Run tests with coverage"""
-        print("\n🧪 Running Tests and Coverage...")
+        print("\nðŸ§ª Running Tests and Coverage...")
 
         self.results["pytest"] = self.run_command(
             [
@@ -178,7 +178,7 @@ class QualityChecker:
 
     def run_documentation_checks(self):
         """Run documentation checks"""
-        print("\n📚 Running Documentation Checks...")
+        print("\nðŸ“š Running Documentation Checks...")
 
         self.results["docformatter"] = self.run_command(
             [
@@ -195,7 +195,7 @@ class QualityChecker:
     def generate_report(self):
         """Generate comprehensive quality report"""
         print(f"\n{'='*60}")
-        print("📊 QUALITY CHECK REPORT")
+        print("ðŸ“Š QUALITY CHECK REPORT")
         print(f"{'='*60}")
 
         total_checks = len(self.results)
@@ -203,15 +203,15 @@ class QualityChecker:
         failed_checks = total_checks - passed_checks
 
         print("\nOverall Results:")
-        print(f"✅ Passed: {passed_checks}/{total_checks}")
-        print(f"❌ Failed: {failed_checks}/{total_checks}")
-        print(f"📈 Success Rate: {(passed_checks/total_checks)*100:.1f}%")
+        print(f"âœ… Passed: {passed_checks}/{total_checks}")
+        print(f"âŒ Failed: {failed_checks}/{total_checks}")
+        print(f"ðŸ“ˆ Success Rate: {(passed_checks/total_checks)*100:.1f}%")
 
         elapsed_time = time.time() - self.start_time
-        print(f"⏱️  Total Time: {elapsed_time:.2f} seconds")
+        print(f"â±ï¸  Total Time: {elapsed_time:.2f} seconds")
 
         if failed_checks > 0:
-            print("\n❌ Failed Checks:")
+            print("\nâŒ Failed Checks:")
             for name, result in self.results.items():
                 if not result["success"]:
                     print(f"  - {name}: {result.get('output', 'Unknown error')[:100]}...")
@@ -235,15 +235,15 @@ class QualityChecker:
                 indent=2,
             )
 
-        print(f"\n📄 Detailed report saved to: {report_file}")
+        print(f"\nðŸ“„ Detailed report saved to: {report_file}")
 
         return failed_checks == 0
 
     def run_all_checks(self):
         """Run all quality checks"""
-        print("🚀 Starting Comprehensive Code Quality Checks...")
-        print(f"📁 Working directory: {self.backend_dir}")
-        print(f"🐍 Using Python: {self.python_executable}")
+        print("ðŸš€ Starting Comprehensive Code Quality Checks...")
+        print(f"ðŸ“ Working directory: {self.backend_dir}")
+        print(f"ðŸ Using Python: {self.python_executable}")
 
         try:
             self.run_python_checks()
@@ -254,17 +254,17 @@ class QualityChecker:
             success = self.generate_report()
 
             if success:
-                print("\n🎉 All quality checks passed!")
+                print("\nðŸŽ‰ All quality checks passed!")
                 return 0
             else:
-                print("\n⚠️  Some quality checks failed. Please review the report above.")
+                print("\nâš ï¸  Some quality checks failed. Please review the report above.")
                 return 1
 
         except KeyboardInterrupt:
-            print("\n⏹️  Quality checks interrupted by user")
+            print("\nâ¹ï¸  Quality checks interrupted by user")
             return 1
         except Exception as e:
-            print(f"\n💥 Quality checks failed with exception: {e}")
+            print(f"\nðŸ’¥ Quality checks failed with exception: {e}")
             return 1
 
 
@@ -276,3 +276,5 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
+

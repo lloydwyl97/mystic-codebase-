@@ -1,4 +1,4 @@
-"""
+﻿"""
 Strategy Module for Mystic Trading Platform
 
 Contains all strategy-related functionality including strategy management, execution, and system operations.
@@ -11,3 +11,5 @@ __all__ = [
     "StrategyAnalyzer",
     "StrategyExecutor",
 ]
+
+

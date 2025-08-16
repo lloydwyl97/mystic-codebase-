@@ -1,4 +1,4 @@
-"""
+﻿"""
 OpenAI Integration for Strategy Descriptions
 ===========================================
 
@@ -165,3 +165,5 @@ def generate_strategy_description(
 ) -> str:
     """Main function to generate strategy description."""
     return generate_openai_description(strategy, parent, backtest_results)
+
+

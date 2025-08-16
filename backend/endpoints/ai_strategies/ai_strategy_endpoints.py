@@ -1,11 +1,11 @@
-"""AI Strategy System Live Endpoints"""
+﻿"""AI Strategy System Live Endpoints"""
 
 from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException
 
-from services.ai_strategies import get_ai_strategy_service
-from services.portfolio_service import portfolio_service
+from backend.services.ai_strategies import get_ai_strategy_service
+from backend.services.portfolio_service import portfolio_service
 
 router = APIRouter()
 
@@ -175,3 +175,6 @@ async def clear_position():
         return portfolio
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to clear position: {str(e)}")
+
+
+

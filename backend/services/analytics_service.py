@@ -1,4 +1,4 @@
-"""
+﻿"""
 Analytics Service
 
 Handles analytics operations and data analysis.
@@ -147,3 +147,5 @@ analytics_service = AnalyticsService()
 def get_analytics_service() -> AnalyticsService:
     """Get the global analytics service instance."""
     return analytics_service
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Data Endpoints
 Consolidated market data, live prices, and market analysis
 All endpoints return live data - no stubs or placeholders
@@ -12,15 +12,15 @@ import aiohttp
 
 from fastapi import APIRouter, HTTPException
 from typing import Any, List
-from config.coins import FEATURED_SYMBOLS
+from backend.config.coins import FEATURED_SYMBOLS
 
 # Import real services
 try:
-    from ai.persistent_cache import get_persistent_cache
-    from modules.data.binance_data import BinanceDataFetcher as BinanceData  # type: ignore[import-not-found]
-    from modules.data.coinbase_data import CoinbaseData  # type: ignore[import-not-found]
-    from services.coingecko_service import CoinGeckoService
-    from services.market_data import MarketDataService
+    from backend.ai.persistent_cache import get_persistent_cache
+    from backend.modules.data.binance_data import BinanceDataFetcher as BinanceData  # type: ignore[import-not-found]
+    from backend.modules.data.coinbase_data import CoinbaseData  # type: ignore[import-not-found]
+    from backend.services.coingecko_service import CoinGeckoService
+    from backend.services.market_data import MarketDataService
 except ImportError as e:
     logging.warning(f"Some market data services not available: {e}")
     def get_persistent_cache() -> Any:  # type: ignore[misc]
@@ -566,3 +566,6 @@ async def get_exchange_data() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting exchange data: {e}")
         raise HTTPException(status_code=500, detail=f"Exchange data failed: {str(e)}")
+
+
+

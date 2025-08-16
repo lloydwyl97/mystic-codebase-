@@ -1,4 +1,4 @@
-"""
+﻿"""
 Signals Module for Mystic Trading Platform
 
 Contains all signal-related functionality including signal generation, management, and processing.
@@ -8,3 +8,5 @@ Contains all signal-related functionality including signal generation, managemen
 # These will be updated when the actual functionality is moved to these modules
 
 __all__ = []
+
+

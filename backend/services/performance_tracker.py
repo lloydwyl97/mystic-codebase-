@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced Performance Tracking Service
 Tracks detailed performance metrics for all trading activities
 """
@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from services.websocket_manager import websocket_manager
+from backend.services.websocket_manager import websocket_manager
 
 logger = logging.getLogger(__name__)
 
@@ -351,16 +351,16 @@ class AdvancedPerformanceTracker:
 
         # Performance recommendations
         if metrics.win_rate < 0.7:
-            logger.warning("⚠️ Win rate below 70% - Consider tightening signal criteria")
+            logger.warning("âš ï¸ Win rate below 70% - Consider tightening signal criteria")
 
         if metrics.profit_factor < 1.5:
-            logger.warning("⚠️ Profit factor below 1.5 - Review risk management")
+            logger.warning("âš ï¸ Profit factor below 1.5 - Review risk management")
 
         if metrics.ml_accuracy < 0.6:
-            logger.warning("⚠️ ML accuracy below 60% - Retrain models")
+            logger.warning("âš ï¸ ML accuracy below 60% - Retrain models")
 
         if metrics.sentiment_accuracy < 0.5:
-            logger.warning("⚠️ Sentiment accuracy below 50% - Review sentiment sources")
+            logger.warning("âš ï¸ Sentiment accuracy below 50% - Review sentiment sources")
 
     def get_current_performance(self) -> Optional[PerformanceMetrics]:
         """Get current performance metrics"""
@@ -394,3 +394,5 @@ class AdvancedPerformanceTracker:
 
 # Global performance tracker instance
 performance_tracker = AdvancedPerformanceTracker()
+
+

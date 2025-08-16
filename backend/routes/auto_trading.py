@@ -1,4 +1,4 @@
-"""
+﻿"""
 Auto Trading Endpoints
 Focused on auto trading control and management with advanced signal filtering
 """
@@ -11,21 +11,21 @@ from typing import Any, Dict, List
 from fastapi import APIRouter, HTTPException
 
 # Import actual AI services
-from modules.ai.ai_signals import (
+from backend.modules.ai.ai_signals import (
     signal_scorer,
     risk_adjusted_signals,
     technical_signals,
     market_strength_signals,
 )
-from ai.auto_trade import get_trading_status, enable_trading, disable_trading
-from ai.trade_tracker import (
+from backend.ai.auto_trade import get_trading_status, enable_trading, disable_trading
+from backend.ai.trade_tracker import (
     get_active_trades,
     get_trade_summary,
     get_trade_history,
 )
-from ai.ai_brains import trend_analysis
-from ai.ai_mystic import mystic_oracle
-from ai.poller import cache
+from backend.ai.ai_brains import trend_analysis
+from backend.ai.ai_mystic import mystic_oracle
+from backend.ai.poller import cache
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/autobuy", tags=["auto-trading"])
@@ -338,7 +338,7 @@ async def _execute_trade_with_comprehensive_risk_management(
             position_size *= 0.8
 
         # Record the trade
-        from ai.trade_tracker import record_entry
+        from backend.ai.trade_tracker import record_entry
 
         record_entry(symbol, position_size, price)
 
@@ -644,7 +644,7 @@ def _get_sentiment_recommendation(sentiment: Any) -> str:
 async def test_integrations() -> Dict[str, Any]:
     """Test CoinGecko and Binance US integrations"""
     try:
-        from ai.auto_trade import (
+        from backend.ai.auto_trade import (
             CoinGeckoAPI,
             BinanceUSAPI,
             get_market_data,
@@ -720,7 +720,7 @@ async def test_integrations() -> Dict[str, Any]:
 async def get_symbol_market_data(symbol: str) -> Dict[str, Any]:
     """Get comprehensive market data for a specific symbol from both CoinGecko and Binance US"""
     try:
-        from ai.auto_trade import get_market_data
+        from backend.ai.auto_trade import get_market_data
 
         data = await get_market_data(symbol)
         return {"success": True, "symbol": symbol, "data": data}
@@ -734,7 +734,7 @@ async def get_symbol_market_data(symbol: str) -> Dict[str, Any]:
 async def get_account_status() -> Dict[str, Any]:
     """Get account status and balance from Binance US"""
     try:
-        from ai.auto_trade import get_account_balance, get_trading_status
+        from backend.ai.auto_trade import get_account_balance, get_trading_status
 
         balance_data = await get_account_balance()
         trading_status = get_trading_status()
@@ -754,8 +754,8 @@ async def get_account_status() -> Dict[str, Any]:
 async def get_system_status() -> Dict[str, Any]:
     """Get comprehensive autobuy system status with all integrations"""
     try:
-        from ai.auto_trade import get_trading_status, get_account_balance
-        from ai.auto_trade import CoinGeckoAPI, BinanceUSAPI
+        from backend.ai.auto_trade import get_trading_status, get_account_balance
+        from backend.ai.auto_trade import CoinGeckoAPI, BinanceUSAPI
 
         # Get trading status
         trading_status = get_trading_status()
@@ -888,8 +888,8 @@ async def get_system_status() -> Dict[str, Any]:
 async def get_comprehensive_status() -> Dict[str, Any]:
     """Get comprehensive system status with all AI and experimental integrations"""
     try:
-        from ai.auto_trade import get_trading_status, get_account_balance
-        from ai.auto_trade import CoinGeckoAPI, BinanceUSAPI
+        from backend.ai.auto_trade import get_trading_status, get_account_balance
+        from backend.ai.auto_trade import CoinGeckoAPI, BinanceUSAPI
         from ai_training_pipeline import get_ai_training_pipeline
         from ai_model_versioning import get_ai_model_versioning
         from experimental_integration import get_experimental_integration
@@ -1015,9 +1015,11 @@ async def get_comprehensive_status() -> Dict[str, Any]:
         return comprehensive_status
 
     except Exception as e:
-        logger.error(f"❌ Error getting comprehensive status: {e}")
+        logger.error(f"âŒ Error getting comprehensive status: {e}")
         return {
             "error": str(e),
             "status": "error",
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
+
+

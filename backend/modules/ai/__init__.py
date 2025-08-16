@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Module for Mystic Trading Platform
 
 Contains all AI-related functionality including strategies, signals, pattern recognition, and live trading.
@@ -27,3 +27,5 @@ __all__ = [
     "get_trading_status",
     "get_trade_summary",
 ]
+
+

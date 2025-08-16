@@ -1,4 +1,4 @@
-"""
+﻿"""
 Performance Monitor for Mystic Trading Platform
 
 Comprehensive performance monitoring with:
@@ -392,3 +392,5 @@ class PerformanceMonitor:
 
 # Global performance monitor instance
 performance_monitor = PerformanceMonitor()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Neuro-Synchronization Engine
 Links internal brainwave profiles (theta/alpha ranges) to system parameters
 for resonance-aligned decision making
@@ -31,11 +31,11 @@ _ = PCA()
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 except ImportError:
     # Fallback if the path modification didn't work
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from agents.base_agent import BaseAgent
+    from backend.agents.base_agent import BaseAgent
 
 
 class NeuroSynchronizationEngine(BaseAgent):
@@ -173,7 +173,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         self.register_handler("get_biofeedback", self.handle_get_biofeedback)
         self.register_handler("update_parameters", self.handle_update_parameters)
 
-        print(f"🧠 Neuro-Synchronization Engine {agent_id} initialized")
+        print(f"ðŸ§  Neuro-Synchronization Engine {agent_id} initialized")
 
     async def initialize(self):
         """Initialize neuro-synchronization engine resources"""
@@ -187,10 +187,10 @@ class NeuroSynchronizationEngine(BaseAgent):
             # Start brainwave monitoring
             await self.start_brainwave_monitoring()
 
-            print(f"✅ Neuro-Synchronization Engine {self.agent_id} initialized successfully")
+            print(f"âœ… Neuro-Synchronization Engine {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Neuro-Synchronization Engine: {e}")
+            print(f"âŒ Error initializing Neuro-Synchronization Engine: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -218,7 +218,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                 await asyncio.sleep(30)  # Check every 30 seconds
 
             except Exception as e:
-                print(f"❌ Error in neuro-synchronization processing loop: {e}")
+                print(f"âŒ Error in neuro-synchronization processing loop: {e}")
                 await asyncio.sleep(60)
 
     async def load_neuro_config(self):
@@ -239,10 +239,10 @@ class NeuroSynchronizationEngine(BaseAgent):
             if presets_data:
                 self.resonance_presets.update(json.loads(presets_data))
 
-            print("📋 Neuro-synchronization configuration loaded")
+            print("ðŸ“‹ Neuro-synchronization configuration loaded")
 
         except Exception as e:
-            print(f"❌ Error loading neuro configuration: {e}")
+            print(f"âŒ Error loading neuro configuration: {e}")
 
     async def initialize_eeg_interface(self):
         """Initialize EEG/BCI interface"""
@@ -255,13 +255,13 @@ class NeuroSynchronizationEngine(BaseAgent):
                 self.eeg_thread = threading.Thread(target=self.generate_eeg_data, daemon=True)
                 self.eeg_thread.start()
 
-                print("📡 EEG/BCI interface initialized (simulation mode)")
+                print("ðŸ“¡ EEG/BCI interface initialized (simulation mode)")
             else:
                 # In production, initialize real EEG/BCI hardware
-                print("📡 EEG/BCI interface initialized (hardware mode)")
+                print("ðŸ“¡ EEG/BCI interface initialized (hardware mode)")
 
         except Exception as e:
-            print(f"❌ Error initializing EEG interface: {e}")
+            print(f"âŒ Error initializing EEG interface: {e}")
 
     def create_eeg_generator(self):
         """Create EEG data generator"""
@@ -294,7 +294,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             return generate_eeg
 
         except Exception as e:
-            print(f"❌ Error creating EEG generator: {e}")
+            print(f"âŒ Error creating EEG generator: {e}")
             return None
 
     def generate_eeg_data(self):
@@ -303,7 +303,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             if self.eeg_generator:
                 self.eeg_generator()
         except Exception as e:
-            print(f"❌ Error generating EEG data: {e}")
+            print(f"âŒ Error generating EEG data: {e}")
 
     async def start_brainwave_monitoring(self):
         """Start brainwave monitoring"""
@@ -316,10 +316,10 @@ class NeuroSynchronizationEngine(BaseAgent):
             # Start brainwave data listener
             asyncio.create_task(self.listen_brainwave_data(pubsub))
 
-            print("📡 Brainwave monitoring started")
+            print("ðŸ“¡ Brainwave monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting brainwave monitoring: {e}")
+            print(f"âŒ Error starting brainwave monitoring: {e}")
 
     async def listen_brainwave_data(self, pubsub):
         """Listen for brainwave data updates"""
@@ -333,7 +333,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                     await self.process_brainwave_data(data)
 
         except Exception as e:
-            print(f"❌ Error in brainwave data listener: {e}")
+            print(f"âŒ Error in brainwave data listener: {e}")
         finally:
             pubsub.close()
 
@@ -348,7 +348,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                 await self.process_biofeedback_signals(data)
 
         except Exception as e:
-            print(f"❌ Error processing brainwave data: {e}")
+            print(f"âŒ Error processing brainwave data: {e}")
 
     async def process_brainwave_signals(self, brainwave_data: Dict[str, Any]):
         """Process brainwave signals"""
@@ -376,7 +376,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                 del self.state["brainwave_profiles"][oldest_key]
 
         except Exception as e:
-            print(f"❌ Error processing brainwave signals: {e}")
+            print(f"âŒ Error processing brainwave signals: {e}")
 
     async def process_biofeedback_signals(self, biofeedback_data: Dict[str, Any]):
         """Process biofeedback signals"""
@@ -403,7 +403,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                 del self.state["biofeedback_data"][oldest_key]
 
         except Exception as e:
-            print(f"❌ Error processing biofeedback signals: {e}")
+            print(f"âŒ Error processing biofeedback signals: {e}")
 
     async def analyze_brainwave_bands(self, eeg_data: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze brainwave frequency bands"""
@@ -447,7 +447,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             return band_analysis
 
         except Exception as e:
-            print(f"❌ Error analyzing brainwave bands: {e}")
+            print(f"âŒ Error analyzing brainwave bands: {e}")
             return {}
 
     async def monitor_brainwave_activity(self):
@@ -469,7 +469,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             self.state["resonance_states"][datetime.now().isoformat()] = current_state
 
         except Exception as e:
-            print(f"❌ Error monitoring brainwave activity: {e}")
+            print(f"âŒ Error monitoring brainwave activity: {e}")
 
     async def analyze_current_brainwave_state(
         self, profiles: List[Dict[str, Any]]
@@ -502,7 +502,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error analyzing current brainwave state: {e}")
+            print(f"âŒ Error analyzing current brainwave state: {e}")
             return {"resonance_quality": 0.0}
 
     def calculate_resonance_quality(self, band_powers: Dict[str, float]) -> float:
@@ -532,7 +532,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             return min(resonance_quality, 1.0)
 
         except Exception as e:
-            print(f"❌ Error calculating resonance quality: {e}")
+            print(f"âŒ Error calculating resonance quality: {e}")
             return 0.0
 
     async def update_system_parameters(self):
@@ -568,7 +568,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             await self.broadcast_parameter_updates(updated_parameters)
 
         except Exception as e:
-            print(f"❌ Error updating system parameters: {e}")
+            print(f"âŒ Error updating system parameters: {e}")
 
     async def broadcast_parameter_updates(self, parameters: Dict[str, float]):
         """Broadcast parameter updates to other agents"""
@@ -588,7 +588,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             await self.send_message("trading_agent", parameter_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting parameter updates: {e}")
+            print(f"âŒ Error broadcasting parameter updates: {e}")
 
     async def check_resonance_states(self):
         """Check and update resonance states"""
@@ -611,13 +611,13 @@ class NeuroSynchronizationEngine(BaseAgent):
                 await self.perform_synchronization(current_state)
 
         except Exception as e:
-            print(f"❌ Error checking resonance states: {e}")
+            print(f"âŒ Error checking resonance states: {e}")
 
     async def perform_synchronization(self, brainwave_state: Dict[str, Any]):
         """Perform neuro-synchronization"""
         try:
             print(
-                f"🧠 Performing neuro-synchronization (quality: {brainwave_state.get('resonance_quality', 0):.2f})"
+                f"ðŸ§  Performing neuro-synchronization (quality: {brainwave_state.get('resonance_quality', 0):.2f})"
             )
 
             # Create synchronization record
@@ -646,10 +646,10 @@ class NeuroSynchronizationEngine(BaseAgent):
 
             await self.broadcast_message(sync_event)
 
-            print("✅ Neuro-synchronization completed")
+            print("âœ… Neuro-synchronization completed")
 
         except Exception as e:
-            print(f"❌ Error performing synchronization: {e}")
+            print(f"âŒ Error performing synchronization: {e}")
 
     async def process_biofeedback(self):
         """Process biofeedback data"""
@@ -667,7 +667,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             await self.update_parameters_from_biofeedback(biofeedback_analysis)
 
         except Exception as e:
-            print(f"❌ Error processing biofeedback: {e}")
+            print(f"âŒ Error processing biofeedback: {e}")
 
     async def analyze_biofeedback_patterns(
         self, biofeedback_data: List[Dict[str, Any]]
@@ -720,7 +720,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             return analysis
 
         except Exception as e:
-            print(f"❌ Error analyzing biofeedback patterns: {e}")
+            print(f"âŒ Error analyzing biofeedback patterns: {e}")
             return {}
 
     async def update_parameters_from_biofeedback(self, biofeedback_analysis: Dict[str, Any]):
@@ -745,7 +745,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             self.state["system_parameters"] = current_params
 
         except Exception as e:
-            print(f"❌ Error updating parameters from biofeedback: {e}")
+            print(f"âŒ Error updating parameters from biofeedback: {e}")
 
     async def update_sync_metrics(self):
         """Update synchronization metrics"""
@@ -766,7 +766,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating sync metrics: {e}")
+            print(f"âŒ Error updating sync metrics: {e}")
 
     async def cleanup_old_data(self):
         """Clean up old data"""
@@ -792,7 +792,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                     del self.state["biofeedback_data"][key]
 
         except Exception as e:
-            print(f"❌ Error cleaning up old data: {e}")
+            print(f"âŒ Error cleaning up old data: {e}")
 
     async def handle_sync_brainwaves(self, message: Dict[str, Any]):
         """Handle manual brainwave synchronization request"""
@@ -800,7 +800,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             target_band = message.get("target_band", "alpha")
             duration = message.get("duration", 300)  # 5 minutes
 
-            print(f"🧠 Manual brainwave synchronization requested for {target_band} band")
+            print(f"ðŸ§  Manual brainwave synchronization requested for {target_band} band")
 
             # Perform targeted synchronization
             sync_result = await self.perform_targeted_sync(target_band, duration)
@@ -819,7 +819,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling brainwave sync request: {e}")
+            print(f"âŒ Error handling brainwave sync request: {e}")
             await self.broadcast_error(f"Brainwave sync error: {e}")
 
     async def perform_targeted_sync(self, target_band: str, duration: int) -> Dict[str, Any]:
@@ -851,7 +851,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             return sync_session
 
         except Exception as e:
-            print(f"❌ Error performing targeted sync: {e}")
+            print(f"âŒ Error performing targeted sync: {e}")
             return {"error": str(e)}
 
     async def handle_set_resonance_preset(self, message: Dict[str, Any]):
@@ -859,7 +859,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         try:
             preset_name = message.get("preset_name", "meditation")
 
-            print(f"🎵 Setting resonance preset: {preset_name}")
+            print(f"ðŸŽµ Setting resonance preset: {preset_name}")
 
             # Get preset configuration
             preset = self.resonance_presets.get(preset_name, self.resonance_presets["meditation"])
@@ -881,7 +881,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling resonance preset request: {e}")
+            print(f"âŒ Error handling resonance preset request: {e}")
             await self.broadcast_error(f"Resonance preset error: {e}")
 
     async def apply_resonance_preset(self, preset: Dict[str, Any]) -> Dict[str, Any]:
@@ -905,7 +905,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             return preset_config
 
         except Exception as e:
-            print(f"❌ Error applying resonance preset: {e}")
+            print(f"âŒ Error applying resonance preset: {e}")
             return {"error": str(e)}
 
     async def handle_get_biofeedback(self, message: Dict[str, Any]):
@@ -914,7 +914,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             data_type = message.get("data_type", "all")
             timeframe = message.get("timeframe", "1h")
 
-            print(f"📊 Biofeedback data request for {data_type} ({timeframe})")
+            print(f"ðŸ“Š Biofeedback data request for {data_type} ({timeframe})")
 
             # Get biofeedback data
             biofeedback_data = await self.get_biofeedback_data(data_type, timeframe)
@@ -933,7 +933,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling biofeedback request: {e}")
+            print(f"âŒ Error handling biofeedback request: {e}")
             await self.broadcast_error(f"Biofeedback request error: {e}")
 
     async def get_biofeedback_data(self, data_type: str, timeframe: str) -> Dict[str, Any]:
@@ -964,7 +964,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             return filtered_data
 
         except Exception as e:
-            print(f"❌ Error getting biofeedback data: {e}")
+            print(f"âŒ Error getting biofeedback data: {e}")
             return {}
 
     async def handle_update_parameters(self, message: Dict[str, Any]):
@@ -972,7 +972,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         try:
             parameters = message.get("parameters", {})
 
-            print("⚙️ Parameter update request received")
+            print("âš™ï¸ Parameter update request received")
 
             # Update system parameters
             self.state["system_parameters"].update(parameters)
@@ -993,7 +993,7 @@ class NeuroSynchronizationEngine(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling parameter update request: {e}")
+            print(f"âŒ Error handling parameter update request: {e}")
             await self.broadcast_error(f"Parameter update error: {e}")
 
 
@@ -1001,3 +1001,5 @@ if __name__ == "__main__":
     # Run the agent
     engine = NeuroSynchronizationEngine()
     asyncio.run(engine.start())
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Enhanced AI Features for Mystic Trading Platform
 Advanced AI capabilities with modern LLM integration
 """
@@ -658,3 +658,5 @@ class EnhancedAITrading:
                 )
 
         return insights
+
+

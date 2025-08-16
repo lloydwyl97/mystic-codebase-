@@ -1,4 +1,4 @@
-"""
+﻿"""
 Core System Endpoints
 Consolidated system health, status, configuration, and core functionality
 All endpoints return live data - no stubs or placeholders
@@ -14,11 +14,11 @@ from fastapi import APIRouter, HTTPException
 
 # Import real services
 try:
-    from modules.ai.persistent_cache import get_persistent_cache
-    from modules.ai.analytics_engine import AnalyticsEngine
-    from modules.notifications.alert_manager import AlertManager
-    from services.performance_monitor import PerformanceMonitor
-    from services.system_monitor import SystemMonitor
+    from backend.modules.ai.persistent_cache import get_persistent_cache
+    from backend.modules.ai.analytics_engine import AnalyticsEngine
+    from backend.modules.notifications.alert_manager import AlertManager
+    from backend.services.performance_monitor import PerformanceMonitor
+    from backend.services.system_monitor import SystemMonitor
 except ImportError as e:
     logging.warning(f"Some system services not available: {e}")
     AnalyticsEngine = object  # type: ignore
@@ -141,8 +141,8 @@ async def get_system_status() -> Dict[str, Any]:
         # Get trading system status
         trading_status = "active"
         try:
-            from services.redis_client import get_redis_client
-            from services.trading import TradingService
+            from backend.services.redis_client import get_redis_client
+            from backend.services.trading import TradingService
 
             redis_client = get_redis_client()
             trading_service = TradingService(redis_client)
@@ -413,14 +413,14 @@ async def get_health_check() -> Dict[str, Any]:
         adapters: List[str] = []
         autobuy_status = "ready"
         try:
-            from services.market_data_router import MarketDataRouter  # type: ignore[import-not-found]
+            from backend.services.market_data_router import MarketDataRouter  # type: ignore[import-not-found]
             router_local = MarketDataRouter()
             adapters = await router_local.get_enabled_adapters()
             adapters.append("coingecko")
         except Exception:
             adapters = []
         try:
-            from services.autobuy_service import autobuy_service  # type: ignore[import-not-found]
+            from backend.services.autobuy_service import autobuy_service  # type: ignore[import-not-found]
             hb = await autobuy_service.heartbeat()  # type: ignore[attr-defined]
             if isinstance(hb, dict) and str(hb.get("status")) != "ready":
                 autobuy_status = "degraded"
@@ -429,3 +429,6 @@ async def get_health_check() -> Dict[str, Any]:
         return {"status": "ok", "adapters": adapters, "autobuy": ("ready" if autobuy_status == "ready" else str(autobuy_status))}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"System health-check failed: {str(e)}")
+
+
+

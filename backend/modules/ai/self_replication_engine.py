@@ -1,4 +1,4 @@
-"""
+﻿"""
 Self-Replication Engine for Mystic AI Trading Platform
 Evolves trading strategies using genetic algorithms and agent performance optimization.
 """
@@ -15,8 +15,8 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from modules.ai.persistent_cache import PersistentCache
-from modules.ai.signal_engine import SignalEngine
+from backend.modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.signal_engine import SignalEngine
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +146,7 @@ class SelfReplicationEngine:
         # Initialize population
         self._initialize_population()
 
-        logger.info("✅ SelfReplicationEngine initialized")
+        logger.info("âœ… SelfReplicationEngine initialized")
 
     def _initialize_population(self):
         """Initialize the initial agent population"""
@@ -165,7 +165,7 @@ class SelfReplicationEngine:
                 agent = TradingAgent(f"agent_gen0_{i}", parameters)
                 self.agents[agent.agent_id] = agent
 
-            logger.info(f"✅ Initialized population with {self.generation_size} agents")
+            logger.info(f"âœ… Initialized population with {self.generation_size} agents")
 
         except Exception as e:
             logger.error(f"Failed to initialize population: {e}")
@@ -268,7 +268,7 @@ class SelfReplicationEngine:
             # Replace old generation
             self.agents = new_agents
 
-            logger.info(f"✅ Evolved to generation {generation} with {len(new_agents)} agents")
+            logger.info(f"âœ… Evolved to generation {generation} with {len(new_agents)} agents")
 
         except Exception as e:
             logger.error(f"Failed to evolve generation: {e}")
@@ -647,7 +647,7 @@ def get_self_replication_engine() -> SelfReplicationEngine:
 if __name__ == "__main__":
     # Test the self-replication engine
     engine = SelfReplicationEngine()
-    print(f"✅ SelfReplicationEngine initialized: {engine}")
+    print(f"âœ… SelfReplicationEngine initialized: {engine}")
 
     # Test agent training
     result = engine.train_agents('coinbase', 'BTC-USD')
@@ -660,3 +660,5 @@ if __name__ == "__main__":
     # Test population stats
     population = engine.get_agent_population()
     print(f"Population stats: {population}")
+
+

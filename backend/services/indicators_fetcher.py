@@ -1,4 +1,4 @@
-"""
+﻿"""
 Indicators Fetcher Service
 Handles fetching technical indicators
 """
@@ -24,7 +24,7 @@ class IndicatorsFetcher:
         """Fetch technical indicators for a given symbol"""
         try:
             # Get real technical indicators from technical analysis service
-            from services.technical_analysis_service import (
+            from backend.services.technical_analysis_service import (
                 get_technical_analysis_service,
             )
 
@@ -39,3 +39,5 @@ class IndicatorsFetcher:
 
 # Global instance
 indicators_fetcher = IndicatorsFetcher()
+
+

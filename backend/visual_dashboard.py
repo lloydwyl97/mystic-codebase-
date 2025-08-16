@@ -1,4 +1,4 @@
-import json
+﻿import json
 import logging
 import os
 import subprocess
@@ -115,3 +115,5 @@ def run_dashboard():
 
 if __name__ == "__main__":
     run_dashboard()
+
+

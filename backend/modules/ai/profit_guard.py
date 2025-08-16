@@ -1,2 +1,4 @@
-# Copied from backend/ai/profit_guard.py for modularization
+﻿# Copied from backend/ai/profit_guard.py for modularization
 # ... existing code from backend/ai/profit_guard.py ...
+
+

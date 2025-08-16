@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Ultimate AI Trading System Launcher
 Launches the complete AI crypto trading machine with all 11 modules.
@@ -51,32 +51,32 @@ class UltimateAILauncher:
     def print_banner(self):
         """Print system banner."""
         banner = """
-╔══════════════════════════════════════════════════════════════╗
-║                    🚀 MYSTIC AI TRADING SYSTEM 🚀              ║
-║                                                              ║
-║  🧠 Complete AI Crypto Trading Machine                       ║
-║  📊 11 Advanced Modules Integrated                           ║
-║  💰 7-Figure Profit Potential                               ║
-║  🛡️ Production-Ready & Scalable                             ║
-║                                                              ║
-║  ✅ Trade Logging Engine                                     ║
-║  ✅ Strategy Evolution                                       ║
-║  ✅ Position Sizing                                          ║
-║  ✅ Capital Allocation                                       ║
-║  ✅ Yield Rotation                                           ║
-║  ✅ Health Monitoring                                        ║
-║  ✅ Live Dashboard                                           ║
-║  ✅ Hyperparameter Optimization                              ║
-║  ✅ Backtesting Engine                                       ║
-║  ✅ Meta Agent                                               ║
-║  ✅ Cold Wallet Integration                                  ║
-╚══════════════════════════════════════════════════════════════╝
+â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+â•‘                    ðŸš€ MYSTIC AI TRADING SYSTEM ðŸš€              â•‘
+â•‘                                                              â•‘
+â•‘  ðŸ§  Complete AI Crypto Trading Machine                       â•‘
+â•‘  ðŸ“Š 11 Advanced Modules Integrated                           â•‘
+â•‘  ðŸ’° 7-Figure Profit Potential                               â•‘
+â•‘  ðŸ›¡ï¸ Production-Ready & Scalable                             â•‘
+â•‘                                                              â•‘
+â•‘  âœ… Trade Logging Engine                                     â•‘
+â•‘  âœ… Strategy Evolution                                       â•‘
+â•‘  âœ… Position Sizing                                          â•‘
+â•‘  âœ… Capital Allocation                                       â•‘
+â•‘  âœ… Yield Rotation                                           â•‘
+â•‘  âœ… Health Monitoring                                        â•‘
+â•‘  âœ… Live Dashboard                                           â•‘
+â•‘  âœ… Hyperparameter Optimization                              â•‘
+â•‘  âœ… Backtesting Engine                                       â•‘
+â•‘  âœ… Meta Agent                                               â•‘
+â•‘  âœ… Cold Wallet Integration                                  â•‘
+â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         """
         print(banner)
 
     def check_dependencies(self):
         """Check if all required dependencies are available."""
-        print("🔍 Checking system dependencies...")
+        print("ðŸ” Checking system dependencies...")
 
         required_files = [
             "models.py",
@@ -97,29 +97,29 @@ class UltimateAILauncher:
                 missing_files.append(file)
 
         if missing_files:
-            print(f"❌ Missing required files: {missing_files}")
+            print(f"âŒ Missing required files: {missing_files}")
             return False
 
-        print("✅ All dependencies found")
+        print("âœ… All dependencies found")
         return True
 
     def initialize_database(self):
         """Initialize the trade logging database."""
-        print("🗄️ Initializing trade database...")
+        print("ðŸ—„ï¸ Initializing trade database...")
         try:
             from db_logger import init_db
 
             init_db()
-            print("✅ Database initialized successfully")
+            print("âœ… Database initialized successfully")
             return True
         except Exception as e:
-            print(f"❌ Database initialization failed: {e}")
+            print(f"âŒ Database initialization failed: {e}")
             return False
 
     def start_service(self, service_name: str, service_config: dict):
         """Start a single service."""
         try:
-            print(f"🚀 Starting {service_name}: {service_config['description']}")
+            print(f"ðŸš€ Starting {service_name}: {service_config['description']}")
 
             # Start the process
             process = subprocess.Popen(
@@ -140,22 +140,22 @@ class UltimateAILauncher:
 
             # Check if process is still running
             if process.poll() is None:
-                print(f"✅ {service_name} started successfully (PID: {process.pid})")
+                print(f"âœ… {service_name} started successfully (PID: {process.pid})")
                 return True
             else:
                 stdout, stderr = process.communicate()
-                print(f"❌ {service_name} failed to start")
+                print(f"âŒ {service_name} failed to start")
                 print(f"   STDOUT: {stdout}")
                 print(f"   STDERR: {stderr}")
                 return False
 
         except Exception as e:
-            print(f"❌ Error starting {service_name}: {e}")
+            print(f"âŒ Error starting {service_name}: {e}")
             return False
 
     def start_all_services(self):
         """Start all AI trading services."""
-        print("\n🚀 Starting AI Trading Services...")
+        print("\nðŸš€ Starting AI Trading Services...")
         print("=" * 50)
 
         started_services = []
@@ -167,33 +167,33 @@ class UltimateAILauncher:
             else:
                 failed_services.append(service_name)
 
-        print("\n📊 Service Startup Summary:")
-        print(f"   ✅ Started: {len(started_services)} services")
-        print(f"   ❌ Failed: {len(failed_services)} services")
+        print("\nðŸ“Š Service Startup Summary:")
+        print(f"   âœ… Started: {len(started_services)} services")
+        print(f"   âŒ Failed: {len(failed_services)} services")
 
         if started_services:
-            print(f"   🎯 Running services: {', '.join(started_services)}")
+            print(f"   ðŸŽ¯ Running services: {', '.join(started_services)}")
 
         if failed_services:
-            print(f"   ⚠️ Failed services: {', '.join(failed_services)}")
+            print(f"   âš ï¸ Failed services: {', '.join(failed_services)}")
 
         return len(failed_services) == 0
 
     def check_service_health(self):
         """Check health of all running services."""
-        print("\n🛡️ Checking service health...")
+        print("\nðŸ›¡ï¸ Checking service health...")
 
         for service_name, service_info in self.processes.items():
             process = service_info["process"]
 
             if process.poll() is None:
-                print(f"   ✅ {service_name}: Running (PID: {process.pid})")
+                print(f"   âœ… {service_name}: Running (PID: {process.pid})")
             else:
-                print(f"   ❌ {service_name}: Stopped")
+                print(f"   âŒ {service_name}: Stopped")
 
     def monitor_services(self):
         """Monitor services and restart if needed."""
-        print("\n👀 Starting service monitoring...")
+        print("\nðŸ‘€ Starting service monitoring...")
 
         while True:
             try:
@@ -201,26 +201,26 @@ class UltimateAILauncher:
                     process = service_info["process"]
 
                     if process.poll() is not None:
-                        print(f"⚠️ {service_name} has stopped, restarting...")
+                        print(f"âš ï¸ {service_name} has stopped, restarting...")
 
                         # Restart the service
                         if self.start_service(service_name, service_info["config"]):
-                            print(f"✅ {service_name} restarted successfully")
+                            print(f"âœ… {service_name} restarted successfully")
                         else:
-                            print(f"❌ Failed to restart {service_name}")
+                            print(f"âŒ Failed to restart {service_name}")
 
                 time.sleep(30)  # Check every 30 seconds
 
             except KeyboardInterrupt:
-                print("\n🛑 Service monitoring stopped")
+                print("\nðŸ›‘ Service monitoring stopped")
                 break
             except Exception as e:
-                print(f"❌ Monitoring error: {e}")
+                print(f"âŒ Monitoring error: {e}")
                 time.sleep(30)
 
     def stop_all_services(self):
         """Stop all running services."""
-        print("\n🛑 Stopping all services...")
+        print("\nðŸ›‘ Stopping all services...")
 
         for service_name, service_info in self.processes.items():
             process = service_info["process"]
@@ -231,44 +231,44 @@ class UltimateAILauncher:
 
                 try:
                     process.wait(timeout=10)
-                    print(f"   ✅ {service_name} stopped")
+                    print(f"   âœ… {service_name} stopped")
                 except subprocess.TimeoutExpired:
-                    print(f"   ⚠️ {service_name} didn't stop gracefully, forcing...")
+                    print(f"   âš ï¸ {service_name} didn't stop gracefully, forcing...")
                     process.kill()
 
         self.processes.clear()
-        print("✅ All services stopped")
+        print("âœ… All services stopped")
 
     def show_dashboard_info(self):
         """Show dashboard access information."""
         print("\n" + "=" * 60)
-        print("🎯 DASHBOARD ACCESS INFORMATION")
+        print("ðŸŽ¯ DASHBOARD ACCESS INFORMATION")
         print("=" * 60)
-        print("📊 Main Dashboard:    http://localhost:8000/dashboard")
-        print("🔧 API Documentation: http://localhost:8000/docs")
-        print("📈 Strategy API:      http://localhost:8000/api/leaderboard")
-        print("💰 Trade History:     http://localhost:8000/api/trades")
-        print("🛡️ System Health:     http://localhost:8000/api/system-health")
+        print("ðŸ“Š Main Dashboard:    http://localhost:8000/dashboard")
+        print("ðŸ”§ API Documentation: http://localhost:8000/docs")
+        print("ðŸ“ˆ Strategy API:      http://localhost:8000/api/leaderboard")
+        print("ðŸ’° Trade History:     http://localhost:8000/api/trades")
+        print("ðŸ›¡ï¸ System Health:     http://localhost:8000/api/system-health")
         print("=" * 60)
-        print("💡 Press Ctrl+C to stop the system")
+        print("ðŸ’¡ Press Ctrl+C to stop the system")
         print("=" * 60)
 
     def run_interactive_mode(self):
         """Run in interactive mode with menu."""
         while True:
             print("\n" + "=" * 50)
-            print("🎮 MYSTIC AI TRADING SYSTEM - INTERACTIVE MODE")
+            print("ðŸŽ® MYSTIC AI TRADING SYSTEM - INTERACTIVE MODE")
             print("=" * 50)
-            print("1. 🚀 Start All Services")
-            print("2. 🛑 Stop All Services")
-            print("3. 🔍 Check Service Health")
-            print("4. 📊 Show Dashboard Info")
-            print("5. 🧠 Run Strategy Optimization")
-            print("6. 💰 Allocate Capital")
-            print("7. 🛡️ System Health Check")
-            print("8. 📈 View Recent Trades")
-            print("9. 🔄 Restart Failed Services")
-            print("0. ❌ Exit")
+            print("1. ðŸš€ Start All Services")
+            print("2. ðŸ›‘ Stop All Services")
+            print("3. ðŸ” Check Service Health")
+            print("4. ðŸ“Š Show Dashboard Info")
+            print("5. ðŸ§  Run Strategy Optimization")
+            print("6. ðŸ’° Allocate Capital")
+            print("7. ðŸ›¡ï¸ System Health Check")
+            print("8. ðŸ“ˆ View Recent Trades")
+            print("9. ðŸ”„ Restart Failed Services")
+            print("0. âŒ Exit")
             print("=" * 50)
 
             choice = input("Select option (0-9): ").strip()
@@ -292,46 +292,46 @@ class UltimateAILauncher:
             elif choice == "9":
                 self.restart_failed_services()
             elif choice == "0":
-                print("👋 Goodbye!")
+                print("ðŸ‘‹ Goodbye!")
                 break
             else:
-                print("❌ Invalid option, please try again")
+                print("âŒ Invalid option, please try again")
 
     def run_optimization(self):
         """Run strategy optimization."""
-        print("\n🧠 Running Strategy Optimization...")
+        print("\nðŸ§  Running Strategy Optimization...")
         try:
             from hyper_tuner import optimize_rsi_ema_breakout
 
             result = optimize_rsi_ema_breakout(method="genetic", rounds=20)
             if result:
-                print("✅ Optimization completed!")
+                print("âœ… Optimization completed!")
                 print(f"   Best Profit: ${result['total_profit']:.2f}")
                 print(f"   Win Rate: {result['win_rate']:.1%}")
             else:
-                print("❌ Optimization failed")
+                print("âŒ Optimization failed")
         except Exception as e:
-            print(f"❌ Optimization error: {e}")
+            print(f"âŒ Optimization error: {e}")
 
     def allocate_capital(self):
         """Allocate capital."""
-        print("\n💰 Allocating Capital...")
+        print("\nðŸ’° Allocating Capital...")
         try:
             from capital_allocator import allocate_capital
 
             allocations = allocate_capital(10000, method="performance")
             if allocations:
-                print("✅ Capital allocated:")
+                print("âœ… Capital allocated:")
                 for strategy, amount in allocations.items():
                     print(f"   {strategy}: ${amount}")
             else:
-                print("❌ No allocations made")
+                print("âŒ No allocations made")
         except Exception as e:
-            print(f"❌ Capital allocation error: {e}")
+            print(f"âŒ Capital allocation error: {e}")
 
     def system_health_check(self):
         """Check system health."""
-        print("\n🛡️ System Health Check...")
+        print("\nðŸ›¡ï¸ System Health Check...")
         try:
             from watchdog import TradingWatchdog
 
@@ -341,11 +341,11 @@ class UltimateAILauncher:
             print(f"   Healthy Services: {summary['healthy_services']}/{summary['total_services']}")
             print(f"   Health Percentage: {summary['health_percentage']}%")
         except Exception as e:
-            print(f"❌ Health check error: {e}")
+            print(f"âŒ Health check error: {e}")
 
     def view_recent_trades(self):
         """View recent trades."""
-        print("\n📈 Recent Trades...")
+        print("\nðŸ“ˆ Recent Trades...")
         try:
             from trade_logger import get_recent_trades
 
@@ -358,11 +358,11 @@ class UltimateAILauncher:
             else:
                 print("   No recent trades found")
         except Exception as e:
-            print(f"❌ Error viewing trades: {e}")
+            print(f"âŒ Error viewing trades: {e}")
 
     def restart_failed_services(self):
         """Restart failed services."""
-        print("\n🔄 Restarting Failed Services...")
+        print("\nðŸ”„ Restarting Failed Services...")
         failed_services = []
 
         for service_name, service_info in self.processes.items():
@@ -383,17 +383,17 @@ class UltimateAILauncher:
 
         # Check dependencies
         if not self.check_dependencies():
-            print("❌ System cannot start due to missing dependencies")
+            print("âŒ System cannot start due to missing dependencies")
             return False
 
         # Initialize database
         if not self.initialize_database():
-            print("❌ System cannot start due to database initialization failure")
+            print("âŒ System cannot start due to database initialization failure")
             return False
 
         # Start all services
         if not self.start_all_services():
-            print("⚠️ Some services failed to start, but continuing...")
+            print("âš ï¸ Some services failed to start, but continuing...")
 
         # Show dashboard info
         self.show_dashboard_info()
@@ -407,9 +407,9 @@ class UltimateAILauncher:
             while True:
                 time.sleep(1)
         except KeyboardInterrupt:
-            print("\n🛑 Shutting down AI trading system...")
+            print("\nðŸ›‘ Shutting down AI trading system...")
             self.stop_all_services()
-            print("✅ System shutdown complete")
+            print("âœ… System shutdown complete")
 
 
 def main():
@@ -428,10 +428,10 @@ def main():
     launcher = UltimateAILauncher()
 
     if args.docker:
-        print("🐳 Using Docker deployment...")
+        print("ðŸ³ Using Docker deployment...")
         os.system("docker-compose up -d")
-        print("✅ Docker services started")
-        print("📊 Dashboard available at: http://localhost:8000/dashboard")
+        print("âœ… Docker services started")
+        print("ðŸ“Š Dashboard available at: http://localhost:8000/dashboard")
     elif args.interactive:
         launcher.run_interactive_mode()
     else:
@@ -440,3 +440,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 AI Strategy Generator Service
 Port 8002 - Standalone AI strategy generation service
@@ -18,7 +18,7 @@ import redis
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import AI strategy generator
+# import backend.ai as ai strategy generator
 from ai_strategy_generator import AIStrategyGenerator
 
 # Configure logging
@@ -56,11 +56,11 @@ class AIStrategyGeneratorService:
             decode_responses=True,
         )
 
-        logger.info("✅ AI Strategy Generator Service initialized")
+        logger.info("âœ… AI Strategy Generator Service initialized")
 
     async def start(self):
         """Start the service"""
-        logger.info("🚀 Starting AI Strategy Generator Service...")
+        logger.info("ðŸš€ Starting AI Strategy Generator Service...")
         self.running = True
 
         # Start the generator
@@ -68,7 +68,7 @@ class AIStrategyGeneratorService:
 
     async def stop(self):
         """Stop the service"""
-        logger.info("🛑 Stopping AI Strategy Generator Service...")
+        logger.info("ðŸ›‘ Stopping AI Strategy Generator Service...")
         self.running = False
         await self.generator.stop()
 
@@ -80,7 +80,7 @@ class AIStrategyGeneratorService:
     ) -> Optional[Dict[str, Any]]:
         """Generate a new AI strategy"""
         try:
-            logger.info(f"🎯 Generating {strategy_type} strategy for {symbol}")
+            logger.info(f"ðŸŽ¯ Generating {strategy_type} strategy for {symbol}")
 
             # Create strategy using the generator
             strategy = await self.generator.create_ai_strategy(
@@ -94,14 +94,14 @@ class AIStrategyGeneratorService:
                 # Publish to strategy queue
                 self.redis_client.lpush("strategy_queue", json.dumps(strategy))
 
-                logger.info(f"✅ Generated strategy: {strategy['id']}")
+                logger.info(f"âœ… Generated strategy: {strategy['id']}")
                 return strategy
             else:
-                logger.warning(f"⚠️ Failed to generate strategy for {symbol}")
+                logger.warning(f"âš ï¸ Failed to generate strategy for {symbol}")
                 return None
 
         except Exception as e:
-            logger.error(f"❌ Error generating strategy: {e}")
+            logger.error(f"âŒ Error generating strategy: {e}")
             raise
 
     async def get_strategy_status(self, strategy_id: str) -> Optional[Dict[str, Any]]:
@@ -112,7 +112,7 @@ class AIStrategyGeneratorService:
                 return json.loads(strategy_data)
             return None
         except Exception as e:
-            logger.error(f"❌ Error getting strategy status: {e}")
+            logger.error(f"âŒ Error getting strategy status: {e}")
             return None
 
     async def list_strategies(self) -> List[Dict[str, Any]]:
@@ -125,7 +125,7 @@ class AIStrategyGeneratorService:
                     strategies.append(json.loads(strategy_data))
             return strategies
         except Exception as e:
-            logger.error(f"❌ Error listing strategies: {e}")
+            logger.error(f"âŒ Error listing strategies: {e}")
             return []
 
 
@@ -140,9 +140,9 @@ async def startup_event():
     try:
         strategy_service = AIStrategyGeneratorService()
         await strategy_service.start()
-        logger.info("✅ AI Strategy Generator Service started")
+        logger.info("âœ… AI Strategy Generator Service started")
     except Exception as e:
-        logger.error(f"❌ Failed to start AI Strategy Generator Service: {e}")
+        logger.error(f"âŒ Failed to start AI Strategy Generator Service: {e}")
         raise
 
 
@@ -152,7 +152,7 @@ async def shutdown_event():
     global strategy_service
     if strategy_service:
         await strategy_service.stop()
-        logger.info("✅ AI Strategy Generator Service stopped")
+        logger.info("âœ… AI Strategy Generator Service stopped")
 
 
 @app.get("/health")
@@ -207,7 +207,7 @@ async def generate_strategy(
             raise HTTPException(status_code=500, detail="Failed to generate strategy")
 
     except Exception as e:
-        logger.error(f"❌ Error in generate endpoint: {e}")
+        logger.error(f"âŒ Error in generate endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -225,7 +225,7 @@ async def list_strategies():
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error listing strategies: {e}")
+        logger.error(f"âŒ Error listing strategies: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -244,7 +244,7 @@ async def get_strategy(strategy_id: str):
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"❌ Error getting strategy: {e}")
+        logger.error(f"âŒ Error getting strategy: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -276,7 +276,7 @@ async def process_strategy_queue():
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error processing queue: {e}")
+        logger.error(f"âŒ Error processing queue: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -284,7 +284,7 @@ if __name__ == "__main__":
     # Get port from environment
     port = int(os.getenv("SERVICE_PORT", 8002))
 
-    logger.info(f"🚀 Starting AI Strategy Generator Service on port {port}")
+    logger.info(f"ðŸš€ Starting AI Strategy Generator Service on port {port}")
 
     # Start the FastAPI server
     uvicorn.run(
@@ -294,3 +294,5 @@ if __name__ == "__main__":
         log_level="info",
         reload=False,
     )
+
+

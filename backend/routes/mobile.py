@@ -1,4 +1,4 @@
-"""
+﻿"""
 Mobile Router - PWA and Mobile Support
 
 Contains PWA endpoints, offline sync, and mobile-specific functionality.
@@ -13,7 +13,7 @@ from fastapi import APIRouter, HTTPException
 
 # Import live services
 try:
-    from modules.data.market_data import market_data_manager
+    from backend.modules.data.market_data import market_data_manager
 
     live_services_available = True
 except ImportError:
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 def get_redis_client():
     """Get Redis client"""
     try:
-        from services.redis_service import get_redis_service
+        from backend.services.redis_service import get_redis_service
 
         return get_redis_service()
     except Exception as e:
@@ -268,3 +268,5 @@ async def get_service_worker():
     except Exception as e:
         logger.error(f"Error getting service worker: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error getting service worker: {str(e)}")
+
+

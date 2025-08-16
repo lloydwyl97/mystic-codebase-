@@ -1,4 +1,4 @@
-"""
+﻿"""
 Shared Endpoints for Mystic Trading Platform
 
 Contains common endpoint logic shared between api_endpoints.py and api_endpoints_simplified.py
@@ -24,10 +24,10 @@ from fastapi import (
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import BaseModel, Field
-from modules.trading.order_manager import OrderManager, Order
-from modules.metrics.analytics_engine import AnalyticsEngine
-from utils.exceptions import RateLimitException, TradingException
-from middleware.rate_limiter import rate_limit
+from backend.modules.trading.order_manager import OrderManager, Order
+from backend.modules.metrics.analytics_engine import AnalyticsEngine
+from backend.utils.exceptions import RateLimitException, TradingException
+from backend.middleware.rate_limiter import rate_limit
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +70,7 @@ def create_portfolio_overview_endpoint(prefix: str = "/api"):
         """Get portfolio overview and performance"""
         try:
             # Get real portfolio data from AI services
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
 
@@ -116,7 +116,7 @@ def create_portfolio_positions_endpoint(prefix: str = "/api"):
         """Get portfolio positions"""
         try:
             # Get real portfolio positions from AI services
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
 
@@ -174,7 +174,7 @@ def create_portfolio_analysis_endpoint(prefix: str = "/api"):
         """Get comprehensive portfolio analysis"""
         try:
             # Get real portfolio analysis from AI services
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             get_persistent_cache()
 
@@ -227,7 +227,7 @@ def create_orders_endpoint(prefix: str = "/api"):
         """Get orders with optional filtering"""
         try:
             # Get real orders from trading services
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             get_persistent_cache()
 
@@ -360,7 +360,7 @@ def create_exchanges_endpoint(prefix: str = "/api"):
         """Get available exchanges"""
         try:
             # Get real exchange status from services
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
 
@@ -403,7 +403,7 @@ def create_exchange_account_endpoint(prefix: str = "/api"):
         """Get exchange account information"""
         try:
             # Get real account data from exchanges
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
 
@@ -514,7 +514,7 @@ def create_multi_exchange_market_data_endpoint(prefix: str = "/api"):
                     status_code=400,
                     detail={"error": True, "message": "Invalid symbol format"},
                 )
-            from modules.data.market_data import market_data_manager
+            from backend.modules.data.market_data import market_data_manager
 
             if market_data_manager:
                 get_data = market_data_manager.get_market_data(symbol)
@@ -528,7 +528,7 @@ def create_multi_exchange_market_data_endpoint(prefix: str = "/api"):
                     if isinstance(data, dict):
                         return data
                     else:
-                        from ai.persistent_cache import get_persistent_cache
+                        from backend.ai.persistent_cache import get_persistent_cache
 
                         cache = get_persistent_cache()
                         live_data = cache.get_binance().get(symbol) or cache.get_coinbase().get(
@@ -585,7 +585,7 @@ def create_risk_parameters_endpoint(prefix: str = "/api"):
     async def get_risk_parameters() -> Dict[str, Any]:
         """Get current risk parameters"""
         try:
-            from services.risk_management import get_risk_service
+            from backend.services.risk_management import get_risk_service
 
             risk_service = get_risk_service()
             params = await risk_service.get_risk_parameters()
@@ -605,7 +605,7 @@ def create_update_risk_parameters_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Union[str, Any]]:
         """Update risk parameters"""
         try:
-            from services.risk_management import get_risk_service
+            from backend.services.risk_management import get_risk_service
 
             risk_service = get_risk_service()
             result = await risk_service.update_risk_parameters(risk_data)
@@ -625,7 +625,7 @@ def create_position_size_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Union[str, Any]]:
         """Calculate position size based on risk parameters"""
         try:
-            from services.risk_management import get_risk_service
+            from backend.services.risk_management import get_risk_service
 
             risk_service = get_risk_service()
             result = await risk_service.calculate_position_size(data)
@@ -648,15 +648,15 @@ def create_strategies_endpoint(prefix: str = "/api"):
     async def get_strategies() -> Dict[str, Union[int, str, List[Dict[str, Any]]]]:
         """Get available trading strategies"""
         try:
-            # Import AI services for real strategy data
-            from modules.ai.ai_signals import (
+            # import backend.ai as ai services for real strategy data
+            from backend.modules.ai.ai_signals import (
                 signal_scorer,
                 risk_adjusted_signals,
                 technical_signals,
                 market_strength_signals,
             )
-            from ai.auto_trade import get_trading_status
-            from ai.trade_tracker import get_trade_summary
+            from backend.ai.auto_trade import get_trading_status
+            from backend.ai.trade_tracker import get_trade_summary
 
             # Get real strategy performance from AI services
             scored_signals = signal_scorer()
@@ -769,7 +769,7 @@ def create_create_strategy_endpoint(prefix: str = "/api"):
     async def create_strategy(strategy_data: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new trading strategy"""
         try:
-            from services.ai_strategies import get_ai_strategy_service
+            from backend.services.ai_strategies import get_ai_strategy_service
 
             ai_service = get_ai_strategy_service()
             result = await ai_service.create_strategy(strategy_data)
@@ -787,7 +787,7 @@ def create_execute_strategy_endpoint(prefix: str = "/api"):
     async def execute_strategy(strategy_id: str, market_data: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a trading strategy"""
         try:
-            from services.ai_strategies import get_ai_strategy_service
+            from backend.services.ai_strategies import get_ai_strategy_service
 
             ai_service = get_ai_strategy_service()
             result = await ai_service.execute_strategy(strategy_id, market_data)
@@ -812,7 +812,7 @@ def create_ml_train_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Union[str, Any]]:
         """Train ML model"""
         try:
-            from services.ml_service import get_ml_service
+            from backend.services.ml_service import get_ml_service
 
             ml_service = get_ml_service()
             result = await ml_service.train_model(model_data)
@@ -836,7 +836,7 @@ def create_ml_predict_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Any]:
         """Make prediction using ML model"""
         try:
-            from services.ml_service import get_ml_service
+            from backend.services.ml_service import get_ml_service
 
             ml_service = get_ml_service()
             result = await ml_service.make_prediction(prediction_data)
@@ -859,7 +859,7 @@ def create_patterns_endpoint(prefix: str = "/api"):
     async def get_patterns(symbol: str) -> Dict[str, Union[str, Any]]:
         """Get trading patterns for a symbol"""
         try:
-            from services.pattern_service import get_pattern_service
+            from backend.services.pattern_service import get_pattern_service
 
             pattern_service = get_pattern_service()
             patterns = await pattern_service.get_patterns(symbol)
@@ -884,7 +884,7 @@ def create_social_traders_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Union[int, str, List[Dict[str, Any]]]]:
         """Get social traders"""
         try:
-            from services.social_trading import get_social_trading_service
+            from backend.services.social_trading import get_social_trading_service
 
             social_service = get_social_trading_service()
             traders = await social_service.get_traders(limit, offset)
@@ -906,7 +906,7 @@ def create_follow_trader_endpoint(prefix: str = "/api"):
     async def follow_trader(trader_id: str, follower_data: Dict[str, str]) -> Dict[str, Any]:
         """Follow a trader"""
         try:
-            from services.social_trading import get_social_trading_service
+            from backend.services.social_trading import get_social_trading_service
 
             social_service = get_social_trading_service()
             result = await social_service.follow_trader(trader_id, follower_data)
@@ -926,7 +926,7 @@ def create_copy_trade_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Any]:
         """Create copy trade configuration"""
         try:
-            from services.social_trading import get_social_trading_service
+            from backend.services.social_trading import get_social_trading_service
 
             social_service = get_social_trading_service()
             result = await social_service.create_copy_trade_config(copy_data)
@@ -946,7 +946,7 @@ def create_social_signals_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Union[int, str, List[Dict[str, Any]]]]:
         """Get social trading signals"""
         try:
-            from services.social_trading import get_social_trading_service
+            from backend.services.social_trading import get_social_trading_service
 
             social_service = get_social_trading_service()
             signals = await social_service.get_trade_signals(limit, offset)
@@ -968,7 +968,7 @@ def create_social_leaderboard_endpoint(prefix: str = "/api"):
     async def get_social_leaderboard(period: str = "all_time", limit: int = 100) -> Dict[str, Any]:
         """Get social trading leaderboard"""
         try:
-            from services.social_trading import get_social_trading_service
+            from backend.services.social_trading import get_social_trading_service
 
             social_service = get_social_trading_service()
             leaderboard = await social_service.get_leaderboard(period, limit)
@@ -986,7 +986,7 @@ def create_achievements_endpoint(prefix: str = "/api"):
     async def get_user_achievements(user_id: str) -> Dict[str, Any]:
         """Get user achievements"""
         try:
-            from services.achievements import get_achievements_service
+            from backend.services.achievements import get_achievements_service
 
             achievements_service = get_achievements_service()
             achievements = await achievements_service.get_user_achievements(user_id)
@@ -1011,7 +1011,7 @@ def create_push_subscription_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Any]:
         """Subscribe to push notifications"""
         try:
-            from services.notifications import get_notification_service
+            from backend.services.notifications import get_notification_service
 
             notification_service = get_notification_service()
             result = await notification_service.subscribe_to_push(subscription_data)
@@ -1031,7 +1031,7 @@ def create_background_sync_endpoint(prefix: str = "/api"):
     ) -> Dict[str, Any]:
         """Register background sync"""
         try:
-            from services.sync_service import get_sync_service
+            from backend.services.sync_service import get_sync_service
 
             sync_service = get_sync_service()
             result = await sync_service.register_background_sync(sync_data)
@@ -1049,7 +1049,7 @@ def create_offline_data_endpoint(prefix: str = "/api"):
     async def get_offline_data_api() -> Dict[str, Any]:
         """Get offline data for mobile app"""
         try:
-            from services.offline_data import get_offline_data_service
+            from backend.services.offline_data import get_offline_data_service
 
             offline_service = get_offline_data_service()
             data = await offline_service.get_offline_data()
@@ -1160,7 +1160,7 @@ def create_login_endpoint(prefix: str = "/api"):
     async def login(credentials: Dict[str, str]) -> Dict[str, Any]:
         """User login"""
         try:
-            from services.auth_service import get_auth_service
+            from backend.services.auth_service import get_auth_service
 
             auth_service = get_auth_service()
             result = await auth_service.login(credentials)
@@ -1180,7 +1180,7 @@ def create_logout_endpoint(prefix: str = "/api"):
     async def logout() -> Dict[str, Any]:
         """User logout"""
         try:
-            from services.auth_service import get_auth_service
+            from backend.services.auth_service import get_auth_service
 
             auth_service = get_auth_service()
             result = await auth_service.logout()
@@ -1198,7 +1198,7 @@ def create_refresh_token_endpoint(prefix: str = "/api"):
     async def refresh_token() -> Dict[str, Any]:
         """Refresh authentication token"""
         try:
-            from services.auth_service import get_auth_service
+            from backend.services.auth_service import get_auth_service
 
             auth_service = get_auth_service()
             result = await auth_service.refresh_token()
@@ -1227,7 +1227,7 @@ def create_market_data_endpoint(prefix: str = "/api"):
                     status_code=400,
                     detail={"error": True, "message": "Invalid symbol format"},
                 )
-            from modules.data.market_data import market_data_manager
+            from backend.modules.data.market_data import market_data_manager
 
             if market_data_manager:
                 get_data = market_data_manager.get_market_data(symbol)
@@ -1241,7 +1241,7 @@ def create_market_data_endpoint(prefix: str = "/api"):
                     if isinstance(data, dict):
                         return data
                     else:
-                        from ai.persistent_cache import get_persistent_cache
+                        from backend.ai.persistent_cache import get_persistent_cache
 
                         cache = get_persistent_cache()
                         live_data = cache.get_binance().get(symbol) or cache.get_coinbase().get(
@@ -1293,7 +1293,7 @@ def create_all_market_data_endpoint(prefix: str = "/api"):
     async def get_all_market_data() -> Dict[str, Any]:
         try:
             # Get real market data from persistent cache
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
             market_data = {}
@@ -1350,7 +1350,7 @@ def create_market_summary_endpoint(prefix: str = "/api"):
     async def get_market_summary() -> Dict[str, Any]:
         try:
             # Get real market summary from persistent cache
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
             symbols = []
@@ -1459,7 +1459,7 @@ def create_trading_status_endpoint(prefix: str = "/api"):
             if all(
                 stats.get(k, 0) == 0 for k in ["total_orders", "pending_orders", "filled_orders"]
             ):
-                from services.trading import get_trading_service
+                from backend.services.trading import get_trading_service
 
                 trading_service = get_trading_service()
                 stats = await trading_service.get_status()
@@ -1507,7 +1507,7 @@ def create_trading_orders_endpoint(prefix: str = "/api"):
             manager = get_order_manager()
 
             # Convert to Enums
-            from modules.trading.order_manager import OrderSide, OrderType
+            from backend.modules.trading.order_manager import OrderSide, OrderType
 
             try:
                 side_enum = OrderSide(order.side)
@@ -1591,7 +1591,7 @@ def create_ai_status_endpoint(prefix: str = "/api"):
     async def get_ai_status() -> Dict[str, Any]:
         """Get AI status"""
         try:
-            from services.ai_service import get_ai_service
+            from backend.services.ai_service import get_ai_service
 
             ai_service = get_ai_service()
             status = await ai_service.get_status()
@@ -1607,10 +1607,10 @@ def create_ai_predictions_endpoint(prefix: str = "/api"):
     """Create AI predictions endpoint with specified prefix"""
 
     async def get_ai_predictions() -> Dict[str, Any]:
-        from utils.exceptions import AIException
+        from backend.utils.exceptions import AIException
 
         try:
-            from services.ai_service import get_ai_service
+            from backend.services.ai_service import get_ai_service
 
             ai_service = get_ai_service()
             result = await ai_service.get_predictions()
@@ -1645,7 +1645,7 @@ def create_analytics_performance_endpoint(prefix: str = "/api"):
                     metrics = engine.get_performance_metrics()  # type: ignore
             else:
                 # Get real analytics from AI services
-                from services.analytics_service import get_analytics_service
+                from backend.services.analytics_service import get_analytics_service
 
                 analytics_service = get_analytics_service()
                 metrics = await analytics_service.get_performance_metrics()
@@ -1693,7 +1693,7 @@ def create_analytics_history_endpoint(prefix: str = "/api"):
                     history = engine.get_trading_history()  # type: ignore
             else:
                 # Get real trading history from AI services
-                from services.analytics_service import get_analytics_service
+                from backend.services.analytics_service import get_analytics_service
 
                 analytics_service = get_analytics_service()
                 history = await analytics_service.get_trading_history()
@@ -2143,7 +2143,7 @@ def create_error_logging_endpoint(prefix: str = "/api"):
             )
 
             # Store in database or cache for analysis
-            from services.redis_service import get_redis_service
+            from backend.services.redis_service import get_redis_service
 
             redis_service = get_redis_service()
 
@@ -2175,3 +2175,5 @@ def create_error_logging_endpoint(prefix: str = "/api"):
             }
 
     return log_error
+
+

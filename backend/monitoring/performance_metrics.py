@@ -1,4 +1,4 @@
-"""
+﻿"""
 Performance Metrics System for Mystic Trading Platform
 
 Provides comprehensive performance monitoring with:
@@ -393,3 +393,5 @@ class MetricsCollector:
 
 # Global metrics collector instance
 metrics_collector = MetricsCollector()
+
+

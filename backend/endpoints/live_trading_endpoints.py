@@ -1,4 +1,4 @@
-"""
+﻿"""
 Live Trading Endpoints
 
 Provides live trading endpoints using real market data and exchange APIs.
@@ -12,12 +12,12 @@ from typing import Any, Dict, Optional
 from fastapi import APIRouter, HTTPException, Query
 
 # Import configuration
-from config import settings
-from services.binance_trading import get_binance_trading_service
-from services.coinbase_trading import get_coinbase_trading_service
+from backend.config import settings
+from backend.services.binance_trading import get_binance_trading_service
+from backend.services.coinbase_trading import get_coinbase_trading_service
 
 # Import live services
-from services.live_market_data import live_market_data_service
+from backend.services.live_market_data import live_market_data_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -517,4 +517,7 @@ async def get_exchange_status() -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail=f"Error getting exchange status: {str(e)}")
 
 
-logger.info("✅ Live trading endpoints loaded successfully")
+logger.info("âœ… Live trading endpoints loaded successfully")
+
+
+

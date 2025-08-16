@@ -1,12 +1,12 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from typing import Dict, List
 from datetime import datetime, timezone
 
 import aiohttp
 
-from models.market_types import Ticker, OHLCV  # type: ignore[import-not-found]
-from utils.symbols import normalize_symbol_to_dash  # type: ignore[import-not-found]
+from backend.models.market_types import Ticker, OHLCV  # type: ignore[import-not-found]
+from backend.utils.symbols import normalize_symbol_to_dash  # type: ignore[import-not-found]
 
 
 class CoinGeckoClient:
@@ -54,5 +54,7 @@ class CoinGeckoClient:
                 )
             )
         return out
+
+
 
 

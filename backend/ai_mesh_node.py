@@ -1,4 +1,4 @@
-import socket
+﻿import socket
 
 
 def start_node(host="localhost", port=9444):
@@ -11,3 +11,5 @@ def start_node(host="localhost", port=9444):
         data = conn.recv(1024).decode()
         print(f"[MESH] Received from {addr}: {data}")
         conn.close()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Celery Task Configuration for Mystic Trading Platform
 Production-ready task queue system for AI trading operations
 """
@@ -701,3 +701,5 @@ def health_check() -> Dict[str, Any]:
 
 if __name__ == "__main__":
     celery_app.start()
+
+

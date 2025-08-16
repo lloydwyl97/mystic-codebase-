@@ -1,4 +1,4 @@
-import logging
+﻿import logging
 from enum import Enum
 
 
@@ -61,3 +61,5 @@ class AITradingController:
             "total_profit": self.total_profit,
             "max_drawdown": self.max_drawdown,
         }
+
+

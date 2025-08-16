@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from typing import Any, Dict
 
@@ -22,11 +22,13 @@ def get_cache() -> Any:  # noqa: ANN401
         return _singleton_cache
     try:
         # Prefer the AI poller's cache if available
-        from ai.ai.poller import get_cache as _ai_get_cache  # type: ignore[import-not-found]
+        from backend.ai.ai.poller import get_cache as _ai_get_cache  # type: ignore[import-not-found]
 
         _singleton_cache = _ai_get_cache()
     except Exception:
         _singleton_cache = _build_fallback_cache()
     return _singleton_cache
+
+
 
 

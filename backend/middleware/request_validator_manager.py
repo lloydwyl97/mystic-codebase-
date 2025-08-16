@@ -1,4 +1,4 @@
-"""
+﻿"""
 Request Validator Manager
 
 Handles request validation and field checking.
@@ -134,3 +134,5 @@ class RequestValidator:
         except Exception as e:
             logger.error(f"Error in request validation: {str(e)}")
             raise HTTPException(status_code=400, detail="Invalid request")
+
+

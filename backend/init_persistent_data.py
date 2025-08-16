@@ -1,4 +1,4 @@
-"""
+﻿"""
 Initialize Persistent Data Cache
 Populates the persistent cache with sample data for testing endpoints
 """
@@ -6,7 +6,7 @@ Populates the persistent cache with sample data for testing endpoints
 import asyncio
 import logging
 
-from ai.persistent_cache import get_persistent_cache
+from backend.ai.persistent_cache import get_persistent_cache
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -123,7 +123,7 @@ async def init_persistent_sample_data():
         cache.update_coinbase(coinbase_data)
         cache.update_coingecko(coingecko_data)
 
-        logger.info("✅ Persistent sample data initialized:")
+        logger.info("âœ… Persistent sample data initialized:")
         logger.info(f"   Binance: {len(binance_data)} symbols")
         logger.info(f"   Coinbase: {len(coinbase_data)} symbols")
         logger.info(f"   CoinGecko: {len(coingecko_data)} coins")
@@ -132,7 +132,7 @@ async def init_persistent_sample_data():
         return True
 
     except Exception as e:
-        logger.error(f"❌ Error initializing persistent sample data: {e}")
+        logger.error(f"âŒ Error initializing persistent sample data: {e}")
         return False
 
 
@@ -140,3 +140,5 @@ if __name__ == "__main__":
     # Initialize persistent sample data
     asyncio.run(init_persistent_sample_data())
     print("Persistent sample data initialized successfully!")
+
+

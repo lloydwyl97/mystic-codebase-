@@ -1,4 +1,4 @@
-import asyncio
+﻿import asyncio
 import openai
 import json
 import sqlite3
@@ -533,3 +533,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

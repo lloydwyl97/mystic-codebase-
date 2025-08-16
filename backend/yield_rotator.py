@@ -1,4 +1,4 @@
-# yield_rotator.py
+﻿# yield_rotator.py
 """
 Yield Rotation Engine
 Manages idle capital by parking it in yield-generating protocols
@@ -180,8 +180,8 @@ class YieldRotator:
         # Log parking action
         self._log_parking_action(parking_record)
 
-        print(f"💰 Parked ${amount} in {protocol['name']} for {lock_period} days")
-        print(f"📈 Expected APY: {protocol['apy']:.1%}")
+        print(f"ðŸ’° Parked ${amount} in {protocol['name']} for {lock_period} days")
+        print(f"ðŸ“ˆ Expected APY: {protocol['apy']:.1%}")
 
         return {
             "success": True,
@@ -231,7 +231,7 @@ class YieldRotator:
         # Log withdrawal
         self._log_withdrawal_action(parking_record)
 
-        print(f"💰 Withdrew ${parking_record['amount']} + ${earned_yield} yield")
+        print(f"ðŸ’° Withdrew ${parking_record['amount']} + ${earned_yield} yield")
 
         return {
             "success": True,
@@ -422,26 +422,28 @@ def auto_rotate_yield(total_capital: float, trading_signal: float) -> Dict[str, 
 
 # Example usage
 if __name__ == "__main__":
-    print("💰 Yield Rotation Engine")
+    print("ðŸ’° Yield Rotation Engine")
     print("=" * 40)
 
     # Test yield rotation
     rotator = YieldRotator()
 
     # Park some capital
-    print("\n📈 Parking capital...")
+    print("\nðŸ“ˆ Parking capital...")
     result = rotator.park_capital(1000, lock_period=30)
     if result["success"]:
         parking_id = result["parking_id"]
 
         # Check summary
         summary = rotator.get_parked_capital_summary()
-        print(f"💰 Total parked: ${summary['total_parked']}")
-        print(f"📈 Total earned: ${summary['total_earned']}")
+        print(f"ðŸ’° Total parked: ${summary['total_parked']}")
+        print(f"ðŸ“ˆ Total earned: ${summary['total_earned']}")
 
         # Test auto-rotation
-        print("\n🔄 Testing auto-rotation...")
+        print("\nðŸ”„ Testing auto-rotation...")
         rotation = rotator.auto_rotate_capital(10000, trading_signal_strength=0.8)
         print(f"Actions taken: {rotation['actions_taken']}")
 
-    print("\n🎯 Yield rotation testing complete!")
+    print("\nðŸŽ¯ Yield rotation testing complete!")
+
+

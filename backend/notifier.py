@@ -1,4 +1,4 @@
-import os
+﻿import os
 
 import requests
 
@@ -24,10 +24,12 @@ def send_alert(message: str):
 
 
 def send_trade_alert(symbol: str, action: str, price: float, profit: float):
-    message = f"🤖 AI Trade: {action} {symbol} @ ${price:.2f} | Profit: ${profit:.2f}"
+    message = f"ðŸ¤– AI Trade: {action} {symbol} @ ${price:.2f} | Profit: ${profit:.2f}"
     send_alert(message)
 
 
 def send_performance_alert(avg_profit: float, total_trades: int):
-    message = f"📊 AI Performance: {total_trades} trades | Avg Profit: ${avg_profit:.2f}"
+    message = f"ðŸ“Š AI Performance: {total_trades} trades | Avg Profit: ${avg_profit:.2f}"
     send_alert(message)
+
+

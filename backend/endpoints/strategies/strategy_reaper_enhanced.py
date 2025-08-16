@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import sqlite3
 import time
@@ -461,3 +461,6 @@ def reap_strategies_enhanced():
 while True:
     reap_strategies_enhanced()
     time.sleep(REAPER_INTERVAL)
+
+
+

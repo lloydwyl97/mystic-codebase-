@@ -1,4 +1,4 @@
-"""
+﻿"""
 Missing AI Strategies Endpoints
 
 Provides missing AI strategies endpoint that returns live data:
@@ -11,7 +11,7 @@ from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException
 
-from ai.persistent_cache import get_persistent_cache
+from backend.ai.persistent_cache import get_persistent_cache
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -35,9 +35,9 @@ async def get_ai_strategies() -> Dict[str, Any]:
         strategy_id = 1
 
         # Assume these services are available for live metrics
-        from services.trading_logs_service import TradingLogsService
-        from services.ai_model_registry import AIModelRegistry
-        from services.analytics_service import AnalyticsService
+        from backend.services.trading_logs_service import TradingLogsService
+        from backend.services.ai_model_registry import AIModelRegistry
+        from backend.services.analytics_service import AnalyticsService
 
         trading_logs_service = TradingLogsService()
         ai_model_registry = AIModelRegistry()
@@ -301,3 +301,6 @@ async def get_ai_strategies() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting AI strategies: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error getting AI strategies: {str(e)}")
+
+
+

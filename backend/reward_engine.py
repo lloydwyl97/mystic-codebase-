@@ -1,4 +1,4 @@
-# reward_engine.py
+﻿# reward_engine.py
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from models import Strategy, Trade, StrategyPerformance
@@ -309,3 +309,5 @@ def run_daily_evaluation() -> Dict[str, Any]:
         f"Daily evaluation completed. Top performers: {len(top_performers)}, Poor performers: {len(poor_performers)}"
     )
     return results
+
+

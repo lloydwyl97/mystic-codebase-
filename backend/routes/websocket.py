@@ -1,4 +1,4 @@
-"""
+﻿"""
 WebSocket Router - Real-time Data
 
 Contains WebSocket endpoints for real-time market data, signals, and social trading.
@@ -11,7 +11,7 @@ from datetime import timezone, datetime
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 
 # Import real services
-from services.redis_service import get_redis_service
+from backend.services.redis_service import get_redis_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -397,3 +397,5 @@ async def get_websocket_status():
     except Exception as e:
         logger.error(f"Error getting WebSocket status: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error getting WebSocket status: {str(e)}")
+
+

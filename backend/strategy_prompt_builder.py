@@ -1,4 +1,4 @@
-import openai
+﻿import openai
 import os
 
 
@@ -18,3 +18,5 @@ def generate_strategy_code(prompt):
         ],
     )
     return response.choices[0].message.content
+
+

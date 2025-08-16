@@ -1,4 +1,4 @@
-import os
+﻿import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
@@ -77,7 +77,7 @@ async def authenticate_user(username: str, password: str) -> Dict[str, Any]:
     try:
         # Real implementation using database authentication
         from database import get_user_by_credentials
-        from utils.password_utils import verify_password
+        from backend.utils.password_utils import verify_password
 
         user = await get_user_by_credentials(username)
         if not user or not verify_password(password, user.get("password_hash", "")):
@@ -94,7 +94,7 @@ async def register_user(username: str, password: str, email: str) -> Dict[str, A
     try:
         # Real implementation using database registration
         from database import create_user, get_user_by_credentials
-        from utils.password_utils import hash_password
+        from backend.utils.password_utils import hash_password
 
         # Check if user already exists
         existing_user = await get_user_by_credentials(username)
@@ -114,3 +114,5 @@ async def register_user(username: str, password: str, email: str) -> Dict[str, A
         return {"user_id": user["id"], "username": username, "token": token}
     except Exception as e:
         raise AuthenticationException(f"Registration failed: {str(e)}")
+
+

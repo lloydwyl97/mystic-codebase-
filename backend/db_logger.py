@@ -1,4 +1,4 @@
-import os
+﻿import os
 from dotenv import load_dotenv
 from sqlalchemy import (
     create_engine,
@@ -123,3 +123,5 @@ def get_strategy_stats():
         .all()
     )
     return {name: {"trades": count, "avg_profit": avg} for name, count, avg in result}
+
+

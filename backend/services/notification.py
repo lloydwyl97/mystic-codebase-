@@ -1,4 +1,4 @@
-"""
+﻿"""
 Notification Service for Mystic Trading
 
 Provides centralized notification management for the platform.
@@ -8,7 +8,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Dict, List
 
-from services.notification_manager import notification_manager
+from backend.services.notification_manager import notification_manager
 
 logger = logging.getLogger(__name__)
 
@@ -241,3 +241,5 @@ def get_notification_service(redis_client: Any) -> NotificationService:
     if notification_service is None:
         notification_service = NotificationService(redis_client)
     return notification_service
+
+

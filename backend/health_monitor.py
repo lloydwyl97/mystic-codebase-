@@ -1,4 +1,4 @@
-"""
+﻿"""
 Health Monitoring Service for Mystic Trading
 
 Monitors the health of all system components and performs self-healing when needed.
@@ -287,3 +287,5 @@ def get_health_monitor(
             metrics_collector,
         )
     return health_monitor
+
+

@@ -1,4 +1,4 @@
-import sqlite3
+﻿import sqlite3
 import os
 from datetime import datetime, timedelta
 
@@ -83,7 +83,7 @@ def auto_evolve():
 def clone_and_mutate(base_strategy):
     """Clone and mutate a winning strategy"""
     new_name = base_strategy + "_mutant_" + datetime.timezone.utcnow().strftime("%H%M%S")
-    print(f"[MUTATE] {base_strategy} → {new_name}")
+    print(f"[MUTATE] {base_strategy} â†’ {new_name}")
     # Copy the strategy logic file or config and apply mutations
 
 
@@ -106,3 +106,5 @@ if __name__ == "__main__":
         print(
             f"{i}. {strat['strategy']}: ${strat['total_profit']:.2f} | WR: {strat['win_rate']:.2%}"
         )
+
+

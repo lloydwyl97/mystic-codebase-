@@ -1,4 +1,4 @@
-import numpy as np
+﻿import numpy as np
 import pandas as pd
 import time
 import json
@@ -419,3 +419,5 @@ def optimize_risk_enhanced():
 while True:
     optimize_risk_enhanced()
     time.sleep(OPTIMIZATION_INTERVAL)
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Database Initialization and Management for Mystic Trading Platform
 Handles database creation, migrations, and connection management
 """
@@ -393,3 +393,5 @@ if __name__ == "__main__":
         logger.info(f"Database health: {health}")
     else:
         logger.error("Database initialization failed")
+
+

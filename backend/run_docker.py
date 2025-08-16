@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Docker runner script for Mystic Trading Platform
 Sets up proper Python path and runs the FastAPI app
@@ -23,3 +23,5 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+

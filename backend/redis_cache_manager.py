@@ -1,4 +1,4 @@
-"""
+﻿"""
 Redis Cache Manager for Mystic Trading Platform
 
 Provides high-performance caching with:
@@ -436,3 +436,5 @@ class RedisCacheManager:
 
 # Global cache manager instance
 cache_manager = RedisCacheManager()
+
+

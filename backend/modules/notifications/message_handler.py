@@ -1,4 +1,4 @@
-"""
+﻿"""
 Message Handler for Mystic Trading Platform
 
 Contains message handling logic for notifications and alerts.
@@ -14,7 +14,7 @@ from email.mime.multipart import MIMEMultipart
 from typing import Any, Dict, List, Optional
 
 import requests
-from utils.exceptions import NotificationException
+from backend.utils.exceptions import NotificationException
 
 logger = logging.getLogger(__name__)
 
@@ -622,3 +622,5 @@ class MessageHandler:
             ):
                 result.append(m)
         return result
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pydantic Models for Mystic Trading
 
 Simple data models for market data and trading signals without database dependencies.
@@ -111,3 +111,5 @@ class UserSettings(BaseModel):
         default_factory=lambda: datetime.now(timezone.utc),
         description="Last update timestamp",
     )
+
+

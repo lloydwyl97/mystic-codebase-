@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 AI Trade Engine Service
 Port 8004 - Standalone AI trading engine service
@@ -20,7 +20,7 @@ import redis
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import AI trade engine
+# import backend.ai as ai trade engine
 from ai_trade_engine import AITradeEngine
 
 # Configure logging
@@ -59,11 +59,11 @@ class AITradeEngineService:
             decode_responses=True,
         )
 
-        logger.info("✅ AI Trade Engine Service initialized")
+        logger.info("âœ… AI Trade Engine Service initialized")
 
     async def start(self):
         """Start the service"""
-        logger.info("🚀 Starting AI Trade Engine Service...")
+        logger.info("ðŸš€ Starting AI Trade Engine Service...")
         self.running = True
 
         # Start the trade engine
@@ -74,13 +74,13 @@ class AITradeEngineService:
 
     async def stop(self):
         """Stop the service"""
-        logger.info("🛑 Stopping AI Trade Engine Service...")
+        logger.info("ðŸ›‘ Stopping AI Trade Engine Service...")
         self.running = False
         await self.trade_engine.stop()
 
     async def trade_monitor_loop(self):
         """Monitor for trade requests"""
-        logger.info("👀 Starting trade monitor loop...")
+        logger.info("ðŸ‘€ Starting trade monitor loop...")
 
         while self.running:
             try:
@@ -95,7 +95,7 @@ class AITradeEngineService:
                 await asyncio.sleep(5)
 
             except Exception as e:
-                logger.error(f"❌ Error in trade monitor loop: {e}")
+                logger.error(f"âŒ Error in trade monitor loop: {e}")
                 await asyncio.sleep(30)
 
     async def process_trade_request(self, request_data: Dict[str, Any]):
@@ -107,7 +107,7 @@ class AITradeEngineService:
             price = request_data.get("price", None)
             strategy_id = request_data.get("strategy_id", "unknown")
 
-            logger.info(f"🎯 Processing trade request for {symbol} {side} {quantity}")
+            logger.info(f"ðŸŽ¯ Processing trade request for {symbol} {side} {quantity}")
 
             # Execute trade using the trade engine
             trade_result = await self.trade_engine.execute_trade(symbol, side, quantity, price)
@@ -134,12 +134,12 @@ class AITradeEngineService:
             # Publish result
             self.redis_client.lpush("trade_results", json.dumps(trade_record))
 
-            logger.info(f"✅ Trade processed: {trade_record['status']}")
+            logger.info(f"âœ… Trade processed: {trade_record['status']}")
 
             return trade_record
 
         except Exception as e:
-            logger.error(f"❌ Error processing trade request: {e}")
+            logger.error(f"âŒ Error processing trade request: {e}")
 
             # Record failed trade
             trade_record = {
@@ -161,7 +161,7 @@ class AITradeEngineService:
     ) -> Dict[str, Any]:
         """Execute a trade"""
         try:
-            logger.info(f"🎯 Executing trade: {symbol} {side} {quantity}")
+            logger.info(f"ðŸŽ¯ Executing trade: {symbol} {side} {quantity}")
 
             # Execute trade using the trade engine
             result = await self.trade_engine.execute_trade(symbol, side, quantity, price)
@@ -180,12 +180,12 @@ class AITradeEngineService:
             # Store trade record
             self.trade_history.append(trade_record)
 
-            logger.info(f"✅ Trade executed: {trade_record['status']}")
+            logger.info(f"âœ… Trade executed: {trade_record['status']}")
 
             return trade_record
 
         except Exception as e:
-            logger.error(f"❌ Error executing trade: {e}")
+            logger.error(f"âŒ Error executing trade: {e}")
             raise
 
     async def get_trade_history(self, limit: int = 100) -> List[Dict[str, Any]]:
@@ -194,7 +194,7 @@ class AITradeEngineService:
             # Return recent trades
             return self.trade_history[-limit:] if self.trade_history else []
         except Exception as e:
-            logger.error(f"❌ Error getting trade history: {e}")
+            logger.error(f"âŒ Error getting trade history: {e}")
             return []
 
     async def get_strategy_trades(self, strategy_id: str) -> List[Dict[str, Any]]:
@@ -207,7 +207,7 @@ class AITradeEngineService:
                     trades.append(json.loads(trade_data))
             return trades
         except Exception as e:
-            logger.error(f"❌ Error getting strategy trades: {e}")
+            logger.error(f"âŒ Error getting strategy trades: {e}")
             return []
 
     async def get_portfolio_status(self) -> Dict[str, Any]:
@@ -221,7 +221,7 @@ class AITradeEngineService:
                 "timestamp": datetime.now().isoformat(),
             }
         except Exception as e:
-            logger.error(f"❌ Error getting portfolio status: {e}")
+            logger.error(f"âŒ Error getting portfolio status: {e}")
             return {"error": str(e)}
 
 
@@ -236,9 +236,9 @@ async def startup_event():
     try:
         trade_service = AITradeEngineService()
         await trade_service.start()
-        logger.info("✅ AI Trade Engine Service started")
+        logger.info("âœ… AI Trade Engine Service started")
     except Exception as e:
-        logger.error(f"❌ Failed to start AI Trade Engine Service: {e}")
+        logger.error(f"âŒ Failed to start AI Trade Engine Service: {e}")
         raise
 
 
@@ -248,7 +248,7 @@ async def shutdown_event():
     global trade_service
     if trade_service:
         await trade_service.stop()
-        logger.info("✅ AI Trade Engine Service stopped")
+        logger.info("âœ… AI Trade Engine Service stopped")
 
 
 @app.get("/health")
@@ -304,7 +304,7 @@ async def execute_trade(
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error in trade endpoint: {e}")
+        logger.error(f"âŒ Error in trade endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -322,7 +322,7 @@ async def get_trades(limit: int = 100):
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error getting trades: {e}")
+        logger.error(f"âŒ Error getting trades: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -341,7 +341,7 @@ async def get_strategy_trades(strategy_id: str):
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error getting strategy trades: {e}")
+        logger.error(f"âŒ Error getting strategy trades: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -355,7 +355,7 @@ async def get_portfolio():
         portfolio = await trade_service.get_portfolio_status()
         return portfolio
     except Exception as e:
-        logger.error(f"❌ Error getting portfolio: {e}")
+        logger.error(f"âŒ Error getting portfolio: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -382,7 +382,7 @@ async def process_trade_queue():
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        logger.error(f"❌ Error processing trade queue: {e}")
+        logger.error(f"âŒ Error processing trade queue: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -390,7 +390,7 @@ if __name__ == "__main__":
     # Get port from environment
     port = int(os.getenv("SERVICE_PORT", 8004))
 
-    logger.info(f"🚀 Starting AI Trade Engine Service on port {port}")
+    logger.info(f"ðŸš€ Starting AI Trade Engine Service on port {port}")
 
     # Start the FastAPI server
     uvicorn.run(
@@ -400,3 +400,5 @@ if __name__ == "__main__":
         log_level="info",
         reload=False,
     )
+
+

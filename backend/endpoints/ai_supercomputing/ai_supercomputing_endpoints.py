@@ -1,10 +1,10 @@
-import time
+﻿import time
 from datetime import datetime
 
 import psutil
 
 try:
-    from services.gpu_monitor import get_gpu_metrics  # If available
+    from backend.services.gpu_monitor import get_gpu_metrics  # If available
 except ImportError:
     get_gpu_metrics = None
 
@@ -18,21 +18,21 @@ except ImportError:
     inspect = None
 
 try:
-    from middleware.circuit_breaker import circuit_states, FAILURE_THRESHOLD, RESET_TIMEOUT
+    from backend.middleware.circuit_breaker import circuit_states, FAILURE_THRESHOLD, RESET_TIMEOUT
 except ImportError:
     circuit_states = {}
     FAILURE_THRESHOLD = 5
     RESET_TIMEOUT = 60
 
 try:
-    from services.performance_monitor import PerformanceMonitor
+    from backend.services.performance_monitor import PerformanceMonitor
 
     performance_monitor = PerformanceMonitor()
 except ImportError:
     performance_monitor = None
 
 try:
-    from services.health_monitor_service import HealthMonitorService
+    from backend.services.health_monitor_service import HealthMonitorService
 
     health_monitor = HealthMonitorService()
 except ImportError:
@@ -59,7 +59,7 @@ except ImportError:
     ai_genetic_algorithm = None
 
 try:
-    from modules.notifications.alert_manager import AlertManager
+    from backend.modules.notifications.alert_manager import AlertManager
 
     alert_manager = AlertManager()
 except ImportError:
@@ -67,8 +67,8 @@ except ImportError:
 
 from fastapi import APIRouter, HTTPException
 
-from services.ai_strategy_service import AIStrategyService
-from services.analytics_service import get_analytics_service
+from backend.services.ai_strategy_service import AIStrategyService
+from backend.services.analytics_service import get_analytics_service
 
 router = APIRouter(prefix="/api/ai/supercomputing", tags=["AI Supercomputing"])
 
@@ -388,7 +388,7 @@ async def get_fault_tolerance():
 
         # Calculate redundancy level based on available services
         try:
-            from services.system_monitor import SystemMonitor
+            from backend.services.system_monitor import SystemMonitor
 
             system_monitor = SystemMonitor()
             services_status = await system_monitor.get_services_status()
@@ -561,7 +561,7 @@ async def get_system_health():
 
         # Add service health checks
         try:
-            from services.system_monitor import SystemMonitor
+            from backend.services.system_monitor import SystemMonitor
 
             system_monitor = SystemMonitor()
             services_status = await system_monitor.get_services_status()
@@ -614,7 +614,7 @@ async def get_system_health():
 
         # Add cache health
         try:
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
             components.append(
@@ -780,7 +780,7 @@ async def get_alerts():
                 pass
         # Get events from system endpoints if available
         try:
-            from services.system_monitor import SystemMonitor
+            from backend.services.system_monitor import SystemMonitor
 
             system_monitor = SystemMonitor()
             events = await system_monitor.get_recent_events(10)
@@ -817,3 +817,6 @@ async def get_supercomputing_overview():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+

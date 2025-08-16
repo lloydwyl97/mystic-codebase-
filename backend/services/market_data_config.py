@@ -1,4 +1,4 @@
-SUPPORTED_COINS = [
+﻿SUPPORTED_COINS = [
     "BTC",
     "ETH",
     "ADA",
@@ -20,3 +20,5 @@ RATE_LIMITS = {
     "coinpaprika": 25,  # Approx safe threshold
     "coincap": 15,  # Free tier estimate
 }
+
+

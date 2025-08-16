@@ -1,4 +1,4 @@
-def calculate_position_size(capital_usdt, strategy_win_rate, volatility=0.02, risk_per_trade=0.01):
+﻿def calculate_position_size(capital_usdt, strategy_win_rate, volatility=0.02, risk_per_trade=0.01):
     """
     Calculates dynamic position size.
     - capital_usdt: total capital available
@@ -54,3 +54,5 @@ class PositionSizer:
     ):
         """Calculate position size using the main function"""
         return calculate_position_size(capital_usdt, strategy_win_rate, volatility, risk_per_trade)
+
+

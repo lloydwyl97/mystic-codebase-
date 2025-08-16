@@ -1,4 +1,4 @@
-"""
+﻿"""
 Security Enhancements for Mystic Trading Platform
 Comprehensive security features including encryption, audit logging, and access control
 """
@@ -546,3 +546,5 @@ class SecurityMiddleware:
 
 # Global security instance
 security_middleware = SecurityMiddleware()
+
+

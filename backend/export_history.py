@@ -1,4 +1,4 @@
-import json
+﻿import json
 import sqlite3
 from datetime import datetime
 
@@ -59,3 +59,5 @@ def export_csv_trades(output_file="trades.csv"):
             f.write(",".join(str(val) for val in row) + "\n")
 
     print(f"[Export] CSV trades exported to {output_file}")
+
+

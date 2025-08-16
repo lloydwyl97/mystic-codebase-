@@ -1,4 +1,4 @@
-"""
+﻿"""
 Missing Portfolio Endpoints
 
 Provides missing portfolio endpoints that return live data:
@@ -11,7 +11,7 @@ import logging
 from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException
-from services.portfolio_service import PortfolioService
+from backend.services.portfolio_service import PortfolioService
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -82,3 +82,6 @@ async def get_portfolio_transactions(limit: int = 50, offset: int = 0) -> Dict[s
             status_code=500,
             detail=f"Error getting portfolio transactions: {str(e)}",
         )
+
+
+

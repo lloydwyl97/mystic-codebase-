@@ -1,4 +1,4 @@
-# trade_memory_integration.py
+﻿# trade_memory_integration.py
 """
 Integration module for trade logging and strategy memory engine.
 This module hooks into the existing trading execution system to automatically
@@ -344,3 +344,5 @@ def force_evaluation() -> Dict[str, Any]:
 def force_evolution() -> Dict[str, Any]:
     """Convenience function to force evolution"""
     return trade_memory.force_evolution()
+
+

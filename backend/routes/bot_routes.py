@@ -1,4 +1,4 @@
-"""
+﻿"""
 Bot Routes
 
 API endpoints for bot control and management.
@@ -9,7 +9,7 @@ from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException
 
-from services.bot_manager import BotManager
+from backend.services.bot_manager import BotManager
 
 logger = logging.getLogger(__name__)
 
@@ -85,3 +85,5 @@ async def execute_trade(
     except Exception as e:
         logger.error(f"Error executing trade: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+

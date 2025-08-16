@@ -1,4 +1,4 @@
-"""
+﻿"""
 Portfolio Rebalancer Module
 
 Handles portfolio rebalancing operations and health monitoring.
@@ -226,3 +226,5 @@ class PortfolioRebalancer:
                 "error": str(e),
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
+
+

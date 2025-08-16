@@ -1,4 +1,4 @@
-"""
+﻿"""
 Custom rate limiting implementation for FastAPI using Redis 5.x and aioredis 2.0.1
 Replaces fastapi-limiter which doesn't support Redis 5.x
 """
@@ -161,3 +161,5 @@ async def add_rate_limit_headers(request: Request, response: JSONResponse):
         response.headers["X-RateLimit-Window"] = str(rate_info["window"])
 
     return response
+
+

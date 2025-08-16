@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trading Module for Mystic Trading Platform
 
 Contains all trading-related functionality including order management,
@@ -22,3 +22,5 @@ __all__ = [
     "OrderStatus",
     "order_manager",
 ]
+
+

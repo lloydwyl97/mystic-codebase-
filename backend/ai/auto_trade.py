@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Auto Trade Module for Mystic Trading Platform
 
@@ -257,7 +257,7 @@ def enable_trading() -> Dict[str, Any]:
         _trading_enabled = True
         _trading_start_time = datetime.now(timezone.utc)
 
-        logger.info("✅ Automated trading enabled")
+        logger.info("âœ… Automated trading enabled")
 
         return {
             "success": True,
@@ -297,7 +297,7 @@ def disable_trading() -> Dict[str, Any]:
 
         _trading_start_time = None
 
-        logger.info("🛑 Automated trading disabled")
+        logger.info("ðŸ›‘ Automated trading disabled")
 
         return {
             "success": True,
@@ -450,3 +450,5 @@ __all__ = [
     "CoinGeckoAPI",
     "BinanceUSAPI",
 ]
+
+

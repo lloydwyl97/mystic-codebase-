@@ -1,4 +1,4 @@
-"""
+﻿"""
 Metrics Collector for Mystic Trading
 
 Collects and exposes comprehensive metrics for Prometheus monitoring.
@@ -367,3 +367,5 @@ def get_metrics_collector(redis_client: redis.Redis) -> MetricsCollector:
     if metrics_collector is None:
         metrics_collector = MetricsCollector(redis_client)
     return metrics_collector
+
+

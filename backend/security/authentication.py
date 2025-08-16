@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Authentication System for Mystic Trading Platform
 
 Provides secure authentication with:
@@ -28,12 +28,12 @@ except ImportError:
     redis = None
     Redis = None
 
-from config import Settings
+from backend.config import settings
 
 logger = logging.getLogger(__name__)
 
 # Get settings instance
-settings = Settings()
+from backend.config import settings
 
 # Authentication configuration
 JWT_SECRET_KEY = settings.security.secret_key
@@ -218,11 +218,11 @@ class AuthenticationManager:
                 )
                 # Test connection
                 self.redis_client.ping()
-                logger.info("✅ Redis connection established")
+                logger.info("âœ… Redis connection established")
             else:
-                logger.warning("⚠️ Redis not available, using in-memory storage")
+                logger.warning("âš ï¸ Redis not available, using in-memory storage")
         except Exception as e:
-            logger.error(f"❌ Redis connection failed: {e}")
+            logger.error(f"âŒ Redis connection failed: {e}")
             self.redis_client = None
 
     def _load_default_users(self):
@@ -252,7 +252,7 @@ class AuthenticationManager:
             user_key = f"user:{username}"
             if not self.redis_client.exists(user_key):
                 self.redis_client.hset(user_key, mapping=user_data)
-                logger.info(f"✅ Created default user: {username}")
+                logger.info(f"âœ… Created default user: {username}")
 
     def authenticate_user(self, username: str, password: str,
                          client_ip: Optional[str] = None) -> Optional[Dict[str, Any]]:
@@ -496,3 +496,5 @@ class AuthenticationManager:
             'lockout_times': dict(self.lockout_times),
             'redis_connected': self.redis_client is not None
         }
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Metrics Collector for Mystic Trading Platform
 
 Contains metrics collection logic, extracted from metrics_collector.py.
@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional
 
 import psutil
 
-from utils.exceptions import MetricsException
+from backend.utils.exceptions import MetricsException
 
 logger = logging.getLogger(__name__)
 
@@ -448,3 +448,5 @@ class MetricsCollector:
             "last_collection": self.last_collection.isoformat(),
             "collection_interval": self.collection_interval,
         }
+
+

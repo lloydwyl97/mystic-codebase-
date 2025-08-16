@@ -1,4 +1,4 @@
-import json
+﻿import json
 import logging
 import time
 
@@ -128,3 +128,5 @@ if __name__ == "__main__":
 
     # Run continuous execution
     run_continuous_execution()
+
+

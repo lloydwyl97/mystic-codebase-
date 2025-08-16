@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Strategy System for Mystic Trading Platform
 
@@ -13,11 +13,11 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
 
-from ai_mutation.strategy_locker import get_live_strategy
+from backend.ai_mutation.strategy_locker import get_live_strategy
 
 # Use absolute imports
 from crypto_autoengine_config import get_config
-from services.websocket_manager import websocket_manager
+from backend.services.websocket_manager import websocket_manager
 from shared_cache import CoinCache, SharedCache
 
 logger = logging.getLogger(__name__)
@@ -1248,3 +1248,6 @@ class StrategyManager:
             "active_controllers": len([c for c in self.controllers.values() if c]),
             "symbols": list(self.controllers.keys()),
         }
+
+
+

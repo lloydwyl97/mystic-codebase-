@@ -1,4 +1,4 @@
-"""
+﻿"""
 Connection Manager Service
 Handles database and external service connections
 """
@@ -21,7 +21,7 @@ class ConnectionManager:
             "rabbitmq": "disconnected",
             "database": "disconnected",
         }
-        logger.info("✅ ConnectionManager initialized")
+        logger.info("âœ… ConnectionManager initialized")
 
     async def get_connection_status(self) -> Dict[str, Any]:
         """Get status of all connections"""
@@ -37,11 +37,11 @@ class ConnectionManager:
             # Test connection
             self.redis_client.ping()
             self.connection_status["redis"] = "connected"
-            logger.info("✅ Redis connected successfully")
+            logger.info("âœ… Redis connected successfully")
             return {"success": True, "status": "connected"}
         except Exception as e:
             self.connection_status["redis"] = "failed"
-            logger.error(f"❌ Redis connection failed: {e}")
+            logger.error(f"âŒ Redis connection failed: {e}")
             return {"success": False, "error": str(e)}
 
     async def connect_rabbitmq(self, host: str = "localhost", port: int = 5672) -> Dict[str, Any]:
@@ -51,11 +51,11 @@ class ConnectionManager:
                 pika.ConnectionParameters(host=host, port=port)
             )
             self.connection_status["rabbitmq"] = "connected"
-            logger.info("✅ RabbitMQ connected successfully")
+            logger.info("âœ… RabbitMQ connected successfully")
             return {"success": True, "status": "connected"}
         except Exception as e:
             self.connection_status["rabbitmq"] = "failed"
-            logger.error(f"❌ RabbitMQ connection failed: {e}")
+            logger.error(f"âŒ RabbitMQ connection failed: {e}")
             return {"success": False, "error": str(e)}
 
     async def test_redis_connection(self) -> Dict[str, Any]:
@@ -106,12 +106,14 @@ class ConnectionManager:
                 self.rabbitmq_connection.close()
                 self.connection_status["rabbitmq"] = "disconnected"
 
-            logger.info("✅ All connections closed")
+            logger.info("âœ… All connections closed")
             return {"success": True}
         except Exception as e:
-            logger.error(f"❌ Error closing connections: {e}")
+            logger.error(f"âŒ Error closing connections: {e}")
             return {"success": False, "error": str(e)}
 
 
 # Global instance
 connection_manager = ConnectionManager()
+
+

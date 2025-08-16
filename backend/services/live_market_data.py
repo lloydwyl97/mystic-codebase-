@@ -1,4 +1,4 @@
-"""
+﻿"""
 Live Market Data Service
 Connects to real APIs for live market data
 """
@@ -402,7 +402,7 @@ class LiveMarketDataService:
         """Get market summary from persistent cache"""
         try:
             # Get real market summary from persistent cache
-            from ai.persistent_cache import get_persistent_cache
+            from backend.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
             symbols = []
@@ -688,3 +688,5 @@ class LiveMarketDataService:
 
 # Global instance
 live_market_data_service = LiveMarketDataService()
+
+

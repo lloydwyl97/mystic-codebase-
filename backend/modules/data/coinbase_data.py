@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from typing import Any
 
@@ -25,5 +25,7 @@ class CoinbaseDataFetcher:
 # Legacy alias expected by old imports
 CoinbaseData = CoinbaseDataFetcher
 __all__ = ["CoinbaseData", "CoinbaseDataFetcher"]
+
+
 
 

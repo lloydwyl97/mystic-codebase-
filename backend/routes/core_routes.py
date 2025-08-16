@@ -1,4 +1,4 @@
-"""
+﻿"""
 Core Routes
 Basic API endpoints for the application
 """
@@ -44,3 +44,5 @@ async def get_version() -> Dict[str, Any]:
             "Real-time Dashboard",
         ],
     }
+
+

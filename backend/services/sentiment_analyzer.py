@@ -1,4 +1,4 @@
-"""
+﻿"""
 Advanced Market Sentiment Analysis Service
 Combines social media, news, and on-chain data for superior signal accuracy
 """
@@ -140,7 +140,7 @@ class AdvancedSentimentAnalyzer:
         """Analyze social media sentiment"""
         try:
             # Get real social sentiment from social media APIs
-            from services.social_media_service import get_social_media_service
+            from backend.services.social_media_service import get_social_media_service
 
             social_service = get_social_media_service()
             sentiment = await social_service.get_sentiment(symbol)
@@ -156,7 +156,7 @@ class AdvancedSentimentAnalyzer:
         """Analyze news sentiment"""
         try:
             # Get real news sentiment from news APIs
-            from services.news_service import get_news_service
+            from backend.services.news_service import get_news_service
 
             news_service = get_news_service()
             sentiment = await news_service.get_sentiment(symbol)
@@ -172,7 +172,7 @@ class AdvancedSentimentAnalyzer:
         """Analyze on-chain data sentiment"""
         try:
             # Get real on-chain sentiment from blockchain APIs
-            from services.blockchain_service import get_blockchain_service
+            from backend.services.blockchain_service import get_blockchain_service
 
             blockchain_service = get_blockchain_service()
             sentiment = await blockchain_service.get_sentiment(symbol)
@@ -280,3 +280,5 @@ class AdvancedSentimentAnalyzer:
 
 # Global sentiment analyzer instance
 sentiment_analyzer = AdvancedSentimentAnalyzer()
+
+

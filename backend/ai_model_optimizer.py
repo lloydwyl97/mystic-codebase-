@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Model Optimizer for Mystic Trading Platform
 
 Provides optimized AI model loading with:
@@ -372,3 +372,5 @@ class ModelLoader:
 
 # Global model loader instance
 model_loader = ModelLoader()
+
+

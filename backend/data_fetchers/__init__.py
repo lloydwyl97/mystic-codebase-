@@ -1,4 +1,4 @@
-"""
+﻿"""
 Data Fetchers Package
 Contains modules for fetching data from various sources.
 
@@ -21,4 +21,6 @@ class DataFetcherManager:
         # No-op on purpose: the app factory launches a comprehensive fetcher
         # background task separately. Keep this lightweight to avoid duplicates.
         await asyncio.sleep(0)
+
+
 

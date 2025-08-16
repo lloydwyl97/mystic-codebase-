@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 CRYPTO AUTOENGINE API Endpoints
 Main API for frontend integration
@@ -748,8 +748,8 @@ async def get_phase5_recent_activity() -> Dict[str, Any]:
     """Get Phase 5 recent activity"""
     return {
         "data": [
-            {"status": "✅", "time": "2024-01-15T10:30:00Z", "action": "Phase 5 monitoring started"},
-            {"status": "✅", "time": "2024-01-15T10:25:00Z", "action": "Signal processing completed"}
+            {"status": "âœ…", "time": "2024-01-15T10:30:00Z", "action": "Phase 5 monitoring started"},
+            {"status": "âœ…", "time": "2024-01-15T10:25:00Z", "action": "Signal processing completed"}
         ]
     }
 
@@ -1138,3 +1138,5 @@ async def generate_experimental_report() -> Dict[str, Any]:
 async def export_experimental_data() -> Dict[str, Any]:
     """Export experimental data"""
     return {"success": True, "message": "Experimental data exported successfully"}
+
+

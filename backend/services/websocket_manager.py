@@ -1,4 +1,4 @@
-"""
+﻿"""
 WebSocket Manager Service
 Handles WebSocket connections and real-time data
 """
@@ -40,3 +40,5 @@ class WebSocketManager:
 
 # Global instance
 websocket_manager = WebSocketManager()
+
+

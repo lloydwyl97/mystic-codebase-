@@ -1,4 +1,4 @@
-"""
+﻿"""
 Orders Router - Order Management
 
 Contains order placement, management, advanced orders, and cancellation endpoints.
@@ -11,10 +11,10 @@ from typing import Any, Dict, Optional, Union
 from fastapi import APIRouter, Depends, HTTPException
 
 # Import real services
-from services.redis_service import get_redis_service
+from backend.services.redis_service import get_redis_service
 
-# Import services
-from services.order_service import order_service
+# import backend.services as services
+from backend.services.order_service import order_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -198,7 +198,7 @@ async def calculate_position_size(
         data.get("volatility", 0.02)
 
         # Calculate real position size using risk service
-        from services.risk_service import get_risk_service
+        from backend.services.risk_service import get_risk_service
 
         risk_service = get_risk_service()
         position_size = await risk_service.calculate_position_size(data)
@@ -216,3 +216,5 @@ async def calculate_position_size(
             status_code=500,
             detail=f"Error calculating position size: {str(e)}",
         )
+
+

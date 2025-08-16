@@ -1,4 +1,4 @@
-"""
+﻿"""
 Coinbase Trading Service
 
 Provides real trading capabilities on Coinbase API.
@@ -496,3 +496,5 @@ def get_coinbase_trading_service(
     if coinbase_trading_service is None:
         coinbase_trading_service = CoinbaseTradingService(api_key, secret_key, sandbox)
     return coinbase_trading_service
+
+

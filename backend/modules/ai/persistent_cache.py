@@ -1,4 +1,4 @@
-"""
+﻿"""
 Persistent Cache Module for AI Services
 Provides SQLite-based persistent caching functionality for AI services and data.
 """
@@ -28,9 +28,9 @@ class PersistentCache:
 
             # Create tables
             self._create_tables()
-            logger.info(f"✅ Persistent cache initialized with database: {self.db_path}")
+            logger.info(f"âœ… Persistent cache initialized with database: {self.db_path}")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize persistent cache: {e}")
+            logger.error(f"âŒ Failed to initialize persistent cache: {e}")
             raise
 
     def _create_tables(self):
@@ -106,7 +106,7 @@ class PersistentCache:
             self.connection.commit()
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to set price for {symbol}: {e}")
+            logger.error(f"âŒ Failed to set price for {symbol}: {e}")
             return False
 
     def get_latest_price(self, exchange: str, symbol: str) -> Optional[float]:
@@ -122,7 +122,7 @@ class PersistentCache:
             result = cursor.fetchone()
             return result['price'] if result else None
         except Exception as e:
-            logger.error(f"❌ Failed to get latest price for {symbol}: {e}")
+            logger.error(f"âŒ Failed to get latest price for {symbol}: {e}")
             return None
 
     def get_price_history(self, exchange: str, symbol: str, limit: int = 100) -> List[Dict[str, Any]]:
@@ -138,7 +138,7 @@ class PersistentCache:
             """, (exchange, symbol, limit))
             return [dict(row) for row in cursor.fetchall()]
         except Exception as e:
-            logger.error(f"❌ Failed to get price history for {symbol}: {e}")
+            logger.error(f"âŒ Failed to get price history for {symbol}: {e}")
             return []
 
     def log_trade(self, trade_id: str, symbol: str, side: str, quantity: float,
@@ -154,7 +154,7 @@ class PersistentCache:
             self.connection.commit()
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to log trade {trade_id}: {e}")
+            logger.error(f"âŒ Failed to log trade {trade_id}: {e}")
             return False
 
     def get_trades(self, symbol: Optional[str] = None, limit: int = 100) -> List[Dict[str, Any]]:
@@ -176,7 +176,7 @@ class PersistentCache:
                 """, (limit,))
             return [dict(row) for row in cursor.fetchall()]
         except Exception as e:
-            logger.error(f"❌ Failed to get trades: {e}")
+            logger.error(f"âŒ Failed to get trades: {e}")
             return []
 
     def store_signal(self, signal_id: str, symbol: str, signal_type: str, confidence: float,
@@ -196,7 +196,7 @@ class PersistentCache:
             self.connection.commit()
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to store signal {signal_id}: {e}")
+            logger.error(f"âŒ Failed to store signal {signal_id}: {e}")
             return False
 
     def get_signals(self, symbol: Optional[str] = None, signal_type: Optional[str] = None,
@@ -243,7 +243,7 @@ class PersistentCache:
                 results.append(result)
             return results
         except Exception as e:
-            logger.error(f"❌ Failed to get signals: {e}")
+            logger.error(f"âŒ Failed to get signals: {e}")
             return []
 
     def get_signals_by_type(self, signal_type: str, limit: int = 100) -> List[Dict[str, Any]]:
@@ -287,7 +287,7 @@ class PersistentCache:
                 "database_size": Path(self.db_path).stat().st_size if Path(self.db_path).exists() else 0
             }
         except Exception as e:
-            logger.error(f"❌ Failed to get cache stats: {e}")
+            logger.error(f"âŒ Failed to get cache stats: {e}")
             return {}
 
     def clear_old_data(self, days: int = 30) -> bool:
@@ -310,10 +310,10 @@ class PersistentCache:
             signal_deleted = cursor.rowcount
 
             self.connection.commit()
-            logger.info(f"✅ Cleared old data: {market_deleted} market records, {trade_deleted} trades, {signal_deleted} signals")
+            logger.info(f"âœ… Cleared old data: {market_deleted} market records, {trade_deleted} trades, {signal_deleted} signals")
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to clear old data: {e}")
+            logger.error(f"âŒ Failed to clear old data: {e}")
             return False
 
     def close(self):
@@ -333,3 +333,31 @@ persistent_cache = PersistentCache()
 def get_persistent_cache() -> PersistentCache:
     """Get the global persistent cache instance"""
     return persistent_cache
+
+
+# --- Compatibility shims (legacy update_* methods) ---
+# Ensure PersistentCache has update_binance / update_coinbase / update_coingecko
+try:
+    _PC = PersistentCache  # class defined above in this module
+    def _mk_update(ns_key):
+        def _update(self, data=None, **kwargs):
+            payload = data if data is not None else kwargs
+            setter = getattr(self, "set", None)
+            if callable(setter):
+                return setter(f"market:{ns_key}", payload)
+            # minimal in-memory fallback (should rarely be used)
+            if not hasattr(self, "_store"):
+                self._store = {}
+            self._store[f"market:{ns_key}"] = payload
+            return True
+        return _update
+
+    if not hasattr(_PC, "update_binance"):
+        _PC.update_binance = _mk_update("binanceus")
+    if not hasattr(_PC, "update_coinbase"):
+        _PC.update_coinbase = _mk_update("coinbase")
+    if not hasattr(_PC, "update_coingecko"):
+        _PC.update_coingecko = _mk_update("coingecko")
+except Exception:
+    # Dont break module import if anything unexpected happens
+    pass

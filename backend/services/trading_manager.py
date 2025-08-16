@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trading Manager
 
 Handles business logic for trading operations including order validation,
@@ -10,7 +10,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
-from services.websocket_manager import websocket_manager
+from backend.services.websocket_manager import websocket_manager
 
 logger = logging.getLogger(__name__)
 
@@ -213,3 +213,5 @@ class TradingManager:
 
 # Global instance
 trading_manager = TradingManager()
+
+

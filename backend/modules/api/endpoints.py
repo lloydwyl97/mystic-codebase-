@@ -1,4 +1,4 @@
-"""
+﻿"""
 Modular API Endpoints for Mystic Trading Platform
 
 Extracted from api_endpoints.py to improve modularity and reduce code duplication.
@@ -99,7 +99,7 @@ def create_data_mode_endpoint(prefix: str = "/api"):
         """Toggle data mode (live/simulation)"""
         try:
             # Real implementation using data service
-            from services.data_service import get_data_service
+            from backend.services.data_service import get_data_service
 
             data_service = get_data_service()
             result = await data_service.set_mode(mode)
@@ -123,7 +123,7 @@ def create_data_status_endpoint(prefix: str = "/api"):
         """Get data status"""
         try:
             # Real implementation using data service
-            from services.data_service import get_data_service
+            from backend.services.data_service import get_data_service
 
             data_service = get_data_service()
             status = await data_service.get_status()
@@ -138,3 +138,5 @@ def create_data_status_endpoint(prefix: str = "/api"):
             raise HTTPException(status_code=500, detail="Error getting data status")
 
     return get_data_status
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Strategy Executor for Mystic Trading Platform
 
 Contains strategy execution logic for live trading.
@@ -9,7 +9,7 @@ import json
 import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
-from utils.exceptions import StrategyException
+from backend.utils.exceptions import StrategyException
 
 logger = logging.getLogger(__name__)
 
@@ -567,3 +567,5 @@ class StrategyExecutor:
             "order_id": "12345",
             "action": action["action"],
         }
+
+

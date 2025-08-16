@@ -1,4 +1,4 @@
-# dashboard.py
+﻿# dashboard.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -242,7 +242,7 @@ def create_recent_trades_table(df: pd.DataFrame) -> go.Figure:
         lambda x: f"{x:.2f}%" if pd.notna(x) else "N/A"
     )
     table_data["success"] = table_data["success"].apply(
-        lambda x: "✅" if x else "❌" if pd.notna(x) else "N/A"
+        lambda x: "âœ…" if x else "âŒ" if pd.notna(x) else "N/A"
     )
 
     fig = go.Figure(
@@ -315,9 +315,9 @@ async def dashboard_home():
     <body>
         <div class="container">
             <div class="header">
-                <h1>🚀 Mystic AI Trading Dashboard</h1>
+                <h1>ðŸš€ Mystic AI Trading Dashboard</h1>
                 <p>Real-time trading performance and strategy analysis</p>
-                <button class="refresh-btn" onclick="refreshDashboard()">🔄 Refresh Data</button>
+                <button class="refresh-btn" onclick="refreshDashboard()">ðŸ”„ Refresh Data</button>
             </div>
 
             <div class="stats-grid" id="stats-grid">
@@ -325,17 +325,17 @@ async def dashboard_home():
             </div>
 
             <div class="chart-container">
-                <h2>📈 Trading Performance</h2>
+                <h2>ðŸ“ˆ Trading Performance</h2>
                 <div id="profit-chart"></div>
             </div>
 
             <div class="chart-container">
-                <h2>🎯 Strategy Performance</h2>
+                <h2>ðŸŽ¯ Strategy Performance</h2>
                 <div id="strategy-chart"></div>
             </div>
 
             <div class="chart-container">
-                <h2>📊 Recent Trades</h2>
+                <h2>ðŸ“Š Recent Trades</h2>
                 <div id="trades-table"></div>
             </div>
         </div>
@@ -517,3 +517,5 @@ async def get_top_performers_api():
 
 if __name__ == "__main__":
     uvicorn.run("dashboard:app", host="0.0.0.0", port=8080, reload=True)
+
+

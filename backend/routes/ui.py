@@ -1,4 +1,4 @@
-"""
+﻿"""
 UI Routes - Dashboard Status Endpoint
 
 Provides data for the frontend dashboard
@@ -11,7 +11,7 @@ from fastapi import APIRouter, HTTPException
 
 # Lazy-import trade tracker functions inside handlers to avoid any potential cycles
 def _get_trade_funcs():
-    from modules.ai.trade_tracker import (
+    from backend.modules.ai.trade_tracker import (
         get_active_trades as _get_active_trades,
         get_trade_summary as _get_trade_summary,
         get_trade_history as _get_trade_history,
@@ -28,7 +28,7 @@ def _get_cache():
         return _svc_get_cache()
     except Exception:
         try:
-            from ai.ai.poller import get_cache as _ai_get_cache  # type: ignore[import-not-found]
+            from backend.ai.ai.poller import get_cache as _ai_get_cache  # type: ignore[import-not-found]
             return _ai_get_cache()
         except Exception:
             # Minimal fallback cache structure
@@ -79,7 +79,7 @@ async def get_status() -> Dict[str, Any]:
             },
         }
     except Exception as e:
-        logger.error(f"❌ UI status error: {e}")
+        logger.error(f"âŒ UI status error: {e}")
         raise HTTPException(status_code=500, detail=f"UI status error: {str(e)}")
 
 
@@ -126,7 +126,7 @@ async def get_dashboard_data() -> Dict[str, Any]:
             "mystic_insight": (lambda: __import__('ai.ai.ai_mystic', fromlist=['mystic_oracle']).mystic_oracle())(),
         }
     except Exception as e:
-        logger.error(f"❌ Dashboard data error: {e}")
+        logger.error(f"âŒ Dashboard data error: {e}")
         raise HTTPException(status_code=500, detail=f"Dashboard data error: {str(e)}")
 
 
@@ -153,7 +153,7 @@ async def get_market_data() -> Dict[str, Any]:
             "last_update": cache.last_update,
         }
     except Exception as e:
-        logger.error(f"❌ Market data error: {e}")
+        logger.error(f"âŒ Market data error: {e}")
         raise HTTPException(status_code=500, detail=f"Market data error: {str(e)}")
 
 
@@ -168,7 +168,7 @@ async def get_trading_overview() -> Dict[str, Any]:
             "recent_trades": _get_trade_funcs()[2](),
         }
     except Exception as e:
-        logger.error(f"❌ Trading overview error: {e}")
+        logger.error(f"âŒ Trading overview error: {e}")
         raise HTTPException(status_code=500, detail=f"Trading overview error: {str(e)}")
 
 
@@ -219,5 +219,7 @@ async def get_analytics_data() -> Dict[str, Any]:
             },
         }
     except Exception as e:
-        logger.error(f"❌ Analytics data error: {e}")
+        logger.error(f"âŒ Analytics data error: {e}")
         raise HTTPException(status_code=500, detail=f"Analytics data error: {str(e)}")
+
+

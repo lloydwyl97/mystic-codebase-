@@ -1,4 +1,4 @@
-"""
+﻿"""
 Risk Alert Service for Mystic AI Trading Platform
 Provides real-time risk monitoring and alerting for trading operations.
 """
@@ -13,7 +13,7 @@ import sys
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +34,10 @@ class RiskAlertService:
 
         # Alert configuration
         self.alert_levels = {
-            "LOW": "🟡",
-            "MEDIUM": "🟠",
-            "HIGH": "🔴",
-            "CRITICAL": "🚨"
+            "LOW": "ðŸŸ¡",
+            "MEDIUM": "ðŸŸ ",
+            "HIGH": "ðŸ”´",
+            "CRITICAL": "ðŸš¨"
         }
 
         # Discord webhook support
@@ -53,7 +53,7 @@ class RiskAlertService:
         self.portfolio_exposure = {}
         self.last_trade_prices = {}
 
-        logger.info("✅ RiskAlertService initialized")
+        logger.info("âœ… RiskAlertService initialized")
 
     def _calculate_drawdown(self, current_price: float, last_trade_price: float) -> float:
         """Calculate drawdown percentage from last trade"""
@@ -299,7 +299,7 @@ class RiskAlertService:
             if not self.discord_enabled or not self.discord_webhook_url:
                 return False
 
-            level_emoji = self.alert_levels.get(alert.get("level", "MEDIUM"), "🟡")
+            level_emoji = self.alert_levels.get(alert.get("level", "MEDIUM"), "ðŸŸ¡")
 
             embed = {
                 "title": f"{level_emoji} Risk Alert: {alert.get('risk_type', 'UNKNOWN')}",
@@ -368,7 +368,7 @@ class RiskAlertService:
     def _print_alert(self, alert: Dict[str, Any]) -> None:
         """Print alert to console"""
         try:
-            level_emoji = self.alert_levels.get(alert.get("level", "MEDIUM"), "🟡")
+            level_emoji = self.alert_levels.get(alert.get("level", "MEDIUM"), "ðŸŸ¡")
             level = alert.get("level", "MEDIUM")
 
             print(f"{level_emoji} [{level}] {alert.get('message', 'Risk alert')}")
@@ -386,7 +386,7 @@ class RiskAlertService:
     def check_risks(self) -> Dict[str, Any]:
         """Check all risk conditions and trigger alerts"""
         try:
-            logger.info("🔍 Checking risk conditions...")
+            logger.info("ðŸ” Checking risk conditions...")
 
             # Update portfolio exposure and last trade prices
             self.portfolio_exposure = self._get_portfolio_exposure()
@@ -455,7 +455,7 @@ class RiskAlertService:
                 }
             }
 
-            logger.info(f"✅ Risk check complete: {len(all_alerts)} alerts generated")
+            logger.info(f"âœ… Risk check complete: {len(all_alerts)} alerts generated")
             return result
 
         except Exception as e:
@@ -525,7 +525,7 @@ def get_risk_alert_service() -> RiskAlertService:
 if __name__ == "__main__":
     # Test the risk alert service
     service = RiskAlertService()
-    print(f"✅ RiskAlertService initialized: {service}")
+    print(f"âœ… RiskAlertService initialized: {service}")
 
     # Test risk check
     result = service.check_risks()
@@ -538,3 +538,5 @@ if __name__ == "__main__":
     # Test status
     status = service.get_risk_status()
     print(f"Service status: {status['status']}")
+
+

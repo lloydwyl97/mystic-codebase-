@@ -1,4 +1,4 @@
-"""
+﻿"""
 Bot Management Endpoints
 Focused on bot control and status management
 """
@@ -82,3 +82,5 @@ async def update_bot_config(data: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error updating bot config: {e}")
         raise HTTPException(status_code=500, detail="Failed to update bot config")
+
+

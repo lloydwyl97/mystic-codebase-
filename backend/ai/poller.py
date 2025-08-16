@@ -1,4 +1,4 @@
-BINANCE_SYMBOLS = [
+﻿BINANCE_SYMBOLS = [
     "BTCUSDT",
     "ETHUSDT",
     "ADAUSDT",
@@ -22,3 +22,5 @@ COINBASE_SYMBOLS = [
     "UNI-USD",
     "ATOM-USD",
 ]
+
+

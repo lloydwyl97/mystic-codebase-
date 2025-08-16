@@ -1,4 +1,4 @@
-# trade_explainer.py
+﻿# trade_explainer.py
 """
 LLM Trade Reason Generator - AI-Powered Trade Analysis
 Uses GPT-4 to explain trading decisions and provide insights.
@@ -34,7 +34,7 @@ def load_trade_log() -> List[Dict[str, Any]]:
     """Load trade log from file."""
     try:
         if not os.path.exists(LOG_FILE):
-            logger.info("📂 No trade log found, creating empty file")
+            logger.info("ðŸ“‚ No trade log found, creating empty file")
             return []
 
         trades = []
@@ -43,10 +43,10 @@ def load_trade_log() -> List[Dict[str, Any]]:
                 if line.strip():
                     trades.append(json.loads(line))
 
-        logger.info(f"📂 Loaded {len(trades)} trades from log")
+        logger.info(f"ðŸ“‚ Loaded {len(trades)} trades from log")
         return trades
     except Exception as e:
-        logger.error(f"❌ Error loading trade log: {e}")
+        logger.error(f"âŒ Error loading trade log: {e}")
         return []
 
 
@@ -65,7 +65,7 @@ def load_explanations() -> Dict[str, str]:
 
         return explanations
     except Exception as e:
-        logger.error(f"❌ Error loading explanations: {e}")
+        logger.error(f"âŒ Error loading explanations: {e}")
         return {}
 
 
@@ -85,9 +85,9 @@ def save_explanation(trade_id: str, explanation: str) -> None:
             )
             f.write("\n")
 
-        logger.info(f"💾 Saved explanation for trade {trade_id}")
+        logger.info(f"ðŸ’¾ Saved explanation for trade {trade_id}")
     except Exception as e:
-        logger.error(f"❌ Error saving explanation: {e}")
+        logger.error(f"âŒ Error saving explanation: {e}")
 
 
 def create_ping_file(explanations_generated: int, total_trades: int) -> None:
@@ -184,7 +184,7 @@ def initialize_live_trade_processing() -> None:
     """Initialize live trade processing without sample data."""
     try:
         if os.path.exists(LOG_FILE):
-            logger.info("📝 Trade log already exists - ready for live processing")
+            logger.info("ðŸ“ Trade log already exists - ready for live processing")
             return
 
         # Create empty trade log file for live data
@@ -192,11 +192,11 @@ def initialize_live_trade_processing() -> None:
         with open(LOG_FILE, "w") as f:
             f.write("")  # Create empty file
 
-        logger.info("📝 Initialized empty trade log for live data processing")
+        logger.info("ðŸ“ Initialized empty trade log for live data processing")
         logger.info("   Note: Trades will be populated by live trading system")
 
     except Exception as e:
-        logger.error(f"❌ Error initializing live trade processing: {e}")
+        logger.error(f"âŒ Error initializing live trade processing: {e}")
 
 
 def main():
@@ -227,3 +227,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Connection Manager for Mystic Trading
 
 Manages all external service connections with proper error handling and fallbacks.
@@ -93,7 +93,7 @@ class ConnectionManager:
                 redis_client = attempt()
                 if redis_client:
                     logger.info(
-                        f"✅ Redis connection established successfully at {redis_host}:{redis_port}"
+                        f"âœ… Redis connection established successfully at {redis_host}:{redis_port}"
                     )
                     return redis_client
             except Exception as e:
@@ -101,7 +101,7 @@ class ConnectionManager:
                 continue
 
         # All attempts failed - this is critical for live data
-        error_msg = "❌ CRITICAL: All Redis connection attempts failed. Live data requires Redis to be running."
+        error_msg = "âŒ CRITICAL: All Redis connection attempts failed. Live data requires Redis to be running."
         logger.error(error_msg)
         logger.error("Please start Redis server or install Redis for Windows.")
         logger.error("The application cannot provide live data without Redis.")
@@ -418,3 +418,5 @@ connection_manager = ConnectionManager()
 def get_connection_manager():
     """Get the global connection manager instance"""
     return connection_manager
+
+

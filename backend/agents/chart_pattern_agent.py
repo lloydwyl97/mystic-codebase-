@@ -1,4 +1,4 @@
-"""
+﻿"""
 Chart Pattern Agent
 Handles chart pattern recognition and technical analysis using computer vision
 """
@@ -18,7 +18,7 @@ import io
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agents.base_agent import BaseAgent
+from backend.agents.base_agent import BaseAgent
 
 
 class ChartPatternAgent(BaseAgent):
@@ -87,7 +87,7 @@ class ChartPatternAgent(BaseAgent):
         self.register_handler("get_pattern_signals", self.handle_get_pattern_signals)
         self.register_handler("market_data", self.handle_market_data)
 
-        print(f"📊 Chart Pattern Agent {agent_id} initialized")
+        print(f"ðŸ“Š Chart Pattern Agent {agent_id} initialized")
 
     async def initialize(self):
         """Initialize chart pattern agent resources"""
@@ -104,10 +104,10 @@ class ChartPatternAgent(BaseAgent):
             # Start chart monitoring
             await self.start_chart_monitoring()
 
-            print(f"✅ Chart Pattern Agent {self.agent_id} initialized successfully")
+            print(f"âœ… Chart Pattern Agent {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Chart Pattern Agent: {e}")
+            print(f"âŒ Error initializing Chart Pattern Agent: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -132,7 +132,7 @@ class ChartPatternAgent(BaseAgent):
                 await asyncio.sleep(300)  # Check every 5 minutes
 
             except Exception as e:
-                print(f"❌ Error in chart pattern processing loop: {e}")
+                print(f"âŒ Error in chart pattern processing loop: {e}")
                 await asyncio.sleep(600)
 
     async def load_pattern_config(self):
@@ -154,13 +154,13 @@ class ChartPatternAgent(BaseAgent):
                 self.chart_settings = json.loads(chart_data)
 
             print(
-                f"📋 Pattern configuration loaded: "
+                f"ðŸ“‹ Pattern configuration loaded: "
                 f"{len(self.pattern_config['supported_patterns'])} patterns, "
                 f"{len(self.trading_symbols)} symbols"
             )
 
         except Exception as e:
-            print(f"❌ Error loading pattern configuration: {e}")
+            print(f"âŒ Error loading pattern configuration: {e}")
 
     async def initialize_pattern_templates(self):
         """Initialize pattern templates for detection"""
@@ -171,11 +171,11 @@ class ChartPatternAgent(BaseAgent):
                 self.state["pattern_templates"][pattern] = template
 
             print(
-                f"🎯 Pattern templates initialized: {len(self.state['pattern_templates'])} templates"
+                f"ðŸŽ¯ Pattern templates initialized: {len(self.state['pattern_templates'])} templates"
             )
 
         except Exception as e:
-            print(f"❌ Error initializing pattern templates: {e}")
+            print(f"âŒ Error initializing pattern templates: {e}")
 
     async def create_pattern_template(self, pattern_name: str) -> Dict[str, Any]:
         """Create a template for pattern detection"""
@@ -312,7 +312,7 @@ class ChartPatternAgent(BaseAgent):
             )
 
         except Exception as e:
-            print(f"❌ Error creating pattern template for {pattern_name}: {e}")
+            print(f"âŒ Error creating pattern template for {pattern_name}: {e}")
             return {
                 "type": "unknown",
                 "direction": "neutral",
@@ -331,10 +331,10 @@ class ChartPatternAgent(BaseAgent):
             # - Pre-trained models for chart analysis
 
             # For now, using OpenCV for basic pattern detection
-            print("👁️ Computer vision models initialized (OpenCV)")
+            print("ðŸ‘ï¸ Computer vision models initialized (OpenCV)")
 
         except Exception as e:
-            print(f"❌ Error initializing CV models: {e}")
+            print(f"âŒ Error initializing CV models: {e}")
 
     async def start_chart_monitoring(self):
         """Start chart monitoring"""
@@ -346,10 +346,10 @@ class ChartPatternAgent(BaseAgent):
             # Start market data listener
             asyncio.create_task(self.listen_market_data(pubsub))
 
-            print("📡 Chart monitoring started")
+            print("ðŸ“¡ Chart monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting chart monitoring: {e}")
+            print(f"âŒ Error starting chart monitoring: {e}")
 
     async def listen_market_data(self, pubsub):
         """Listen for market data updates"""
@@ -363,7 +363,7 @@ class ChartPatternAgent(BaseAgent):
                     await self.process_market_data(market_data)
 
         except Exception as e:
-            print(f"❌ Error in market data listener: {e}")
+            print(f"âŒ Error in market data listener: {e}")
         finally:
             pubsub.close()
 
@@ -380,7 +380,7 @@ class ChartPatternAgent(BaseAgent):
                 await self.store_market_data(symbol, price, volume, timestamp)
 
         except Exception as e:
-            print(f"❌ Error processing market data: {e}")
+            print(f"âŒ Error processing market data: {e}")
 
     async def store_market_data(self, symbol: str, price: float, volume: float, timestamp: str):
         """Store market data for chart generation"""
@@ -408,27 +408,27 @@ class ChartPatternAgent(BaseAgent):
                 self.state["chart_cache"][symbol] = self.state["chart_cache"][symbol][-200:]
 
         except Exception as e:
-            print(f"❌ Error storing market data: {e}")
+            print(f"âŒ Error storing market data: {e}")
 
     async def analyze_all_charts(self):
         """Analyze charts for all symbols"""
         try:
-            print(f"📊 Analyzing charts for {len(self.trading_symbols)} symbols...")
+            print(f"ðŸ“Š Analyzing charts for {len(self.trading_symbols)} symbols...")
 
             for symbol in self.trading_symbols:
                 try:
                     await self.analyze_symbol_chart(symbol)
                 except Exception as e:
-                    print(f"❌ Error analyzing chart for {symbol}: {e}")
+                    print(f"âŒ Error analyzing chart for {symbol}: {e}")
 
             # Update analysis count
             self.state["analysis_count"] += 1
             self.state["last_analysis"] = datetime.now().isoformat()
 
-            print("✅ Chart analysis complete")
+            print("âœ… Chart analysis complete")
 
         except Exception as e:
-            print(f"❌ Error analyzing all charts: {e}")
+            print(f"âŒ Error analyzing all charts: {e}")
 
     async def analyze_symbol_chart(self, symbol: str):
         """Analyze chart for a specific symbol"""
@@ -456,7 +456,7 @@ class ChartPatternAgent(BaseAgent):
                 await self.broadcast_pattern_detection(symbol, patterns)
 
         except Exception as e:
-            print(f"❌ Error analyzing chart for {symbol}: {e}")
+            print(f"âŒ Error analyzing chart for {symbol}: {e}")
 
     async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
         """Get market data for a symbol"""
@@ -485,7 +485,7 @@ class ChartPatternAgent(BaseAgent):
             return data_points
 
         except Exception as e:
-            print(f"❌ Error getting market data for {symbol}: {e}")
+            print(f"âŒ Error getting market data for {symbol}: {e}")
             return []
 
     async def generate_chart_image(
@@ -547,7 +547,7 @@ class ChartPatternAgent(BaseAgent):
             return img
 
         except Exception as e:
-            print(f"❌ Error generating chart image for {symbol}: {e}")
+            print(f"âŒ Error generating chart image for {symbol}: {e}")
             return None
 
     async def detect_patterns_in_chart(
@@ -581,7 +581,7 @@ class ChartPatternAgent(BaseAgent):
             return detected_patterns
 
         except Exception as e:
-            print(f"❌ Error detecting patterns in chart: {e}")
+            print(f"âŒ Error detecting patterns in chart: {e}")
             return []
 
     async def detect_specific_pattern(
@@ -618,7 +618,7 @@ class ChartPatternAgent(BaseAgent):
                 return await self.detect_generic_pattern(gray_image, pattern_name)
 
         except Exception as e:
-            print(f"❌ Error detecting {pattern_name}: {e}")
+            print(f"âŒ Error detecting {pattern_name}: {e}")
             return 0.0
 
     async def detect_head_and_shoulders(self, prices: List[float]) -> float:
@@ -658,7 +658,7 @@ class ChartPatternAgent(BaseAgent):
             return 0.0
 
         except Exception as e:
-            print(f"❌ Error detecting head and shoulders: {e}")
+            print(f"âŒ Error detecting head and shoulders: {e}")
             return 0.0
 
     async def detect_inverse_head_and_shoulders(self, prices: List[float]) -> float:
@@ -698,7 +698,7 @@ class ChartPatternAgent(BaseAgent):
             return 0.0
 
         except Exception as e:
-            print(f"❌ Error detecting inverse head and shoulders: {e}")
+            print(f"âŒ Error detecting inverse head and shoulders: {e}")
             return 0.0
 
     async def detect_double_top(self, prices: List[float]) -> float:
@@ -733,7 +733,7 @@ class ChartPatternAgent(BaseAgent):
             return 0.0
 
         except Exception as e:
-            print(f"❌ Error detecting double top: {e}")
+            print(f"âŒ Error detecting double top: {e}")
             return 0.0
 
     async def detect_double_bottom(self, prices: List[float]) -> float:
@@ -768,7 +768,7 @@ class ChartPatternAgent(BaseAgent):
             return 0.0
 
         except Exception as e:
-            print(f"❌ Error detecting double bottom: {e}")
+            print(f"âŒ Error detecting double bottom: {e}")
             return 0.0
 
     async def detect_triangle_ascending(self, prices: List[float]) -> float:
@@ -801,7 +801,7 @@ class ChartPatternAgent(BaseAgent):
             return 0.0
 
         except Exception as e:
-            print(f"❌ Error detecting ascending triangle: {e}")
+            print(f"âŒ Error detecting ascending triangle: {e}")
             return 0.0
 
     async def detect_triangle_descending(self, prices: List[float]) -> float:
@@ -834,7 +834,7 @@ class ChartPatternAgent(BaseAgent):
             return 0.0
 
         except Exception as e:
-            print(f"❌ Error detecting descending triangle: {e}")
+            print(f"âŒ Error detecting descending triangle: {e}")
             return 0.0
 
     async def detect_triangle_symmetrical(self, prices: List[float]) -> float:
@@ -865,7 +865,7 @@ class ChartPatternAgent(BaseAgent):
             return 0.0
 
         except Exception as e:
-            print(f"❌ Error detecting symmetrical triangle: {e}")
+            print(f"âŒ Error detecting symmetrical triangle: {e}")
             return 0.0
 
     async def detect_generic_pattern(self, gray_image: np.ndarray, pattern_name: str) -> float:
@@ -901,7 +901,7 @@ class ChartPatternAgent(BaseAgent):
             return confidence
 
         except Exception as e:
-            print(f"❌ Error detecting generic pattern {pattern_name}: {e}")
+            print(f"âŒ Error detecting generic pattern {pattern_name}: {e}")
             return 0.0
 
     def find_peaks(self, prices: List[float]) -> List[float]:
@@ -913,7 +913,7 @@ class ChartPatternAgent(BaseAgent):
                     peaks.append(prices[i])
             return peaks
         except Exception as e:
-            print(f"❌ Error finding peaks: {e}")
+            print(f"âŒ Error finding peaks: {e}")
             return []
 
     def find_troughs(self, prices: List[float]) -> List[float]:
@@ -925,7 +925,7 @@ class ChartPatternAgent(BaseAgent):
                     troughs.append(prices[i])
             return troughs
         except Exception as e:
-            print(f"❌ Error finding troughs: {e}")
+            print(f"âŒ Error finding troughs: {e}")
             return []
 
     async def broadcast_pattern_detection(self, symbol: str, patterns: List[Dict[str, Any]]):
@@ -946,7 +946,7 @@ class ChartPatternAgent(BaseAgent):
             await self.send_message("risk_agent", pattern_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting pattern detection: {e}")
+            print(f"âŒ Error broadcasting pattern detection: {e}")
 
     async def update_pattern_models(self):
         """Update pattern detection models"""
@@ -954,10 +954,10 @@ class ChartPatternAgent(BaseAgent):
             # Update pattern templates based on recent detections
             # In production, you'd implement machine learning model updates here
 
-            print("🔄 Pattern models updated")
+            print("ðŸ”„ Pattern models updated")
 
         except Exception as e:
-            print(f"❌ Error updating pattern models: {e}")
+            print(f"âŒ Error updating pattern models: {e}")
 
     async def generate_pattern_signals(self):
         """Generate trading signals based on detected patterns"""
@@ -975,7 +975,7 @@ class ChartPatternAgent(BaseAgent):
                 await self.broadcast_pattern_signals(signals)
 
         except Exception as e:
-            print(f"❌ Error generating pattern signals: {e}")
+            print(f"âŒ Error generating pattern signals: {e}")
 
     async def generate_symbol_pattern_signal(
         self, symbol: str, patterns: List[Dict[str, Any]]
@@ -1018,7 +1018,7 @@ class ChartPatternAgent(BaseAgent):
             }
 
         except Exception as e:
-            print(f"❌ Error generating pattern signal for {symbol}: {e}")
+            print(f"âŒ Error generating pattern signal for {symbol}: {e}")
             return None
 
     async def broadcast_pattern_signals(self, signals: Dict[str, Any]):
@@ -1038,14 +1038,14 @@ class ChartPatternAgent(BaseAgent):
             await self.send_message("execution_agent", signals_update)
 
         except Exception as e:
-            print(f"❌ Error broadcasting pattern signals: {e}")
+            print(f"âŒ Error broadcasting pattern signals: {e}")
 
     async def handle_analyze_chart(self, message: Dict[str, Any]):
         """Handle manual chart analysis request"""
         try:
             symbol = message.get("symbol")
 
-            print(f"📊 Manual chart analysis requested for {symbol}")
+            print(f"ðŸ“Š Manual chart analysis requested for {symbol}")
 
             if symbol:
                 await self.analyze_symbol_chart(symbol)
@@ -1062,7 +1062,7 @@ class ChartPatternAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling chart analysis request: {e}")
+            print(f"âŒ Error handling chart analysis request: {e}")
             await self.broadcast_error(f"Chart analysis error: {e}")
 
     async def handle_detect_patterns(self, message: Dict[str, Any]):
@@ -1071,7 +1071,7 @@ class ChartPatternAgent(BaseAgent):
             symbol = message.get("symbol")
             pattern_types = message.get("patterns", self.pattern_config["supported_patterns"])
 
-            print(f"🎯 Pattern detection requested for {symbol}")
+            print(f"ðŸŽ¯ Pattern detection requested for {symbol}")
 
             if symbol:
                 # Get market data and detect specific patterns
@@ -1099,7 +1099,7 @@ class ChartPatternAgent(BaseAgent):
                             await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling pattern detection request: {e}")
+            print(f"âŒ Error handling pattern detection request: {e}")
             await self.broadcast_error(f"Pattern detection error: {e}")
 
     async def handle_get_pattern_signals(self, message: Dict[str, Any]):
@@ -1107,7 +1107,7 @@ class ChartPatternAgent(BaseAgent):
         try:
             symbol = message.get("symbol")
 
-            print(f"📈 Pattern signals requested for {symbol}")
+            print(f"ðŸ“ˆ Pattern signals requested for {symbol}")
 
             # Get pattern signals
             if symbol and symbol in self.state["patterns_detected"]:
@@ -1133,7 +1133,7 @@ class ChartPatternAgent(BaseAgent):
                 await self.send_message(sender, response)
 
         except Exception as e:
-            print(f"❌ Error handling pattern signals request: {e}")
+            print(f"âŒ Error handling pattern signals request: {e}")
             await self.broadcast_error(f"Pattern signals error: {e}")
 
     async def update_pattern_metrics(self):
@@ -1154,7 +1154,7 @@ class ChartPatternAgent(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating pattern metrics: {e}")
+            print(f"âŒ Error updating pattern metrics: {e}")
 
     async def cleanup_cache(self):
         """Clean up old cache entries"""
@@ -1179,4 +1179,6 @@ class ChartPatternAgent(BaseAgent):
                     del self.state["chart_cache"][symbol]
 
         except Exception as e:
-            print(f"❌ Error cleaning up cache: {e}")
+            print(f"âŒ Error cleaning up cache: {e}")
+
+

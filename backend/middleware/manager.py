@@ -1,4 +1,4 @@
-"""
+﻿"""
 Middleware Manager for Mystic Trading
 
 Provides centralized middleware registration and configuration.
@@ -94,3 +94,5 @@ class MiddlewareManager:
 def get_middleware_manager() -> MiddlewareManager:
     """Get the global middleware manager instance"""
     return MiddlewareManager()
+
+

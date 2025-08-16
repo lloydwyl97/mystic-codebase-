@@ -1,4 +1,4 @@
-"""
+﻿"""
 Market Routes
 
 API endpoints for market data and signals.
@@ -12,9 +12,9 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException, Query
 
-from services.market_data import MarketDataService
-from services.notification import get_notification_service
-from services.service_manager import service_manager
+from backend.services.market_data import MarketDataService
+from backend.services.notification import get_notification_service
+from backend.services.service_manager import service_manager
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +102,7 @@ async def get_markets() -> Dict[str, Any]:
     """Get market overview"""
     try:
         # Use live market data service instead of service_manager
-        from services.live_market_data import live_market_data_service
+        from backend.services.live_market_data import live_market_data_service
 
         # Get market data from live service
         market_data = await live_market_data_service.get_market_data("usd", 50)
@@ -363,7 +363,7 @@ async def get_market_data() -> Dict[str, Any]:
     """Get market data endpoint"""
     try:
         # Import persistent cache
-        from ai.persistent_cache import get_persistent_cache
+        from backend.ai.persistent_cache import get_persistent_cache
 
         cache = get_persistent_cache()
         market_data = {}
@@ -509,3 +509,5 @@ async def trigger_auto_trade(action: str, data: Dict[str, Any]) -> Dict[str, Any
         },
         "timestamp": datetime.now().isoformat(),
     }
+
+

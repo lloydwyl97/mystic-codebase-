@@ -1,4 +1,4 @@
-def build_subnet_config(chain_name="MysticSubnet", validators=5):
+﻿def build_subnet_config(chain_name="MysticSubnet", validators=5):
     config = {
         "chain": chain_name,
         "consensus": "PoS",
@@ -10,3 +10,5 @@ def build_subnet_config(chain_name="MysticSubnet", validators=5):
 
         json.dump(config, f, indent=2)
     print(f"[SUBNET] Config saved for {chain_name}")
+
+

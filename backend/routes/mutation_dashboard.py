@@ -1,4 +1,4 @@
-"""
+﻿"""
 Enhanced Mutation Dashboard Routes
 =================================
 
@@ -25,7 +25,7 @@ async def mutation_dashboard():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>🧬 Ultimate AI Strategy Evolution Dashboard</title>
+        <title>ðŸ§¬ Ultimate AI Strategy Evolution Dashboard</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -224,7 +224,7 @@ async def mutation_dashboard():
     <body>
         <div class="container">
             <div class="header">
-                <h1>🧬 Ultimate AI Strategy Evolution Dashboard</h1>
+                <h1>ðŸ§¬ Ultimate AI Strategy Evolution Dashboard</h1>
                 <p>Real-time monitoring of your self-evolving, version-controlled trading AI</p>
             </div>
 
@@ -234,12 +234,12 @@ async def mutation_dashboard():
 
             <div class="charts-section">
                 <div class="chart-container">
-                    <div class="chart-title">📈 Evolution Profit Over Time</div>
+                    <div class="chart-title">ðŸ“ˆ Evolution Profit Over Time</div>
                     <canvas id="profitChart" width="400" height="200"></canvas>
                 </div>
 
                 <div class="chart-container">
-                    <div class="chart-title">🎯 Promotion Success Rate</div>
+                    <div class="chart-title">ðŸŽ¯ Promotion Success Rate</div>
                     <canvas id="successChart" width="400" height="200"></canvas>
                 </div>
             </div>
@@ -268,17 +268,17 @@ async def mutation_dashboard():
             </div>
 
             <div class="metadata-section">
-                <h3>📋 Strategy Metadata</h3>
+                <h3>ðŸ“‹ Strategy Metadata</h3>
                 <div class="metadata-grid" id="metadata-grid">
                     <!-- Metadata will be loaded here -->
                 </div>
             </div>
 
             <div class="controls">
-                <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh Data</button>
-                <button class="btn btn-success" onclick="startMutationCycle()">🚀 Start Evolution</button>
-                <button class="btn btn-danger" onclick="stopMutationCycle()">⏹️ Stop Evolution</button>
-                <button class="btn btn-primary" onclick="viewLeaderboard()">🏆 View Leaderboard</button>
+                <button class="btn btn-primary" onclick="refreshData()">ðŸ”„ Refresh Data</button>
+                <button class="btn btn-success" onclick="startMutationCycle()">ðŸš€ Start Evolution</button>
+                <button class="btn btn-danger" onclick="stopMutationCycle()">â¹ï¸ Stop Evolution</button>
+                <button class="btn btn-primary" onclick="viewLeaderboard()">ðŸ† View Leaderboard</button>
                 <div class="refresh-info">Auto-refresh every 30 seconds</div>
             </div>
         </div>
@@ -369,7 +369,7 @@ async def mutation_dashboard():
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">System Status</div>
-                        <div class="stat-value ${stats.is_running ? 'profit' : 'loss'}">${stats.is_running ? '🟢 Evolving' : '🔴 Stopped'}</div>
+                        <div class="stat-value ${stats.is_running ? 'profit' : 'loss'}">${stats.is_running ? 'ðŸŸ¢ Evolving' : 'ðŸ”´ Stopped'}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Current Version</div>
@@ -399,7 +399,7 @@ async def mutation_dashboard():
                 const tbody = document.getElementById('mutations-tbody');
                 tbody.innerHTML = mutations.map(mutation => {
                     const statusClass = mutation.promoted ? 'status-promoted' : 'status-rejected';
-                    const statusText = mutation.promoted ? '✅ Promoted' : '❌ Rejected';
+                    const statusText = mutation.promoted ? 'âœ… Promoted' : 'âŒ Rejected';
                     const isLive = mutation.is_live ? 'status-live' : '';
                     const liveText = mutation.is_live ? ' (LIVE)' : '';
 
@@ -488,7 +488,7 @@ async def get_mutation_stats():
     """Get enhanced mutation statistics for the dashboard"""
     try:
         # Get stats from mutation manager
-        from ai_mutation.mutation_manager import MutationManager
+        from backend.ai_mutation.mutation_manager import MutationManager
 
         manager = MutationManager()
         stats = manager.get_mutation_stats()
@@ -609,3 +609,5 @@ async def stop_mutation_cycle():
         return JSONResponse({"status": "success", "message": "Evolution cycle stopped"})
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
+
+

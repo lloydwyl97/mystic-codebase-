@@ -1,4 +1,4 @@
-from strategy_leaderboard import get_strategy_leaderboard
+﻿from strategy_leaderboard import get_strategy_leaderboard
 from capital_allocator import allocate_capital
 from position_sizer import calculate_position_size
 import time
@@ -107,3 +107,5 @@ def run_meta_agent():
 
 if __name__ == "__main__":
     run_meta_agent()
+
+

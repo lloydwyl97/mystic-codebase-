@@ -1,4 +1,4 @@
-from strategy_leaderboard import get_strategy_leaderboard
+﻿from strategy_leaderboard import get_strategy_leaderboard
 from capital_allocator import allocate_capital
 
 
@@ -14,7 +14,7 @@ def allocate_dao_treasury(treasury_usdt):
     """Allocate DAO treasury based on strategy performance"""
     get_strategy_leaderboard(hours_back=24)
     allocation = allocate_capital(treasury_usdt)
-    print(f"[DAO] Allocating ${treasury_usdt} → {allocation}")
+    print(f"[DAO] Allocating ${treasury_usdt} â†’ {allocation}")
     return allocation
 
 
@@ -29,3 +29,5 @@ def execute_dao_decision(decision_type, amount):
     """Execute a DAO decision"""
     print(f"[DAO] Executing {decision_type} with ${amount}")
     return {"executed": True, "type": decision_type, "amount": amount}
+
+

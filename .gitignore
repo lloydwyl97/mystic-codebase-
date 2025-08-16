@@ -1,42 +1,10 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-*.egg-info/
-.eggs/
-
-# Envs
+﻿__pycache__/
+*.pyc
 venv/
 .venv/
-.env
-.env.*
-.python-version
-
-# Caches / tooling
-.pytest_cache/
-.mypy_cache/
-ruff_cache/
-coverage.xml
-.cache/
-
-# App/runtime
-__logs__/
 logs/
 *.log
-dist/
-build/
-*.db
-*.sqlite
+.env
+.env.*
 cache.db
-.streamlit/
-
-# Node (if any UI bits)
-node_modules/
-
-# OS/Editors
-.DS_Store
-Thumbs.db
 .vscode/
-.idea/

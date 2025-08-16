@@ -1,4 +1,4 @@
-"""
+﻿"""
 Portfolio Service for Mystic AI Trading Platform
 Provides comprehensive portfolio tracking and analysis using cached trade data.
 """
@@ -12,7 +12,7 @@ import os
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from modules.ai.persistent_cache import PersistentCache
+from backend.modules.ai.persistent_cache import PersistentCache
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class PortfolioService:
         self.positions = {}
         self.transactions = []
 
-        logger.info("✅ PortfolioService initialized")
+        logger.info("âœ… PortfolioService initialized")
 
     def _get_trade_history(self, limit: int = 1000) -> List[Dict[str, Any]]:
         """Get trade history from cache"""
@@ -175,7 +175,7 @@ class PortfolioService:
     def get_portfolio_overview(self) -> Dict[str, Any]:
         """Get comprehensive portfolio overview with live data from cache"""
         try:
-            logger.info("📊 Getting portfolio overview...")
+            logger.info("ðŸ“Š Getting portfolio overview...")
 
             # Get trade history and latest prices
             trades = self._get_trade_history()
@@ -223,7 +223,7 @@ class PortfolioService:
                         "trade_count": len(holding.get("trades", []))
                     }
 
-            logger.info(f"✅ Portfolio overview generated: {portfolio_overview['positions_count']} positions, ${portfolio_overview['total_value']:.2f} total value")
+            logger.info(f"âœ… Portfolio overview generated: {portfolio_overview['positions_count']} positions, ${portfolio_overview['total_value']:.2f} total value")
             return portfolio_overview
 
         except Exception as e:
@@ -345,7 +345,7 @@ class PortfolioService:
     def store_portfolio_snapshot(self) -> Dict[str, Any]:
         """Store portfolio snapshot in cache for dashboard use"""
         try:
-            logger.info("💾 Storing portfolio snapshot...")
+            logger.info("ðŸ’¾ Storing portfolio snapshot...")
 
             # Get current portfolio overview
             overview = self.get_portfolio_overview()
@@ -374,7 +374,7 @@ class PortfolioService:
                 metadata=snapshot
             )
 
-            logger.info(f"✅ Portfolio snapshot stored: {snapshot_id}")
+            logger.info(f"âœ… Portfolio snapshot stored: {snapshot_id}")
             return {
                 "snapshot_id": snapshot_id,
                 "timestamp": snapshot["snapshot_timestamp"],
@@ -419,7 +419,7 @@ def get_portfolio_service() -> PortfolioService:
 if __name__ == "__main__":
     # Test the portfolio service
     service = PortfolioService()
-    print(f"✅ PortfolioService initialized: {service}")
+    print(f"âœ… PortfolioService initialized: {service}")
 
     # Test portfolio overview
     overview = service.get_portfolio_overview()
@@ -436,3 +436,5 @@ if __name__ == "__main__":
     # Test status
     status = service.get_portfolio_status()
     print(f"Service status: {status['status']}")
+
+

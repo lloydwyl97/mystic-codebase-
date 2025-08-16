@@ -1,4 +1,4 @@
-"""
+﻿"""
 Notifications Router - Notification Management
 
 Contains notification endpoints for managing user notifications.
@@ -11,9 +11,9 @@ from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException
 
 # Import real services
-from services.redis_service import get_redis_service
+from backend.services.redis_service import get_redis_service
 
-# Import services
+# import backend.services as services
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -120,3 +120,5 @@ async def update_notification_settings(settings: Dict[str, Any]):
             status_code=500,
             detail=f"Error updating notification settings: {str(e)}",
         )
+
+

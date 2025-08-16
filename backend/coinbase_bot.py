@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Coinbase Trading Bot - Dedicated bot for Coinbase exchange only
 Handles only Coinbase coins with proper throttling and error handling
@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Optional, TypedDict
 import aiohttp
 
 # Import rotated logging system
-from utils.log_rotation_manager import get_log_rotation_manager
+from backend.utils.log_rotation_manager import get_log_rotation_manager
 
 # Configure logging with rotation
 log_manager = get_log_rotation_manager()
@@ -403,3 +403,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

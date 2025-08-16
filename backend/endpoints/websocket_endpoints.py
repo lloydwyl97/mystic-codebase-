@@ -1,4 +1,4 @@
-"""
+﻿"""
 WebSocket Endpoints
 
 Handles all WebSocket-related endpoints for real-time data streaming.
@@ -48,3 +48,6 @@ async def websocket_trading_signals(websocket: WebSocket):
     except Exception as e:
         logger.error(f"WebSocket trading signals error: {e}")
         await websocket.close(code=1011, reason="Internal server error")
+
+
+

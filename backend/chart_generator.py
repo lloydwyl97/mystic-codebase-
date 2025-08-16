@@ -1,4 +1,4 @@
-import sqlite3
+﻿import sqlite3
 from datetime import datetime
 
 import matplotlib.pyplot as plt
@@ -69,3 +69,5 @@ def plot_performance_over_time(db_path="simulation_trades.db"):
     plt.tight_layout()
     plt.savefig("performance_chart.png")
     print("[Chart] Performance chart saved to performance_chart.png")
+
+

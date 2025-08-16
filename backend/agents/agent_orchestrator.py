@@ -1,4 +1,4 @@
-"""
+﻿"""
 Agent Orchestrator
 Manages all AI agents, coordinates communication, and provides central control
 """
@@ -14,33 +14,33 @@ import sys
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # noqa: E402
 
-from agents.base_agent import BaseAgent  # noqa: E402
-from agents.strategy_agent import StrategyAgent  # noqa: E402
-from agents.risk_agent import RiskAgent  # noqa: E402
-from agents.execution_agent import ExecutionAgent  # noqa: E402
-from agents.compliance_agent import ComplianceAgent  # noqa: E402
-from agents.news_sentiment_agent import NewsSentimentAgent  # noqa: E402
-from agents.social_media_agent import SocialMediaAgent  # noqa: E402
-from agents.market_sentiment_agent import MarketSentimentAgent  # noqa: E402
-from agents.deep_learning_agent import DeepLearningAgent  # noqa: E402
-from agents.reinforcement_learning_agent import ReinforcementLearningAgent  # noqa: E402
-from agents.ai_model_manager import AIModelManager  # noqa: E402
-from agents.advanced_ai_orchestrator import AdvancedAIOrchestrator  # noqa: E402
-from agents.nlp_orchestrator import NLPOrchestrator  # noqa: E402
-from agents.chart_pattern_agent import ChartPatternAgent  # noqa: E402
-from agents.technical_indicator_agent import TechnicalIndicatorAgent  # noqa: E402
-from agents.market_visualization_agent import MarketVisualizationAgent  # noqa: E402
-from agents.computer_vision_orchestrator import ComputerVisionOrchestrator  # noqa: E402
-from agents.quantum_algorithm_engine import QuantumAlgorithmEngine  # noqa: E402
-from agents.quantum_machine_learning_agent import QuantumMachineLearningAgent  # noqa: E402
-from agents.quantum_optimization_agent import QuantumOptimizationAgent  # noqa: E402
-from agents.quantum_trading_engine import QuantumTradingEngine  # noqa: E402
-from agents.interdimensional_signal_decoder import (  # noqa: E402
+from backend.agents.base_agent import BaseAgent  # noqa: E402
+from backend.agents.strategy_agent import StrategyAgent  # noqa: E402
+from backend.agents.risk_agent import RiskAgent  # noqa: E402
+from backend.agents.execution_agent import ExecutionAgent  # noqa: E402
+from backend.agents.compliance_agent import ComplianceAgent  # noqa: E402
+from backend.agents.news_sentiment_agent import NewsSentimentAgent  # noqa: E402
+from backend.agents.social_media_agent import SocialMediaAgent  # noqa: E402
+from backend.agents.market_sentiment_agent import MarketSentimentAgent  # noqa: E402
+from backend.agents.deep_learning_agent import DeepLearningAgent  # noqa: E402
+from backend.agents.reinforcement_learning_agent import ReinforcementLearningAgent  # noqa: E402
+from backend.agents.ai_model_manager import AIModelManager  # noqa: E402
+from backend.agents.advanced_ai_orchestrator import AdvancedAIOrchestrator  # noqa: E402
+from backend.agents.nlp_orchestrator import NLPOrchestrator  # noqa: E402
+from backend.agents.chart_pattern_agent import ChartPatternAgent  # noqa: E402
+from backend.agents.technical_indicator_agent import TechnicalIndicatorAgent  # noqa: E402
+from backend.agents.market_visualization_agent import MarketVisualizationAgent  # noqa: E402
+from backend.agents.computer_vision_orchestrator import ComputerVisionOrchestrator  # noqa: E402
+from backend.agents.quantum_algorithm_engine import QuantumAlgorithmEngine  # noqa: E402
+from backend.agents.quantum_machine_learning_agent import QuantumMachineLearningAgent  # noqa: E402
+from backend.agents.quantum_optimization_agent import QuantumOptimizationAgent  # noqa: E402
+from backend.agents.quantum_trading_engine import QuantumTradingEngine  # noqa: E402
+from backend.agents.interdimensional_signal_decoder import (  # noqa: E402
     InterdimensionalSignalDecoder,
 )
-from agents.neuro_synchronization_engine import NeuroSynchronizationEngine  # noqa: E402
-from agents.cosmic_pattern_recognizer import CosmicPatternRecognizer  # noqa: E402
-from agents.auranet_channel import AuraNetChannel  # noqa: E402
+from backend.agents.neuro_synchronization_engine import NeuroSynchronizationEngine  # noqa: E402
+from backend.agents.cosmic_pattern_recognizer import CosmicPatternRecognizer  # noqa: E402
+from backend.agents.auranet_channel import AuraNetChannel  # noqa: E402
 
 
 class AgentOrchestrator(BaseAgent):
@@ -93,7 +93,7 @@ class AgentOrchestrator(BaseAgent):
         self.register_handler("performance_report", self.handle_performance_report)
         self.register_handler("agent_communication", self.handle_agent_communication)
 
-        print(f"🎼 Agent Orchestrator {agent_id} initialized")
+        print(f"ðŸŽ¼ Agent Orchestrator {agent_id} initialized")
 
     async def initialize(self):
         """Initialize orchestrator and all agents"""
@@ -107,10 +107,10 @@ class AgentOrchestrator(BaseAgent):
             # Initialize system coordination
             await self.initialize_system_coordination()
 
-            print(f"✅ Agent Orchestrator {self.agent_id} initialized successfully")
+            print(f"âœ… Agent Orchestrator {self.agent_id} initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing Agent Orchestrator: {e}")
+            print(f"âŒ Error initializing Agent Orchestrator: {e}")
             self.update_health_status("error")
 
     async def process_loop(self):
@@ -132,13 +132,13 @@ class AgentOrchestrator(BaseAgent):
                 await asyncio.sleep(30)  # Check every 30 seconds
 
             except Exception as e:
-                print(f"❌ Error in orchestrator processing loop: {e}")
+                print(f"âŒ Error in orchestrator processing loop: {e}")
                 await asyncio.sleep(60)
 
     async def initialize_agents(self):
         """Initialize all AI agents"""
         try:
-            print("🤖 Initializing AI agents...")
+            print("ðŸ¤– Initializing AI agents...")
 
             # Initialize Strategy Agent
             self.strategy_agent = StrategyAgent("strategy_agent_001")
@@ -306,10 +306,10 @@ class AgentOrchestrator(BaseAgent):
             self.state["agents"]["auranet_channel"] = self.auranet_channel
             self.state["agent_status"]["auranet_channel"] = "running"
 
-            print("✅ All agents initialized successfully")
+            print("âœ… All agents initialized successfully")
 
         except Exception as e:
-            print(f"❌ Error initializing agents: {e}")
+            print(f"âŒ Error initializing agents: {e}")
             raise
 
     async def start_agent_monitoring(self):
@@ -324,10 +324,10 @@ class AgentOrchestrator(BaseAgent):
             # Start monitoring listener
             asyncio.create_task(self.listen_agent_updates(pubsub))
 
-            print("👁️ Agent monitoring started")
+            print("ðŸ‘ï¸ Agent monitoring started")
 
         except Exception as e:
-            print(f"❌ Error starting agent monitoring: {e}")
+            print(f"âŒ Error starting agent monitoring: {e}")
 
     async def listen_agent_updates(self, pubsub):
         """Listen for agent updates"""
@@ -341,7 +341,7 @@ class AgentOrchestrator(BaseAgent):
                     await self.process_agent_update(update_data)
 
         except Exception as e:
-            print(f"❌ Error in agent updates listener: {e}")
+            print(f"âŒ Error in agent updates listener: {e}")
         finally:
             pubsub.close()
 
@@ -359,7 +359,7 @@ class AgentOrchestrator(BaseAgent):
                 await self.handle_performance_report(update_data)
 
         except Exception as e:
-            print(f"❌ Error processing agent update: {e}")
+            print(f"âŒ Error processing agent update: {e}")
 
     async def initialize_system_coordination(self):
         """Initialize system coordination"""
@@ -378,10 +378,10 @@ class AgentOrchestrator(BaseAgent):
                 }
             )
 
-            print("🎼 System coordination initialized")
+            print("ðŸŽ¼ System coordination initialized")
 
         except Exception as e:
-            print(f"❌ Error initializing system coordination: {e}")
+            print(f"âŒ Error initializing system coordination: {e}")
 
     async def setup_agent_communication(self):
         """Set up agent communication channels"""
@@ -420,7 +420,7 @@ class AgentOrchestrator(BaseAgent):
             )
 
         except Exception as e:
-            print(f"❌ Error setting up agent communication: {e}")
+            print(f"âŒ Error setting up agent communication: {e}")
 
     async def monitor_agents(self):
         """Monitor all agents"""
@@ -452,12 +452,12 @@ class AgentOrchestrator(BaseAgent):
                 self.state["system_status"] = "critical"
 
         except Exception as e:
-            print(f"❌ Error monitoring agents: {e}")
+            print(f"âŒ Error monitoring agents: {e}")
 
     async def restart_agent(self, agent_name: str):
         """Restart an unhealthy agent"""
         try:
-            print(f"🔄 Restarting {agent_name} agent")
+            print(f"ðŸ”„ Restarting {agent_name} agent")
 
             agent = self.state["agents"].get(agent_name)
             if agent:
@@ -470,10 +470,10 @@ class AgentOrchestrator(BaseAgent):
                 # Restart agent
                 await agent.start()
 
-                print(f"✅ {agent_name} agent restarted")
+                print(f"âœ… {agent_name} agent restarted")
 
         except Exception as e:
-            print(f"❌ Error restarting {agent_name} agent: {e}")
+            print(f"âŒ Error restarting {agent_name} agent: {e}")
 
     async def coordinate_agents(self):
         """Coordinate agent communication and activities"""
@@ -488,7 +488,7 @@ class AgentOrchestrator(BaseAgent):
             self.state["last_coordination"] = datetime.now().isoformat()
 
         except Exception as e:
-            print(f"❌ Error coordinating agents: {e}")
+            print(f"âŒ Error coordinating agents: {e}")
 
     async def route_agent_messages(self):
         """Route messages between agents"""
@@ -508,7 +508,7 @@ class AgentOrchestrator(BaseAgent):
             self.state["agent_communication"]["message_stats"] = message_stats
 
         except Exception as e:
-            print(f"❌ Error routing agent messages: {e}")
+            print(f"âŒ Error routing agent messages: {e}")
 
     async def coordinate_agent_activities(self):
         """Coordinate agent activities"""
@@ -529,7 +529,7 @@ class AgentOrchestrator(BaseAgent):
                 )
 
         except Exception as e:
-            print(f"❌ Error coordinating agent activities: {e}")
+            print(f"âŒ Error coordinating agent activities: {e}")
 
     async def handle_agent_status_update(self, message: Dict[str, Any]):
         """Handle agent status update"""
@@ -544,10 +544,10 @@ class AgentOrchestrator(BaseAgent):
                     self.state["agent_status"][agent_name] = health
                     break
 
-            print(f"📊 Agent {agent_id} status: {status} ({health})")
+            print(f"ðŸ“Š Agent {agent_id} status: {status} ({health})")
 
         except Exception as e:
-            print(f"❌ Error handling agent status update: {e}")
+            print(f"âŒ Error handling agent status update: {e}")
 
     async def handle_agent_error(self, message: Dict[str, Any]):
         """Handle agent error"""
@@ -555,7 +555,7 @@ class AgentOrchestrator(BaseAgent):
             agent_id = message.get("agent_id")
             error = message.get("error")
 
-            print(f"❌ Agent {agent_id} error: {error}")
+            print(f"âŒ Agent {agent_id} error: {error}")
 
             # Log error
             error_log = {
@@ -570,12 +570,12 @@ class AgentOrchestrator(BaseAgent):
             await self.handle_agent_recovery(agent_id, error)
 
         except Exception as e:
-            print(f"❌ Error handling agent error: {e}")
+            print(f"âŒ Error handling agent error: {e}")
 
     async def handle_agent_recovery(self, agent_id: str, error: str):
         """Handle agent recovery"""
         try:
-            print(f"🔄 Attempting recovery for agent {agent_id}")
+            print(f"ðŸ”„ Attempting recovery for agent {agent_id}")
 
             # Find agent by ID
             for agent_name, agent in self.state["agents"].items():
@@ -585,7 +585,7 @@ class AgentOrchestrator(BaseAgent):
                     break
 
         except Exception as e:
-            print(f"❌ Error handling agent recovery: {e}")
+            print(f"âŒ Error handling agent recovery: {e}")
 
     async def handle_system_command(self, message: Dict[str, Any]):
         """Handle system command"""
@@ -593,7 +593,7 @@ class AgentOrchestrator(BaseAgent):
             command = message.get("command")
             params = message.get("params", {})
 
-            print(f"🎛️ Executing system command: {command}")
+            print(f"ðŸŽ›ï¸ Executing system command: {command}")
 
             if command == "restart_agent":
                 agent_name = params.get("agent_name")
@@ -613,7 +613,7 @@ class AgentOrchestrator(BaseAgent):
                 await self.update_system_config(params)
 
         except Exception as e:
-            print(f"❌ Error handling system command: {e}")
+            print(f"âŒ Error handling system command: {e}")
 
     async def handle_performance_report(self, message: Dict[str, Any]):
         """Handle performance report from agent"""
@@ -632,7 +632,7 @@ class AgentOrchestrator(BaseAgent):
             )
 
         except Exception as e:
-            print(f"❌ Error handling performance report: {e}")
+            print(f"âŒ Error handling performance report: {e}")
 
     async def handle_agent_communication(self, message: Dict[str, Any]):
         """Handle agent communication"""
@@ -652,12 +652,12 @@ class AgentOrchestrator(BaseAgent):
             self.redis_client.lpush("agent_communication_log", json.dumps(comm_log))
 
         except Exception as e:
-            print(f"❌ Error handling agent communication: {e}")
+            print(f"âŒ Error handling agent communication: {e}")
 
     async def stop_system(self):
         """Stop the entire system"""
         try:
-            print("🛑 Stopping AI trading system...")
+            print("ðŸ›‘ Stopping AI trading system...")
 
             # Stop all agents
             for agent_name, agent in self.state["agents"].items():
@@ -674,15 +674,15 @@ class AgentOrchestrator(BaseAgent):
                 }
             )
 
-            print("✅ AI trading system stopped")
+            print("âœ… AI trading system stopped")
 
         except Exception as e:
-            print(f"❌ Error stopping system: {e}")
+            print(f"âŒ Error stopping system: {e}")
 
     async def start_system(self):
         """Start the entire system"""
         try:
-            print("🚀 Starting AI trading system...")
+            print("ðŸš€ Starting AI trading system...")
 
             # Start all agents
             for agent_name, agent in self.state["agents"].items():
@@ -699,10 +699,10 @@ class AgentOrchestrator(BaseAgent):
                 }
             )
 
-            print("✅ AI trading system started")
+            print("âœ… AI trading system started")
 
         except Exception as e:
-            print(f"❌ Error starting system: {e}")
+            print(f"âŒ Error starting system: {e}")
 
     async def send_system_status(self, target_agent: str = None):
         """Send system status"""
@@ -721,7 +721,7 @@ class AgentOrchestrator(BaseAgent):
                 await self.broadcast_message(status)
 
         except Exception as e:
-            print(f"❌ Error sending system status: {e}")
+            print(f"âŒ Error sending system status: {e}")
 
     async def update_system_config(self, config: Dict[str, Any]):
         """Update system configuration"""
@@ -739,10 +739,10 @@ class AgentOrchestrator(BaseAgent):
             # Store configuration in Redis
             self.redis_client.set("system_config", json.dumps(config), ex=3600)
 
-            print("✅ System configuration updated")
+            print("âœ… System configuration updated")
 
         except Exception as e:
-            print(f"❌ Error updating system config: {e}")
+            print(f"âŒ Error updating system config: {e}")
 
     async def check_system_health(self):
         """Check overall system health"""
@@ -780,7 +780,7 @@ class AgentOrchestrator(BaseAgent):
             )
 
         except Exception as e:
-            print(f"❌ Error checking system health: {e}")
+            print(f"âŒ Error checking system health: {e}")
 
     async def update_system_metrics(self):
         """Update system metrics"""
@@ -798,12 +798,12 @@ class AgentOrchestrator(BaseAgent):
             self.redis_client.set(f"agent_metrics:{self.agent_id}", json.dumps(metrics), ex=300)
 
         except Exception as e:
-            print(f"❌ Error updating system metrics: {e}")
+            print(f"âŒ Error updating system metrics: {e}")
 
     async def process_market_data(self, market_data: Dict[str, Any]):
         """Process incoming market data and distribute to agents"""
         try:
-            print(f"📊 Processing market data for agent orchestration")
+            print(f"ðŸ“Š Processing market data for agent orchestration")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -814,11 +814,11 @@ class AgentOrchestrator(BaseAgent):
                 try:
                     if hasattr(agent, 'process_market_data'):
                         await agent.process_market_data(market_data)
-                        print(f"✅ Market data sent to {agent_name}")
+                        print(f"âœ… Market data sent to {agent_name}")
                     else:
-                        print(f"⚠️ Agent {agent_name} doesn't have process_market_data method")
+                        print(f"âš ï¸ Agent {agent_name} doesn't have process_market_data method")
                 except Exception as e:
-                    print(f"❌ Error sending market data to {agent_name}: {e}")
+                    print(f"âŒ Error sending market data to {agent_name}: {e}")
 
             # Update system metrics
             await self.update_system_metrics()
@@ -826,16 +826,16 @@ class AgentOrchestrator(BaseAgent):
             # Check system health after processing
             await self.check_system_health()
 
-            print(f"✅ Market data processed for agent orchestration")
+            print(f"âœ… Market data processed for agent orchestration")
 
         except Exception as e:
-            print(f"❌ Error processing market data for orchestration: {e}")
+            print(f"âŒ Error processing market data for orchestration: {e}")
             await self.broadcast_error(f"Agent orchestration market data error: {e}")
 
     async def stop(self):
         """Stop the orchestrator and all agents"""
         try:
-            print("🛑 Stopping Agent Orchestrator...")
+            print("ðŸ›‘ Stopping Agent Orchestrator...")
 
             # Stop all agents
             for agent_name, agent in self.state["agents"].items():
@@ -844,10 +844,10 @@ class AgentOrchestrator(BaseAgent):
             # Stop orchestrator
             await super().stop()
 
-            print("✅ Agent Orchestrator stopped")
+            print("âœ… Agent Orchestrator stopped")
 
         except Exception as e:
-            print(f"❌ Error stopping orchestrator: {e}")
+            print(f"âŒ Error stopping orchestrator: {e}")
 
 
 async def main():
@@ -875,9 +875,9 @@ async def main():
                         orchestrator.state['agent_status_history'] = orchestrator.state['agent_status_history'][-100:]
 
     except KeyboardInterrupt:
-        print("🛑 Shutting down...")
+        print("ðŸ›‘ Shutting down...")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
     finally:
         if orchestrator:
             await orchestrator.stop()
@@ -885,3 +885,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+

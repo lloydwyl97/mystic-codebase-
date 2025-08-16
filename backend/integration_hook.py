@@ -1,4 +1,4 @@
-# integration_hook.py
+﻿# integration_hook.py
 """
 Simple integration hook for existing trading systems.
 
@@ -215,3 +215,5 @@ if __name__ == "__main__":
     simple_trade_logger("ETHUSDT", "RSI_Dip", 3000.0, 3100.0, action="exit")
 
     print("Integration examples completed!")
+
+

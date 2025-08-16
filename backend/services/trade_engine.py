@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trade Engine Service
 Handles trade execution and management
 """
@@ -72,3 +72,5 @@ class TradeEngine:
 
 # Global instance
 trade_engine = TradeEngine()
+
+

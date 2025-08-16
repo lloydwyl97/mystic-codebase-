@@ -1,4 +1,4 @@
-"""
+﻿"""
 Miscellaneous endpoints for the Mystic Trading Platform
 
 Contains various utility endpoints that don't fit into other categories.
@@ -32,3 +32,6 @@ async def get_misc_info() -> Dict[str, Any]:
         "description": "Miscellaneous utility endpoints",
         "endpoints": ["/api/misc/status", "/api/misc/info"],
     }
+
+
+

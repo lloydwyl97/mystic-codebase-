@@ -1,4 +1,4 @@
-"""
+﻿"""
 Mystic Routes
 Handles endpoints for mystic integrations, Schumann resonance,
 fractal time, and other esoteric trading features.
@@ -10,8 +10,8 @@ from typing import Any, Dict
 from fastapi import APIRouter, HTTPException
 
 from mystic_config import mystic_config
-from services.mystic_integration_service import mystic_integration_service
-from services.mystic_signal_engine import mystic_signal_engine
+from backend.services.mystic_integration_service import mystic_integration_service
+from backend.services.mystic_signal_engine import mystic_signal_engine
 
 logger = logging.getLogger(__name__)
 
@@ -439,3 +439,5 @@ async def get_trading_recommendation(
     except Exception as e:
         logger.error(f"Error generating trading recommendation: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate trading recommendation")
+
+

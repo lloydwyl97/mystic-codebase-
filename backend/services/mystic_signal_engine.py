@@ -1,4 +1,4 @@
-"""
+﻿"""
 Mystic Signal Engine
 Combines various mystic factors to generate trading signals
 including Tesla 369, Faerie Star, Lagos alignment, and other esoteric patterns.
@@ -13,7 +13,7 @@ from typing import Any, Dict, List
 
 from mystic_config import mystic_config
 
-from services.mystic_integration_service import mystic_integration_service
+from backend.services.mystic_integration_service import mystic_integration_service
 
 logger = logging.getLogger(__name__)
 
@@ -474,3 +474,5 @@ class MysticSignalEngine:
 
 # Global instance
 mystic_signal_engine = MysticSignalEngine()
+
+

@@ -1,4 +1,4 @@
-from ai_auto_learner import AIAutoLearner
+﻿from ai_auto_learner import AIAutoLearner
 from simulation_logger import SimulationLogger
 
 
@@ -68,3 +68,5 @@ def generate_recommendations(rating, summary):
         recommendations.append("AI performing well - continue current strategy")
 
     return recommendations
+
+

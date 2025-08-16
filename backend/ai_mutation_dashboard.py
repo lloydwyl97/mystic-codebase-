@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI Mutation Engine Dashboard
 Advanced dashboard for monitoring and controlling AI strategy evolution
 """
@@ -563,18 +563,18 @@ class MutationDashboard:
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🧬 AI Mutation Dashboard</h1>
+                    <h1>ðŸ§¬ AI Mutation Dashboard</h1>
                     <p>Advanced AI Strategy Evolution & Management</p>
                 </div>
 
                 <div class="grid">
                     <div class="card">
-                        <h3>🔄 System Status</h3>
+                        <h3>ðŸ”„ System Status</h3>
                         <div id="system-status">Loading...</div>
                     </div>
 
                     <div class="card">
-                        <h3>📊 Active Strategies</h3>
+                        <h3>ðŸ“Š Active Strategies</h3>
                         <div id="strategies-count">Loading...</div>
                         <div class="chart-container">
                             <canvas id="strategies-chart"></canvas>
@@ -582,7 +582,7 @@ class MutationDashboard:
                     </div>
 
                     <div class="card">
-                        <h3>🧬 Genetic Population</h3>
+                        <h3>ðŸ§¬ Genetic Population</h3>
                         <div id="genetic-status">Loading...</div>
                         <div class="chart-container">
                             <canvas id="evolution-chart"></canvas>
@@ -590,19 +590,19 @@ class MutationDashboard:
                     </div>
 
                     <div class="card">
-                        <h3>📦 Model Versions</h3>
+                        <h3>ðŸ“¦ Model Versions</h3>
                         <div id="model-versions">Loading...</div>
                     </div>
 
                     <div class="card">
-                        <h3>🔄 Retrain Queue</h3>
+                        <h3>ðŸ”„ Retrain Queue</h3>
                         <div id="retrain-queue">Loading...</div>
                         <button class="button" onclick="triggerEvolution()">Trigger Evolution</button>
                         <button class="button danger" onclick="resetPopulation()">Reset Population</button>
                     </div>
 
                     <div class="card">
-                        <h3>📈 Recent Activity</h3>
+                        <h3>ðŸ“ˆ Recent Activity</h3>
                         <div id="activity-feed" class="activity-feed">Loading...</div>
                     </div>
                 </div>
@@ -858,7 +858,7 @@ class MutationDashboard:
 
     async def start(self, host: str = "0.0.0.0", port: int = 8080):
         """Start the dashboard server"""
-        print(f"🚀 Starting AI Mutation Dashboard on {host}:{port}")
+        print(f"ðŸš€ Starting AI Mutation Dashboard on {host}:{port}")
         config = uvicorn.Config(self.app, host=host, port=port, log_level="info")
         server = uvicorn.Server(config)
         await server.serve()
@@ -871,10 +871,12 @@ async def main():
     try:
         await dashboard.start()
     except KeyboardInterrupt:
-        print("🛑 Received interrupt signal")
+        print("ðŸ›‘ Received interrupt signal")
     except Exception as e:
-        print(f"❌ Error in main: {e}")
+        print(f"âŒ Error in main: {e}")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
