@@ -20,12 +20,12 @@ MAX_COINBASE = int(os.getenv("COMPREHENSIVE_MAX_COINBASE", MAX_PER_EXCHANGE))
 # Add modules directory to Python path
 modules_path = os.path.join(os.path.dirname(__file__), '..', 'modules')
 if modules_path not in sys.path:
-    sys.path.insert(0, modules_path)
+	sys.path.insert(0, modules_path)
 
 # Add ai directory to Python path
 ai_path = os.path.join(os.path.dirname(__file__), '..', 'ai')
 if ai_path not in sys.path:
-    sys.path.insert(0, ai_path)
+	sys.path.insert(0, ai_path)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -36,61 +36,13 @@ data_fetcher_manager = None
 
 
 def create_app() -> FastAPI:
-    ...
+	...
 
-"""
-Mystic AI Trading Platform - App Factory
-Creates and configures the FastAPI application with all routes and middleware.
-"""
+ 
 
-import time
-import asyncio
-import logging
-import os
-import sys
+ 
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
-# Add modules directory to Python path
-modules_path = os.path.join(os.path.dirname(__file__), '..', 'modules')
-if modules_path not in sys.path:
-    sys.path.insert(0, modules_path)
-
-# Add ai directory to Python path
-ai_path = os.path.join(os.path.dirname(__file__), '..', 'ai')
-if ai_path not in sys.path:
-    sys.path.insert(0, ai_path)
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Global data fetcher manager
-data_fetcher_manager = None
-
-
-def create_app() -> FastAPI:
-    """Create and configure the FastAPI application."""
-    logger.info("Starting app creation...")
-    app = FastAPI(
-        title="Mystic AI Trading Platform",
-        description="Advanced AI-powered cryptocurrency trading platform",
-        version="1.0.0",
-    )
-
-    # Add CORS middleware
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],  # In production, specify exact origins
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-    logger.info("âœ… FastAPI app created")
-    logger.info(f"Comprehensive fetch limits — binanceus={MAX_BINANCEUS}, coinbase={MAX_COINBASE}")
-
+ 
     # Initialize comprehensive data fetchers for live market data
     async def start_data_fetchers():
         global data_fetcher_manager
@@ -110,7 +62,7 @@ def create_app() -> FastAPI:
 
                 # Start all data fetchers
                 await data_fetcher_manager.start_all()
-                logger.info("âœ… DataFetcherManager initialized and started")
+                logger.info("✅ DataFetcherManager initialized and started")
 
             except Exception as e:
                 logger.error(f"âŒ Error initializing DataFetcherManager: {e}")
@@ -128,7 +80,7 @@ def create_app() -> FastAPI:
                     ai_path = os.path.join(os.path.dirname(__file__), '..', 'ai')
                     if ai_path not in sys.path:
                         sys.path.insert(0, ai_path)
-                    from backend.ai.persistent_cache import get_persistent_cache
+                    from backend.modules.ai.persistent_cache import get_persistent_cache
                     cache = get_persistent_cache()
                 except ImportError as e:
                     logger.warning(f"persistent_cache not available: {e}, skipping comprehensive market data")
@@ -298,7 +250,7 @@ def create_app() -> FastAPI:
 
             # Start the comprehensive market data fetcher as a background task
             asyncio.create_task(fetch_comprehensive_market_data())
-            logger.info("âœ… Comprehensive market data fetcher started")
+            logger.info("✅ Comprehensive market data fetcher started")
 
         except Exception as e:
             logger.error(f"âŒ Error starting comprehensive data fetchers: {e}")
@@ -308,31 +260,58 @@ def create_app() -> FastAPI:
     async def startup_event():
         await start_data_fetchers()
 
+        # Expand symbol seeding/caching to match UI top 10 (non-blocking)
+        try:
+            import aiohttp
+            seed_symbols = [
+                "BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","ADAUSDT","XRPUSDT",
+                "DOGEUSDT","AVAXUSDT","DOTUSDT","LTCUSDT",
+            ]
+            async with aiohttp.ClientSession() as session:
+                for sym in seed_symbols:
+                    try:
+                        url = f"https://api.binance.us/api/v3/ticker/24hr?symbol={sym}"
+                        async with session.get(url, timeout=10) as resp:
+                            _ = await resp.text()
+                    except Exception as e:
+                        logger.warning(f"Symbol seed fetch failed for {sym}: {e}")
+        except Exception as e:
+            logger.warning(f"Symbol seed loop skipped: {e}")
+
     # Include consolidated router - replaces all individual router loading
     try:
-        logger.info("ðŸ”„ Loading consolidated endpoints...")
+        logger.info("🔧 Loading consolidated endpoints...")
         from backend.endpoints.consolidated_router import router as consolidated_router
 
         app.include_router(consolidated_router, prefix="/api")
         logger.info(
-            f"âœ… Included consolidated router with {len(consolidated_router.routes)} routes"
+            f"✅ Included consolidated router with {len(consolidated_router.routes)} routes"
         )
 
-        # Also include Crypto Autoengine router directly to expose single-prefix /api routes
+        # Also include Crypto Autoengine router under /api to keep UI paths consistent
         try:
             from crypto_autoengine_api import router as crypto_router
 
-            app.include_router(crypto_router)
-            logger.info("âœ… Included Crypto Autoengine router (single /api prefix)")
+            app.include_router(crypto_router, prefix="/api")
+            logger.info("✅ Included Crypto Autoengine router under /api")
         except Exception as e2:
             logger.error(f"âŒ Error loading Crypto Autoengine router: {e2}")
+
+        # Include minimal compat router under /api for UI-only paths
+        try:
+            from backend.endpoints.compat_router import router as compat_router
+
+            app.include_router(compat_router, prefix="/api")
+            logger.info("✅ Included compatibility router under /api")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading compatibility router: {e2}")
 
         # Add UI routes to main router
         try:
             from backend.routes.ui import router as ui_router
 
-            app.include_router(ui_router)
-            logger.info("âœ… Included UI router")
+            app.include_router(ui_router, prefix="/api")
+            logger.info("✅ Included UI router")
         except Exception as e2:
             logger.error(f"âŒ Error loading UI router: {e2}")
 
@@ -341,7 +320,7 @@ def create_app() -> FastAPI:
             from backend.endpoints.ai_explain import router as ai_explain_router
 
             app.include_router(ai_explain_router)
-            logger.info("âœ… Included AI explain router")
+            logger.info("✅ Included AI explain router")
         except Exception as e2:
             logger.error(f"âŒ Error loading AI explain router: {e2}")
 
@@ -349,7 +328,7 @@ def create_app() -> FastAPI:
             from backend.endpoints.dashboard_missing.dashboard_missing_endpoints import router as dashboard_missing_router
 
             app.include_router(dashboard_missing_router)
-            logger.info("âœ… Included dashboard missing endpoints router")
+            logger.info("✅ Included dashboard missing endpoints router")
         except Exception as e2:
             logger.error(f"âŒ Error loading dashboard missing endpoints router: {e2}")
 
@@ -357,37 +336,135 @@ def create_app() -> FastAPI:
             from backend.routes.ai_dashboard import router as ai_dashboard_router
 
             app.include_router(ai_dashboard_router)
-            logger.info("âœ… Included AI dashboard router")
+            logger.info("✅ Included AI dashboard router")
         except Exception as e2:
             logger.error(f"âŒ Error loading AI dashboard router: {e2}")
+
+        # Also include UI compatibility routers in fallback mode
+        try:
+            from backend.endpoints.market.candles_endpoints import router as candles_router
+            app.include_router(candles_router)
+            logger.info("✅ Included market candles router (fallback)")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading candles router (fallback): {e2}")
+
+        try:
+            from backend.endpoints.portfolio.transactions_endpoints import router as transactions_router
+            app.include_router(transactions_router)
+            logger.info("✅ Included portfolio transactions router (fallback)")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading transactions router (fallback): {e2}")
+
+        
+
+        try:
+            from backend.endpoints.ai.ai_leaderboard_endpoints import router as ai_leaderboard_router
+            app.include_router(ai_leaderboard_router)
+            logger.info("✅ Included AI leaderboard router (fallback)")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading AI leaderboard router (fallback): {e2}")
+
+        try:
+            from backend.endpoints.ai.ai_analytics_endpoints import router as ai_analytics_router
+            app.include_router(ai_analytics_router)
+            logger.info("✅ Included AI analytics router (fallback)")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading AI analytics router (fallback): {e2}")
+
+        try:
+            from backend.endpoints.signals.whale_alerts_endpoints import router as whale_alerts_router
+            app.include_router(whale_alerts_router)
+            logger.info("✅ Included whale alerts router (fallback)")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading whale alerts router (fallback): {e2}")
+
+        try:
+            from backend.endpoints.health.ai_health_endpoints import router as ai_health_router
+            app.include_router(ai_health_router)
+            logger.info("✅ Included AI health router (fallback)")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading AI health router (fallback): {e2}")
 
         # Register AI explain router
         try:
             from backend.endpoints.ai_explain import router as ai_explain_router
 
             app.include_router(ai_explain_router)
-            logger.info("âœ… Included AI explain router (fallback)")
+            logger.info("✅ Included AI explain router (fallback)")
         except Exception as e2:
             logger.error(f"âŒ Error loading AI explain router (fallback): {e2}")
 
         try:
             from backend.routes.websocket import router as websocket_router
 
+            # Note: websocket router defines an HTTP status at /api/websocket/status already
+            # so we include it without extra prefix to avoid double-API duplication.
             app.include_router(websocket_router)
-            logger.info("âœ… Included WebSocket router")
+            logger.info("✅ Included WebSocket router")
         except Exception as e2:
             logger.error(f"âŒ Error loading WebSocket router: {e2}")
+
+        # Register thin alias/new routers for UI compatibility
+        try:
+            from backend.endpoints.market.candles_endpoints import router as candles_router
+            app.include_router(candles_router)
+            logger.info("✅ Included market candles router")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading candles router: {e2}")
+
+        # legacy alias router removed
+
+        try:
+            from backend.endpoints.portfolio.transactions_endpoints import router as transactions_router
+            app.include_router(transactions_router)
+            logger.info("✅ Included portfolio transactions router")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading transactions router: {e2}")
+
+        # legacy live trading alias router removed
+
+        try:
+            from backend.endpoints.ai.ai_leaderboard_endpoints import router as ai_leaderboard_router
+            app.include_router(ai_leaderboard_router)
+            logger.info("✅ Included AI leaderboard router")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading AI leaderboard router: {e2}")
+
+        try:
+            from backend.endpoints.ai.ai_analytics_endpoints import router as ai_analytics_router
+            app.include_router(ai_analytics_router)
+            logger.info("✅ Included AI analytics router")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading AI analytics router: {e2}")
+
+        try:
+            from backend.endpoints.signals.whale_alerts_endpoints import router as whale_alerts_router
+            app.include_router(whale_alerts_router)
+            logger.info("✅ Included whale alerts router")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading whale alerts router: {e2}")
+
+        try:
+            from backend.endpoints.health.ai_health_endpoints import router as ai_health_router
+            app.include_router(ai_health_router)
+            logger.info("✅ Included AI health router")
+        except Exception as e2:
+            logger.error(f"âŒ Error loading AI health router: {e2}")
+
+        # legacy live notifications alias router removed
+
+        logger.info("Routers mounted OK: market candles and consolidated bundle (if present)")
 
     except Exception as e:
         logger.error(f"âŒ Error loading consolidated endpoints: {e}")
 
         # Fallback to individual routers if consolidated router fails
-        logger.info("ðŸ”„ Falling back to individual routers...")
+        logger.info("🔧 Falling back to individual routers...")
         try:
             from backend.routes.dashboard import router as dashboard_router
 
             app.include_router(dashboard_router, prefix="/api")
-            logger.info("âœ… Included dashboard router (fallback)")
+            logger.info("✅ Included dashboard router (fallback)")
         except Exception as e2:
             logger.error(f"âŒ Error loading dashboard router (fallback): {e2}")
 
@@ -395,7 +472,7 @@ def create_app() -> FastAPI:
             from api_endpoints import router as main_api_router
 
             app.include_router(main_api_router, prefix="/api")
-            logger.info("âœ… Included main API router (fallback)")
+            logger.info("✅ Included main API router (fallback)")
         except Exception as e2:
             logger.error(f"âŒ Error loading main API router (fallback): {e2}")
 
@@ -404,7 +481,7 @@ def create_app() -> FastAPI:
             from backend.routes.ui import router as ui_router
 
             app.include_router(ui_router)
-            logger.info("âœ… Included UI router")
+            logger.info("✅ Included UI router")
         except Exception as e2:
             logger.error(f"âŒ Error loading UI router: {e2}")
 
@@ -412,7 +489,7 @@ def create_app() -> FastAPI:
             from backend.endpoints.dashboard_missing.dashboard_missing_endpoints import router as dashboard_missing_router
 
             app.include_router(dashboard_missing_router)
-            logger.info("âœ… Included dashboard missing endpoints router")
+            logger.info("✅ Included dashboard missing endpoints router")
         except Exception as e2:
             logger.error(f"âŒ Error loading dashboard missing endpoints router: {e2}")
 
@@ -420,9 +497,11 @@ def create_app() -> FastAPI:
             from backend.routes.ai_dashboard import router as ai_dashboard_router
 
             app.include_router(ai_dashboard_router)
-            logger.info("âœ… Included AI dashboard router")
+            logger.info("✅ Included AI dashboard router")
         except Exception as e2:
             logger.error(f"âŒ Error loading AI dashboard router: {e2}")
+
+    
 
     # Health check endpoint
     @app.get("/health")
@@ -446,7 +525,7 @@ def create_app() -> FastAPI:
             "timestamp": time.time(),
         }
 
-    logger.info("âœ… App factory completed successfully")
+    logger.info("✅ App factory completed successfully")
     return app
 
 
