@@ -4,12 +4,13 @@ Generates trading signals using technical indicators and machine learning.
 """
 
 import logging
+import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
+
 import numpy as np
 import pandas as pd
-from typing import Dict, Any, Optional, Tuple
-from datetime import datetime, timezone
-import sys
-import os
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -47,7 +48,7 @@ class SignalEngine:
 
         logger.info("âœ… SignalEngine initialized")
 
-    def _get_ohlcv_data(self, symbol: str, limit: int = 200) -> Optional[pd.DataFrame]:
+    def _get_ohlcv_data(self, symbol: str, limit: int = 200) -> pd.DataFrame | None:
         """Get OHLCV data from cache and convert to DataFrame"""
         try:
             # Get price history from cache
@@ -112,7 +113,7 @@ class SignalEngine:
             logger.error(f"Failed to calculate EMA: {e}")
             return pd.Series([np.nan] * len(prices))
 
-    def detect_ema_crossover(self, fast_ema: pd.Series, slow_ema: pd.Series) -> Tuple[str, float]:
+    def detect_ema_crossover(self, fast_ema: pd.Series, slow_ema: pd.Series) -> tuple[str, float]:
         """Detect EMA crossover signals"""
         try:
             if len(fast_ema) < 2 or len(slow_ema) < 2:
@@ -138,7 +139,7 @@ class SignalEngine:
             logger.error(f"Failed to detect EMA crossover: {e}")
             return "HOLD", 0.0
 
-    def prepare_ml_features(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def prepare_ml_features(self, df: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
         """Prepare features for machine learning model"""
         try:
             if len(df) < self.ml_lookback:
@@ -218,7 +219,7 @@ class SignalEngine:
             logger.error(f"Failed to train ML model for {symbol}: {e}")
             return False
 
-    def predict_trend(self, symbol: str) -> Tuple[str, float]:
+    def predict_trend(self, symbol: str) -> tuple[str, float]:
         """Predict trend using ML model"""
         try:
             if not SKLEARN_AVAILABLE or self.ml_model is None:
@@ -249,7 +250,7 @@ class SignalEngine:
             logger.error(f"Failed to predict trend for {symbol}: {e}")
             return "HOLD", 0.0
 
-    def generate_signal(self, symbol: str) -> Dict[str, Any]:
+    def generate_signal(self, symbol: str) -> dict[str, Any]:
         """Generate trading signal for a symbol"""
         try:
             # Get OHLCV data
@@ -337,11 +338,11 @@ class SignalEngine:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_signal(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def get_signal(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get trading signal for a specific symbol"""
         return self.generate_signal(symbol)
 
-    def get_all_signals(self) -> Dict[str, Any]:
+    def get_all_signals(self) -> dict[str, Any]:
         """Get signals for all monitored symbols"""
         try:
             # Get symbols from cache or use default list
@@ -400,7 +401,7 @@ class SignalEngine:
             logger.error(f"Failed to get active signals count: {e}")
             return 0
 
-    def get_service_status(self) -> Dict[str, Any]:
+    def get_service_status(self) -> dict[str, Any]:
         """Get current service status"""
         try:
             return {

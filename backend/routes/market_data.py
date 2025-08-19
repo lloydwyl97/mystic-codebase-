@@ -1,7 +1,7 @@
 ﻿import logging
 import os
 import sys
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -22,20 +22,20 @@ notification_service = get_notification_service(
 
 
 @router.get("/api/markets")
-async def get_all_markets() -> Dict[str, Any]:
+async def get_all_markets() -> dict[str, Any]:
     """Get all available markets (bundled, deduped, cached, rotated)"""
     try:
         # Check service manager health
         service_health = service_manager.get_health_status()
 
         # Get markets data using the correct method
-        markets_data: Dict[str, Any] = await market_data_service.get_markets()
+        markets_data: dict[str, Any] = await market_data_service.get_markets()
 
         # Extract markets from the response
-        markets: Dict[str, Dict[str, Any]] = markets_data.get("markets", {})
+        markets: dict[str, dict[str, Any]] = markets_data.get("markets", {})
 
         # Bundle and dedupe by symbol
-        bundled: Dict[str, Dict[str, Any]] = {}
+        bundled: dict[str, dict[str, Any]] = {}
         for symbol, market_data in markets.items():
             if symbol not in bundled:
                 bundled[symbol] = {
@@ -47,7 +47,7 @@ async def get_all_markets() -> Dict[str, Any]:
                 }
 
         # Get API health status for monitoring
-        api_health: Dict[str, bool] = markets_data.get("api_health", {})
+        api_health: dict[str, bool] = markets_data.get("api_health", {})
 
         return {
             "markets": list(bundled.values()),
@@ -73,16 +73,16 @@ async def get_all_markets() -> Dict[str, Any]:
 
 
 @router.get("/api/market/{symbol}")
-async def get_market(symbol: str) -> Dict[str, Any]:
+async def get_market(symbol: str) -> dict[str, Any]:
     """Get the latest price and change for a specific symbol (cached, rotated)"""
     try:
         # Get market data using the correct method
-        market_data: Optional[Dict[str, Any]] = await market_data_service.get_market_data(symbol)
+        market_data: dict[str, Any] | None = await market_data_service.get_market_data(symbol)
         if not market_data:
             raise HTTPException(status_code=404, detail=f"Market data for {symbol} not found")
 
         # Get cache info for monitoring
-        cache_info: Dict[str, Union[bool, int, Any]] = {
+        cache_info: dict[str, bool | int | Any] = {
             "hit": symbol in market_data_service.cache,
             "duration": 300,  # Default cache duration
             "entries": len(market_data_service.cache),
@@ -113,17 +113,17 @@ async def get_market(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/api/market-data/status")
-async def get_market_data_status() -> Dict[str, Any]:
+async def get_market_data_status() -> dict[str, Any]:
     """Get the status of all market data APIs and rate limits"""
     try:
         # Get markets data to access API health
-        markets_data: Dict[str, Any] = await market_data_service.get_markets()
+        markets_data: dict[str, Any] = await market_data_service.get_markets()
 
         # Get API health status
-        api_health: Dict[str, Dict[str, Any]] = markets_data.get("api_health", {})
+        api_health: dict[str, dict[str, Any]] = markets_data.get("api_health", {})
 
         # Get cache stats
-        cache_stats: Dict[str, Union[int, Any]] = {
+        cache_stats: dict[str, int | Any] = {
             "entries": len(market_data_service.cache),
             "duration_seconds": 300,  # Default cache duration
         }

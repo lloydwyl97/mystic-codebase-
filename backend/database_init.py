@@ -3,22 +3,23 @@ Database Initialization and Management for Mystic Trading Platform
 Handles database creation, migrations, and connection management
 """
 
-import os
 import json
+import os
 from datetime import datetime, timedelta
+
+import structlog
 from sqlalchemy import (
-    create_engine,
+    Boolean,
     Column,
+    DateTime,
+    Float,
     Integer,
     String,
-    Float,
-    DateTime,
     Text,
-    Boolean,
+    create_engine,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import structlog
 
 # Configure logging
 logger = structlog.get_logger()

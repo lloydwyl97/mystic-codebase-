@@ -11,7 +11,7 @@ def detect_stagnation():
     if not os.path.exists(STATE_FILE):
         return
 
-    with open(STATE_FILE, "r") as f:
+    with open(STATE_FILE) as f:
         state = json.load(f)
 
     adjustments = state.get("adjustment_count", 0)

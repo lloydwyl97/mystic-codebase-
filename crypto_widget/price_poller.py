@@ -1,12 +1,13 @@
 # price_poller.py
-import httpx
 import asyncio
-import json
 import csv
+import json
 import os
-from itertools import cycle
 from collections import defaultdict
 from datetime import datetime
+from itertools import cycle
+
+import httpx
 
 BINANCE = {
     "BTC": "https://api.binance.us/api/v3/ticker/price?symbol=BTCUSDT",

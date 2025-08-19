@@ -1,21 +1,21 @@
 ﻿import json
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 from redis import Redis
 
 redis_client: Redis = Redis.from_url("redis://localhost:6379/0")
 
 
-def save_attribution(symbol: str, inputs: Dict[str, Any], weights: Dict[str, float], reason: str) -> None:
-    data: Dict[str, Any] = {
+def save_attribution(symbol: str, inputs: dict[str, Any], weights: dict[str, float], reason: str) -> None:
+    data: dict[str, Any] = {
         "used": {"inputs": inputs, "weights": weights, "reason": reason},
         "ts": datetime.now(timezone.utc).isoformat(),
     }
     redis_client.set(f"ai:attr:{symbol}", json.dumps(data), ex=600)
 
 
-def load_attribution(symbol: str) -> Dict[str, Any]:
+def load_attribution(symbol: str) -> dict[str, Any]:
     raw = redis_client.get(f"ai:attr:{symbol}")
     if raw:
         try:

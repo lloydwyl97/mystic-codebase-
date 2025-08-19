@@ -10,7 +10,7 @@ def rollback_model():
         print("[Rollback] No model file found.")
         return False
 
-    with open(STATE_FILE, "r") as f:
+    with open(STATE_FILE) as f:
         state = json.load(f)
 
     if state["adjustment_count"] == 0:

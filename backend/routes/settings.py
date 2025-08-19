@@ -7,7 +7,7 @@ All endpoints use live data and configuration management.
 
 import logging
 import time
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 @router.get("/api/settings/profile")
-async def get_user_profile() -> Dict[str, Any]:
+async def get_user_profile() -> dict[str, Any]:
     """Get user profile settings"""
     try:
         # Get user profile from configuration
@@ -48,7 +48,7 @@ async def get_user_profile() -> Dict[str, Any]:
 
 
 @router.put("/api/settings/profile")
-async def update_user_profile(profile_data: Dict[str, Any]) -> Dict[str, Any]:
+async def update_user_profile(profile_data: dict[str, Any]) -> dict[str, Any]:
     """Update user profile settings"""
     try:
         # Validate profile data
@@ -97,7 +97,7 @@ async def update_user_profile(profile_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @router.get("/api/settings/preferences")
-async def get_user_preferences() -> Dict[str, Any]:
+async def get_user_preferences() -> dict[str, Any]:
     """Get user preferences and settings"""
     try:
         # Get user preferences from configuration
@@ -148,8 +148,8 @@ async def get_user_preferences() -> Dict[str, Any]:
 
 @router.put("/api/settings/preferences")
 async def update_user_preferences(
-    preferences_data: Dict[str, Any],
-) -> Dict[str, Any]:
+    preferences_data: dict[str, Any],
+) -> dict[str, Any]:
     """Update user preferences and settings"""
     try:
         # Validate and update preferences
@@ -193,7 +193,7 @@ async def update_user_preferences(
 
 
 @router.get("/api/settings/notifications")
-async def get_notification_settings() -> Dict[str, Any]:
+async def get_notification_settings() -> dict[str, Any]:
     """Get notification settings"""
     try:
         # Get notification settings
@@ -247,8 +247,8 @@ async def get_notification_settings() -> Dict[str, Any]:
 
 @router.put("/api/settings/notifications")
 async def update_notification_settings(
-    notification_data: Dict[str, Any],
-) -> Dict[str, Any]:
+    notification_data: dict[str, Any],
+) -> dict[str, Any]:
     """Update notification settings"""
     try:
         # Get current settings
@@ -275,7 +275,7 @@ async def update_notification_settings(
 
 
 @router.get("/api/settings/security")
-async def get_security_settings() -> Dict[str, Any]:
+async def get_security_settings() -> dict[str, Any]:
     """Get security settings"""
     try:
         # Get security settings
@@ -317,8 +317,8 @@ async def get_security_settings() -> Dict[str, Any]:
 
 @router.put("/api/settings/security")
 async def update_security_settings(
-    security_data: Dict[str, Any],
-) -> Dict[str, Any]:
+    security_data: dict[str, Any],
+) -> dict[str, Any]:
     """Update security settings"""
     try:
         # Get current security settings
@@ -345,7 +345,7 @@ async def update_security_settings(
 
 
 @router.get("/api/settings/exchanges")
-async def get_exchange_settings() -> Dict[str, Any]:
+async def get_exchange_settings() -> dict[str, Any]:
     """Get exchange configuration settings"""
     try:
         # Get exchange settings from configuration
@@ -393,7 +393,7 @@ async def get_exchange_settings() -> Dict[str, Any]:
 
 
 @router.get("/api/settings/system")
-async def get_system_settings() -> Dict[str, Any]:
+async def get_system_settings() -> dict[str, Any]:
     """Get system configuration settings"""
     try:
         # Get system settings

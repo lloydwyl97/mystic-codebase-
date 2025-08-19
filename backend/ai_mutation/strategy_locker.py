@@ -7,20 +7,20 @@ Handles strategy locking, unlocking, and status tracking.
 
 import json
 import logging
-from pathlib import Path
-from typing import Optional, Dict, Any
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-def get_live_strategy() -> Optional[str]:
+def get_live_strategy() -> str | None:
     """Get the currently active live strategy file"""
     try:
         # Check for live strategy lock file
         lock_file = Path("strategies/live_strategy.lock")
         if lock_file.exists():
-            with open(lock_file, "r") as f:
+            with open(lock_file) as f:
                 strategy_file = f.read().strip()
 
             # Verify the strategy file exists
@@ -95,14 +95,14 @@ def unlock_strategy() -> bool:
         return False
 
 
-def get_strategy_info(strategy_file: str) -> Optional[Dict[str, Any]]:
+def get_strategy_info(strategy_file: str) -> dict[str, Any] | None:
     """Get detailed information about a strategy"""
     try:
         strategy_path = Path("strategies") / strategy_file
         if not strategy_path.exists():
             return None
 
-        with open(strategy_path, "r") as f:
+        with open(strategy_path) as f:
             strategy_data = json.load(f)
 
         # Get file stats
@@ -170,7 +170,7 @@ def is_strategy_locked(strategy_file: str) -> bool:
     return live_strategy == strategy_file
 
 
-def get_strategy_status(strategy_file: str) -> Dict[str, Any]:
+def get_strategy_status(strategy_file: str) -> dict[str, Any]:
     """Get comprehensive status of a strategy"""
     try:
         info = get_strategy_info(strategy_file)
@@ -208,7 +208,7 @@ def get_strategy_status(strategy_file: str) -> Dict[str, Any]:
         return {"error": str(e)}
 
 
-def backup_strategy(strategy_file: str) -> Optional[str]:
+def backup_strategy(strategy_file: str) -> str | None:
     """Create a backup of a strategy file"""
     try:
         strategy_path = Path("strategies") / strategy_file

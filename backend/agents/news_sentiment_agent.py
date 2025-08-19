@@ -5,15 +5,16 @@ Handles financial news analysis and sentiment extraction
 
 import asyncio
 import json
-import requests
-import feedparser
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
 import os
-import sys
 import re
-from textblob import TextBlob
+import sys
+from datetime import datetime, timedelta
+from typing import Any, Optional
+
+import feedparser
 import numpy as np
+import requests
+from textblob import TextBlob
 
 # Make all imports live (F401:
 _ = requests.get("https://example.com", timeout=1)
@@ -213,7 +214,7 @@ class NewsSentimentAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for news context"""
         try:
             symbol = market_data.get("symbol")
@@ -226,7 +227,7 @@ class NewsSentimentAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing market data: {e}")
 
-    async def handle_market_data(self, message: Dict[str, Any]):
+    async def handle_market_data(self, message: dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})
@@ -265,7 +266,7 @@ class NewsSentimentAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error fetching and analyzing news: {e}")
 
-    async def fetch_news_from_source(self, source: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def fetch_news_from_source(self, source: dict[str, Any]) -> list[dict[str, Any]]:
         """Fetch news from a specific source"""
         try:
             articles = []
@@ -296,7 +297,7 @@ class NewsSentimentAgent(BaseAgent):
             print(f"âŒ Error fetching from {source['name']}: {e}")
             return []
 
-    async def analyze_articles_sentiment(self, articles: List[Dict[str, Any]]):
+    async def analyze_articles_sentiment(self, articles: list[dict[str, Any]]):
         """Analyze sentiment for a list of articles"""
         try:
             for article in articles:
@@ -315,7 +316,7 @@ class NewsSentimentAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error analyzing articles sentiment: {e}")
 
-    async def analyze_article_sentiment(self, article: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_article_sentiment(self, article: dict[str, Any]) -> dict[str, Any]:
         """Analyze sentiment for a single article"""
         try:
             # Combine title and summary for analysis
@@ -383,7 +384,7 @@ class NewsSentimentAgent(BaseAgent):
             print(f"âŒ Error cleaning text: {e}")
             return text
 
-    async def extract_symbols(self, article: Dict[str, Any]) -> List[str]:
+    async def extract_symbols(self, article: dict[str, Any]) -> list[str]:
         """Extract trading symbols from article"""
         try:
             text = f"{article['title']} {article['summary']}"
@@ -406,7 +407,7 @@ class NewsSentimentAgent(BaseAgent):
             print(f"âŒ Error extracting symbols: {e}")
             return []
 
-    async def extract_keywords_sentiment(self, text: str) -> Dict[str, float]:
+    async def extract_keywords_sentiment(self, text: str) -> dict[str, float]:
         """Extract sentiment for specific keywords"""
         try:
             keywords_sentiment = {}
@@ -459,9 +460,9 @@ class NewsSentimentAgent(BaseAgent):
 
     async def update_sentiment_cache(
         self,
-        article: Dict[str, Any],
-        sentiment: Dict[str, Any],
-        symbols: List[str],
+        article: dict[str, Any],
+        sentiment: dict[str, Any],
+        symbols: list[str],
     ):
         """Update sentiment cache"""
         try:
@@ -497,9 +498,9 @@ class NewsSentimentAgent(BaseAgent):
 
     async def broadcast_sentiment_update(
         self,
-        article: Dict[str, Any],
-        sentiment: Dict[str, Any],
-        symbols: List[str],
+        article: dict[str, Any],
+        sentiment: dict[str, Any],
+        symbols: list[str],
     ):
         """Broadcast sentiment update to other agents"""
         try:
@@ -537,7 +538,7 @@ class NewsSentimentAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating symbol context: {e}")
 
-    async def handle_analyze_news(self, message: Dict[str, Any]):
+    async def handle_analyze_news(self, message: dict[str, Any]):
         """Handle manual news analysis request"""
         try:
             source_url = message.get("source_url")
@@ -572,7 +573,7 @@ class NewsSentimentAgent(BaseAgent):
             print(f"âŒ Error handling news analysis request: {e}")
             await self.broadcast_error(f"News analysis error: {e}")
 
-    async def handle_get_sentiment(self, message: Dict[str, Any]):
+    async def handle_get_sentiment(self, message: dict[str, Any]):
         """Handle sentiment request"""
         try:
             symbol = message.get("symbol")
@@ -600,7 +601,7 @@ class NewsSentimentAgent(BaseAgent):
             print(f"âŒ Error handling sentiment request: {e}")
             await self.broadcast_error(f"Sentiment request error: {e}")
 
-    async def handle_update_sources(self, message: Dict[str, Any]):
+    async def handle_update_sources(self, message: dict[str, Any]):
         """Handle news sources update request"""
         try:
             new_sources = message.get("sources", [])
@@ -628,7 +629,7 @@ class NewsSentimentAgent(BaseAgent):
             print(f"âŒ Error updating news sources: {e}")
             await self.broadcast_error(f"Sources update error: {e}")
 
-    async def get_symbol_sentiment(self, symbol: str, timeframe: str) -> Dict[str, Any]:
+    async def get_symbol_sentiment(self, symbol: str, timeframe: str) -> dict[str, Any]:
         """Get sentiment data for a symbol"""
         try:
             symbol_sentiments = self.state["symbol_sentiment"].get(symbol, [])

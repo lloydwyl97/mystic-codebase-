@@ -12,11 +12,11 @@ Comprehensive performance monitoring with:
 
 import asyncio
 import logging
-import time
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
 import threading
+import time
 from collections import defaultdict, deque
+from dataclasses import dataclass
+from typing import Any
 
 try:
     import psutil
@@ -65,12 +65,12 @@ class PerformanceAlert:
 
         logger.warning(f"Performance alert: {metric_name} = {value} (threshold: {threshold})")
 
-    def get_recent_alerts(self, minutes: int = 10) -> List[Dict[str, Any]]:
+    def get_recent_alerts(self, minutes: int = 10) -> list[dict[str, Any]]:
         """Get recent alerts"""
         cutoff_time = time.time() - (minutes * 60)
         return [alert for alert in self.alerts if alert['timestamp'] > cutoff_time]
 
-    def get_alert_stats(self) -> Dict[str, Any]:
+    def get_alert_stats(self) -> dict[str, Any]:
         """Get alert statistics"""
         return {
             'total_alerts': len(self.alerts),
@@ -83,7 +83,7 @@ class PerformanceMonitor:
     """Comprehensive performance monitoring system"""
 
     def __init__(self):
-        self.metrics: Dict[str, deque] = defaultdict(lambda: deque(maxlen=1000))
+        self.metrics: dict[str, deque] = defaultdict(lambda: deque(maxlen=1000))
         self.alerts = PerformanceAlert()
         self.running = False
         self.monitoring_task = None
@@ -233,7 +233,7 @@ class PerformanceMonitor:
             self._store_recommendations(recommendations)
             logger.info(f"Generated {len(recommendations)} performance recommendations")
 
-    def _get_average_metric(self, metric_name: str, window_minutes: int = 5) -> Optional[float]:
+    def _get_average_metric(self, metric_name: str, window_minutes: int = 5) -> float | None:
         """Get average metric value over a time window"""
         if metric_name not in self.metrics:
             return None
@@ -246,13 +246,13 @@ class PerformanceMonitor:
 
         return sum(recent_metrics) / len(recent_metrics) if recent_metrics else None
 
-    def _get_latest_metric(self, metric_name: str) -> Optional[PerformanceMetric]:
+    def _get_latest_metric(self, metric_name: str) -> PerformanceMetric | None:
         """Get the latest metric for a given name"""
         if metric_name not in self.metrics or not self.metrics[metric_name]:
             return None
         return self.metrics[metric_name][-1]
 
-    def _store_recommendations(self, recommendations: List[Dict[str, Any]]):
+    def _store_recommendations(self, recommendations: list[dict[str, Any]]):
         """Store performance recommendations"""
         # In a real implementation, this would store to database or cache
         # For now, we'll just log them
@@ -306,7 +306,7 @@ class PerformanceMonitor:
             'timestamp': time.time()
         })
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Get comprehensive performance summary"""
         with self.lock:
             summary = {
@@ -356,7 +356,7 @@ class PerformanceMonitor:
 
             return summary
 
-    def get_detailed_metrics(self, metric_name: str, minutes: int = 60) -> List[Dict[str, Any]]:
+    def get_detailed_metrics(self, metric_name: str, minutes: int = 60) -> list[dict[str, Any]]:
         """Get detailed metrics for a specific metric"""
         if metric_name not in self.metrics:
             return []

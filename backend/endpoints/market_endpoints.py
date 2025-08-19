@@ -6,7 +6,7 @@ Handles all market-related API endpoints including prices, indicators, and cosmi
 
 import logging
 import time
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -30,7 +30,7 @@ router = APIRouter()
 
 
 @router.get("/prices")
-async def get_market_prices() -> Dict[str, Any]:
+async def get_market_prices() -> dict[str, Any]:
     """Get current market prices for all supported coins"""
     try:
         if price_fetcher and hasattr(price_fetcher, "get_market_data"):
@@ -44,7 +44,7 @@ async def get_market_prices() -> Dict[str, Any]:
 
 
 @router.get("/indicators/{symbol}")
-async def get_technical_indicators(symbol: str) -> Dict[str, Any]:
+async def get_technical_indicators(symbol: str) -> dict[str, Any]:
     """Get technical indicators for a specific symbol"""
     try:
         if indicators_fetcher and hasattr(indicators_fetcher, "get_indicators"):
@@ -62,7 +62,7 @@ async def get_technical_indicators(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/cosmic-signals")
-async def get_cosmic_signals() -> Dict[str, Any]:
+async def get_cosmic_signals() -> dict[str, Any]:
     """Get cosmic analysis signals"""
     try:
         if cosmic_fetcher and hasattr(cosmic_fetcher, "get_global_signals"):
@@ -76,7 +76,7 @@ async def get_cosmic_signals() -> Dict[str, Any]:
 
 
 @router.get("/supported-coins")
-async def get_supported_coins() -> Dict[str, Any]:
+async def get_supported_coins() -> dict[str, Any]:
     """Get list of supported coins"""
     try:
         if price_fetcher and hasattr(price_fetcher, "get_supported_coins"):
@@ -90,7 +90,7 @@ async def get_supported_coins() -> Dict[str, Any]:
 
 
 @router.get("/coinstate")
-async def get_coin_state() -> Dict[str, Any]:
+async def get_coin_state() -> dict[str, Any]:
     """Get current state of all coins"""
     try:
         if price_fetcher and hasattr(price_fetcher, "get_all_prices"):

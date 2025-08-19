@@ -10,15 +10,15 @@ import os
 import signal
 import sys
 from datetime import datetime, timezone
-from typing import Optional
+
+import uvicorn
+from autobuy_dashboard import app as dashboard_app
+from binance_us_autobuy import autobuy_system
 
 from backend.endpoints.autobuy.autobuy_config import (
-    validate_and_load_config,
     get_config,
+    validate_and_load_config,
 )
-from binance_us_autobuy import autobuy_system
-from autobuy_dashboard import app as dashboard_app
-import uvicorn
 
 # Configure logging
 logging.basicConfig(
@@ -37,8 +37,8 @@ class AutobuyLauncher:
 
     def __init__(self):
         self.config = get_config()
-        self.autobuy_task: Optional[asyncio.Task] = None
-        self.dashboard_task: Optional[asyncio.Task] = None
+        self.autobuy_task: asyncio.Task | None = None
+        self.dashboard_task: asyncio.Task | None = None
         self.is_running = False
         self.start_time = datetime.now(timezone.utc)
 

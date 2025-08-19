@@ -7,12 +7,11 @@ Renders profit charts from trade logs
 import json
 import logging
 import os
-from datetime import datetime
-from typing import Any, Dict, List
+from datetime import datetime, timezone
+from typing import Any
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-from datetime import datetime, timezone
 
 logger = logging.getLogger("chart_profit")
 
@@ -101,14 +100,14 @@ def plot_profits(output_file: str = "profit_chart.png") -> bool:
         return False
 
 
-def load_trade_data() -> List[Dict[str, Any]]:
+def load_trade_data() -> list[dict[str, Any]]:
     """Load trade data from files"""
     try:
         trades = []
 
         # Load from active trades
         if os.path.exists("active_trades.json"):
-            with open("active_trades.json", "r") as f:
+            with open("active_trades.json") as f:
                 active_trades = json.load(f)
                 for symbol, trade in active_trades.items():
                     trades.append(
@@ -123,7 +122,7 @@ def load_trade_data() -> List[Dict[str, Any]]:
 
         # Load from trade history
         if os.path.exists("trade_history.json"):
-            with open("trade_history.json", "r") as f:
+            with open("trade_history.json") as f:
                 history = json.load(f)
                 trades.extend(history)
 
@@ -193,7 +192,7 @@ def plot_market_performance(
         return False
 
 
-def generate_trading_report() -> Dict[str, Any]:
+def generate_trading_report() -> dict[str, Any]:
     """Generate comprehensive trading report"""
     try:
         from backend.ai.trade_tracker import (

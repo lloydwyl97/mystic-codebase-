@@ -9,6 +9,7 @@ from urllib.parse import urlencode
 
 import requests
 from dotenv import load_dotenv
+
 from backend.config import settings
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))

@@ -16,7 +16,7 @@ def test_portfolio_transactions() -> None:
     client = _get_client()
     r = client.get("/api/portfolio/transactions")
     assert r.status_code == 200
-    data: t.Dict[str, t.Any] = r.json()
+    data: dict[str, t.Any] = r.json()
     assert isinstance(data, dict)
     assert isinstance(data.get("items"), list)
     assert isinstance(data.get("count"), int)
@@ -34,7 +34,7 @@ def test_websocket_status() -> None:
     client = _get_client()
     r = client.get("/api/websocket/status")
     assert r.status_code == 200
-    data: t.Dict[str, t.Any] = r.json()
+    data: dict[str, t.Any] = r.json()
     assert isinstance(data, dict)
     assert "websocket" in data
 
@@ -43,7 +43,7 @@ def test_whale_alerts_get_empty_ok() -> None:
     client = _get_client()
     r = client.get("/api/whale/alerts")
     assert r.status_code == 200
-    data: t.Dict[str, t.Any] = r.json()
+    data: dict[str, t.Any] = r.json()
     assert isinstance(data.get("alerts"), list)
 
 

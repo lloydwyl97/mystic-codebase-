@@ -6,10 +6,9 @@ Built for Windows 11 Home + PowerShell + Docker.
 """
 
 import json
-import time
 import logging
 import os
-from datetime import datetime
+import time
 from datetime import datetime, timezone
 
 # Configure logging
@@ -47,7 +46,7 @@ def load_risk_config():
     """Load risk configuration from file"""
     try:
         if os.path.exists(RISK_FILE):
-            with open(RISK_FILE, "r") as f:
+            with open(RISK_FILE) as f:
                 return json.load(f)
         else:
             # Create default risk config

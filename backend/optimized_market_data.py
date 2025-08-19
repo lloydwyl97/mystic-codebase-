@@ -9,10 +9,11 @@ import asyncio
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any
 
 from api_throttler import api_throttler
 from database_optimized import optimized_db_manager
+
 from backend.utils.exceptions import MarketDataException, handle_exception
 
 logger = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ class OptimizedMarketData:
     def __post_init__(self):
         self.cache_key = f"market_data:{self.symbol}:{self.exchange}"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "symbol": self.symbol,
@@ -56,8 +57,8 @@ class OptimizedMarketDataService:
 
     def __init__(self):
         self.supported_symbols = ["BTC", "ETH", "ADA", "DOT", "SOL", "MATIC"]
-        self.data_cache: Dict[str, OptimizedMarketData] = {}
-        self.cache_timestamps: Dict[str, float] = {}
+        self.data_cache: dict[str, OptimizedMarketData] = {}
+        self.cache_timestamps: dict[str, float] = {}
         self.cache_ttl = 30  # seconds
 
         # Performance tracking
@@ -82,7 +83,7 @@ class OptimizedMarketDataService:
 
         return time.time() - self.cache_timestamps[symbol] < self.cache_ttl
 
-    def _get_cached_data(self, symbol: str) -> Optional[OptimizedMarketData]:
+    def _get_cached_data(self, symbol: str) -> OptimizedMarketData | None:
         """Get cached market data"""
         if symbol in self.data_cache and self._is_cache_valid(symbol):
             self.stats["cache_hits"] += 1
@@ -97,7 +98,7 @@ class OptimizedMarketDataService:
         self.cache_timestamps[symbol] = time.time()
 
     @handle_exception("Failed to get optimized market data", MarketDataException)
-    async def get_market_data(self, symbol: str) -> Optional[OptimizedMarketData]:
+    async def get_market_data(self, symbol: str) -> OptimizedMarketData | None:
         """Get market data with optimizations"""
         start_time = time.time()
         self.stats["total_requests"] += 1
@@ -133,7 +134,7 @@ class OptimizedMarketDataService:
                     + response_time
                 ) / self.stats["total_requests"]
 
-    async def _get_from_database(self, symbol: str) -> Optional[OptimizedMarketData]:
+    async def _get_from_database(self, symbol: str) -> OptimizedMarketData | None:
         """Get market data from optimized database"""
         try:
             self.stats["database_queries"] += 1
@@ -168,7 +169,7 @@ class OptimizedMarketDataService:
             logger.error(f"Database query failed for {symbol}: {e}")
             return None
 
-    async def _get_from_api(self, symbol: str) -> Optional[OptimizedMarketData]:
+    async def _get_from_api(self, symbol: str) -> OptimizedMarketData | None:
         """Get market data from API with throttling"""
         try:
             self.stats["api_calls"] += 1
@@ -187,7 +188,7 @@ class OptimizedMarketDataService:
             logger.error(f"API call failed for {symbol}: {e}")
             return None
 
-    async def _fetch_api_data(self, symbol: str) -> Optional[OptimizedMarketData]:
+    async def _fetch_api_data(self, symbol: str) -> OptimizedMarketData | None:
         """Fetch data from external API (simulated)"""
         # Simulate API call with delay
         await asyncio.sleep(0.1)
@@ -231,13 +232,13 @@ class OptimizedMarketDataService:
             logger.error(f"Failed to store data in database: {e}")
 
     @handle_exception("Failed to get all optimized market data", MarketDataException)
-    async def get_all_market_data(self) -> Dict[str, OptimizedMarketData]:
+    async def get_all_market_data(self) -> dict[str, OptimizedMarketData]:
         """Get market data for all supported symbols with optimizations"""
         try:
             tasks = [self.get_market_data(symbol) for symbol in self.supported_symbols]
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
-            market_data: Dict[str, OptimizedMarketData] = {}
+            market_data: dict[str, OptimizedMarketData] = {}
             for i, result in enumerate(results):
                 if isinstance(result, OptimizedMarketData):
                     market_data[self.supported_symbols[i]] = result
@@ -251,7 +252,7 @@ class OptimizedMarketDataService:
             return {}
 
     @handle_exception("Failed to get optimized market summary", MarketDataException)
-    async def get_market_summary(self) -> Dict[str, Any]:
+    async def get_market_summary(self) -> dict[str, Any]:
         """Get optimized market summary"""
         try:
             market_data = await self.get_all_market_data()
@@ -297,7 +298,7 @@ class OptimizedMarketDataService:
                 "cache_stats": self.stats,
             }
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get comprehensive performance statistics"""
         return {
             "market_data_stats": self.stats.copy(),

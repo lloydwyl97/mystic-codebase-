@@ -1,6 +1,7 @@
-﻿import os
-import json
+﻿import json
+import os
 import typing as t
+
 import requests
 
 
@@ -11,9 +12,9 @@ class ApiError(Exception):
 def _request_json(
 	method: str,
 	path: str,
-	params: t.Optional[dict[str, t.Any]] = None,
-	data: t.Optional[t.Union[dict[str, t.Any], str]] = None,
-	headers: t.Optional[dict[str, str]] = None,
+	params: dict[str, t.Any] | None = None,
+	data: dict[str, t.Any] | str | None = None,
+	headers: dict[str, str] | None = None,
 	json_body: t.Any = None,
 ) -> t.Any:
 	from mystic_ui.config import api_url
@@ -36,55 +37,66 @@ def _request_json(
 	try:
 		return json.loads(r.text)
 	except Exception as e:
-		raise ApiError(f"Invalid JSON from {url}: {e}")
+		raise ApiError(f"Invalid JSON from {url}: {e}") from e
 
 
-def _coerce_candles_to_columns(payload: t.Any) -> dict[str, t.List[t.Any]]:
-	"""
-	Accepts either:
-	  1) list[dict]: [{time, open, high, low, close, volume}, ...]
-	  2) dict with vector fields: {timestamps, opens, highs, lows, closes, volumes}
-	Returns dict with keys expected by ui_common.to_df:
-	  timestamps, opens, highs, lows, closes, volumes
-	"""
+def _coerce_candles_to_columns(payload: t.Any) -> dict[str, list[t.Any]]:
+	"""Normalize candles payload to columnar dict for UI consumption."""
 	if isinstance(payload, dict) and all(
 		k in payload for k in ("timestamps", "opens", "highs", "lows", "closes", "volumes")
 	):
-		return t.cast(dict[str, t.List[t.Any]], payload)
+		return t.cast(dict[str, list[t.Any]], payload)
 
 	if isinstance(payload, list) and payload and isinstance(payload[0], dict):
-		ts: t.List[t.Any] = []
-		o: t.List[float] = []
-		h: t.List[float] = []
-		l: t.List[float] = []
-		c: t.List[float] = []
-		v: t.List[float] = []
-		for row_any in t.cast(t.List[t.Any], payload):
+		ts: list[t.Any] = []
+		o: list[float] = []
+		h: list[float] = []
+		low_values: list[float] = []
+		c: list[float] = []
+		v: list[float] = []
+		for row_any in t.cast(list[t.Any], payload):
 			row: dict[str, t.Any] = t.cast(dict[str, t.Any], row_any)
 			# tolerate different key spellings
 			ts.append(row.get("time") or row.get("timestamp") or row.get("t"))
 			o.append(float(row.get("open") or row.get("o") or 0))
 			h.append(float(row.get("high") or row.get("h") or 0))
-			l.append(float(row.get("low") or row.get("l") or 0))
+			low_values.append(float(row.get("low") or row.get("l") or 0))
 			c.append(float(row.get("close") or row.get("c") or 0))
 			v.append(float(row.get("volume") or row.get("v") or 0))
-		return {"timestamps": ts, "opens": o, "highs": h, "lows": l, "closes": c, "volumes": v}
+		return {"timestamps": ts, "opens": o, "highs": h, "lows": low_values, "closes": c, "volumes": v}
 
 	raise ApiError("Unrecognized candles payload shape")
 
 # === PUBLIC WRAPPERS (use these in UI code) ===
-def request_json(arg1: str, arg2: t.Optional[t.Any] = None, params: t.Optional[dict[str, t.Any]] = None) -> t.Any:
+def request_json(
+	arg1: str,
+	arg2: t.Any | None = None,
+	params: dict[str, t.Any] | None = None,
+	*,
+	data: dict[str, t.Any] | str | None = None,
+	headers: dict[str, str] | None = None,
+	json: t.Any = None,
+) -> t.Any:
 	"""
-	Flexible GET wrapper:
-	- If called like request_json("GET", "/path", params), it delegates to _request_json
-	- If called like request_json("https://host/path", params), it performs a direct GET
+	Flexible HTTP JSON wrapper with passthrough of common kwargs.
+
+	- request_json("GET", "/path", params={...}) → backend GET
+	- request_json("POST", "/path", json={...}) → backend POST
+	- request_json("https://host/path", params={...}) → absolute GET
 	"""
 	method_like = (arg1 or "").upper()
 	if method_like in {"GET", "POST", "PUT", "DELETE", "PATCH"}:
-		return _request_json(arg1, t.cast(str, arg2), params)
-	# Treat as absolute URL
+		return _request_json(
+			arg1,
+			t.cast(str, arg2),
+			params=params,
+			data=data,
+			headers=headers,
+			json_body=json,
+		)
+	# Treat as absolute URL (GET only)
 	url = arg1
-	r = requests.get(url, params=t.cast(t.Optional[dict[str, t.Any]], arg2), timeout=20)
+	r = requests.get(url, params=t.cast(dict[str, t.Any] | None, arg2), timeout=20)
 	if r.status_code >= 400:
 		raise ApiError(f"GET {url} -> {r.status_code}: {r.text[:300]}")
 	ct = r.headers.get("content-type", "")
@@ -93,9 +105,9 @@ def request_json(arg1: str, arg2: t.Optional[t.Any] = None, params: t.Optional[d
 	try:
 		return json.loads(r.text)
 	except Exception as e:
-		raise ApiError(f"Invalid JSON from {url}: {e}")
+		raise ApiError(f"Invalid JSON from {url}: {e}") from e
 
-def coerce_candles_to_columns(data: t.Any) -> dict[str, t.List[t.Any]]:
+def coerce_candles_to_columns(data: t.Any) -> dict[str, list[t.Any]]:
 	return _coerce_candles_to_columns(data)
 
 BACKEND = os.environ.get("MYSTIC_BACKEND", "").rstrip("/")
@@ -108,9 +120,14 @@ def _join_url(base: str, path: str) -> str:
 	return f"{base}/{path.lstrip('/')}"
 
 # Last-known-good cache for candles to avoid UI flicker on transient errors
-_LKG_CANDLES: dict[tuple[str, str, str, int], dict[str, t.List[t.Any]]] = {}
+_LKG_CANDLES: dict[tuple[str, str, str, int], dict[str, list[t.Any]]] = {}
 
-def get_candles(symbol: str, exchange: str = "binance", interval: str = "1h", limit: int = 200) -> dict[str, t.List[t.Any]]:
+def get_candles(
+	symbol: str,
+	exchange: str = "binance",
+	interval: str = "1h",
+	limit: int = 200,
+) -> dict[str, list[t.Any]]:
 	"""
 	Primary: /api/market/candles
 	Fallback: /market/candles (for clients that add /api automatically)
@@ -132,10 +149,10 @@ def get_candles(symbol: str, exchange: str = "binance", interval: str = "1h", li
 				if isinstance(data, list) and data and isinstance(data[0], dict):
 					data_dicts = t.cast(list[dict[str, t.Any]], data)
 					ts = data_dicts[0].get("timestamp")
-					if isinstance(ts, (int, float)) and ts < 10_000_000_000:
+					if isinstance(ts, int | float) and ts < 10_000_000_000:
 						for r_ in data_dicts:
 							tv = r_.get("timestamp")
-							if isinstance(tv, (int, float)):
+							if isinstance(tv, int | float):
 								r_["timestamp"] = int(tv * 1000)
 				# Expect list[dict] with keys: timestamp, open, high, low, close, volume
 				if isinstance(data, list):

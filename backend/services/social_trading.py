@@ -5,8 +5,8 @@ Handles social trading functionality including leaderboards, copy trading, and t
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict, List, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class SocialTradingService:
         self.logger = logging.getLogger(__name__)
         self.logger.info("Social Trading Service initialized")
 
-    async def get_leaderboard(self, timeframe: str = "30d") -> Dict[str, Any]:
+    async def get_leaderboard(self, timeframe: str = "30d") -> dict[str, Any]:
         """Get social trading leaderboard with live data"""
         try:
             # Live social trading leaderboard from exchange APIs and social platforms
@@ -35,7 +35,7 @@ class SocialTradingService:
             self.logger.error(f"Error getting leaderboard: {str(e)}")
             raise
 
-    async def get_traders(self) -> List[Dict[str, Any]]:
+    async def get_traders(self) -> list[dict[str, Any]]:
         """Get list of social traders with live data"""
         try:
             # Live social traders data from exchange APIs and social platforms
@@ -47,7 +47,7 @@ class SocialTradingService:
             self.logger.error(f"Error getting traders: {str(e)}")
             raise
 
-    async def get_trader(self, trader_id: str) -> Optional[Dict[str, Any]]:
+    async def get_trader(self, trader_id: str) -> dict[str, Any] | None:
         """Get a specific social trader by ID with live data"""
         try:
             # Live trader data from exchange APIs and social platforms
@@ -57,7 +57,7 @@ class SocialTradingService:
             self.logger.error(f"Error getting trader {trader_id}: {str(e)}")
             raise
 
-    async def start_copy_trading(self, copy_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def start_copy_trading(self, copy_data: dict[str, Any]) -> dict[str, Any]:
         """Start copying a trader's trades"""
         try:
             # Get real copy trading service
@@ -78,7 +78,7 @@ class SocialTradingService:
             self.logger.error(f"Error starting copy trading: {str(e)}")
             raise
 
-    async def stop_copy_trading(self, copy_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def stop_copy_trading(self, copy_data: dict[str, Any]) -> dict[str, Any]:
         """Stop copying a trader's trades"""
         try:
             # Get real copy trading service

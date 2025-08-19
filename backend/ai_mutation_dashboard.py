@@ -6,15 +6,16 @@ Advanced dashboard for monitoring and controlling AI strategy evolution
 import asyncio
 import json
 import os
-import redis
-import numpy as np
 from datetime import datetime, timedelta
-from typing import Dict, Any, List
+from typing import Any
+
+import numpy as np
+import redis
+import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-import uvicorn
-from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -30,7 +31,7 @@ class MutationDashboard:
             decode_responses=True,
         )
         self.app = FastAPI(title="AI Mutation Dashboard", version="1.0.0")
-        self.active_connections: List[WebSocket] = []
+        self.active_connections: list[WebSocket] = []
 
         # Setup CORS
         self.app.add_middleware(
@@ -122,7 +123,7 @@ class MutationDashboard:
             except WebSocketDisconnect:
                 self.active_connections.remove(websocket)
 
-    async def get_system_status(self) -> Dict[str, Any]:
+    async def get_system_status(self) -> dict[str, Any]:
         """Get overall system status"""
         try:
             # Get service statuses
@@ -160,10 +161,11 @@ class MutationDashboard:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_all_strategies(self) -> List[Dict[str, Any]]:
+    async def get_all_strategies(self) -> list[dict[str, Any]]:
         """Get all AI strategies"""
         try:
-            strategy_ids = self.redis_client.lrange("ai_strategies", 0, -1)
+            from utils.redis_helpers import to_str_list
+            strategy_ids = to_str_list(self.redis_client.lrange("ai_strategies", 0, -1))
             strategies = []
 
             for strategy_id in strategy_ids:
@@ -177,7 +179,7 @@ class MutationDashboard:
         except Exception:
             return []
 
-    async def get_strategy_details(self, strategy_id: str) -> Dict[str, Any]:
+    async def get_strategy_details(self, strategy_id: str) -> dict[str, Any]:
         """Get specific strategy details"""
         try:
             strategy_data = self.redis_client.get(f"ai_strategy:{strategy_id}")
@@ -201,7 +203,7 @@ class MutationDashboard:
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def get_genetic_population(self) -> Dict[str, Any]:
+    async def get_genetic_population(self) -> dict[str, Any]:
         """Get genetic algorithm population"""
         try:
             population_data = self.redis_client.get("genetic_population")
@@ -231,7 +233,7 @@ class MutationDashboard:
                 "error": str(e),
             }
 
-    async def get_evolution_history(self) -> List[Dict[str, Any]]:
+    async def get_evolution_history(self) -> list[dict[str, Any]]:
         """Get evolution history"""
         try:
             evolution_data = self.redis_client.get("evolution_history")
@@ -240,7 +242,7 @@ class MutationDashboard:
         except Exception:
             return []
 
-    async def get_model_versions(self) -> List[Dict[str, Any]]:
+    async def get_model_versions(self) -> list[dict[str, Any]]:
         """Get model versions"""
         try:
             # This would typically query the model versioning database
@@ -267,10 +269,11 @@ class MutationDashboard:
         except Exception:
             return []
 
-    async def get_retrain_queue(self) -> List[Dict[str, Any]]:
+    async def get_retrain_queue(self) -> list[dict[str, Any]]:
         """Get retrain queue"""
         try:
-            queue_items = self.redis_client.lrange("retrain_queue", 0, -1)
+            from utils.redis_helpers import to_str_list
+            queue_items = to_str_list(self.redis_client.lrange("retrain_queue", 0, -1))
             queue = []
 
             for item in queue_items:
@@ -281,7 +284,7 @@ class MutationDashboard:
         except Exception:
             return []
 
-    async def trigger_strategy_retrain(self, strategy_id: str) -> Dict[str, Any]:
+    async def trigger_strategy_retrain(self, strategy_id: str) -> dict[str, Any]:
         """Trigger retraining for a strategy"""
         try:
             # Add to retrain queue
@@ -302,7 +305,7 @@ class MutationDashboard:
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def deploy_strategy(self, strategy_id: str) -> Dict[str, Any]:
+    async def deploy_strategy(self, strategy_id: str) -> dict[str, Any]:
         """Deploy a strategy"""
         try:
             # Add to deployment queue
@@ -323,7 +326,7 @@ class MutationDashboard:
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def trigger_genetic_evolution(self) -> Dict[str, Any]:
+    async def trigger_genetic_evolution(self) -> dict[str, Any]:
         """Trigger genetic evolution"""
         try:
             # Add evolution request
@@ -343,7 +346,7 @@ class MutationDashboard:
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def reset_genetic_population(self) -> Dict[str, Any]:
+    async def reset_genetic_population(self) -> dict[str, Any]:
         """Reset genetic population"""
         try:
             # Add reset request
@@ -363,7 +366,7 @@ class MutationDashboard:
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def get_recent_activity(self) -> List[Dict[str, Any]]:
+    async def get_recent_activity(self) -> list[dict[str, Any]]:
         """Get recent system activity"""
         try:
             # This would typically query logs or activity database
@@ -391,7 +394,7 @@ class MutationDashboard:
         except Exception:
             return []
 
-    async def get_strategy_performance_history(self, strategy_id: str) -> List[Dict[str, Any]]:
+    async def get_strategy_performance_history(self, strategy_id: str) -> list[dict[str, Any]]:
         """Get strategy performance history"""
         try:
             # This would typically query performance database
@@ -413,7 +416,7 @@ class MutationDashboard:
         except Exception:
             return []
 
-    async def get_strategy_lineage(self, strategy_id: str) -> List[Dict[str, Any]]:
+    async def get_strategy_lineage(self, strategy_id: str) -> list[dict[str, Any]]:
         """Get strategy lineage"""
         try:
             # This would typically query lineage database
@@ -432,7 +435,7 @@ class MutationDashboard:
         except Exception:
             return []
 
-    async def get_realtime_data(self) -> Dict[str, Any]:
+    async def get_realtime_data(self) -> dict[str, Any]:
         """Get real-time data for WebSocket updates"""
         try:
             return {

@@ -18,7 +18,7 @@ except ImportError:
     inspect = None
 
 try:
-    from backend.middleware.circuit_breaker import circuit_states, FAILURE_THRESHOLD, RESET_TIMEOUT
+    from backend.middleware.circuit_breaker import FAILURE_THRESHOLD, RESET_TIMEOUT, circuit_states
 except ImportError:
     circuit_states = {}
     FAILURE_THRESHOLD = 5

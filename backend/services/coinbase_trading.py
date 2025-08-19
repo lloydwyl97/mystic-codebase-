@@ -12,7 +12,7 @@ import json
 import logging
 import time
 from decimal import Decimal
-from typing import Any, Dict, Optional
+from typing import Any
 
 import requests
 
@@ -43,7 +43,7 @@ class CoinbaseTradingService:
 
         logger.info(f"Coinbase trading service initialized (sandbox: {sandbox})")
 
-    def _sign_request(self, method: str, path: str, body: str = "") -> Dict[str, str]:
+    def _sign_request(self, method: str, path: str, body: str = "") -> dict[str, str]:
         """Sign request for Coinbase API authentication"""
         timestamp = str(int(time.time()))
         message = timestamp + method + path + body
@@ -73,7 +73,7 @@ class CoinbaseTradingService:
             logger.error(f"Error signing request: {e}")
             return {}
 
-    async def get_account_info(self) -> Dict[str, Any]:
+    async def get_account_info(self) -> dict[str, Any]:
         """Get account information and balances"""
         now = time.time()
 
@@ -150,7 +150,7 @@ class CoinbaseTradingService:
             logger.error(f"Error getting account info: {str(e)}")
             return {"error": str(e), "timestamp": now}
 
-    async def get_market_price(self, product_id: str) -> Dict[str, Any]:
+    async def get_market_price(self, product_id: str) -> dict[str, Any]:
         """Get current market price for a product"""
         try:
             # Use public API endpoint for price data
@@ -182,7 +182,7 @@ class CoinbaseTradingService:
                 "timestamp": time.time(),
             }
 
-    async def place_market_order(self, product_id: str, side: str, size: float) -> Dict[str, Any]:
+    async def place_market_order(self, product_id: str, side: str, size: float) -> dict[str, Any]:
         """Place a market order"""
         try:
             if not self.api_key or not self.secret_key:
@@ -239,7 +239,7 @@ class CoinbaseTradingService:
 
     async def place_limit_order(
         self, product_id: str, side: str, size: float, price: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Place a limit order"""
         try:
             if not self.api_key or not self.secret_key:
@@ -293,7 +293,7 @@ class CoinbaseTradingService:
                 "timestamp": time.time(),
             }
 
-    async def cancel_order(self, order_id: str) -> Dict[str, Any]:
+    async def cancel_order(self, order_id: str) -> dict[str, Any]:
         """Cancel an order"""
         try:
             if not self.api_key or not self.secret_key:
@@ -333,7 +333,7 @@ class CoinbaseTradingService:
                 "timestamp": time.time(),
             }
 
-    async def get_open_orders(self, product_id: Optional[str] = None) -> Dict[str, Any]:
+    async def get_open_orders(self, product_id: str | None = None) -> dict[str, Any]:
         """Get open orders"""
         try:
             if not self.api_key or not self.secret_key:
@@ -376,8 +376,8 @@ class CoinbaseTradingService:
             return {"error": str(e), "timestamp": time.time()}
 
     async def get_order_history(
-        self, product_id: Optional[str] = None, limit: int = 100
-    ) -> Dict[str, Any]:
+        self, product_id: str | None = None, limit: int = 100
+    ) -> dict[str, Any]:
         """Get order history"""
         try:
             if not self.api_key or not self.secret_key:
@@ -427,7 +427,7 @@ class CoinbaseTradingService:
                 "timestamp": time.time(),
             }
 
-    async def get_products(self) -> Dict[str, Any]:
+    async def get_products(self) -> dict[str, Any]:
         """Get available products"""
         try:
             # Use public API endpoint for products
@@ -461,7 +461,7 @@ class CoinbaseTradingService:
                 "timestamp": time.time(),
             }
 
-    async def test_connection(self) -> Dict[str, Any]:
+    async def test_connection(self) -> dict[str, Any]:
         """Test connection to Coinbase API"""
         try:
             # Test by getting products

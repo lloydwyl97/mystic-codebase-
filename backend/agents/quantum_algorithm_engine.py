@@ -5,35 +5,33 @@ Implements quantum algorithms for financial applications
 
 import asyncio
 import json
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
 import os
 import sys
+from datetime import datetime, timedelta
+from typing import Any
+
+import numpy as np
+import pandas as pd
 import qiskit
-from qiskit import (
-    QuantumCircuit,
-    QuantumRegister,
-    ClassicalRegister,
-    execute,
-    Aer,
-)
-from qiskit.circuit.library.standard_gates import RYGate, RZGate
-from qiskit.algorithms import Grover
-from qiskit.algorithms.optimizers import SPSA, COBYLA
-from qiskit.circuit.library import QFT, TwoLocal
-from qiskit.quantum_info import Operator, Statevector
-from qiskit.primitives import Sampler, Estimator
-from qiskit_machine_learning.algorithms import VQC, VQR
-from qiskit_machine_learning.neural_networks import EstimatorQNN
-from qiskit_machine_learning.connectors import TorchConnector
 import torch
 import torch.nn as nn
+from qiskit import (
+    Aer,
+    ClassicalRegister,
+    QuantumCircuit,
+    QuantumRegister,
+    execute,
+)
+from qiskit.algorithms import Grover
+from qiskit.algorithms.optimizers import COBYLA, SPSA
+from qiskit.circuit.library import QFT, TwoLocal
+from qiskit.circuit.library.standard_gates import RYGate, RZGate
+from qiskit.primitives import Estimator, Sampler
+from qiskit.quantum_info import Operator, Statevector
 
 # Make all imports live (F401):
 _ = pd.DataFrame()
-_ = Tuple[int, int]
+_ = tuple[int, int]
 _ = qiskit.__version__
 _ = COBYLA()
 _ = TwoLocal(2, [RYGate, RZGate], entanglement="linear")
@@ -157,7 +155,7 @@ class QuantumPortfolioOptimizer:
             print(f"âŒ Error optimizing portfolio: {e}")
             return None
 
-    def extract_weights_from_counts(self, counts: Dict[str, int]) -> np.ndarray:
+    def extract_weights_from_counts(self, counts: dict[str, int]) -> np.ndarray:
         """Extract portfolio weights from measurement counts"""
         try:
             total_shots = sum(counts.values())
@@ -222,7 +220,7 @@ class QuantumFourierTransform:
             print(f"âŒ Error applying QFT: {e}")
             return np.fft.fft(data)
 
-    def extract_frequencies(self, counts: Dict[str, int]) -> np.ndarray:
+    def extract_frequencies(self, counts: dict[str, int]) -> np.ndarray:
         """Extract frequency components from measurement counts"""
         try:
             total_shots = sum(counts.values())
@@ -512,7 +510,7 @@ class QuantumAlgorithmEngine(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for quantum analysis"""
         try:
             symbol = market_data.get("symbol")
@@ -626,7 +624,7 @@ class QuantumAlgorithmEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error executing quantum algorithms for {symbol}: {e}")
 
-    async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_symbol_market_data(self, symbol: str) -> list[dict[str, Any]]:
         """Get market data for a symbol"""
         try:
             # Get from cache first
@@ -707,7 +705,7 @@ class QuantumAlgorithmEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error optimizing portfolios: {e}")
 
-    async def broadcast_quantum_results(self, symbol: str, results: Dict[str, Any]):
+    async def broadcast_quantum_results(self, symbol: str, results: dict[str, Any]):
         """Broadcast quantum analysis results to other agents"""
         try:
             quantum_update = {
@@ -727,7 +725,7 @@ class QuantumAlgorithmEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting quantum results: {e}")
 
-    async def broadcast_portfolio_optimization(self, optimization_result: Dict[str, Any]):
+    async def broadcast_portfolio_optimization(self, optimization_result: dict[str, Any]):
         """Broadcast portfolio optimization results"""
         try:
             optimization_update = {
@@ -746,7 +744,7 @@ class QuantumAlgorithmEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting portfolio optimization: {e}")
 
-    async def handle_execute_quantum_algorithm(self, message: Dict[str, Any]):
+    async def handle_execute_quantum_algorithm(self, message: dict[str, Any]):
         """Handle manual quantum algorithm execution request"""
         try:
             algorithm_type = message.get("algorithm_type")
@@ -784,7 +782,7 @@ class QuantumAlgorithmEngine(BaseAgent):
 
     async def execute_specific_algorithm(
         self, algorithm_type: str, symbol: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Execute a specific quantum algorithm"""
         try:
             market_data = await self.get_symbol_market_data(symbol)
@@ -823,7 +821,7 @@ class QuantumAlgorithmEngine(BaseAgent):
             print(f"âŒ Error executing specific algorithm: {e}")
             return {"error": str(e)}
 
-    async def handle_optimize_portfolio(self, message: Dict[str, Any]):
+    async def handle_optimize_portfolio(self, message: dict[str, Any]):
         """Handle manual portfolio optimization request"""
         try:
             symbols = message.get("symbols", self.trading_symbols)
@@ -876,7 +874,7 @@ class QuantumAlgorithmEngine(BaseAgent):
             print(f"âŒ Error handling portfolio optimization: {e}")
             await self.broadcast_error(f"Portfolio optimization error: {e}")
 
-    async def handle_quantum_analysis(self, message: Dict[str, Any]):
+    async def handle_quantum_analysis(self, message: dict[str, Any]):
         """Handle quantum analysis request"""
         try:
             symbol = message.get("symbol")

@@ -7,8 +7,8 @@ API endpoints for market data and signals.
 import asyncio
 import logging
 import random
-from datetime import timezone, datetime
-from typing import Any, Dict, List, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -25,7 +25,7 @@ market_data_service = MarketDataService()
 notification_service = get_notification_service(None)
 
 # Simulated live data
-live_market_data: Dict[str, Dict[str, Any]] = {
+live_market_data: dict[str, dict[str, Any]] = {
     "BTC/USD": {"price": 45000.0, "change": 2.5, "volume": 1000000},
     "ETH/USD": {"price": 3200.0, "change": -1.2, "volume": 800000},
     "ADA/USD": {"price": 1.20, "change": 5.8, "volume": 500000},
@@ -33,7 +33,7 @@ live_market_data: Dict[str, Dict[str, Any]] = {
     "DOT/USD": {"price": 25.0, "change": -0.5, "volume": 200000},
 }
 
-live_portfolio: Dict[str, Any] = {
+live_portfolio: dict[str, Any] = {
     "total_value": 50000.0,
     "total_change": 12.5,
     "positions": [
@@ -48,11 +48,11 @@ live_portfolio: Dict[str, Any] = {
     ],
 }
 
-live_trades: List[Dict[str, Any]] = []
+live_trades: list[dict[str, Any]] = []
 
 
 @router.get("/coins/all")
-async def get_all_coins() -> Dict[str, Any]:
+async def get_all_coins() -> dict[str, Any]:
     """Get all available coins"""
     try:
         if not service_manager.market_data_service:
@@ -98,7 +98,7 @@ async def get_all_coins() -> Dict[str, Any]:
 
 
 @router.get("/markets")
-async def get_markets() -> Dict[str, Any]:
+async def get_markets() -> dict[str, Any]:
     """Get market overview"""
     try:
         # Use live market data service instead of service_manager
@@ -135,7 +135,7 @@ async def get_markets() -> Dict[str, Any]:
 
 
 @router.get("/markets/test")
-async def test_markets() -> Dict[str, Any]:
+async def test_markets() -> dict[str, Any]:
     """Test endpoint for markets"""
     return {
         "message": "Markets test endpoint working",
@@ -145,7 +145,7 @@ async def test_markets() -> Dict[str, Any]:
 
 
 @router.get("/market/{symbol}")
-async def get_market(symbol: str) -> Dict[str, Any]:
+async def get_market(symbol: str) -> dict[str, Any]:
     """Get specific market data"""
     try:
         if not service_manager.market_data_service:
@@ -180,7 +180,7 @@ async def get_market(symbol: str) -> Dict[str, Any]:
 @router.get("/signals/live")
 async def get_live_signals(
     symbol: str = Query("all", description="Asset symbol to analyze")
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get live trading signals"""
     try:
         if not service_manager.market_data_service:
@@ -213,7 +213,7 @@ async def get_live_signals(
 
 
 @router.get("/signals/unified")
-async def get_unified_signals(symbol: Optional[str] = None) -> Dict[str, Any]:
+async def get_unified_signals(symbol: str | None = None) -> dict[str, Any]:
     """Get unified signals"""
     try:
         if not service_manager.unified_signal_manager:
@@ -240,7 +240,7 @@ async def get_unified_signals(symbol: Optional[str] = None) -> Dict[str, Any]:
 
 
 @router.get("/signals/summary")
-async def get_signal_summary() -> Dict[str, Any]:
+async def get_signal_summary() -> dict[str, Any]:
     """Get signal summary"""
     try:
         if not service_manager.unified_signal_manager:
@@ -264,7 +264,7 @@ async def get_signal_summary() -> Dict[str, Any]:
 
 
 @router.get("/live/market-data")
-async def get_live_market_data() -> Dict[str, Any]:
+async def get_live_market_data() -> dict[str, Any]:
     """Get live market data for testing"""
     # Simulate price updates
     for symbol in live_market_data:
@@ -284,7 +284,7 @@ async def get_live_market_data() -> Dict[str, Any]:
 
 
 @router.get("/live/portfolio")
-async def get_live_portfolio() -> Dict[str, Any]:
+async def get_live_portfolio() -> dict[str, Any]:
     """Get live portfolio data for testing"""
     # Update portfolio based on market data
     total_value = 0.0
@@ -307,7 +307,7 @@ async def get_live_portfolio() -> Dict[str, Any]:
 
 
 @router.get("/live/trades")
-async def get_live_trades() -> Dict[str, Any]:
+async def get_live_trades() -> dict[str, Any]:
     """Get live trading activity for testing"""
     # Simulate new trades
     if random.random() < 0.3:  # 30% chance of new trade
@@ -317,7 +317,7 @@ async def get_live_trades() -> Dict[str, Any]:
         amount = round(random.uniform(0.1, 2.0), 4)
         price = live_market_data[symbol]["price"]
 
-        new_trade: Dict[str, Any] = {
+        new_trade: dict[str, Any] = {
             "id": len(live_trades) + 1,
             "symbol": symbol,
             "type": trade_type,
@@ -341,7 +341,7 @@ async def get_live_trades() -> Dict[str, Any]:
 
 
 @router.get("/live/system-status")
-async def get_system_status() -> Dict[str, Any]:
+async def get_system_status() -> dict[str, Any]:
     """Get live system status for testing"""
     return {
         "status": "success",
@@ -359,7 +359,7 @@ async def get_system_status() -> Dict[str, Any]:
 
 
 @router.get("/market-data")
-async def get_market_data() -> Dict[str, Any]:
+async def get_market_data() -> dict[str, Any]:
     """Get market data endpoint"""
     try:
         # Import persistent cache
@@ -428,7 +428,7 @@ async def get_market_data() -> Dict[str, Any]:
 
 
 @router.get("/market-updates")
-async def get_market_updates() -> Dict[str, Any]:
+async def get_market_updates() -> dict[str, Any]:
     """Get market updates endpoint"""
     updates = []
     for symbol, data in live_market_data.items():
@@ -450,7 +450,7 @@ async def get_market_updates() -> Dict[str, Any]:
 
 
 @router.get("/portfolio")
-async def get_portfolio() -> Dict[str, Any]:
+async def get_portfolio() -> dict[str, Any]:
     """Get portfolio data endpoint"""
     return {
         "status": "success",
@@ -460,7 +460,7 @@ async def get_portfolio() -> Dict[str, Any]:
 
 
 @router.get("/auto-trades")
-async def get_auto_trades() -> Dict[str, Any]:
+async def get_auto_trades() -> dict[str, Any]:
     """Get auto trades endpoint"""
     auto_trades = [
         {
@@ -487,7 +487,7 @@ async def get_auto_trades() -> Dict[str, Any]:
 
 
 @router.post("/auto-trade/{action}")
-async def trigger_auto_trade(action: str, data: Dict[str, Any]) -> Dict[str, Any]:
+async def trigger_auto_trade(action: str, data: dict[str, Any]) -> dict[str, Any]:
     """Trigger auto trade action"""
     symbol = data.get("symbol")
     exchange = data.get("exchange", "default")

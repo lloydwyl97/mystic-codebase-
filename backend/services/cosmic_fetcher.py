@@ -4,7 +4,8 @@ Handles fetching cosmic/market data from various sources
 """
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any
+
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -15,7 +16,7 @@ class CosmicFetcher:
         self.base_url = "https://api.coingecko.com/api/v3"
         self.supported_endpoints = ["global", "trending", "exchanges"]
 
-    async def get_global_data(self) -> Optional[Dict[str, Any]]:
+    async def get_global_data(self) -> dict[str, Any] | None:
         """Fetch global market data"""
         try:
             async with httpx.AsyncClient() as client:
@@ -27,7 +28,7 @@ class CosmicFetcher:
             logger.error(f"Error fetching global data: {e}")
             return None
 
-    async def get_trending_coins(self) -> Optional[Dict[str, Any]]:
+    async def get_trending_coins(self) -> dict[str, Any] | None:
         """Fetch trending coins"""
         try:
             async with httpx.AsyncClient() as client:
@@ -39,7 +40,7 @@ class CosmicFetcher:
             logger.error(f"Error fetching trending coins: {e}")
             return None
 
-    async def get_exchanges(self) -> Optional[Dict[str, Any]]:
+    async def get_exchanges(self) -> dict[str, Any] | None:
         """Fetch exchange data"""
         try:
             async with httpx.AsyncClient() as client:

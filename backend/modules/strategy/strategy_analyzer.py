@@ -8,7 +8,7 @@ Handles live performance metrics and strategy optimization.
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -25,14 +25,14 @@ class StrategyAnalyzer:
     """Strategy analyzer for performance evaluation and optimization"""
 
     def __init__(self):
-        self.strategies: Dict[str, Dict[str, Any]] = {}
-        self.performance_data: Dict[str, List[Dict[str, Any]]] = {}
-        self.analysis_results: Dict[str, Any] = {}
-        self.last_analysis_time: Optional[datetime] = None
-        self.analysis_cache: Dict[str, Any] = {}
-        self.performance_metrics: Dict[str, Any] = {}
+        self.strategies: dict[str, dict[str, Any]] = {}
+        self.performance_data: dict[str, list[dict[str, Any]]] = {}
+        self.analysis_results: dict[str, Any] = {}
+        self.last_analysis_time: datetime | None = None
+        self.analysis_cache: dict[str, Any] = {}
+        self.performance_metrics: dict[str, Any] = {}
 
-    def add_strategy(self, strategy_id: str, strategy_config: Dict[str, Any]) -> Dict[str, Any]:
+    def add_strategy(self, strategy_id: str, strategy_config: dict[str, Any]) -> dict[str, Any]:
         """Add a new strategy for analysis"""
         strategy = {
             "id": strategy_id,
@@ -48,7 +48,7 @@ class StrategyAnalyzer:
 
         return {"success": True, "strategy": strategy}
 
-    def remove_strategy(self, strategy_id: str) -> Dict[str, Any]:
+    def remove_strategy(self, strategy_id: str) -> dict[str, Any]:
         """Remove a strategy from analysis"""
         if strategy_id in self.strategies:
             del self.strategies[strategy_id]
@@ -59,7 +59,7 @@ class StrategyAnalyzer:
 
         return {"success": False, "error": "Strategy not found"}
 
-    def add_performance_data(self, strategy_id: str, trade_data: Dict[str, Any]) -> Dict[str, Any]:
+    def add_performance_data(self, strategy_id: str, trade_data: dict[str, Any]) -> dict[str, Any]:
         """Add performance data for a strategy"""
         if strategy_id not in self.strategies:
             return {"success": False, "error": "Strategy not found"}
@@ -145,7 +145,7 @@ class StrategyAnalyzer:
             logger.error(f"Strategy analysis failed for {strategy_id}: {e}")
             return {"error": str(e)}
 
-    def compare_strategies(self, strategy_ids: List[str]) -> Dict[str, Any]:
+    def compare_strategies(self, strategy_ids: list[str]) -> dict[str, Any]:
         """Compare multiple strategies"""
         if len(strategy_ids) < 2:
             return {"error": "Need at least 2 strategies for comparison"}
@@ -186,7 +186,7 @@ class StrategyAnalyzer:
 
         return comparison
 
-    def get_strategy_recommendations(self, strategy_id: str) -> Dict[str, Any]:
+    def get_strategy_recommendations(self, strategy_id: str) -> dict[str, Any]:
         """Get recommendations for strategy improvement"""
         analysis = self.analyze_strategy_performance(strategy_id)
 
@@ -282,7 +282,7 @@ class StrategyAnalyzer:
 
     def export_strategy_analysis(
         self, strategy_id: str, format_type: str = "json"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Export strategy analysis results"""
         if strategy_id not in self.strategies:
             return {"error": "Strategy not found"}
@@ -332,7 +332,7 @@ class StrategyAnalyzer:
 
         return winning_trades / losing_trades if losing_trades > 0 else float("inf")
 
-    def _calculate_daily_strategy_returns(self, df: pd.DataFrame) -> Dict[str, float]:
+    def _calculate_daily_strategy_returns(self, df: pd.DataFrame) -> dict[str, float]:
         """Calculate daily returns for strategy"""
         if "timestamp" not in df.columns or "pnl" not in df.columns:
             return {}
@@ -344,7 +344,7 @@ class StrategyAnalyzer:
         except Exception:
             return {}
 
-    def _simulate_strategy_performance(self, strategy_id: str, parameters: Dict[str, Any]) -> float:
+    def _simulate_strategy_performance(self, strategy_id: str, parameters: dict[str, Any]) -> float:
         """Simulate strategy performance with given parameters"""
         # Simple simulation - in practice, you'd implement proper backtesting
         analysis = self.analyze_strategy_performance(strategy_id)

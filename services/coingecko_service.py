@@ -5,7 +5,7 @@ Provides cryptocurrency data from CoinGecko API
 
 import logging
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import httpx
 
@@ -20,7 +20,7 @@ class CoinGeckoService:
         self.last_update = 0
         self.update_interval = 60  # 60 seconds
 
-    async def get_simple_price(self, ids: List[str], vs_currencies: List[str] = ["usd"]) -> Dict[str, Any]:
+    async def get_simple_price(self, ids: list[str], vs_currencies: list[str] = ["usd"]) -> dict[str, Any]:
         """Get simple price data for multiple coins"""
         try:
             url = f"{self.base_url}/simple/price"
@@ -44,7 +44,7 @@ class CoinGeckoService:
             return {}
 
     async def get_coin_markets(self, vs_currency: str = "usd", order: str = "market_cap_desc", 
-                              per_page: int = 100, page: int = 1, sparkline: bool = False) -> List[Dict[str, Any]]:
+                              per_page: int = 100, page: int = 1, sparkline: bool = False) -> list[dict[str, Any]]:
         """Get market data for coins"""
         try:
             url = f"{self.base_url}/coins/markets"
@@ -67,7 +67,7 @@ class CoinGeckoService:
             logger.error(f"Error fetching CoinGecko markets: {e}")
             return []
 
-    async def get_coin_by_id(self, coin_id: str) -> Optional[Dict[str, Any]]:
+    async def get_coin_by_id(self, coin_id: str) -> dict[str, Any] | None:
         """Get detailed data for a specific coin"""
         try:
             url = f"{self.base_url}/coins/{coin_id}"
@@ -91,7 +91,7 @@ class CoinGeckoService:
             logger.error(f"Error fetching CoinGecko coin data: {e}")
             return None
 
-    async def get_trending(self) -> List[Dict[str, Any]]:
+    async def get_trending(self) -> list[dict[str, Any]]:
         """Get trending coins"""
         try:
             url = f"{self.base_url}/search/trending"
@@ -108,7 +108,7 @@ class CoinGeckoService:
             logger.error(f"Error fetching CoinGecko trending data: {e}")
             return []
 
-    async def get_global_data(self) -> Dict[str, Any]:
+    async def get_global_data(self) -> dict[str, Any]:
         """Get global cryptocurrency data"""
         try:
             url = f"{self.base_url}/global"
@@ -124,7 +124,7 @@ class CoinGeckoService:
             logger.error(f"Error fetching CoinGecko global data: {e}")
             return {}
 
-    def get_cached_data(self, key: str) -> Optional[Dict[str, Any]]:
+    def get_cached_data(self, key: str) -> dict[str, Any] | None:
         """Get cached data if available and not expired"""
         if key in self.cache:
             data, timestamp = self.cache[key]
@@ -132,6 +132,6 @@ class CoinGeckoService:
                 return data
         return None
 
-    def cache_data(self, key: str, data: Dict[str, Any]):
+    def cache_data(self, key: str, data: dict[str, Any]):
         """Cache data with timestamp"""
         self.cache[key] = (data, time.time()) 

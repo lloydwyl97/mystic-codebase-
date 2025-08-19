@@ -1,4 +1,7 @@
-import os, httpx, math
+import math
+import os
+
+import httpx
 
 BASE = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:9000").rstrip("/")
 

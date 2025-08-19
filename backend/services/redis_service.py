@@ -3,12 +3,13 @@ Redis Service
 Handles Redis operations and caching with Docker connection
 """
 
-import logging
 import json
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
-import redis.asyncio as redis
+import logging
 import os
+from datetime import datetime, timezone
+from typing import Any
+
+import redis.asyncio as redis
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ class RedisService:
             logger.error(f"âŒ Error getting key {key}: {e}")
             return default
 
-    async def set(self, key: str, value: Any, ex: Optional[int] = None) -> bool:
+    async def set(self, key: str, value: Any, ex: int | None = None) -> bool:
         """Set value in Redis with optional expiry"""
         try:
             await self._ensure_connection()
@@ -123,7 +124,7 @@ class RedisService:
             logger.error(f"âŒ Error checking existence of key {key}: {e}")
             return False
 
-    async def hget(self, name: str, key: str) -> Optional[str]:
+    async def hget(self, name: str, key: str) -> str | None:
         """Get hash field value"""
         try:
             await self._ensure_connection()
@@ -142,7 +143,7 @@ class RedisService:
             logger.error(f"âŒ Error setting hash field {name}:{key}: {e}")
             return 0
 
-    async def hgetall(self, name: str) -> Dict[str, Any]:
+    async def hgetall(self, name: str) -> dict[str, Any]:
         """Get all hash fields"""
         try:
             await self._ensure_connection()
@@ -170,7 +171,7 @@ class RedisService:
             logger.error(f"âŒ Error pushing to list {name}: {e}")
             return 0
 
-    async def lrange(self, name: str, start: int, end: int) -> List[Any]:
+    async def lrange(self, name: str, start: int, end: int) -> list[Any]:
         """Get list range"""
         try:
             await self._ensure_connection()
@@ -200,7 +201,7 @@ class RedisService:
             self.connection_status = "error"
             return False
 
-    async def get_stats(self) -> Dict[str, Any]:
+    async def get_stats(self) -> dict[str, Any]:
         """Get Redis statistics"""
         try:
             await self._ensure_connection()

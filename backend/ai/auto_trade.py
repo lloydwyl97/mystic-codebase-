@@ -10,7 +10,8 @@ import logging
 import os
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Any
+
 import aiohttp
 from dotenv import load_dotenv
 
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 # Global trading state
 _trading_enabled = False
-_trading_start_time: Optional[datetime] = None
+_trading_start_time: datetime | None = None
 _trading_stats = {
     "total_trades": 0,
     "successful_trades": 0,
@@ -70,7 +71,7 @@ class CoinGeckoAPI:
         if self.session:
             await self.session.close()
 
-    async def get_coin_price(self, coin_id: str) -> Optional[Dict[str, Any]]:
+    async def get_coin_price(self, coin_id: str) -> dict[str, Any] | None:
         """Get current price and market data for a coin"""
         try:
             url = f"{self.base_url}/simple/price"
@@ -100,7 +101,7 @@ class CoinGeckoAPI:
             logger.error(f"CoinGecko API error for {coin_id}: {e}")
             return None
 
-    async def get_market_data(self, coin_ids: list) -> Dict[str, Any]:
+    async def get_market_data(self, coin_ids: list) -> dict[str, Any]:
         """Get comprehensive market data for multiple coins"""
         try:
             ids_param = ",".join(coin_ids)
@@ -150,10 +151,10 @@ class BinanceUSAPI:
         if self.session:
             await self.session.close()
 
-    def _generate_signature(self, params: Dict[str, Any]) -> str:
+    def _generate_signature(self, params: dict[str, Any]) -> str:
         """Generate HMAC signature for authenticated requests"""
-        import hmac
         import hashlib
+        import hmac
         from urllib.parse import urlencode
 
         query_string = urlencode(params)
@@ -164,7 +165,7 @@ class BinanceUSAPI:
         ).hexdigest()
         return signature
 
-    async def get_account_info(self) -> Optional[Dict[str, Any]]:
+    async def get_account_info(self) -> dict[str, Any] | None:
         """Get account information and balances"""
         try:
             if not self.api_key or not self.secret_key:
@@ -195,7 +196,7 @@ class BinanceUSAPI:
             logger.error(f"Binance US account API error: {e}")
             return None
 
-    async def get_ticker_price(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def get_ticker_price(self, symbol: str) -> dict[str, Any] | None:
         """Get current price for a symbol"""
         try:
             url = f"{self.base_url}/api/v3/ticker/price"
@@ -215,7 +216,7 @@ class BinanceUSAPI:
             logger.error(f"Binance US ticker error for {symbol}: {e}")
             return None
 
-    async def get_24hr_ticker(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def get_24hr_ticker(self, symbol: str) -> dict[str, Any] | None:
         """Get 24hr ticker statistics"""
         try:
             url = f"{self.base_url}/api/v3/ticker/24hr"
@@ -241,7 +242,7 @@ class BinanceUSAPI:
             return None
 
 
-def enable_trading() -> Dict[str, Any]:
+def enable_trading() -> dict[str, Any]:
     """Enable automated trading system"""
     global _trading_enabled, _trading_start_time
 
@@ -275,7 +276,7 @@ def enable_trading() -> Dict[str, Any]:
         }
 
 
-def disable_trading() -> Dict[str, Any]:
+def disable_trading() -> dict[str, Any]:
     """Disable automated trading system"""
     global _trading_enabled, _trading_start_time
 
@@ -316,7 +317,7 @@ def disable_trading() -> Dict[str, Any]:
         }
 
 
-def get_trading_status() -> Dict[str, Any]:
+def get_trading_status() -> dict[str, Any]:
     """Get current trading system status"""
     global _trading_enabled, _trading_start_time, _trading_stats
 
@@ -350,7 +351,7 @@ def get_trading_status() -> Dict[str, Any]:
         }
 
 
-async def get_market_data(symbol: str) -> Dict[str, Any]:
+async def get_market_data(symbol: str) -> dict[str, Any]:
     """Get comprehensive market data for a symbol from both CoinGecko and Binance US"""
     try:
         results = {}
@@ -385,7 +386,7 @@ async def get_market_data(symbol: str) -> Dict[str, Any]:
         }
 
 
-async def get_account_balance() -> Dict[str, Any]:
+async def get_account_balance() -> dict[str, Any]:
     """Get account balance from Binance US"""
     try:
         async with BinanceUSAPI() as binance:
@@ -420,7 +421,7 @@ async def get_account_balance() -> Dict[str, Any]:
         }
 
 
-def update_trading_stats(trade_result: Dict[str, Any]) -> None:
+def update_trading_stats(trade_result: dict[str, Any]) -> None:
     """Update trading statistics"""
     global _trading_stats
 

@@ -5,12 +5,13 @@ Handles risk management, position sizing, and portfolio risk monitoring
 
 import asyncio
 import json
-import numpy as np
-import time
-from datetime import datetime
-from typing import Dict, Any
 import os
 import sys
+import time
+from datetime import datetime
+from typing import Any
+
+import numpy as np
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -152,7 +153,7 @@ class RiskAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process incoming market data for risk assessment"""
         try:
             symbol = market_data.get("symbol")
@@ -168,7 +169,7 @@ class RiskAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing market data: {e}")
 
-    async def handle_assess_risk(self, message: Dict[str, Any]):
+    async def handle_assess_risk(self, message: dict[str, Any]):
         """Handle risk assessment request"""
         try:
             symbol = message.get("symbol")
@@ -196,7 +197,7 @@ class RiskAgent(BaseAgent):
             print(f"âŒ Error assessing risk: {e}")
             await self.broadcast_error(f"Risk assessment error: {e}")
 
-    async def handle_calculate_position_size(self, message: Dict[str, Any]):
+    async def handle_calculate_position_size(self, message: dict[str, Any]):
         """Handle position size calculation request"""
         try:
             symbol = message.get("symbol")
@@ -227,7 +228,7 @@ class RiskAgent(BaseAgent):
             print(f"âŒ Error calculating position size: {e}")
             await self.broadcast_error(f"Position size calculation error: {e}")
 
-    async def handle_portfolio_update(self, message: Dict[str, Any]):
+    async def handle_portfolio_update(self, message: dict[str, Any]):
         """Handle portfolio update"""
         try:
             portfolio = message.get("portfolio", {})
@@ -241,7 +242,7 @@ class RiskAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling portfolio update: {e}")
 
-    async def handle_trading_signal(self, message: Dict[str, Any]):
+    async def handle_trading_signal(self, message: dict[str, Any]):
         """Handle trading signal for risk validation"""
         try:
             strategy_id = message.get("strategy_id")
@@ -295,7 +296,7 @@ class RiskAgent(BaseAgent):
 
     async def assess_trade_risk(
         self, symbol: str, position_size: float, current_price: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Assess risk for a specific trade"""
         try:
             # Get portfolio risk metrics
@@ -343,7 +344,7 @@ class RiskAgent(BaseAgent):
         signal_strength: float,
         available_capital: float,
         current_price: float,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate optimal position size based on risk parameters"""
         try:
             # Get risk metrics for symbol
@@ -385,8 +386,8 @@ class RiskAgent(BaseAgent):
             return {"position_size": 0, "error": str(e)}
 
     async def validate_trading_signal(
-        self, signal: Dict[str, Any], market_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, signal: dict[str, Any], market_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Validate trading signal from risk perspective"""
         try:
             symbol = market_data.get("symbol")
@@ -436,7 +437,7 @@ class RiskAgent(BaseAgent):
             print(f"âŒ Error validating trading signal: {e}")
             return {"approved": False, "reason": f"Validation error: {e}"}
 
-    async def analyze_portfolio_risk(self, portfolio: Dict[str, Any]):
+    async def analyze_portfolio_risk(self, portfolio: dict[str, Any]):
         """Analyze portfolio risk metrics"""
         try:
             positions = portfolio.get("positions", [])
@@ -520,7 +521,7 @@ class RiskAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error checking risk alerts: {e}")
 
-    async def check_symbol_risk_alerts(self, symbol: str, market_data: Dict[str, Any]):
+    async def check_symbol_risk_alerts(self, symbol: str, market_data: dict[str, Any]):
         """Check for symbol-specific risk alerts"""
         try:
             symbol_risk = self.state["risk_metrics"].get(symbol, {})
@@ -563,7 +564,7 @@ class RiskAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error checking symbol risk alerts: {e}")
 
-    async def check_portfolio_risk_alerts(self, portfolio: Dict[str, Any]):
+    async def check_portfolio_risk_alerts(self, portfolio: dict[str, Any]):
         """Check for portfolio-level risk alerts"""
         try:
             positions = portfolio.get("positions", [])
@@ -588,7 +589,7 @@ class RiskAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error checking portfolio risk alerts: {e}")
 
-    async def create_alert(self, alert_type: str, data: Dict[str, Any]):
+    async def create_alert(self, alert_type: str, data: dict[str, Any]):
         """Create a risk alert"""
         try:
             alert = {
@@ -679,7 +680,7 @@ class RiskAgent(BaseAgent):
             print(f"âŒ Error getting symbol volatility: {e}")
             return 0.2
 
-    def calculate_trade_risk_score(self, trade_risk: Dict[str, Any]) -> float:
+    def calculate_trade_risk_score(self, trade_risk: dict[str, Any]) -> float:
         """Calculate risk score for a trade (0-100, higher is riskier)"""
         try:
             score = 0
@@ -704,7 +705,7 @@ class RiskAgent(BaseAgent):
             print(f"âŒ Error calculating trade risk score: {e}")
             return 50.0
 
-    def generate_risk_recommendation(self, trade_risk: Dict[str, Any]) -> str:
+    def generate_risk_recommendation(self, trade_risk: dict[str, Any]) -> str:
         """Generate risk recommendation for a trade"""
         try:
             risk_score = trade_risk.get("risk_score", 50)
@@ -757,7 +758,7 @@ class RiskAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error cleaning up alerts: {e}")
 
-    async def handle_market_data(self, message: Dict[str, Any]):
+    async def handle_market_data(self, message: dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})

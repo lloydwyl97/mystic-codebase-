@@ -1,26 +1,26 @@
 ﻿import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import requests
 
 # Rate limiting configuration - Only Binance and Coinbase
-RATE_LIMITS: Dict[str, Dict[str, Any]] = {
+RATE_LIMITS: dict[str, dict[str, Any]] = {
     "coinbase": {"rpm": 10, "last_call": 0},
     "binance": {"rpm": 10, "last_call": 0},
 }
 
 # âœ… STEP 1: Only call supported + tradable coins - OPTIMIZED LIST
 # These coins are tested and work on multiple exchanges
-SUPPORTED_COINS: List[str] = []  # Will be populated dynamically from exchange APIs
+SUPPORTED_COINS: list[str] = []  # Will be populated dynamically from exchange APIs
 
 # Removed: All other coins to minimize API calls
 
 # ðŸ”§ STAGGERED BATCHING CONFIGURATION
 # Group coins by priority and API capacity
-FAST_COINS: List[str] = []  # Will be populated dynamically from exchange APIs
+FAST_COINS: list[str] = []  # Will be populated dynamically from exchange APIs
 
 # API rotation schedule
-API_SCHEDULE: Dict[str, Dict[str, Any]] = {
+API_SCHEDULE: dict[str, dict[str, Any]] = {
     "binance": {"coins": FAST_COINS, "delay": 0},
     "coinbase": {"coins": FAST_COINS, "delay": 0},
 }
@@ -51,9 +51,9 @@ def throttle(provider: str) -> None:
 
 
 # ðŸ”§ STAGGERED BATCH FETCH
-def fetch_staggered_batch() -> Dict[str, Dict[str, Any]]:
+def fetch_staggered_batch() -> dict[str, dict[str, Any]]:
     """Fetch data using staggered batching to respect rate limits."""
-    results: Dict[str, Dict[str, Any]] = {}
+    results: dict[str, dict[str, Any]] = {}
 
     print("ðŸš€ Starting staggered batch fetch for 3 major coins...")
 
@@ -78,7 +78,7 @@ def fetch_staggered_batch() -> Dict[str, Dict[str, Any]]:
     return results
 
 
-def fetch_from_binance(symbol: str) -> Optional[Dict[str, Any]]:
+def fetch_from_binance(symbol: str) -> dict[str, Any] | None:
     try:
         url = f"https://api.binance.us/api/v3/ticker/price?symbol={symbol.upper()}USDT"
         response = requests.get(url, timeout=5)
@@ -90,7 +90,7 @@ def fetch_from_binance(symbol: str) -> Optional[Dict[str, Any]]:
         raise Exception(f"Binance error: {e}")
 
 
-def fetch_from_coinbase(symbol: str) -> Optional[Dict[str, Any]]:
+def fetch_from_coinbase(symbol: str) -> dict[str, Any] | None:
     try:
         url = f"https://api.coinbase.us/v2/prices/{symbol.upper()}-USD/spot"
         response = requests.get(url, timeout=5)
@@ -106,14 +106,14 @@ def fetch_from_coinbase(symbol: str) -> Optional[Dict[str, Any]]:
 
 
 # âœ… STEP 3: Batch fetch function for all supported coins - UPDATED
-def fetch_all_supported_coins() -> Dict[str, Dict[str, Any]]:
+def fetch_all_supported_coins() -> dict[str, dict[str, Any]]:
     """Fetch data for all supported coins using staggered batching."""
     return fetch_staggered_batch()
 
 
-def test_coin_support(symbol: str) -> Dict[str, bool]:
+def test_coin_support(symbol: str) -> dict[str, bool]:
     """Test which exchanges support a given coin."""
-    results: Dict[str, bool] = {}
+    results: dict[str, bool] = {}
     apis = ["binance", "coinbase"]
 
     for api in apis:
@@ -131,9 +131,9 @@ def test_coin_support(symbol: str) -> Dict[str, bool]:
     return results
 
 
-def get_coin_support_summary() -> Dict[str, Dict[str, bool]]:
+def get_coin_support_summary() -> dict[str, dict[str, bool]]:
     """Get support summary for all coins in the list."""
-    summary: Dict[str, Dict[str, bool]] = {}
+    summary: dict[str, dict[str, bool]] = {}
     for coin in SUPPORTED_COINS:
         summary[coin] = test_coin_support(coin)
         time.sleep(2)  # Be nice to APIs

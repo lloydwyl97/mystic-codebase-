@@ -5,8 +5,9 @@ Provides a centralized cache for market data, cosmic data, and other shared info
 
 import json
 import logging
-from typing import Any, Dict, Optional
 from datetime import datetime
+from typing import Any
+
 import redis
 
 logger = logging.getLogger(__name__)
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 class SharedCache:
     """Centralized cache for shared data across the platform"""
 
-    def __init__(self, redis_client: Optional[redis.Redis] = None):
+    def __init__(self, redis_client: redis.Redis | None = None):
         self.redis_client = redis_client
         self.memory_cache = {
             "market_data": {},
@@ -63,7 +64,7 @@ class SharedCache:
                 logger.warning(f"âŒ Redis connection failed for SharedCache: {e}")
                 self.redis_client = None
 
-    def update_market_data(self, data: Dict[str, Any]) -> None:
+    def update_market_data(self, data: dict[str, Any]) -> None:
         """Update market data in cache"""
         try:
             self.memory_cache["market_data"] = data
@@ -146,7 +147,7 @@ class SharedCache:
         except Exception as e:
             logger.error(f"âŒ Error updating volume for {symbol}: {e}")
 
-    def get_coin_cache(self, symbol: str) -> Dict[str, Any]:
+    def get_coin_cache(self, symbol: str) -> dict[str, Any]:
         """Get coin cache data for a specific symbol"""
         try:
             coin_data = {}
@@ -168,7 +169,7 @@ class SharedCache:
             logger.error(f"âŒ Error getting coin cache for {symbol}: {e}")
             return {}
 
-    def update_indicators(self, symbol: str, rsi: float, macd: Dict[str, float], volatility: float) -> None:
+    def update_indicators(self, symbol: str, rsi: float, macd: dict[str, float], volatility: float) -> None:
         """Update indicators for a specific symbol"""
         try:
             if "indicator_data" not in self.memory_cache:
@@ -193,7 +194,7 @@ class SharedCache:
         except Exception as e:
             logger.error(f"âŒ Error updating indicators for {symbol}: {e}")
 
-    def get_market_data(self) -> Dict[str, Any]:
+    def get_market_data(self) -> dict[str, Any]:
         """Get market data from cache"""
         try:
             # Try Redis first
@@ -208,7 +209,7 @@ class SharedCache:
             logger.error(f"âŒ Error getting market data from SharedCache: {e}")
             return {}
 
-    def update_cosmic_data(self, data: Dict[str, Any]) -> None:
+    def update_cosmic_data(self, data: dict[str, Any]) -> None:
         """Update cosmic data in cache"""
         try:
             self.memory_cache["cosmic_data"] = data
@@ -221,7 +222,7 @@ class SharedCache:
         except Exception as e:
             logger.error(f"âŒ Error updating cosmic data in SharedCache: {e}")
 
-    def get_cosmic_data(self) -> Dict[str, Any]:
+    def get_cosmic_data(self) -> dict[str, Any]:
         """Get cosmic data from cache"""
         try:
             # Try Redis first
@@ -236,7 +237,7 @@ class SharedCache:
             logger.error(f"âŒ Error getting cosmic data from SharedCache: {e}")
             return {}
 
-    def update_indicator_data(self, symbol: str, data: Dict[str, Any]) -> None:
+    def update_indicator_data(self, symbol: str, data: dict[str, Any]) -> None:
         """Update indicator data for a specific symbol"""
         try:
             if "indicator_data" not in self.memory_cache:
@@ -254,7 +255,7 @@ class SharedCache:
         except Exception as e:
             logger.error(f"âŒ Error updating indicator data for {symbol} in SharedCache: {e}")
 
-    def get_indicator_data(self, symbol: str) -> Dict[str, Any]:
+    def get_indicator_data(self, symbol: str) -> dict[str, Any]:
         """Get indicator data for a specific symbol"""
         try:
             # Try Redis first
@@ -269,7 +270,7 @@ class SharedCache:
             logger.error(f"âŒ Error getting indicator data for {symbol} from SharedCache: {e}")
             return {}
 
-    def update_volume_data(self, symbol: str, data: Dict[str, Any]) -> None:
+    def update_volume_data(self, symbol: str, data: dict[str, Any]) -> None:
         """Update volume data for a specific symbol"""
         try:
             if "volume_data" not in self.memory_cache:
@@ -287,7 +288,7 @@ class SharedCache:
         except Exception as e:
             logger.error(f"âŒ Error updating volume data for {symbol} in SharedCache: {e}")
 
-    def get_volume_data(self, symbol: str) -> Dict[str, Any]:
+    def get_volume_data(self, symbol: str) -> dict[str, Any]:
         """Get volume data for a specific symbol"""
         try:
             # Try Redis first
@@ -302,7 +303,7 @@ class SharedCache:
             logger.error(f"âŒ Error getting volume data for {symbol} from SharedCache: {e}")
             return {}
 
-    def get_cache_status(self) -> Dict[str, Any]:
+    def get_cache_status(self) -> dict[str, Any]:
         """Get status of all cache data"""
         try:
             status = {
@@ -330,7 +331,7 @@ class SharedCache:
             logger.error(f"âŒ Error getting cache status: {e}")
             return {"error": str(e)}
 
-    def clear_cache(self, cache_type: Optional[str] = None) -> None:
+    def clear_cache(self, cache_type: str | None = None) -> None:
         """Clear cache data"""
         try:
             if cache_type:
@@ -371,7 +372,7 @@ class CoinCache:
     def __init__(self, shared_cache: SharedCache):
         self.shared_cache = shared_cache
 
-    def update_coin_data(self, symbol: str, data: Dict[str, Any]) -> None:
+    def update_coin_data(self, symbol: str, data: dict[str, Any]) -> None:
         """Update data for a specific coin"""
         try:
             # Update market data
@@ -383,7 +384,7 @@ class CoinCache:
         except Exception as e:
             logger.error(f"âŒ Error updating coin data for {symbol}: {e}")
 
-    def get_coin_data(self, symbol: str) -> Dict[str, Any]:
+    def get_coin_data(self, symbol: str) -> dict[str, Any]:
         """Get data for a specific coin"""
         try:
             market_data = self.shared_cache.get_market_data()
@@ -392,7 +393,7 @@ class CoinCache:
             logger.error(f"âŒ Error getting coin data for {symbol}: {e}")
             return {}
 
-    def get_all_coins(self) -> Dict[str, Any]:
+    def get_all_coins(self) -> dict[str, Any]:
         """Get data for all coins"""
         try:
             return self.shared_cache.get_market_data()

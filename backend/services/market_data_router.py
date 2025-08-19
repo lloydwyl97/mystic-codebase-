@@ -3,26 +3,27 @@
 import asyncio
 import logging
 import time
-from typing import Any, Dict, List, Optional, TypeVar, Awaitable
+from collections.abc import Awaitable
+from typing import Any, TypeVar
 
 T = TypeVar("T")
 
+from backend.exchanges.base_adapter import BaseExchangeAdapter  # type: ignore[import-not-found]
 from backend.exchanges.binanceus_adapter import BinanceUSAdapter  # type: ignore[import-not-found]
 from backend.exchanges.coinbase_adapter import CoinbaseAdapter  # type: ignore[import-not-found]
-from backend.exchanges.kraken_adapter import KrakenAdapter  # type: ignore[import-not-found]
 from backend.exchanges.coingecko_client import CoinGeckoClient  # type: ignore[import-not-found]
-from backend.exchanges.base_adapter import BaseExchangeAdapter  # type: ignore[import-not-found]
-from backend.models.market_types import Ticker, OHLCV  # type: ignore[import-not-found]
-from backend.utils.symbols import EXCHANGE_TOP4, normalize_symbol_to_dash, is_top4  # type: ignore[import-not-found]
+from backend.exchanges.kraken_adapter import KrakenAdapter  # type: ignore[import-not-found]
+from backend.models.market_types import OHLCV, Ticker  # type: ignore[import-not-found]
+from backend.utils.symbols import is_top4, normalize_symbol_to_dash  # type: ignore[import-not-found]
 
 logger = logging.getLogger(__name__)
 
 
 class _InMemoryCache:
     def __init__(self) -> None:
-        self._store: Dict[str, tuple[float, Any]] = {}
+        self._store: dict[str, tuple[float, Any]] = {}
 
-    def get(self, key: str) -> Optional[Any]:
+    def get(self, key: str) -> Any | None:
         item = self._store.get(key)
         if not item:
             return None
@@ -38,7 +39,7 @@ class _InMemoryCache:
 
 class MarketDataRouter:
     def __init__(self) -> None:
-        self.adapters: Dict[str, BaseExchangeAdapter] = {
+        self.adapters: dict[str, BaseExchangeAdapter] = {
             "coinbase": CoinbaseAdapter(),
             "binanceus": BinanceUSAdapter(),
             "kraken": KrakenAdapter(),
@@ -46,12 +47,12 @@ class MarketDataRouter:
         self.coingecko = CoinGeckoClient()
         self.cache = _InMemoryCache()
         self.ttl_short = 3
-        self.rate_limits_per_minute: Dict[str, int] = {
+        self.rate_limits_per_minute: dict[str, int] = {
             "coinbase": 60,
             "binanceus": 120,
             "kraken": 60,
         }
-        self._last_call_ts: Dict[str, float] = {}
+        self._last_call_ts: dict[str, float] = {}
         self._backoff_base = 0.25
         self._backoff_max = 2.0
 
@@ -88,7 +89,7 @@ class MarketDataRouter:
                 await asyncio.sleep(min(delay, self._backoff_max))
                 delay *= 2
 
-    async def get_enabled_adapters(self) -> List[str]:
+    async def get_enabled_adapters(self) -> list[str]:
         return list(self.adapters.keys())
 
     def _cache_key(self, exchange: str, symbol: str, kind: str) -> str:
@@ -114,7 +115,7 @@ class MarketDataRouter:
         self.cache.set(key, result, self.ttl_short)
         return result
 
-    async def get_ohlcv(self, exchange: str, symbol: str, interval: str, limit: int = 200) -> List[OHLCV]:
+    async def get_ohlcv(self, exchange: str, symbol: str, interval: str, limit: int = 200) -> list[OHLCV]:
         if not is_top4(exchange, normalize_symbol_to_dash(symbol)):
             raise ValueError("Symbol not allowed; top-4 per exchange enforced")
         key = self._cache_key(exchange, symbol, f"ohlcv:{interval}:{limit}")
@@ -138,12 +139,12 @@ class MarketDataRouter:
         self.cache.set(key, result, self.ttl_short)
         return result
 
-    async def fanout_tickers(self, symbol: str) -> Dict[str, Ticker]:
+    async def fanout_tickers(self, symbol: str) -> dict[str, Ticker]:
         tasks = {}
         for name in await self.get_enabled_adapters():
             if is_top4(name, normalize_symbol_to_dash(symbol)):
                 tasks[name] = asyncio.create_task(self.get_ticker(name, symbol))
-        results: Dict[str, Ticker] = {}
+        results: dict[str, Ticker] = {}
         for name, task in list(tasks.items()):  # type: ignore[assignment]
             try:
                 results[name] = await task

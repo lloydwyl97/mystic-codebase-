@@ -6,11 +6,10 @@ Maps Streamlit UI actions to real services, without changing the UI.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, cast
+from typing import Any, cast
 
 import httpx
 from fastapi import APIRouter, HTTPException
-
 
 router = APIRouter(tags=["compat-trading"])
 
@@ -24,7 +23,7 @@ def _url(path: str) -> str:
 
 
 @router.post("/trading/start")
-async def trading_start() -> Dict[str, Any]:
+async def trading_start() -> dict[str, Any]:
     try:
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(_url("/autobuy/config"), json={"enabled": True})
@@ -34,7 +33,7 @@ async def trading_start() -> Dict[str, Any]:
 
 
 @router.post("/trading/stop")
-async def trading_stop() -> Dict[str, Any]:
+async def trading_stop() -> dict[str, Any]:
     try:
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(_url("/autobuy/config"), json={"enabled": False})
@@ -44,23 +43,23 @@ async def trading_stop() -> Dict[str, Any]:
 
 
 @router.post("/trading/cancel/{symbol}")
-async def trading_cancel_symbol(symbol: str) -> Dict[str, Any]:
+async def trading_cancel_symbol(symbol: str) -> dict[str, Any]:
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             # Use canonical /api/live alias added by consolidated router
             orders_r = await client.get(_url("/api/live/trading/orders"))
             data_any: Any = orders_r.json() if orders_r.status_code == 200 else {}
-            data = cast(Dict[str, Any], data_any if isinstance(data_any, dict) else {})
-            orders: List[Dict[str, Any]] = []
-            orders_by_exchange: Dict[str, Any] = cast(Dict[str, Any], data.get("orders") or {})
+            data = cast(dict[str, Any], data_any if isinstance(data_any, dict) else {})
+            orders: list[dict[str, Any]] = []
+            orders_by_exchange: dict[str, Any] = cast(dict[str, Any], data.get("orders") or {})
             for exch, rows in orders_by_exchange.items():
                 if isinstance(rows, list):
                     orders.extend([
-                        {"exchange": str(exch), **cast(Dict[str, Any], row)}
-                        for row in cast(List[Any], rows)
+                        {"exchange": str(exch), **cast(dict[str, Any], row)}
+                        for row in cast(list[Any], rows)
                         if isinstance(row, dict)
                     ])
-            canceled: List[Dict[str, Any]] = []
+            canceled: list[dict[str, Any]] = []
             for o in orders:
                 if str(o.get("symbol", "")).upper() != symbol.upper():
                     continue
@@ -78,22 +77,22 @@ async def trading_cancel_symbol(symbol: str) -> Dict[str, Any]:
 
 
 @router.post("/trading/cancel-all")
-async def trading_cancel_all() -> Dict[str, Any]:
+async def trading_cancel_all() -> dict[str, Any]:
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             orders_r = await client.get(_url("/api/live/trading/orders"))
             data_any: Any = orders_r.json() if orders_r.status_code == 200 else {}
-            data = cast(Dict[str, Any], data_any if isinstance(data_any, dict) else {})
-            orders: List[Dict[str, Any]] = []
-            orders_by_exchange: Dict[str, Any] = cast(Dict[str, Any], data.get("orders") or {})
+            data = cast(dict[str, Any], data_any if isinstance(data_any, dict) else {})
+            orders: list[dict[str, Any]] = []
+            orders_by_exchange: dict[str, Any] = cast(dict[str, Any], data.get("orders") or {})
             for exch, rows in orders_by_exchange.items():
                 if isinstance(rows, list):
                     orders.extend([
-                        {"exchange": str(exch), **cast(Dict[str, Any], row)}
-                        for row in cast(List[Any], rows)
+                        {"exchange": str(exch), **cast(dict[str, Any], row)}
+                        for row in cast(list[Any], rows)
                         if isinstance(row, dict)
                     ])
-            canceled: List[Dict[str, Any]] = []
+            canceled: list[dict[str, Any]] = []
             for o in orders:
                 order_id = cast(str | None, o.get("id"))
                 symbol = cast(str, o.get("symbol") or "")

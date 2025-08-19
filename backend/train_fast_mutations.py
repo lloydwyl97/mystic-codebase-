@@ -5,14 +5,13 @@ Continuously trains and evolves trading strategies using backtesting.
 Built for Windows 11 Home + PowerShell + Docker.
 """
 
+import json
+import logging
 import os
 import random
 import time
-import logging
-import json
-from typing import Dict, Any, List
-from datetime import datetime
 from datetime import datetime, timezone
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -25,7 +24,7 @@ TRAIN_INTERVAL = 1800
 MAX_STRATEGIES = 50
 
 
-def list_strategies() -> List[str]:
+def list_strategies() -> list[str]:
     """List available strategy files."""
     try:
         if not os.path.exists(STRATEGY_DIR):
@@ -39,11 +38,12 @@ def list_strategies() -> List[str]:
         return []
 
 
-def simulate_backtest(strategy_file: str) -> Dict[str, Any]:
+def simulate_backtest(strategy_file: str) -> dict[str, Any]:
     """Run real backtesting of a strategy using live historical data from Binance."""
     try:
-        import pandas as pd
         import importlib.util
+
+        import pandas as pd
         import requests
 
         # Fetch historical price data
@@ -67,7 +67,7 @@ def simulate_backtest(strategy_file: str) -> Dict[str, Any]:
         buy_signals = trades[trades == 1].index
         sell_signals = trades[trades == -1].index
         profit_loss = 0
-        for buy, sell in zip(buy_signals, sell_signals):
+        for buy, sell in zip(buy_signals, sell_signals, strict=False):
             profit_loss += df["close"][sell] - df["close"][buy]
         winrate = len(buy_signals) / max(len(trades), 1)
         result = {
@@ -91,7 +91,7 @@ def simulate_backtest(strategy_file: str) -> Dict[str, Any]:
         }
 
 
-def save_backtest_result(result: Dict[str, Any]) -> None:
+def save_backtest_result(result: dict[str, Any]) -> None:
     """Save backtest result to file."""
     try:
         results_dir = "/data/backtest_results"
@@ -133,7 +133,7 @@ def initialize_live_strategy_training() -> None:
         logger.error(f"âŒ Error initializing live strategy training: {e}")
 
 
-def run_training_cycle() -> Dict[str, Any]:
+def run_training_cycle() -> dict[str, Any]:
     """Run a complete training cycle."""
     try:
         strategies = list_strategies()

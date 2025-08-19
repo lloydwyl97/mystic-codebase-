@@ -6,7 +6,7 @@ All endpoints return live data - no stubs or placeholders
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, Protocol, runtime_checkable, List
+from typing import Any, Protocol, runtime_checkable
 
 from fastapi import APIRouter, HTTPException
 
@@ -75,13 +75,13 @@ router = APIRouter()
 
 @runtime_checkable
 class PortfolioServiceProtocol(Protocol):
-    async def get_portfolio_overview(self) -> Dict[str, Any]:
+    async def get_portfolio_overview(self) -> dict[str, Any]:
         ...
 
-    async def get_portfolio_summary(self) -> Dict[str, Any]:
+    async def get_portfolio_summary(self) -> dict[str, Any]:
         ...
 
-    async def get_positions(self) -> Dict[str, Any]:
+    async def get_positions(self) -> dict[str, Any]:
         ...
 
 
@@ -97,7 +97,7 @@ except Exception as e:
 
 
 @router.get("/portfolio/overview")
-async def get_portfolio_overview() -> Dict[str, Any]:
+async def get_portfolio_overview() -> dict[str, Any]:
     """Get comprehensive portfolio overview with live data"""
     try:
         # Get real portfolio data
@@ -144,7 +144,7 @@ async def get_portfolio_overview() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/live")
-async def get_portfolio_live() -> Dict[str, Any]:
+async def get_portfolio_live() -> dict[str, Any]:
     """Get live portfolio data and real-time updates"""
     try:
         # Get real-time portfolio data
@@ -191,7 +191,7 @@ async def get_portfolio_live() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/positions")
-async def get_portfolio_positions() -> Dict[str, Any]:
+async def get_portfolio_positions() -> dict[str, Any]:
     """Get current portfolio positions and holdings"""
     try:
         # Get real portfolio positions
@@ -228,7 +228,7 @@ async def get_portfolio_positions() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/history")
-async def get_portfolio_history(days: int = 30) -> Dict[str, Any]:
+async def get_portfolio_history(days: int = 30) -> dict[str, Any]:
     """Get portfolio trading history"""
     try:
         # Get real trading history
@@ -265,7 +265,7 @@ async def get_portfolio_history(days: int = 30) -> Dict[str, Any]:
 
 
 @router.get("/portfolio/performance")
-async def get_portfolio_performance() -> Dict[str, Any]:
+async def get_portfolio_performance() -> dict[str, Any]:
     """Get detailed portfolio performance metrics"""
     try:
         # Get real performance data
@@ -300,7 +300,7 @@ async def get_portfolio_performance() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/allocations")
-async def get_portfolio_allocations() -> Dict[str, Any]:
+async def get_portfolio_allocations() -> dict[str, Any]:
     """Get portfolio asset allocations and distribution"""
     try:
         # Get real allocation data

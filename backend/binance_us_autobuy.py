@@ -11,7 +11,7 @@ import logging
 import os
 import time
 from datetime import datetime, timezone
-from typing import Dict, List, Any, Optional
+from typing import Any
 from urllib.parse import urlencode
 
 import aiohttp
@@ -56,11 +56,11 @@ DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 class BinanceUSAutobuy:
     def __init__(self):
-        self.session: Optional[aiohttp.ClientSession] = None
-        self.active_trades: Dict[str, Dict[str, Any]] = {}
-        self.trade_history: List[Dict[str, Any]] = []
-        self.signal_history: Dict[str, List[Dict[str, Any]]] = {}
-        self.last_signal_time: Dict[str, float] = {}
+        self.session: aiohttp.ClientSession | None = None
+        self.active_trades: dict[str, dict[str, Any]] = {}
+        self.trade_history: list[dict[str, Any]] = []
+        self.signal_history: dict[str, list[dict[str, Any]]] = {}
+        self.last_signal_time: dict[str, float] = {}
         self.is_running = False
 
         # Statistics
@@ -81,7 +81,7 @@ class BinanceUSAutobuy:
 
         # Test connection
         try:
-            account_info: Optional[Dict[str, Any]] = await self.get_account_info()
+            account_info: dict[str, Any] | None = await self.get_account_info()
             if account_info:
                 balance = account_info.get("totalWalletBalance", "N/A")
                 logger.info("âœ… Binance US connection successful")
@@ -119,7 +119,7 @@ class BinanceUSAutobuy:
         except Exception as e:
             logger.error(f"âŒ Failed to send notification: {e}")
 
-    async def get_account_info(self) -> Optional[Dict[str, Any]]:
+    async def get_account_info(self) -> dict[str, Any] | None:
         """Get Binance US account information"""
         if self.session is None:
             raise RuntimeError("Session is not initialized. Call initialize() first.")
@@ -146,7 +146,7 @@ class BinanceUSAutobuy:
             logger.error(f"âŒ Error getting account info: {e}")
             return None
 
-    async def get_ticker_24hr(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def get_ticker_24hr(self, symbol: str) -> dict[str, Any] | None:
         """Get 24hr ticker for a symbol"""
         if self.session is None:
             raise RuntimeError("Session is not initialized. Call initialize() first.")
@@ -165,7 +165,7 @@ class BinanceUSAutobuy:
             logger.error(f"âŒ Error getting ticker for {symbol}: {e}")
             return None
 
-    async def get_current_price(self, symbol: str) -> Optional[float]:
+    async def get_current_price(self, symbol: str) -> float | None:
         """Get current price for a symbol"""
         if self.session is None:
             raise RuntimeError("Session is not initialized. Call initialize() first.")
@@ -187,7 +187,7 @@ class BinanceUSAutobuy:
 
     async def place_market_buy_order(
         self, symbol: str, quote_amount: float
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Place a market buy order"""
         if not TRADING_ENABLED:
             logger.info(f"ðŸ”„ Trading disabled - simulating buy order for {symbol}")
@@ -235,7 +235,7 @@ class BinanceUSAutobuy:
             logger.error(f"âŒ Error placing buy order for {symbol}: {e}")
             return None
 
-    def analyze_buy_signal(self, symbol: str, ticker_data: Dict[str, Any]) -> Dict[str, Any]:
+    def analyze_buy_signal(self, symbol: str, ticker_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze if we should buy based on ticker data"""
         if self.session is None:
             raise RuntimeError("Session is not initialized. Call initialize() first.")
@@ -253,7 +253,7 @@ class BinanceUSAutobuy:
             price_position = (current_price - low_24h) / price_range if price_range > 0 else 0.5
 
             # Signal conditions
-            signals: List[str] = []
+            signals: list[str] = []
             confidence = 0
 
             # 1. Price momentum (positive change)
@@ -312,7 +312,7 @@ class BinanceUSAutobuy:
                 "error": str(e),
             }
 
-    async def execute_buy_signal(self, symbol: str, signal_data: Dict[str, Any]):
+    async def execute_buy_signal(self, symbol: str, signal_data: dict[str, Any]):
         """Execute a buy signal"""
         if self.session is None:
             raise RuntimeError("Session is not initialized. Call initialize() first.")
@@ -340,7 +340,7 @@ class BinanceUSAutobuy:
             logger.info(f"   Confidence: {signal_data['confidence']}%")
             logger.info(f"   Signals: {', '.join(signal_data['signals'])}")
 
-            order_result: Optional[Dict[str, Any]] = await self.place_market_buy_order(
+            order_result: dict[str, Any] | None = await self.place_market_buy_order(
                 symbol, USD_AMOUNT_PER_TRADE
             )
 
@@ -466,7 +466,7 @@ class BinanceUSAutobuy:
             self.is_running = False
             await self.cleanup()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get current system status"""
         return {
             "is_running": self.is_running,

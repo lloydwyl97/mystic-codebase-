@@ -5,11 +5,11 @@ fractal time, and other esoteric trading features.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
-
 from mystic_config import mystic_config
+
 from backend.services.mystic_integration_service import mystic_integration_service
 from backend.services.mystic_signal_engine import mystic_signal_engine
 
@@ -19,7 +19,7 @@ router = APIRouter(prefix="/mystic", tags=["mystic"])
 
 
 @router.get("/config")
-async def get_mystic_config() -> Dict[str, Any]:
+async def get_mystic_config() -> dict[str, Any]:
     """Get mystic configuration summary"""
     try:
         return {
@@ -33,7 +33,7 @@ async def get_mystic_config() -> Dict[str, Any]:
 
 
 @router.get("/schumann")
-async def get_schumann_resonance() -> Dict[str, Any]:
+async def get_schumann_resonance() -> dict[str, Any]:
     """Get current Schumann resonance data"""
     try:
         schumann_data = await mystic_integration_service.get_schumann_resonance()
@@ -60,7 +60,7 @@ async def get_schumann_resonance() -> Dict[str, Any]:
 
 
 @router.get("/fractal-time")
-async def get_fractal_time_data() -> Dict[str, Any]:
+async def get_fractal_time_data() -> dict[str, Any]:
     """Get current fractal time data"""
     try:
         fractal_data = await mystic_integration_service.get_fractal_time_data()
@@ -81,7 +81,7 @@ async def get_fractal_time_data() -> Dict[str, Any]:
 
 
 @router.get("/planetary-alignment")
-async def get_planetary_alignment() -> Dict[str, Any]:
+async def get_planetary_alignment() -> dict[str, Any]:
     """Get current planetary alignment data"""
     try:
         planetary_data = await mystic_integration_service.get_planetary_alignment()
@@ -105,7 +105,7 @@ async def get_planetary_alignment() -> Dict[str, Any]:
 
 
 @router.get("/signal-strength")
-async def get_mystic_signal_strength() -> Dict[str, Any]:
+async def get_mystic_signal_strength() -> dict[str, Any]:
     """Get overall mystic signal strength"""
     try:
         signal_data = await mystic_integration_service.get_mystic_signal_strength()
@@ -124,7 +124,7 @@ async def get_mystic_signal_strength() -> Dict[str, Any]:
 
 
 @router.get("/moon-phase")
-async def get_moon_phase() -> Dict[str, Any]:
+async def get_moon_phase() -> dict[str, Any]:
     """Get current moon phase information"""
     try:
         from datetime import datetime
@@ -173,7 +173,7 @@ async def get_moon_phase() -> Dict[str, Any]:
 
 
 @router.get("/all-data")
-async def get_all_mystic_data() -> Dict[str, Any]:
+async def get_all_mystic_data() -> dict[str, Any]:
     """Get all mystic data in one request"""
     try:
         schumann = await mystic_integration_service.get_schumann_resonance()
@@ -214,7 +214,7 @@ async def get_all_mystic_data() -> Dict[str, Any]:
 
 
 @router.get("/health")
-async def mystic_health_check() -> Dict[str, Any]:
+async def mystic_health_check() -> dict[str, Any]:
     """Health check for mystic services"""
     try:
         # Quick test of core functionality
@@ -249,7 +249,7 @@ async def mystic_health_check() -> Dict[str, Any]:
 @router.get("/signal-engine/comprehensive")
 async def get_comprehensive_mystic_signal(
     symbol: str = "BTCUSDT",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get comprehensive mystic trading signal with Tesla 369, Faerie Star, and Lagos integration"""
     try:
         mystic_signal = await mystic_signal_engine.generate_comprehensive_signal(symbol)
@@ -276,7 +276,7 @@ async def get_comprehensive_mystic_signal(
 
 
 @router.get("/signal-engine/tesla")
-async def get_tesla_signal() -> Dict[str, Any]:
+async def get_tesla_signal() -> dict[str, Any]:
     """Get Tesla 369 frequency signal"""
     try:
         from datetime import datetime
@@ -301,7 +301,7 @@ async def get_tesla_signal() -> Dict[str, Any]:
 
 
 @router.get("/signal-engine/faerie")
-async def get_faerie_signal() -> Dict[str, Any]:
+async def get_faerie_signal() -> dict[str, Any]:
     """Get Faerie Star alignment signal"""
     try:
         from datetime import datetime
@@ -328,7 +328,7 @@ async def get_faerie_signal() -> Dict[str, Any]:
 
 
 @router.get("/signal-engine/lagos")
-async def get_lagos_signal() -> Dict[str, Any]:
+async def get_lagos_signal() -> dict[str, Any]:
     """Get Lagos alignment signal"""
     try:
         from datetime import datetime
@@ -358,7 +358,7 @@ async def get_lagos_signal() -> Dict[str, Any]:
 
 
 @router.get("/signal-engine/all-engines")
-async def get_all_engine_signals() -> Dict[str, Any]:
+async def get_all_engine_signals() -> dict[str, Any]:
     """Get signals from all mystic engines (Tesla, Faerie, Lagos)"""
     try:
         from datetime import datetime
@@ -405,7 +405,7 @@ async def get_all_engine_signals() -> Dict[str, Any]:
 @router.get("/signal-engine/trading-recommendation")
 async def get_trading_recommendation(
     symbol: str = "BTCUSDT",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get trading recommendation based on mystic signals"""
     try:
         mystic_signal = await mystic_signal_engine.generate_comprehensive_signal(symbol)

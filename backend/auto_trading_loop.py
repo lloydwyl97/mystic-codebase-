@@ -9,11 +9,13 @@ import json
 import logging
 import os
 import time
-from typing import Any, Dict, List
+from typing import Any
 
 from ai_strategy_execution import execute_ai_strategy_signal
 from signal_manager import SignalManager
+
 from backend.utils.alerts import broadcast_alert
+
 from .services.websocket_manager import websocket_manager
 
 logger = logging.getLogger("auto_trading_loop")
@@ -135,7 +137,7 @@ class AutoTradingLoop:
         except Exception as e:
             logger.error(f"Error processing signals: {e}")
 
-    async def _get_all_signals(self) -> List[Dict[str, Any]]:
+    async def _get_all_signals(self) -> list[dict[str, Any]]:
         """Get all available signals from Redis"""
         try:
             # Get signal history for all coins
@@ -158,7 +160,7 @@ class AutoTradingLoop:
             logger.error(f"Error getting signals: {e}")
             return []
 
-    async def _process_single_signal(self, signal: Dict[str, Any]):
+    async def _process_single_signal(self, signal: dict[str, Any]):
         """Process a single signal and execute trade if conditions are met"""
         try:
             symbol = signal.get("symbol", "").lower()
@@ -196,7 +198,7 @@ class AutoTradingLoop:
         except Exception as e:
             logger.error(f"Error processing signal for {signal.get('symbol', 'unknown')}: {e}")
 
-    def _is_strong_signal(self, signal: Dict[str, Any]) -> bool:
+    def _is_strong_signal(self, signal: dict[str, Any]) -> bool:
         """Check if signal is strong enough to execute trade"""
         try:
             # Check for breakout signals
@@ -223,7 +225,7 @@ class AutoTradingLoop:
             logger.error(f"Error checking signal strength: {e}")
             return False
 
-    async def _execute_trade(self, symbol: str, exchange: str, signal: Dict[str, Any]) -> bool:
+    async def _execute_trade(self, symbol: str, exchange: str, signal: dict[str, Any]) -> bool:
         """Execute a trade on the specified exchange"""
         try:
             if not AUTO_TRADING_ENABLED:
@@ -278,7 +280,7 @@ class AutoTradingLoop:
             await broadcast_alert(f"âŒ Trade execution error for {symbol}: {str(e)}")
             return False
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get trading statistics"""
         return {
             "is_running": self.is_running,

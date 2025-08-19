@@ -9,16 +9,15 @@ Provides secure logging with:
 - Compliance logging
 """
 
+import json
 import logging
 import logging.handlers
 import os
-import time
-import json
-from typing import Any, Dict, Optional
-from collections import defaultdict, deque
-import threading
 import re
-
+import threading
+import time
+from collections import defaultdict, deque
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +96,7 @@ class LogSanitizer:
 
         return sanitized
 
-    def sanitize_dict(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def sanitize_dict(self, data: dict[str, Any]) -> dict[str, Any]:
         """Sanitize dictionary to remove sensitive information"""
         if not isinstance(data, dict):
             return data
@@ -127,7 +126,7 @@ class SecurityLogFilter(logging.Filter):
     def __init__(self, name: str = ""):
         super().__init__(name)
         self.security_events: deque = deque(maxlen=1000)
-        self.suspicious_patterns: Dict[str, int] = defaultdict(int)
+        self.suspicious_patterns: dict[str, int] = defaultdict(int)
         self.lock = threading.Lock()
 
     def filter(self, record: logging.LogRecord) -> bool:
@@ -176,7 +175,7 @@ class SecurityLogFilter(logging.Filter):
             pattern = record.getMessage()[:50]  # First 50 chars as pattern
             self.suspicious_patterns[pattern] += 1
 
-    def get_security_stats(self) -> Dict[str, Any]:
+    def get_security_stats(self) -> dict[str, Any]:
         """Get security logging statistics"""
         with self.lock:
             return {
@@ -209,7 +208,7 @@ class AuditLogger:
         self.audit_logger.setLevel(logging.INFO)
 
     def log_access(self, user_id: str, action: str, resource: str,
-                  success: bool, client_ip: Optional[str] = None):
+                  success: bool, client_ip: str | None = None):
         """Log access attempt"""
         event = {
             'timestamp': time.time(),
@@ -233,7 +232,7 @@ class AuditLogger:
         self.audit_logger.info(log_message)
 
     def log_authentication(self, user_id: str, method: str, success: bool,
-                         client_ip: Optional[str] = None):
+                         client_ip: str | None = None):
         """Log authentication attempt"""
         event = {
             'timestamp': time.time(),
@@ -256,7 +255,7 @@ class AuditLogger:
         self.audit_logger.info(log_message)
 
     def log_data_access(self, user_id: str, data_type: str, operation: str,
-                       success: bool, record_count: Optional[int] = None):
+                       success: bool, record_count: int | None = None):
         """Log data access attempt"""
         event = {
             'timestamp': time.time(),
@@ -280,7 +279,7 @@ class AuditLogger:
         self.audit_logger.info(log_message)
 
     def log_security_event(self, event_type: str, severity: str, description: str,
-                          user_id: Optional[str] = None, client_ip: Optional[str] = None):
+                          user_id: str | None = None, client_ip: str | None = None):
         """Log security event"""
         event = {
             'timestamp': time.time(),
@@ -304,7 +303,7 @@ class AuditLogger:
             log_message += f" - IP: {client_ip}"
         self.audit_logger.warning(log_message)
 
-    def _log_audit_event(self, event: Dict[str, Any]):
+    def _log_audit_event(self, event: dict[str, Any]):
         """Internal method to log audit event"""
         with self.lock:
             self.audit_events.append(event)
@@ -314,7 +313,7 @@ class AuditLogger:
         log_message = f"AUDIT: {event_type} - {json.dumps(event)}"
         self.audit_logger.info(log_message)
 
-    def get_audit_stats(self) -> Dict[str, Any]:
+    def get_audit_stats(self) -> dict[str, Any]:
         """Get audit logging statistics"""
         with self.lock:
             return {
@@ -388,7 +387,7 @@ class SecureLogger:
 
         logger.warning(log_message)
 
-    def log_error(self, message: str, error: Optional[Exception] = None, **kwargs):
+    def log_error(self, message: str, error: Exception | None = None, **kwargs):
         """Log error message securely"""
         sanitized_message = self.sanitizer.sanitize_message(message)
         sanitized_kwargs = self.sanitizer.sanitize_dict(kwargs)
@@ -424,7 +423,7 @@ class SecureLogger:
         )
 
     def log_access_attempt(self, user_id: str, action: str, resource: str,
-                          success: bool, client_ip: Optional[str] = None):
+                          success: bool, client_ip: str | None = None):
         """Log access attempt"""
         self.audit_logger.log_access(user_id, action, resource, success, client_ip)
 
@@ -437,7 +436,7 @@ class SecureLogger:
         logger.info(log_message)
 
     def log_authentication_attempt(self, user_id: str, method: str, success: bool,
-                                 client_ip: Optional[str] = None):
+                                 client_ip: str | None = None):
         """Log authentication attempt"""
         self.audit_logger.log_authentication(user_id, method, success, client_ip)
 
@@ -449,7 +448,7 @@ class SecureLogger:
 
         logger.info(log_message)
 
-    def get_logging_stats(self) -> Dict[str, Any]:
+    def get_logging_stats(self) -> dict[str, Any]:
         """Get comprehensive logging statistics"""
         return {
             'security_stats': self.security_filter.get_security_stats(),

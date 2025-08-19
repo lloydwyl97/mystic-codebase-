@@ -7,7 +7,7 @@ Computes basic portfolio risk metrics from existing portfolio endpoints/services
 from __future__ import annotations
 
 import math
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -22,10 +22,10 @@ router = APIRouter(prefix="/api/portfolio", tags=["portfolio"])
 
 
 @router.get("/risk-metrics")
-async def get_risk_metrics() -> Dict[str, Any]:
+async def get_risk_metrics() -> dict[str, Any]:
     try:
         total_value: float = 0.0
-        positions: List[Dict[str, Any]] = []
+        positions: list[dict[str, Any]] = []
         pnl_24h: float | None = None
 
         # Fetch from service if available
@@ -38,8 +38,8 @@ async def get_risk_metrics() -> Dict[str, Any]:
             # 24h pnl not directly available; leave None unless source is added later
         
         # Derive exposures and weights
-        exposure_pct: Dict[str, float] = {}
-        weights: List[float] = []
+        exposure_pct: dict[str, float] = {}
+        weights: list[float] = []
         largest_position_pct: float = 0.0
         if total_value > 0 and positions:
             for p in positions:

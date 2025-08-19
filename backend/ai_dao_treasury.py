@@ -1,5 +1,5 @@
-﻿from strategy_leaderboard import get_strategy_leaderboard
-from capital_allocator import allocate_capital
+﻿from capital_allocator import allocate_capital
+from strategy_leaderboard import get_strategy_leaderboard
 
 
 def simulate_treasury_growth(treasury_usdt, days, growth_rate_per_day=0.015):

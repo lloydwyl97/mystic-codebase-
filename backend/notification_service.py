@@ -11,7 +11,7 @@ import smtplib
 from datetime import datetime, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any
 
 import aiohttp
 import redis
@@ -20,14 +20,14 @@ logger = logging.getLogger(__name__)
 
 
 class NotificationService:
-    def __init__(self, redis_client: Union[redis.Redis, Any]):
+    def __init__(self, redis_client: redis.Redis | Any):
         self.redis_client = redis_client
-        self.session: Optional[aiohttp.ClientSession] = None
-        self.notifications: List[Dict[str, Any]] = []
+        self.session: aiohttp.ClientSession | None = None
+        self.notifications: list[dict[str, Any]] = []
         self.notification_id_counter = 1
 
         # Notification configuration
-        self.config: Dict[str, Dict[str, Any]] = {
+        self.config: dict[str, dict[str, Any]] = {
             "email": {
                 "enabled": False,
                 "smtp_server": "smtp.gmail.com",
@@ -67,7 +67,7 @@ class NotificationService:
                 else:
                     config_str = str(config_data)
 
-                stored_config: Dict[str, Any] = json.loads(config_str)
+                stored_config: dict[str, Any] = json.loads(config_str)
                 # Merge with defaults, keeping defaults for missing keys
                 for channel, config in stored_config.items():
                     if channel in self.config and isinstance(config, dict):
@@ -89,9 +89,9 @@ class NotificationService:
         title: str,
         message: str,
         level: str = "info",
-        channels: Optional[List[str]] = None,
-        data: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        channels: list[str] | None = None,
+        data: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """
         Send notification through specified channels
 
@@ -105,7 +105,7 @@ class NotificationService:
         if channels is None:
             channels = ["in_app"]  # Default to in-app only
 
-        results: Dict[str, Any] = {
+        results: dict[str, Any] = {
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             "title": title,
             "message": message,
@@ -154,8 +154,8 @@ class NotificationService:
         title: str,
         message: str,
         level: str,
-        data: Optional[Dict[str, Any]],
-    ) -> Dict[str, Any]:
+        data: dict[str, Any] | None,
+    ) -> dict[str, Any]:
         """Send email notification"""
         try:
             config = self.config["email"]
@@ -202,8 +202,8 @@ class NotificationService:
         title: str,
         message: str,
         level: str,
-        data: Optional[Dict[str, Any]],
-    ) -> Dict[str, Any]:
+        data: dict[str, Any] | None,
+    ) -> dict[str, Any]:
         """Send Slack notification"""
         try:
             config = self.config["slack"]
@@ -216,7 +216,7 @@ class NotificationService:
                 "critical": "#8b0000",  # Dark red
             }
 
-            slack_message: Dict[str, Any] = {
+            slack_message: dict[str, Any] = {
                 "channel": config["channel"],
                 "attachments": [
                     {
@@ -275,13 +275,13 @@ class NotificationService:
         title: str,
         message: str,
         level: str,
-        data: Optional[Dict[str, Any]],
-    ) -> Dict[str, Any]:
+        data: dict[str, Any] | None,
+    ) -> dict[str, Any]:
         """Send webhook notification"""
         try:
             config = self.config["webhook"]
 
-            webhook_data: Dict[str, Any] = {
+            webhook_data: dict[str, Any] = {
                 "title": title,
                 "message": message,
                 "level": level,
@@ -316,8 +316,8 @@ class NotificationService:
         title: str,
         message: str,
         level: str,
-        data: Optional[Dict[str, Any]],
-    ) -> Dict[str, Any]:
+        data: dict[str, Any] | None,
+    ) -> dict[str, Any]:
         """Store in-app notification"""
         try:
             notification = {
@@ -346,18 +346,18 @@ class NotificationService:
             logger.error(f"In-app notification failed: {str(e)}")
             return {"success": False, "error": str(e)}
 
-    async def get_notifications(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_notifications(self, limit: int = 50) -> list[dict[str, Any]]:
         """Get notifications."""
         try:
             # Redis lrange returns a list of bytes or strings
             lrange_result = self.redis_client.lrange("in_app_notifications", 0, limit - 1)
             # Handle both sync and async Redis clients
             if hasattr(lrange_result, "__await__"):
-                notifications_data = await lrange_result
-            else:
-                notifications_data = cast(List[Any], lrange_result)
+                lrange_result = await lrange_result
+            from utils.redis_helpers import to_str_list
+            notifications_data = to_str_list(lrange_result)
 
-            notifications: List[Dict[str, Any]] = []
+            notifications: list[dict[str, Any]] = []
 
             # Process each notification item
             for data in notifications_data:
@@ -368,7 +368,7 @@ class NotificationService:
                         data_str = data
                     else:
                         data_str = str(data)
-                    notification: Dict[str, Any] = json.loads(data_str)
+                    notification: dict[str, Any] = json.loads(data_str)
                     notifications.append(notification)
                 except (json.JSONDecodeError, ValueError, KeyError) as e:
                     logger.warning(f"Could not parse notification data: {e}")
@@ -380,16 +380,16 @@ class NotificationService:
             logger.error(f"Error getting notifications: {str(e)}")
             return []
 
-    async def mark_read(self, notification_id: str) -> Dict[str, Any]:
+    async def mark_read(self, notification_id: str) -> dict[str, Any]:
         """Mark notification as read."""
         try:
             # Redis lrange returns a list of bytes or strings
             lrange_result = self.redis_client.lrange("in_app_notifications", 0, -1)
             # Handle both sync and async Redis clients
             if hasattr(lrange_result, "__await__"):
-                notifications_data = await lrange_result
-            else:
-                notifications_data = cast(List[Any], lrange_result)
+                lrange_result = await lrange_result
+            from utils.redis_helpers import to_str_list
+            notifications_data = to_str_list(lrange_result)
 
             # Process each notification item
             try:
@@ -402,7 +402,7 @@ class NotificationService:
                             data_str = data
                         else:
                             data_str = str(data)
-                        notification: Dict[str, Any] = json.loads(data_str)
+                        notification: dict[str, Any] = json.loads(data_str)
                         if notification.get("id") == notification_id:
                             notification["read"] = True
                             lset_result = self.redis_client.lset(
@@ -436,16 +436,16 @@ class NotificationService:
             logger.error(f"Error marking notification read: {str(e)}")
             return {"status": "error", "message": str(e)}
 
-    async def clear_all(self) -> Dict[str, Any]:
+    async def clear_all(self) -> dict[str, Any]:
         """Clear all notifications."""
         try:
             # Redis lrange returns a list of bytes or strings
             lrange_result = self.redis_client.lrange("in_app_notifications", 0, -1)
             # Handle both sync and async Redis clients
             if hasattr(lrange_result, "__await__"):
-                notifications_data = await lrange_result
-            else:
-                notifications_data = cast(List[Any], lrange_result)
+                lrange_result = await lrange_result
+            from utils.redis_helpers import to_str_list
+            notifications_data = to_str_list(lrange_result)
 
             cleared_count = 0
             # Process each notification item
@@ -457,7 +457,7 @@ class NotificationService:
                         data_str = data
                     else:
                         data_str = str(data)
-                    notification: Dict[str, Any] = json.loads(data_str)
+                    notification: dict[str, Any] = json.loads(data_str)
                     notification_time = datetime.fromisoformat(
                         notification["timestamp"].replace("Z", "+00:00")
                     ).timestamp()
@@ -492,7 +492,7 @@ class NotificationService:
             logger.error(f"Error clearing notifications: {str(e)}")
             return {"status": "error", "message": str(e)}
 
-    async def create_notification(self, notification_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_notification(self, notification_data: dict[str, Any]) -> dict[str, Any]:
         """Create a new notification."""
         try:
             notification = {
@@ -513,7 +513,7 @@ class NotificationService:
             logger.error(f"Error creating notification: {str(e)}")
             return {}
 
-    async def update_config(self, channel: str, config: Dict[str, Any]) -> bool:
+    async def update_config(self, channel: str, config: dict[str, Any]) -> bool:
         """Update notification configuration"""
         try:
             if channel in self.config:
@@ -534,7 +534,7 @@ notification_service = None
 
 
 def get_notification_service(
-    redis_client: Union[redis.Redis, Any],
+    redis_client: redis.Redis | Any,
 ) -> NotificationService:
     """Get or create notification service instance"""
     global notification_service

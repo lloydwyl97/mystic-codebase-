@@ -4,16 +4,17 @@ Replaces fastapi-limiter which doesn't support Redis 5.x
 """
 
 import time
-from typing import Optional, Callable
-from fastapi import Request, HTTPException
-from fastapi.responses import JSONResponse
+from collections.abc import Callable
+
 import aioredis
+from fastapi import HTTPException, Request
+from fastapi.responses import JSONResponse
 
 
 class RateLimiter:
     def __init__(self, redis_url: str = "redis://localhost:6379"):
         self.redis_url = redis_url
-        self.redis: Optional[aioredis.Redis] = None
+        self.redis: aioredis.Redis | None = None
 
     async def connect(self):
         """Connect to Redis"""
@@ -96,7 +97,7 @@ async def rate_limit_middleware(
     request: Request,
     max_requests: int = 100,
     window_seconds: int = 60,
-    key_func: Optional[Callable[[Request], str]] = None,
+    key_func: Callable[[Request], str] | None = None,
 ):
     """
     Rate limiting middleware for FastAPI
@@ -129,7 +130,7 @@ async def rate_limit_middleware(
 def rate_limit(
     max_requests: int = 100,
     window_seconds: int = 60,
-    key_func: Optional[Callable[[Request], str]] = None,
+    key_func: Callable[[Request], str] | None = None,
 ):
     """
     Decorator for rate limiting endpoints

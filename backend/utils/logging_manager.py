@@ -7,8 +7,8 @@ Provides centralized logging configuration and management.
 import logging
 import logging.handlers
 import os
-from datetime import timezone, datetime
-from typing import Any, Dict, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 from enhanced_logging import StructuredFormatter, log_operation_performance
 
@@ -17,9 +17,9 @@ class LoggingManager:
     """Manages logging configuration and provides logging utilities"""
 
     def __init__(self):
-        self.loggers: Dict[str, logging.Logger] = {}
-        self.formatters: Dict[str, logging.Formatter] = {}
-        self.handlers: Dict[str, logging.Handler] = {}
+        self.loggers: dict[str, logging.Logger] = {}
+        self.formatters: dict[str, logging.Formatter] = {}
+        self.handlers: dict[str, logging.Handler] = {}
         self.log_levels = {
             "DEBUG": logging.DEBUG,
             "INFO": logging.INFO,
@@ -30,13 +30,13 @@ class LoggingManager:
 
     def configure(
         self,
-        redis_client: Optional[Any] = None,
+        redis_client: Any | None = None,
         log_level: str = "INFO",
         log_file: str = "mystic_trading.log",
         enable_redis_logging: bool = True,
         enable_file_logging: bool = True,
         enable_console_logging: bool = True,
-    ) -> Dict[str, logging.Logger]:
+    ) -> dict[str, logging.Logger]:
         """Configure logging system"""
 
         # Create logs directory if it doesn't exist
@@ -117,9 +117,9 @@ class LoggingManager:
         """Create a structured JSON formatter"""
         return StructuredFormatter()
 
-    def _create_loggers(self) -> Dict[str, logging.Logger]:
+    def _create_loggers(self) -> dict[str, logging.Logger]:
         """Create specific loggers for different components"""
-        loggers: Dict[str, logging.Logger] = {}
+        loggers: dict[str, logging.Logger] = {}
 
         # Main application logger
         app_logger = logging.getLogger("mystic.app")
@@ -173,7 +173,7 @@ class LoggingManager:
             self.loggers[name] = logger
             return logger
 
-    def log_event(self, event_type: str, details: Dict[str, Any], level: str = "INFO") -> None:
+    def log_event(self, event_type: str, details: dict[str, Any], level: str = "INFO") -> None:
         """Log a structured event"""
         logger = self.get_logger("app")
         log_level = self.log_levels.get(level.upper(), logging.INFO)
@@ -182,7 +182,7 @@ class LoggingManager:
         record = logger.makeRecord(logger.name, log_level, "", 0, f"Event: {event_type}", (), None)
 
         # Add extra fields as a custom attribute
-        setattr(record, "extra_fields", details)
+        record.extra_fields = details
 
         logger.handle(record)
 
@@ -191,7 +191,7 @@ class LoggingManager:
         operation: str,
         duration_ms: float,
         status: str = "success",
-        details: Optional[Dict[str, Any]] = None,
+        details: dict[str, Any] | None = None,
     ) -> None:
         """Log a performance metric"""
         logger = self.get_logger("performance")
@@ -208,7 +208,7 @@ class LoggingManager:
         )
 
         # Add performance data
-        setattr(record, "duration", duration_ms)
+        record.duration = duration_ms
 
         # Add extra fields
         extra_data = {
@@ -221,7 +221,7 @@ class LoggingManager:
         if details:
             extra_data.update(details)
 
-        setattr(record, "extra_fields", extra_data)
+        record.extra_fields = extra_data
 
         logger.handle(record)
 

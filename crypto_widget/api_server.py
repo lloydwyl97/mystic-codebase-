@@ -1,12 +1,13 @@
 # api_server.py
+import csv
+import json
+import os
+from datetime import datetime, timezone
+from typing import Any
+
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-import json
-import csv
-import os
-from datetime import datetime, timezone
-from typing import Optional, Dict, Any, List
 
 app = FastAPI()
 
@@ -28,14 +29,14 @@ startup_time = datetime.now(timezone.utc)
 @app.get("/prices")
 def get_prices():
     try:
-        with open(SHARED_DATA, "r") as f:
+        with open(SHARED_DATA) as f:
             return json.load(f)
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 
 @app.get("/health")
-def get_health() -> Dict[str, Any]:
+def get_health() -> dict[str, Any]:
     try:
         last_modified = os.path.getmtime(SHARED_DATA)
         return {
@@ -50,7 +51,7 @@ def get_health() -> Dict[str, Any]:
 
 
 @app.get("/coins")
-def get_coins() -> Dict[str, List[str]]:
+def get_coins() -> dict[str, list[str]]:
     return {
         "Binance": ["BTC", "ETH", "SOL", "ADA"],
         "Coinbase": ["BTC", "ETH", "SOL", "ADA"],
@@ -61,9 +62,9 @@ def get_coins() -> Dict[str, List[str]]:
 def get_history(
     symbol: str = Query(..., min_length=3),
     source: str = Query(...),
-    limit: Optional[int] = 50,
+    limit: int | None = 50,
 ):
-    rows: List[Dict[str, Any]] = []
+    rows: list[dict[str, Any]] = []
     try:
         with open(LOG_FILE, newline="") as f:
             reader = csv.DictReader(f)

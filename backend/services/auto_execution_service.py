@@ -3,12 +3,12 @@ Auto Execution Service for Mystic AI Trading Platform
 Handles live trading execution via CCXT library for multiple exchanges.
 """
 
-import os
 import logging
-import uuid
-from typing import Dict, Any
-from datetime import datetime, timezone
+import os
 import sys
+import uuid
+from datetime import datetime, timezone
+from typing import Any
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -86,7 +86,7 @@ class AutoExecutionService:
             except Exception as e:
                 logger.error(f"âŒ Failed to initialize {exchange_id}: {e}")
 
-    def get_balance(self, exchange: str) -> Dict[str, Any]:
+    def get_balance(self, exchange: str) -> dict[str, Any]:
         """Get account balance for specified exchange"""
         try:
             if exchange not in self.exchanges:
@@ -121,7 +121,7 @@ class AutoExecutionService:
             logger.error(f"âŒ Failed to get balance for {exchange}: {e}")
             return {"success": False, "error": str(e)}
 
-    def place_buy_order(self, exchange: str, symbol: str, amount_in_usd: float) -> Dict[str, Any]:
+    def place_buy_order(self, exchange: str, symbol: str, amount_in_usd: float) -> dict[str, Any]:
         """Place a buy order for specified amount in USD"""
         try:
             if exchange not in self.exchanges:
@@ -171,7 +171,7 @@ class AutoExecutionService:
             logger.error(f"âŒ Failed to place buy order for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
-    def place_sell_order(self, exchange: str, symbol: str, amount_in_usd: float) -> Dict[str, Any]:
+    def place_sell_order(self, exchange: str, symbol: str, amount_in_usd: float) -> dict[str, Any]:
         """Place a sell order for specified amount in USD"""
         try:
             if exchange not in self.exchanges:
@@ -221,7 +221,7 @@ class AutoExecutionService:
             logger.error(f"âŒ Failed to place sell order for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
-    def get_order_status(self, exchange: str, order_id: str) -> Dict[str, Any]:
+    def get_order_status(self, exchange: str, order_id: str) -> dict[str, Any]:
         """Get status of an order"""
         try:
             if exchange not in self.exchanges:
@@ -255,7 +255,7 @@ class AutoExecutionService:
             logger.error(f"âŒ Failed to get order status for {order_id}: {e}")
             return {"success": False, "error": str(e)}
 
-    def cancel_order(self, exchange: str, order_id: str) -> Dict[str, Any]:
+    def cancel_order(self, exchange: str, order_id: str) -> dict[str, Any]:
         """Cancel an order"""
         try:
             if exchange not in self.exchanges:
@@ -284,7 +284,7 @@ class AutoExecutionService:
             logger.error(f"âŒ Failed to cancel order {order_id}: {e}")
             return {"success": False, "error": str(e)}
 
-    def get_service_status(self) -> Dict[str, Any]:
+    def get_service_status(self) -> dict[str, Any]:
         """Get current service status and exchange information"""
         try:
             exchange_status = {}

@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-from typing import List, Optional, Dict, Any
+from typing import Any
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 
 class Ticker(BaseModel):
     price: float = Field(..., ge=0)
-    exchange: Optional[str]
-    bid: Optional[float]
-    ask: Optional[float]
-    timestamp: Optional[str]
-    volume_24h: Optional[float]
-    change_24h: Optional[float]
+    exchange: str | None
+    bid: float | None
+    ask: float | None
+    timestamp: str | None
+    volume_24h: float | None
+    change_24h: float | None
 
 
 class Candle(BaseModel):
@@ -21,12 +21,12 @@ class Candle(BaseModel):
     high: float
     low: float
     close: float
-    volume: Optional[float]
+    volume: float | None
 
 
 class OHLCV(BaseModel):
-    data: Optional[Dict[str, List[Any]]] = None
-    candles: Optional[List[Candle]] = None
+    data: dict[str, list[Any]] | None = None
+    candles: list[Candle] | None = None
 
 
 class OrderBookLevel(BaseModel):
@@ -35,38 +35,38 @@ class OrderBookLevel(BaseModel):
 
 
 class OrderBook(BaseModel):
-    bids: List[OrderBookLevel]
-    asks: List[OrderBookLevel]
-    timestamp: Optional[str]
+    bids: list[OrderBookLevel]
+    asks: list[OrderBookLevel]
+    timestamp: str | None
 
 
 class Trade(BaseModel):
-    trade_id: Optional[str]
+    trade_id: str | None
     price: float
-    size: Optional[float]
-    side: Optional[str]
-    timestamp: Optional[str]
+    size: float | None
+    side: str | None
+    timestamp: str | None
 
 
 class Balance(BaseModel):
     asset: str
     free: float
-    locked: Optional[float]
+    locked: float | None
 
 
 class AIHeartbeat(BaseModel):
     running: bool
     strategies_active: int = 0
-    last_decision_ts: Optional[str] = None
-    queue_depth: Optional[int] = None
+    last_decision_ts: str | None = None
+    queue_depth: int | None = None
 
 
 class AlertItem(BaseModel):
-    id: Optional[str]
-    title: Optional[str]
+    id: str | None
+    title: str | None
     message: str
-    level: Optional[str]
-    timestamp: Optional[str]
+    level: str | None
+    timestamp: str | None
 
 
 def truncate_snippet(payload: Any, max_len: int = 300) -> str:

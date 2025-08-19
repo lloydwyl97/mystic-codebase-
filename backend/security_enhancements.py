@@ -3,21 +3,21 @@ Security Enhancements for Mystic Trading Platform
 Comprehensive security features including encryption, audit logging, and access control
 """
 
-import os
+import base64
 import hashlib
 import hmac
-import base64
 import json
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
+import os
+import secrets
 from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+from functools import wraps
+from typing import Any
+
 import structlog
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import secrets
-from functools import wraps
-from datetime import datetime, timezone
 
 logger = structlog.get_logger()
 
@@ -26,12 +26,12 @@ logger = structlog.get_logger()
 class SecurityEvent:
     event_id: str
     event_type: str
-    user_id: Optional[str]
+    user_id: str | None
     ip_address: str
     endpoint: str
     method: str
     timestamp: datetime
-    details: Dict[str, Any]
+    details: dict[str, Any]
     severity: str  # low, medium, high, critical
     status: str  # success, failure, blocked
 
@@ -41,10 +41,10 @@ class APIKey:
     key_id: str
     user_id: str
     key_hash: str
-    permissions: List[str]
+    permissions: list[str]
     created_at: datetime
-    expires_at: Optional[datetime]
-    last_used: Optional[datetime]
+    expires_at: datetime | None
+    last_used: datetime | None
     is_active: bool
     rate_limit: int  # requests per minute
 
@@ -52,7 +52,7 @@ class APIKey:
 class EncryptionManager:
     """Manages encryption and decryption of sensitive data"""
 
-    def __init__(self, master_key: Optional[str] = None):
+    def __init__(self, master_key: str | None = None):
         if master_key:
             self.master_key = master_key.encode()
         else:
@@ -80,7 +80,7 @@ class EncryptionManager:
             logger.error(f"Decryption failed: {e}")
             raise
 
-    def derive_key(self, password: str, salt: Optional[bytes] = None) -> bytes:
+    def derive_key(self, password: str, salt: bytes | None = None) -> bytes:
         """Derive encryption key from password"""
         if salt is None:
             salt = self.key_derivation_salt
@@ -101,8 +101,8 @@ class RateLimiter:
     """Rate limiting for API endpoints"""
 
     def __init__(self):
-        self.rate_limits: Dict[str, Dict[str, Any]] = {}
-        self.request_counts: Dict[str, List[datetime]] = {}
+        self.rate_limits: dict[str, dict[str, Any]] = {}
+        self.request_counts: dict[str, list[datetime]] = {}
 
     def add_rate_limit(self, endpoint: str, max_requests: int, window_seconds: int = 60):
         """Add rate limit for endpoint"""
@@ -166,17 +166,17 @@ class AuditLogger:
 
     def __init__(self, log_file: str = "audit.log"):
         self.log_file = log_file
-        self.events: List[SecurityEvent] = []
+        self.events: list[SecurityEvent] = []
         self.max_events = 10000  # Keep last 10k events in memory
 
     def log_event(
         self,
         event_type: str,
-        user_id: Optional[str],
+        user_id: str | None,
         ip_address: str,
         endpoint: str,
         method: str,
-        details: Dict[str, Any],
+        details: dict[str, Any],
         severity: str = "low",
         status: str = "success",
     ):
@@ -236,12 +236,12 @@ class AuditLogger:
 
     def get_events(
         self,
-        event_type: Optional[str] = None,
-        user_id: Optional[str] = None,
-        severity: Optional[str] = None,
-        start_time: Optional[datetime] = None,
-        end_time: Optional[datetime] = None,
-    ) -> List[SecurityEvent]:
+        event_type: str | None = None,
+        user_id: str | None = None,
+        severity: str | None = None,
+        start_time: datetime | None = None,
+        end_time: datetime | None = None,
+    ) -> list[SecurityEvent]:
         """Get filtered audit events"""
         filtered_events = self.events
 
@@ -262,7 +262,7 @@ class AuditLogger:
 
         return filtered_events
 
-    def get_security_summary(self) -> Dict[str, Any]:
+    def get_security_summary(self) -> dict[str, Any]:
         """Get security summary statistics"""
         now = datetime.now(timezone.utc)
         last_24h = now - timedelta(hours=24)
@@ -283,7 +283,7 @@ class AuditLogger:
             "security_score": self._calculate_security_score(recent_events),
         }
 
-    def _get_most_active_endpoints(self, events: List[SecurityEvent]) -> List[Dict[str, Any]]:
+    def _get_most_active_endpoints(self, events: list[SecurityEvent]) -> list[dict[str, Any]]:
         """Get most active endpoints"""
         endpoint_counts = {}
         for event in events:
@@ -296,7 +296,7 @@ class AuditLogger:
             )[:10]
         ]
 
-    def _calculate_security_score(self, events: List[SecurityEvent]) -> float:
+    def _calculate_security_score(self, events: list[SecurityEvent]) -> float:
         """Calculate security score (0-100)"""
         if not events:
             return 100.0
@@ -323,14 +323,14 @@ class APIKeyManager:
 
     def __init__(self, encryption_manager: EncryptionManager):
         self.encryption_manager = encryption_manager
-        self.api_keys: Dict[str, APIKey] = {}
-        self.user_permissions: Dict[str, List[str]] = {}
+        self.api_keys: dict[str, APIKey] = {}
+        self.user_permissions: dict[str, list[str]] = {}
 
     def generate_api_key(
         self,
         user_id: str,
-        permissions: List[str],
-        expires_in_days: Optional[int] = None,
+        permissions: list[str],
+        expires_in_days: int | None = None,
     ) -> str:
         """Generate new API key"""
         key_id = secrets.token_hex(16)
@@ -356,7 +356,7 @@ class APIKeyManager:
 
         return f"{key_id}.{api_key}"
 
-    def validate_api_key(self, api_key: str) -> Optional[APIKey]:
+    def validate_api_key(self, api_key: str) -> APIKey | None:
         """Validate API key and return key object"""
         try:
             key_id, key_value = api_key.split(".", 1)
@@ -400,7 +400,7 @@ class APIKeyManager:
         if key_id in self.api_keys:
             self.api_keys[key_id].is_active = False
 
-    def get_user_keys(self, user_id: str) -> List[APIKey]:
+    def get_user_keys(self, user_id: str) -> list[APIKey]:
         """Get all API keys for user"""
         return [key for key in self.api_keys.values() if key.user_id == user_id]
 
@@ -419,7 +419,7 @@ class SecurityMiddleware:
         self.rate_limiter.add_rate_limit("/api/v1/portfolio", 120, 60)  # 120 requests per minute
         self.rate_limiter.add_rate_limit("/api/v1/market-data", 300, 60)  # 300 requests per minute
 
-    def require_api_key(self, required_permissions: List[str] = None):
+    def require_api_key(self, required_permissions: list[str] = None):
         """Decorator to require API key authentication"""
 
         def decorator(func):
@@ -507,7 +507,7 @@ class SecurityMiddleware:
 
         return decorator
 
-    def encrypt_sensitive_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def encrypt_sensitive_data(self, data: dict[str, Any]) -> dict[str, Any]:
         """Encrypt sensitive data in response"""
         encrypted_data = data.copy()
 
@@ -520,7 +520,7 @@ class SecurityMiddleware:
 
         return encrypted_data
 
-    def get_security_status(self) -> Dict[str, Any]:
+    def get_security_status(self) -> dict[str, Any]:
         """Get security status and statistics"""
         return {
             "encryption": {

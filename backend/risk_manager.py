@@ -6,9 +6,10 @@ Manages portfolio risk and position limits
 import asyncio
 import json
 import os
-import redis
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any
+
+import redis
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -59,7 +60,7 @@ class RiskManager:
                 print(f"âŒ Error in risk monitoring: {e}")
                 await asyncio.sleep(120)
 
-    async def calculate_risk_metrics(self) -> Dict[str, Any]:
+    async def calculate_risk_metrics(self) -> dict[str, Any]:
         """Calculate risk metrics"""
         try:
             risk_data = {
@@ -90,7 +91,7 @@ class RiskManager:
             print(f"Error calculating risk metrics: {e}")
             return {}
 
-    async def check_risk_alerts(self, risk_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def check_risk_alerts(self, risk_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Check for risk alerts"""
         try:
             alerts = []
@@ -140,14 +141,14 @@ class RiskManager:
             print(f"Error checking risk alerts: {e}")
             return []
 
-    async def store_risk_data(self, data: Dict[str, Any]):
+    async def store_risk_data(self, data: dict[str, Any]):
         """Store risk data in Redis"""
         try:
             self.redis_client.set("risk_data", json.dumps(data), ex=1800)  # 30 minutes TTL
         except Exception as e:
             print(f"Error storing risk data: {e}")
 
-    async def publish_risk_alerts(self, alerts: List[Dict[str, Any]]):
+    async def publish_risk_alerts(self, alerts: list[dict[str, Any]]):
         """Publish risk alerts to Redis channels"""
         try:
             self.redis_client.publish("risk_alerts", json.dumps(alerts))

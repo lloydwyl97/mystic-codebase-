@@ -21,9 +21,9 @@ MIN_PROFIT = 10.0
 
 def load_file(path):
     try:
-        with open(path, "r") as f:
+        with open(path) as f:
             return json.load(f)
-    except (FileNotFoundError, PermissionError, json.JSONDecodeError, IOError) as e:
+    except (OSError, FileNotFoundError, PermissionError, json.JSONDecodeError) as e:
         logger.warning(f"Failed to load file {path}: {e}")
         return []
 
@@ -115,7 +115,7 @@ def run_continuous_evaluation():
 if __name__ == "__main__":
     # Create sample mutations if it doesn't exist
     try:
-        with open(MUTATION_FILE, "r") as f:
+        with open(MUTATION_FILE) as f:
             pass
     except FileNotFoundError:
         create_sample_mutations()

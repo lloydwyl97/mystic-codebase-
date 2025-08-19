@@ -7,11 +7,11 @@ position tracking, and trading strategy execution.
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
-from enhanced_logging import log_operation_performance
 from backend.services.trading_manager import trading_manager
 from backend.services.websocket_manager import websocket_manager
+from enhanced_logging import log_operation_performance
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class TradingService:
             # Continue with empty state
 
     @log_operation_performance("place_order")
-    async def place_order(self, order_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def place_order(self, order_data: dict[str, Any]) -> dict[str, Any]:
         """Place a new order"""
         try:
             # Validate order data
@@ -92,7 +92,7 @@ class TradingService:
             }
 
     @log_operation_performance("cancel_order")
-    async def cancel_order(self, order_id: str) -> Dict[str, Any]:
+    async def cancel_order(self, order_id: str) -> dict[str, Any]:
         """Cancel an existing order"""
         try:
             # Remove order using manager
@@ -129,7 +129,7 @@ class TradingService:
             }
 
     @log_operation_performance("get_active_orders")
-    async def get_active_orders(self) -> Dict[str, Any]:
+    async def get_active_orders(self) -> dict[str, Any]:
         """Get all active orders"""
         try:
             orders = trading_manager.get_all_orders()
@@ -148,7 +148,7 @@ class TradingService:
             }
 
     @log_operation_performance("get_positions")
-    async def get_positions(self) -> Dict[str, Any]:
+    async def get_positions(self) -> dict[str, Any]:
         """Get all current positions"""
         try:
             positions = trading_manager.get_all_positions()
@@ -168,8 +168,8 @@ class TradingService:
 
     @log_operation_performance("execute_strategy")
     async def execute_strategy(
-        self, strategy_name: str, parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, strategy_name: str, parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute a trading strategy"""
         try:
             logger.info(f"Executing strategy: {strategy_name}")

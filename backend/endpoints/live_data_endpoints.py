@@ -4,7 +4,6 @@ Real API endpoints using live market data and trading services
 """
 
 from datetime import datetime
-from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -72,7 +71,7 @@ async def get_open_orders():
 
 @router.get("/trading/trades")
 async def get_trade_history(
-    symbol: Optional[str] = Query(None, description="Symbol to filter trades"),
+    symbol: str | None = Query(None, description="Symbol to filter trades"),
     limit: int = Query(100, description="Number of trades to fetch"),
 ):
     """Get trade history from connected exchanges"""
@@ -100,7 +99,7 @@ async def place_order(
     order_type: str = Query(..., description="Order type: market, limit"),
     side: str = Query(..., description="Order side: buy, sell"),
     amount: float = Query(..., description="Order amount"),
-    price: Optional[float] = Query(None, description="Order price (required for limit orders)"),
+    price: float | None = Query(None, description="Order price (required for limit orders)"),
 ):
     """Place a new order on the specified exchange"""
     try:

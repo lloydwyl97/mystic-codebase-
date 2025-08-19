@@ -1,5 +1,6 @@
 ﻿from __future__ import annotations
-from typing import Any, Optional, Dict
+
+from typing import Any
 
 # Prefer delegating to the existing client if present
 try:
@@ -19,7 +20,7 @@ class CoingeckoService:
         return self._client is not None
 
     # Optional convenience used by legacy code paths; safe no-op default
-    def get_simple_price(self, symbol: str, vs: str = "usd") -> Optional[float]:
+    def get_simple_price(self, symbol: str, vs: str = "usd") -> float | None:
         if self._client is None:
             return None
         try:
@@ -28,7 +29,7 @@ class CoingeckoService:
             if isinstance(data, dict):
                 sym = symbol.lower()
                 curr = vs.lower()
-                inner: Dict[str, Any] = data.get(sym, {})  # type: ignore[assignment]
+                inner: dict[str, Any] = data.get(sym, {})  # type: ignore[assignment]
                 value = inner.get(curr)
                 return float(value) if value is not None else None
             return None
@@ -36,7 +37,7 @@ class CoingeckoService:
             return None
 
     # Some endpoints call this; provide a harmless default
-    async def get_global_data(self) -> Dict[str, Any]:
+    async def get_global_data(self) -> dict[str, Any]:
         if self._client is None:
             return {}
         # No direct mapping in client; return empty to be safe

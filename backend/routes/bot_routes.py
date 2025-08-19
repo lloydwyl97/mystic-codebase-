@@ -5,7 +5,7 @@ API endpoints for bot control and management.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -18,7 +18,7 @@ bot_manager = BotManager()
 
 
 @router.get("/bot/status")
-async def get_bot_status() -> Dict[str, Any]:
+async def get_bot_status() -> dict[str, Any]:
     """Get current bot status"""
     try:
         return bot_manager.get_bot_status()
@@ -28,7 +28,7 @@ async def get_bot_status() -> Dict[str, Any]:
 
 
 @router.post("/bot/start")
-async def start_bot() -> Dict[str, Any]:
+async def start_bot() -> dict[str, Any]:
     """Start the trading bot"""
     try:
         return bot_manager.start_bot()
@@ -38,7 +38,7 @@ async def start_bot() -> Dict[str, Any]:
 
 
 @router.post("/bot/stop")
-async def stop_bot() -> Dict[str, Any]:
+async def stop_bot() -> dict[str, Any]:
     """Stop the trading bot"""
     try:
         return bot_manager.stop_bot()
@@ -48,7 +48,7 @@ async def stop_bot() -> Dict[str, Any]:
 
 
 @router.post("/auto-buy/configure")
-async def configure_auto_buy(config: Dict[str, Any]) -> Dict[str, Any]:
+async def configure_auto_buy(config: dict[str, Any]) -> dict[str, Any]:
     """Configure auto-buy settings"""
     try:
         return bot_manager.configure_auto_buy(config)
@@ -60,13 +60,13 @@ async def configure_auto_buy(config: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @router.get("/auto-buy/config")
-async def get_auto_buy_config() -> Dict[str, Any]:
+async def get_auto_buy_config() -> dict[str, Any]:
     """Get current auto-buy configuration"""
     return bot_manager.get_auto_buy_config()
 
 
 @router.get("/bot/logs")
-async def get_bot_logs(limit: int = 100) -> Dict[str, Any]:
+async def get_bot_logs(limit: int = 100) -> dict[str, Any]:
     """Get bot logs"""
     try:
         return bot_manager.get_bot_logs(limit)
@@ -78,7 +78,7 @@ async def get_bot_logs(limit: int = 100) -> Dict[str, Any]:
 @router.post("/trade/execute")
 async def execute_trade(
     symbol: str, action: str, amount: float = 1000, strategy: str = "default"
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Execute a trade"""
     try:
         return bot_manager.execute_trade(symbol, action, amount, strategy)

@@ -5,7 +5,7 @@ Provides blockchain-related functionality for the trading platform
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class BlockchainService:
         self.status = "stopped"
         logger.info("✅ Blockchain service stopped")
         
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         """Get blockchain service status"""
         return {
             "status": self.status,
@@ -39,7 +39,7 @@ class BlockchainService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_recent_transactions(self) -> Dict[str, Any]:
+    async def get_recent_transactions(self) -> dict[str, Any]:
         """Get recent blockchain transactions"""
         return {
             "transactions": [
@@ -49,7 +49,7 @@ class BlockchainService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_transactions(self) -> Dict[str, Any]:
+    async def get_transactions(self) -> dict[str, Any]:
         """Get blockchain transactions"""
         return {
             "transaction_count": 1500,
@@ -58,7 +58,7 @@ class BlockchainService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_blockchain_data(self) -> Dict[str, Any]:
+    async def get_blockchain_data(self) -> dict[str, Any]:
         """Get blockchain data"""
         return {
             "blockchain": "ethereum",

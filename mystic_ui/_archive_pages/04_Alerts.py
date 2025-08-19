@@ -3,7 +3,7 @@
 import os
 import sys
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, cast
 
 import streamlit as st
 
@@ -12,9 +12,8 @@ _ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if _ROOT not in sys.path:
     sys.path.append(_ROOT)
 
+from mystic_ui._archive_pages.components.common_utils import display_guard, render_sidebar_controls
 from mystic_ui.api_client import request_json as _req
-from mystic_ui._archive_pages.components.common_utils import render_sidebar_controls, display_guard
-
 
 SEVERITY_COLOR = {
     "critical": "#ff4d4f",
@@ -28,7 +27,7 @@ SEVERITY_COLOR = {
 }
 
 
-def _severity_color(sev: Optional[str]) -> str:
+def _severity_color(sev: str | None) -> str:
     s = (sev or "").strip().lower()
     return SEVERITY_COLOR.get(s, "#444")
 
@@ -49,11 +48,11 @@ def _to_iso(ts: Any) -> str:
     return "—"
 
 
-def _as_dict(x: Any) -> Dict[str, Any]:
+def _as_dict(x: Any) -> dict[str, Any]:
     if isinstance(x, dict):
-        return cast(Dict[str, Any], x)
-    if hasattr(x, "data") and isinstance(getattr(x, "data"), dict):
-        return cast(Dict[str, Any], getattr(x, "data"))
+        return cast(dict[str, Any], x)
+    if hasattr(x, "data") and isinstance(x.data, dict):
+        return cast(dict[str, Any], x.data)
     return {}
 
 
@@ -67,8 +66,8 @@ def main() -> None:
     # Health/AI summary pills
     try:
         hc = _req("GET", "/api/health")
-        hdata: Dict[str, Any] = _as_dict(hc)
-        adapters: List[str] = [str(x) for x in cast(List[Any], hdata.get("adapters", []))] if isinstance(hdata.get("adapters"), list) else []
+        hdata: dict[str, Any] = _as_dict(hc)
+        adapters: list[str] = [str(x) for x in cast(list[Any], hdata.get("adapters", []))] if isinstance(hdata.get("adapters"), list) else []
         autobuy_state: str = str(hdata.get("autobuy", ""))
         sys_state: str = str(hdata.get("status", ""))
         status_map = {
@@ -86,7 +85,7 @@ def main() -> None:
         _st.markdown(pills, unsafe_allow_html=True)
         try:
             ai = _req("GET", "/api/ai/heartbeat")
-            ai_data: Dict[str, Any] = _as_dict(ai)
+            ai_data: dict[str, Any] = _as_dict(ai)
             running = bool(ai_data.get("running"))
             last_ts = ai_data.get("last_decision_ts")
             _st.markdown(
@@ -104,10 +103,10 @@ def main() -> None:
         res: Any = _req("GET", "/api/whale/alerts", params={"limit": 200})
         if isinstance(res, dict) and "__meta__" in res:
             meta_raw: Any = res["__meta__"] if "__meta__" in res else {}
-            meta: Dict[str, Any] = cast(Dict[str, Any], meta_raw if isinstance(meta_raw, dict) else {})
-            route = cast(Optional[str], meta.get("route"))
-            status = cast(Optional[int], meta.get("status"))
-            err = cast(Optional[str], meta.get("error"))
+            meta: dict[str, Any] = cast(dict[str, Any], meta_raw if isinstance(meta_raw, dict) else {})
+            route = cast(str | None, meta.get("route"))
+            status = cast(int | None, meta.get("status"))
+            err = cast(str | None, meta.get("error"))
             msg = "Alerts unavailable"
             if route or status:
                 msg += f" — {route or ''} {f'({status})' if status is not None else ''}"
@@ -116,33 +115,33 @@ def main() -> None:
             _st.info(msg.strip())
 
     # Normalize alerts list
-    alerts: List[Dict[str, Any]] = []
+    alerts: list[dict[str, Any]] = []
     raw_payload: Any = None
     if res is None:
         alerts = []
     else:
         if isinstance(res, dict) and "__meta__" in res:
-            raw_payload = cast(Dict[str, Any], res)
+            raw_payload = cast(dict[str, Any], res)
         else:
             res_obj: Any = res
             if hasattr(res_obj, "data"):
-                raw_payload = getattr(res_obj, "data")
+                raw_payload = res_obj.data
             else:
                 raw_payload = res_obj
         data: Any = raw_payload
         if isinstance(data, dict):
-            data_dict: Dict[str, Any] = cast(Dict[str, Any], data)
+            data_dict: dict[str, Any] = cast(dict[str, Any], data)
             # whale alerts endpoint returns {alerts: [...], count: N}
             list_any: Any = data_dict.get("alerts") or data_dict.get("notifications") or []
-            alerts = cast(List[Dict[str, Any]], list_any if isinstance(list_any, list) else [])
+            alerts = cast(list[dict[str, Any]], list_any if isinstance(list_any, list) else [])
         elif isinstance(data, list):
-            alerts = cast(List[Dict[str, Any]], data)
+            alerts = cast(list[dict[str, Any]], data)
 
     _st.subheader("Recent Alerts")
     if alerts:
         # Compact timeline/list with severity color accents
         for a in alerts[:200]:
-            ad: Dict[str, Any] = a
+            ad: dict[str, Any] = a
             sev_val: Any = ad["severity"] if "severity" in ad else ad["level"] if "level" in ad else ad["type"] if "type" in ad else "info"
             sev = str(sev_val)
             color = _severity_color(sev)

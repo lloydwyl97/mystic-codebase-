@@ -25,7 +25,7 @@ MIN_PROFIT = 10.0
 
 def load_leaderboard():
     try:
-        with open(LEADERBOARD_FILE, "r") as f:
+        with open(LEADERBOARD_FILE) as f:
             data = json.load(f)
             logger.info(f"Loaded leaderboard with {len(data)} strategies")
             return data
@@ -121,7 +121,7 @@ def run_continuous_execution():
 if __name__ == "__main__":
     # Create leaderboard if it doesn't exist
     try:
-        with open(LEADERBOARD_FILE, "r") as f:
+        with open(LEADERBOARD_FILE) as f:
             pass
     except FileNotFoundError:
         create_leaderboard()

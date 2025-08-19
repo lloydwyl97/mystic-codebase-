@@ -4,10 +4,10 @@ Checks that all new dashboard endpoints can be imported and loaded correctly.
 """
 
 import importlib
-from typing import Dict, Any
+from typing import Any
 
 
-def test_imports() -> Dict[str, Any]:
+def test_imports() -> dict[str, Any]:
     """Test importing all new dashboard endpoint modules"""
     results = {
         "successful_imports": [],
@@ -59,7 +59,7 @@ def test_imports() -> Dict[str, Any]:
     return results
 
 
-def test_router_registration() -> Dict[str, Any]:
+def test_router_registration() -> dict[str, Any]:
     """Test that the router can be registered without errors"""
     results = {"success": False, "error": None, "routes_count": 0}
 
@@ -113,7 +113,7 @@ def test_router_registration() -> Dict[str, Any]:
     return results
 
 
-def test_data_source_imports() -> Dict[str, Any]:
+def test_data_source_imports() -> dict[str, Any]:
     """Test importing data sources that the endpoints depend on"""
     results = {
         "available_sources": [],

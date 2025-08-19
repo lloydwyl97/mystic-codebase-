@@ -10,8 +10,8 @@ import logging
 import time
 import urllib.parse
 from dataclasses import dataclass
-from datetime import timezone, datetime
-from typing import Any, Dict, List, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 import aiohttp
 
@@ -24,8 +24,8 @@ class OrderRequest:
     side: str  # 'buy' or 'sell'
     order_type: str  # 'market', 'limit', 'stop'
     quantity: float
-    price: Optional[float] = None
-    stop_price: Optional[float] = None
+    price: float | None = None
+    stop_price: float | None = None
     time_in_force: str = "GTC"
 
 
@@ -39,7 +39,7 @@ class OrderResponse:
     price: float
     status: str
     timestamp: datetime
-    fills: List[Dict[str, Any]] = None
+    fills: list[dict[str, Any]] = None
 
 
 @dataclass
@@ -72,7 +72,7 @@ class BinanceAPI:
         if self.session:
             await self.session.close()
 
-    def _generate_signature(self, params: Dict[str, Any]) -> str:
+    def _generate_signature(self, params: dict[str, Any]) -> str:
         """Generate HMAC signature for authenticated requests."""
         query_string = urllib.parse.urlencode(params)
         signature = hmac.new(
@@ -86,9 +86,9 @@ class BinanceAPI:
         self,
         method: str,
         endpoint: str,
-        params: Dict[str, Any] = None,
+        params: dict[str, Any] = None,
         authenticated: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Make HTTP request to Binance API."""
         if params is None:
             params = {}
@@ -114,18 +114,18 @@ class BinanceAPI:
             logger.error(f"Request error: {str(e)}")
             return {"error": str(e)}
 
-    async def get_account_info(self) -> Dict[str, Any]:
+    async def get_account_info(self) -> dict[str, Any]:
         """Get account information."""
         return await self._make_request("GET", "/api/v3/account", authenticated=True)
 
-    async def get_open_orders(self, symbol: str = None) -> List[Dict[str, Any]]:
+    async def get_open_orders(self, symbol: str = None) -> list[dict[str, Any]]:
         """Get open orders."""
         params = {}
         if symbol:
             params["symbol"] = symbol
         return await self._make_request("GET", "/api/v3/openOrders", params, authenticated=True)
 
-    async def get_order_history(self, symbol: str, limit: int = 100) -> List[Dict[str, Any]]:
+    async def get_order_history(self, symbol: str, limit: int = 100) -> list[dict[str, Any]]:
         """Get order history."""
         params = {"symbol": symbol, "limit": limit}
         return await self._make_request("GET", "/api/v3/allOrders", params, authenticated=True)
@@ -162,19 +162,19 @@ class BinanceAPI:
         else:
             raise Exception(f"Order placement failed: {result['error']}")
 
-    async def cancel_order(self, symbol: str, order_id: str) -> Dict[str, Any]:
+    async def cancel_order(self, symbol: str, order_id: str) -> dict[str, Any]:
         """Cancel an order."""
         params = {"symbol": symbol, "orderId": order_id}
         return await self._make_request("DELETE", "/api/v3/order", params, authenticated=True)
 
-    async def get_ticker_price(self, symbol: str) -> Dict[str, Any]:
+    async def get_ticker_price(self, symbol: str) -> dict[str, Any]:
         """Get current price for a symbol."""
         params = {"symbol": symbol}
         return await self._make_request("GET", "/api/v3/ticker/price", params)
 
     async def get_klines(
         self, symbol: str, interval: str = "1h", limit: int = 100
-    ) -> List[List[Any]]:
+    ) -> list[list[Any]]:
         """Get candlestick data."""
         params = {"symbol": symbol, "interval": interval, "limit": limit}
         return await self._make_request("GET", "/api/v3/klines", params)
@@ -219,9 +219,9 @@ class CoinbaseAPI:
         self,
         method: str,
         endpoint: str,
-        data: Dict[str, Any] = None,
+        data: dict[str, Any] = None,
         authenticated: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Make HTTP request to Coinbase Pro API."""
         url = f"{self.base_url}{endpoint}"
         headers = {}
@@ -255,7 +255,7 @@ class CoinbaseAPI:
             logger.error(f"Coinbase request error: {str(e)}")
             return {"error": str(e)}
 
-    async def get_accounts(self) -> List[Dict[str, Any]]:
+    async def get_accounts(self) -> list[dict[str, Any]]:
         """Get account information."""
         return await self._make_request("GET", "/accounts", authenticated=True)
 
@@ -301,7 +301,7 @@ class ExchangeManager:
         self.active_exchanges.append(name)
         logger.info(f"Added exchange: {name}")
 
-    async def get_all_positions(self) -> Dict[str, List[Position]]:
+    async def get_all_positions(self) -> dict[str, list[Position]]:
         """Get positions from all active exchanges."""
         all_positions = {}
 
@@ -333,7 +333,7 @@ class ExchangeManager:
 
         return all_positions
 
-    async def place_order_on_all(self, order: OrderRequest) -> Dict[str, OrderResponse]:
+    async def place_order_on_all(self, order: OrderRequest) -> dict[str, OrderResponse]:
         """Place order on all active exchanges."""
         results = {}
 
@@ -349,7 +349,7 @@ class ExchangeManager:
 
         return results
 
-    async def get_market_data(self, symbol: str) -> Dict[str, Dict[str, Any]]:
+    async def get_market_data(self, symbol: str) -> dict[str, dict[str, Any]]:
         """Get market data from all exchanges."""
         market_data = {}
 

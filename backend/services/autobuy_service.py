@@ -4,21 +4,22 @@ Monitors cached prices and AI signals to execute automated buy orders.
 """
 
 import logging
-import uuid
-from typing import Dict, Any, Optional, Tuple, List, cast
-from datetime import datetime, timezone
-import sys
 import os
+import sys
+import uuid
+from datetime import datetime, timezone
+from typing import Any, cast
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+import asyncio
+
+from backend.modules.ai.analytics_engine import AnalyticsEngine  # type: ignore[import-not-found]
 from backend.modules.ai.persistent_cache import PersistentCache
+from backend.modules.notifications.alert_manager import AlertManager  # type: ignore[import-not-found]
 from backend.services.market_data_router import MarketDataRouter
 from backend.utils.symbols import normalize_symbol_to_dash
-from backend.modules.notifications.alert_manager import AlertManager  # type: ignore[import-not-found]
-from backend.modules.ai.analytics_engine import AnalyticsEngine  # type: ignore[import-not-found]
-import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -29,20 +30,20 @@ class SignalEngine:
     def __init__(self):
         self.cache: Any = PersistentCache()  # type: ignore[no-redef]
 
-    def get_latest_signal(self, symbol: str) -> Optional[Dict[str, Any]]:
+    def get_latest_signal(self, symbol: str) -> dict[str, Any] | None:
         """Get the latest AI signal for a symbol"""
         try:
-            signals = cast(List[Dict[str, Any]], self.cache.get_signals(symbol=symbol, limit=1))  # type: ignore[attr-defined]
+            signals = cast(list[dict[str, Any]], self.cache.get_signals(symbol=symbol, limit=1))  # type: ignore[attr-defined]
             return signals[0] if signals else None
         except Exception as e:
             logger.error(f"Failed to get signal for {symbol}: {e}")
             return None
 
-    def calculate_rsi(self, symbol: str, period: int = 14) -> Optional[float]:
+    def calculate_rsi(self, symbol: str, period: int = 14) -> float | None:
         """Calculate RSI for a symbol using cached price data"""
         try:
             # Get price history for RSI calculation
-            price_history: List[Dict[str, Any]] = cast(List[Dict[str, Any]], self.cache.get_price_history('aggregated', symbol, limit=period + 1))  # type: ignore[attr-defined]
+            price_history: list[dict[str, Any]] = cast(list[dict[str, Any]], self.cache.get_price_history('aggregated', symbol, limit=period + 1))  # type: ignore[attr-defined]
             if len(price_history) < period + 1:
                 return None
 
@@ -50,8 +51,8 @@ class SignalEngine:
             prices.reverse()  # Oldest first
 
             # Calculate RSI
-            gains: List[float] = []
-            losses: List[float] = []
+            gains: list[float] = []
+            losses: list[float] = []
 
             for i in range(1, len(prices)):
                 change = prices[i] - prices[i-1]
@@ -90,7 +91,7 @@ class AutoExecutionService:
         self.simulation_mode = True  # Default to simulation mode
 
     def execute_buy_order(self, exchange: str, symbol: str, quantity: float,
-                         price: float, order_type: str = "market") -> Dict[str, Any]:
+                         price: float, order_type: str = "market") -> dict[str, Any]:
         """Execute a buy order (simulated or real)"""
         try:
             order_id = str(uuid.uuid4())
@@ -145,7 +146,7 @@ class AutobuyService:
         self.cache: Any = PersistentCache()
         self.signal_engine = SignalEngine()
         self.execution_service = AutoExecutionService()
-        self.active_orders: List[Dict[str, Any]] = []
+        self.active_orders: list[dict[str, Any]] = []
         self.router = MarketDataRouter()
         self.alerts = AlertManager()
         self.analytics: Any = AnalyticsEngine()
@@ -158,20 +159,20 @@ class AutobuyService:
 
         logger.info("âœ… AutobuyService initialized")
 
-    async def warmup(self, symbols: List[str]) -> Dict[str, Any]:
+    async def warmup(self, symbols: list[str]) -> dict[str, Any]:
         try:
             tasks = [self.router.fanout_tickers(s) for s in symbols]
             results = await asyncio.gather(*tasks, return_exceptions=True)
-            warmed: Dict[str, Any] = {}
-            for s, r in zip(symbols, results):
+            warmed: dict[str, Any] = {}
+            for s, r in zip(symbols, results, strict=False):
                 warmed[normalize_symbol_to_dash(s)] = r if not isinstance(r, Exception) else {"error": str(r)}
-            warm_event: Dict[str, Any] = {"symbols": [normalize_symbol_to_dash(s) for s in symbols]}
+            warm_event: dict[str, Any] = {"symbols": [normalize_symbol_to_dash(s) for s in symbols]}
             self.analytics.track_event("autobuy_warmup", warm_event)
             return {"warmed": warmed, "ts": datetime.now(timezone.utc).isoformat()}
         except Exception as e:
             return {"error": str(e)}
 
-    async def eval_signals(self, symbol: str) -> Dict[str, Any]:
+    async def eval_signals(self, symbol: str) -> dict[str, Any]:
         try:
             symbol_dash = normalize_symbol_to_dash(symbol)
             ohlcv = await self.router.get_ohlcv("binanceus", symbol_dash, interval="1h", limit=100)
@@ -187,18 +188,18 @@ class AutobuyService:
         except Exception as e:
             return {"error": str(e)}
 
-    async def decide_and_route(self, symbol: str) -> Dict[str, Any]:
+    async def decide_and_route(self, symbol: str) -> dict[str, Any]:
         sig = await self.eval_signals(symbol)
         if sig.get("error"):
             return {"action": "hold", "reason": sig["error"], "signal": sig}
-        f: Dict[str, float] = cast(Dict[str, float], sig["features"])
+        f: dict[str, float] = cast(dict[str, float], sig["features"])
         action: str = "buy" if (f["rsi"] < self.rsi_threshold and f["sma_20"] > f["sma_50"]) else "hold"
         self.analytics.set_metric("last_decision_rsi", f["rsi"])  # type: ignore[arg-type]
-        decision_event: Dict[str, Any] = {"symbol": sig["symbol"], "action": action, "features": f}
+        decision_event: dict[str, Any] = {"symbol": sig["symbol"], "action": action, "features": f}
         self.analytics.track_event("autobuy_decision", decision_event)
         return {"action": action, "signal": sig}
 
-    async def execute_decision(self, decision: Dict[str, Any]) -> Dict[str, Any]:
+    async def execute_decision(self, decision: dict[str, Any]) -> dict[str, Any]:
         try:
             if decision.get("action") != "buy":
                 return {"skipped": True}
@@ -209,7 +210,7 @@ class AutobuyService:
             # Select best price among adapters
             best_ex, best = min(tickers.items(), key=lambda kv: kv[1].price)
             qty = max(self.min_quantity, self.max_quantity * self.quantity_percentage) / max(best.price, 1e-9)
-            result: Dict[str, Any] = {
+            result: dict[str, Any] = {
                 "exchange": best_ex,
                 "symbol": symbol,
                 "qty": qty,
@@ -231,14 +232,14 @@ class AutobuyService:
         except Exception as e:
             return {"error": str(e)}
 
-    async def heartbeat(self) -> Dict[str, Any]:
+    async def heartbeat(self) -> dict[str, Any]:
         try:
             adapters = await self.router.get_enabled_adapters()
             return {"status": "ready", "adapters": adapters, "active_orders": len(self.active_orders)}
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
-    def check_buy_conditions(self, symbol: str) -> Tuple[bool, Dict[str, Any]]:
+    def check_buy_conditions(self, symbol: str) -> tuple[bool, dict[str, Any]]:
         """Check if buy conditions are met for a symbol"""
         try:
             # Get latest price
@@ -294,7 +295,7 @@ class AutobuyService:
             logger.error(f"âŒ Failed to calculate trade quantity for {symbol}: {e}")
             return 0.0
 
-    def execute_autobuy(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def execute_autobuy(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Execute an automated buy order for a symbol"""
         try:
             # Check buy conditions
@@ -340,22 +341,22 @@ class AutobuyService:
             logger.error(f"âŒ Failed to execute autobuy for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
-    def execute_all_autobuys(self) -> Dict[str, Any]:
+    def execute_all_autobuys(self) -> dict[str, Any]:
         """Execute autobuy for all monitored symbols"""
         try:
             # List of symbols to monitor
-            symbols: List[str] = [
+            symbols: list[str] = [
                 "BTC-USD", "ETH-USD", "ADA-USD", "SOL-USD", "DOT-USD",
                 "LINK-USD", "MATIC-USD", "AVAX-USD", "UNI-USD", "ATOM-USD"
             ]
 
-            results: List[Dict[str, Any]] = []
+            results: list[dict[str, Any]] = []
             successful_trades: int = 0
 
             for symbol in symbols:
                 try:
                     # Try multiple exchanges
-                    exchanges: List[str] = ["coinbase_us", "binance_us", "kraken_us"]
+                    exchanges: list[str] = ["coinbase_us", "binance_us", "kraken_us"]
 
                     for exchange in exchanges:
                         result = self.execute_autobuy(exchange, symbol)
@@ -377,7 +378,7 @@ class AutobuyService:
                         "result": {"success": False, "error": str(e)}
                     })
 
-            summary: Dict[str, Any] = {
+            summary: dict[str, Any] = {
                 "success": True,
                 "total_symbols": len(symbols),
                 "successful_trades": successful_trades,
@@ -392,7 +393,7 @@ class AutobuyService:
             logger.error(f"âŒ Failed to execute all autobuys: {e}")
             return {"success": False, "error": str(e)}
 
-    def get_open_orders(self) -> List[Dict[str, Any]]:
+    def get_open_orders(self) -> list[dict[str, Any]]:
         """Get all open autobuy orders"""
         try:
             return [
@@ -412,11 +413,11 @@ class AutobuyService:
             logger.error(f"âŒ Failed to get open orders: {e}")
             return []
 
-    def get_trigger_stats(self) -> Dict[str, Any]:
+    def get_trigger_stats(self) -> dict[str, Any]:
         """Get autobuy trigger statistics"""
         try:
             # Get recent autobuy signals
-            autobuy_signals = cast(List[Dict[str, Any]], self.cache.get_signals_by_type("AUTOBUY_TRIGGER", limit=100))  # type: ignore[attr-defined]
+            autobuy_signals = cast(list[dict[str, Any]], self.cache.get_signals_by_type("AUTOBUY_TRIGGER", limit=100))  # type: ignore[attr-defined]
             
             total_triggers = len(autobuy_signals)
             successful_triggers = len([s for s in autobuy_signals if s.get("metadata", {}).get("success", False)])
@@ -439,17 +440,17 @@ class AutobuyService:
                 "recent_triggers": []
             }
 
-    def get_service_status(self) -> Dict[str, Any]:
+    def get_service_status(self) -> dict[str, Any]:
         """Get current service status and statistics"""
         try:
             # Get cache stats
-            cache_stats = cast(Dict[str, Any], self.cache.get_cache_stats())  # type: ignore[attr-defined]
+            cache_stats = cast(dict[str, Any], self.cache.get_cache_stats())  # type: ignore[attr-defined]
 
             # Get recent trades
-            recent_trades = cast(List[Dict[str, Any]], self.cache.get_trades(limit=10))  # type: ignore[attr-defined]
+            recent_trades = cast(list[dict[str, Any]], self.cache.get_trades(limit=10))  # type: ignore[attr-defined]
 
             # Get recent signals
-            recent_signals = cast(List[Dict[str, Any]], self.cache.get_signals(limit=10))  # type: ignore[attr-defined]
+            recent_signals = cast(list[dict[str, Any]], self.cache.get_signals(limit=10))  # type: ignore[attr-defined]
 
             return {
                 "service": "AutobuyService",
@@ -472,7 +473,7 @@ class AutobuyService:
             return {"success": False, "error": str(e)}
 
     # Methods expected by endpoints
-    async def get_configuration(self) -> Dict[str, Any]:
+    async def get_configuration(self) -> dict[str, Any]:
         return {
             "rsi_threshold": self.rsi_threshold,
             "min_quantity": self.min_quantity,
@@ -480,50 +481,50 @@ class AutobuyService:
             "quantity_percentage": self.quantity_percentage,
         }
 
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         return self.get_service_status()
 
-    async def get_statistics(self) -> Dict[str, Any]:
+    async def get_statistics(self) -> dict[str, Any]:
         return self.get_trigger_stats()
 
-    async def get_performance_metrics(self) -> Dict[str, Any]:
+    async def get_performance_metrics(self) -> dict[str, Any]:
         return {
             "active_orders": len(self.active_orders),
             "simulation_mode": self.execution_service.simulation_mode,
         }
 
-    async def get_recent_trades(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_trades(self, limit: int = 50) -> list[dict[str, Any]]:
         try:
-            return cast(List[Dict[str, Any]], self.cache.get_trades(limit=limit))  # type: ignore[attr-defined]
+            return cast(list[dict[str, Any]], self.cache.get_trades(limit=limit))  # type: ignore[attr-defined]
         except Exception:
             return []
 
-    async def get_trade_summary(self) -> Dict[str, Any]:
-        trades = cast(List[Dict[str, Any]], self.cache.get_trades(limit=100))  # type: ignore[attr-defined]
+    async def get_trade_summary(self) -> dict[str, Any]:
+        trades = cast(list[dict[str, Any]], self.cache.get_trades(limit=100))  # type: ignore[attr-defined]
         return {"total_trades": len(trades)}
 
-    async def get_recent_signals(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_signals(self, limit: int = 50) -> list[dict[str, Any]]:
         try:
-            return cast(List[Dict[str, Any]], self.cache.get_signals(limit=limit))  # type: ignore[attr-defined]
+            return cast(list[dict[str, Any]], self.cache.get_signals(limit=limit))  # type: ignore[attr-defined]
         except Exception:
             return []
 
-    async def get_signal_analysis(self) -> Dict[str, Any]:
+    async def get_signal_analysis(self) -> dict[str, Any]:
         return {"quality": "unknown"}
 
-    async def get_ai_status(self) -> Dict[str, Any]:
+    async def get_ai_status(self) -> dict[str, Any]:
         return {"status": "active"}
 
-    async def get_ai_performance(self) -> Dict[str, Any]:
+    async def get_ai_performance(self) -> dict[str, Any]:
         return {"accuracy": 0.0}
 
-    async def start(self) -> Dict[str, Any]:
+    async def start(self) -> dict[str, Any]:
         return {"started": True}
 
-    async def stop(self) -> Dict[str, Any]:
+    async def stop(self) -> dict[str, Any]:
         return {"stopped": True}
 
-    async def update_configuration(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    async def update_configuration(self, config: dict[str, Any]) -> dict[str, Any]:
         # Update only known keys
         self.rsi_threshold = config.get("rsi_threshold", self.rsi_threshold)
         self.min_quantity = config.get("min_quantity", self.min_quantity)

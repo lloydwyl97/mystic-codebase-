@@ -1,14 +1,14 @@
 ﻿from __future__ import annotations
 
-from typing import Any, Dict, List
 from datetime import datetime, timezone
+from typing import Any
 
 
 class SystemMonitor:
-    async def get_services_status(self) -> Dict[str, Any]:
+    async def get_services_status(self) -> dict[str, Any]:
         return {"services": [], "timestamp": datetime.now(timezone.utc).isoformat()}
 
-    async def get_recent_events(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_events(self, limit: int = 50) -> list[dict[str, Any]]:
         return [
             {
                 "type": "info",

@@ -1,13 +1,14 @@
 ﻿from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Dict, List, Literal
+from typing import Literal
 
 import aiohttp
 
+from backend.models.market_types import OHLCV, OrderBook, OrderResult, Ticker, Trade  # type: ignore[import-not-found]
+from backend.utils.symbols import normalize_symbol_to_dash, to_exchange_symbol  # type: ignore[import-not-found]
+
 from .base_adapter import AbstractExchangeAdapter
-from backend.models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
-from backend.utils.symbols import to_exchange_symbol, normalize_symbol_to_dash  # type: ignore[import-not-found]
 
 
 class BinanceUSAdapter(AbstractExchangeAdapter):
@@ -39,13 +40,13 @@ class BinanceUSAdapter(AbstractExchangeAdapter):
         ts = int(datetime.now(timezone.utc).timestamp() * 1000)
         return OrderBook(exchange=self.name, symbol=normalize_symbol_to_dash(symbol), bids=bids, asks=asks, ts=ts)
 
-    async def get_trades(self, symbol: str, limit: int = 100) -> List[Trade]:
+    async def get_trades(self, symbol: str, limit: int = 100) -> list[Trade]:
         pair = to_exchange_symbol(self.name, normalize_symbol_to_dash(symbol))
         url = f"{self.api_base}/api/v3/trades?symbol={pair}&limit={min(limit, 1000)}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
                 data = await resp.json()
-        out: List[Trade] = []
+        out: list[Trade] = []
         for t in data:
             ts = int(t.get("time", 0))
             out.append(
@@ -60,13 +61,13 @@ class BinanceUSAdapter(AbstractExchangeAdapter):
             )
         return out[:limit]
 
-    async def get_ohlcv(self, symbol: str, interval: str, limit: int = 500) -> List[OHLCV]:
+    async def get_ohlcv(self, symbol: str, interval: str, limit: int = 500) -> list[OHLCV]:
         pair = to_exchange_symbol(self.name, normalize_symbol_to_dash(symbol))
         url = f"{self.api_base}/api/v3/klines?symbol={pair}&interval={interval}&limit={min(limit, 1000)}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
                 data = await resp.json()
-        candles: List[OHLCV] = []
+        candles: list[OHLCV] = []
         for k in data:
             open_time = int(k[0])
             candles.append(
@@ -83,7 +84,7 @@ class BinanceUSAdapter(AbstractExchangeAdapter):
             )
         return candles
 
-    async def get_balance(self) -> Dict[str, float]:
+    async def get_balance(self) -> dict[str, float]:
         return {}
 
     async def create_order(

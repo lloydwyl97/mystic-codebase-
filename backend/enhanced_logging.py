@@ -11,9 +11,10 @@ import logging.handlers
 import os
 import time
 import traceback
+from collections.abc import Callable
 from datetime import datetime, timezone
 from functools import wraps
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any
 
 try:
     import redis
@@ -28,7 +29,7 @@ class StructuredFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         # Create structured log entry
-        log_entry: Dict[str, Any] = {
+        log_entry: dict[str, Any] = {
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             "level": record.levelname,
             "logger": record.name,
@@ -184,7 +185,7 @@ class PerformanceLogger:
     def log_event(
         self,
         event_type: str,
-        details: Dict[str, Any],
+        details: dict[str, Any],
         level: int = logging.INFO,
     ):
         """Log a structured event"""
@@ -203,7 +204,7 @@ class EnhancedLogger:
 
     def __init__(
         self,
-        redis_client: Optional[redis.Redis],
+        redis_client: redis.Redis | None,
         key_prefix: str = "logs",
         max_logs: int = 1000,
     ):
@@ -220,7 +221,7 @@ class EnhancedLogger:
         self.max_logs = max_logs
         self.buffer_size = 100
         self.flush_interval = 60  # seconds
-        self.log_buffer: List[Dict[str, Any]] = []
+        self.log_buffer: list[dict[str, Any]] = []
         self.last_flush = time.time()
 
         # Initialize Redis if available
@@ -239,7 +240,7 @@ class EnhancedLogger:
         else:
             logger.info("Enhanced logger initialized without Redis (local only)")
 
-    def log(self, level: str, message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+    def log(self, level: str, message: str, extra: dict[str, Any] | None = None) -> None:
         """
         Log a message with enhanced features.
 
@@ -310,11 +311,11 @@ class EnhancedLogger:
 
     async def get_logs(
         self,
-        level: Optional[str] = None,
+        level: str | None = None,
         limit: int = 100,
-        start_time: Optional[str] = None,
-        end_time: Optional[str] = None,
-    ) -> List[Dict[str, Any]]:
+        start_time: str | None = None,
+        end_time: str | None = None,
+    ) -> list[dict[str, Any]]:
         """
         Retrieve logs from Redis.
 
@@ -351,7 +352,7 @@ class EnhancedLogger:
                 else:
                     log_keys = zrevrange_result
 
-            logs: List[Dict[str, Any]] = []
+            logs: list[dict[str, Any]] = []
             # Handle both sync and async Redis responses
             try:
                 # Ensure log_keys is iterable
@@ -403,13 +404,13 @@ class EnhancedLogger:
             logger.error(f"Failed to retrieve logs from Redis: {e}")
             return []
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get logging statistics."""
         if not self.redis_client:
             return {"redis_available": False}
 
         try:
-            stats: Dict[str, Any] = {
+            stats: dict[str, Any] = {
                 "redis_available": True,
                 "buffer_size": len(self.log_buffer),
                 "total_logs": self.redis_client.zcard(f"{self.key_prefix}:sorted"),
@@ -428,7 +429,7 @@ class EnhancedLogger:
             logger.error(f"Failed to get logging stats: {e}")
             return {"redis_available": False, "error": str(e)}
 
-    def clear_logs(self, level: Optional[str] = None) -> bool:
+    def clear_logs(self, level: str | None = None) -> bool:
         """
         Clear logs from Redis.
 
@@ -519,11 +520,11 @@ class RedisLogHandler(logging.Handler):
 
 
 # Global enhanced logger instance
-_enhanced_logger: Optional[EnhancedLogger] = None
+_enhanced_logger: EnhancedLogger | None = None
 
 
 def get_enhanced_logger(
-    redis_client: Optional[redis.Redis] = None,
+    redis_client: redis.Redis | None = None,
 ) -> EnhancedLogger:
     """Get the global enhanced logger instance."""
     global _enhanced_logger
@@ -534,44 +535,44 @@ def get_enhanced_logger(
     return _enhanced_logger
 
 
-def log_event(level: str, message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+def log_event(level: str, message: str, extra: dict[str, Any] | None = None) -> None:
     """Log an event using the global enhanced logger."""
     logger = get_enhanced_logger()
     logger.log(level, message, extra)
 
 
 # Convenience functions
-def log_info(message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+def log_info(message: str, extra: dict[str, Any] | None = None) -> None:
     """Log info message."""
     log_event("info", message, extra)
 
 
-def log_warning(message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+def log_warning(message: str, extra: dict[str, Any] | None = None) -> None:
     """Log warning message."""
     log_event("warning", message, extra)
 
 
-def log_error(message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+def log_error(message: str, extra: dict[str, Any] | None = None) -> None:
     """Log error message."""
     log_event("error", message, extra)
 
 
-def log_critical(message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+def log_critical(message: str, extra: dict[str, Any] | None = None) -> None:
     """Log critical message."""
     log_event("critical", message, extra)
 
 
-def log_debug(message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+def log_debug(message: str, extra: dict[str, Any] | None = None) -> None:
     """Log debug message."""
     log_event("debug", message, extra)
 
 
 def setup_enhanced_logging(
-    redis_client: Union[redis.Redis, None],
+    redis_client: redis.Redis | None,
     log_level: str = "INFO",
     log_file: str = "mystic_trading.log",
     enable_redis_logging: bool = True,
-) -> Dict[str, logging.Logger]:
+) -> dict[str, logging.Logger]:
     """Setup enhanced logging configuration"""
 
     # Create logs directory if it doesn't exist

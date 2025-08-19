@@ -6,9 +6,10 @@ Provides consistent exception handling across the entire application.
 
 import logging
 import traceback
+from collections.abc import Callable
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Callable, Dict, Optional, Type, Union
+from typing import Any
 
 from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -70,8 +71,8 @@ class MysticException(Exception):
         self,
         message: str,
         error_code: ErrorCode = ErrorCode.UNKNOWN_ERROR,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         self.message = message
         self.error_code = error_code
@@ -102,7 +103,7 @@ class MysticException(Exception):
 
         logger.error(f"MysticException: {log_data}")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert exception to dictionary for API responses"""
         return {
             "error": True,
@@ -120,8 +121,8 @@ class DatabaseException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(
             message,
@@ -137,8 +138,8 @@ class DatabaseConnectionException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(
             message,
@@ -154,8 +155,8 @@ class APIException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(
             message,
@@ -171,8 +172,8 @@ class TradingException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.TRADING_ORDER_ERROR, details, original_exception)
 
@@ -183,8 +184,8 @@ class MarketDataException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.MARKET_DATA_ERROR, details, original_exception)
 
@@ -195,8 +196,8 @@ class AIException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.AI_MODEL_ERROR, details, original_exception)
 
@@ -207,8 +208,8 @@ class AnalyticsException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.AI_MODEL_ERROR, details, original_exception)
 
@@ -219,8 +220,8 @@ class MetricsException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.AI_MODEL_ERROR, details, original_exception)
 
@@ -231,8 +232,8 @@ class AuthenticationException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(
             message,
@@ -248,8 +249,8 @@ class RateLimitException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.RATE_LIMIT_ERROR, details, original_exception)
 
@@ -260,8 +261,8 @@ class ModelException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.AI_MODEL_ERROR, details, original_exception)
 
@@ -272,8 +273,8 @@ class NotificationException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.UNKNOWN_ERROR, details, original_exception)
 
@@ -284,8 +285,8 @@ class StrategyException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.TRADING_ORDER_ERROR, details, original_exception)
 
@@ -295,7 +296,7 @@ class StrategyException(MysticException):
 
 def handle_exception(
     error_message: str,
-    exception_class: Type[MysticException] = MysticException,
+    exception_class: type[MysticException] = MysticException,
     error_code: ErrorCode = ErrorCode.UNKNOWN_ERROR,
     reraise: bool = True,
     default_return: Any = None,
@@ -349,7 +350,7 @@ def handle_exception(
 
 def handle_async_exception(
     error_message: str,
-    exception_class: Type[MysticException] = MysticException,
+    exception_class: type[MysticException] = MysticException,
     error_code: ErrorCode = ErrorCode.UNKNOWN_ERROR,
     reraise: bool = True,
     default_return: Any = None,
@@ -478,7 +479,7 @@ def _get_status_code_for_error_code(error_code: ErrorCode) -> int:
     return status_code_map.get(error_code, 500)
 
 
-def safe_execute(func: Callable, *args, **kwargs) -> Union[Any, MysticException]:
+def safe_execute(func: Callable, *args, **kwargs) -> Any | MysticException:
     """
     Safely execute a function and return result or exception
 
@@ -501,7 +502,7 @@ def safe_execute(func: Callable, *args, **kwargs) -> Union[Any, MysticException]
         )
 
 
-async def safe_async_execute(func: Callable, *args, **kwargs) -> Union[Any, MysticException]:
+async def safe_async_execute(func: Callable, *args, **kwargs) -> Any | MysticException:
     """
     Safely execute an async function and return result or exception
     """

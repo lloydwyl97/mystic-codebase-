@@ -1,19 +1,22 @@
 ﻿from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, cast
 
 import pandas as pd
 import streamlit as st
 
+from mystic_ui._archive_pages.components.common_utils import (  # public wrapper
+	get_app_state,
+	inject_global_theme,  # public wrapper
+	render_sidebar_controls,
+	safe_number_format,  # public wrapper
+)
 from mystic_ui.api_client import request_json as _req
-from mystic_ui._archive_pages.components.common_utils import get_app_state, render_sidebar_controls  # public wrapper
-from mystic_ui._archive_pages.components.common_utils import safe_number_format  # public wrapper
-from mystic_ui._archive_pages.components.common_utils import inject_global_theme  # public wrapper
 
 _st = cast(Any, st)
 
 
-def _extract_positions(payload: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _extract_positions(payload: dict[str, Any] | None) -> list[dict[str, Any]]:
 	if not isinstance(payload, dict):
 		return []
 	# Accept multiple possible shapes
@@ -24,25 +27,25 @@ def _extract_positions(payload: Optional[Dict[str, Any]]) -> List[Dict[str, Any]
 		or payload.get("data")
 	)
 	if isinstance(positions_obj, list):
-		return cast(List[Dict[str, Any]], positions_obj)
+		return cast(list[dict[str, Any]], positions_obj)
 	return []
 
 
-def _extract_orders(payload: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _extract_orders(payload: dict[str, Any] | None) -> list[dict[str, Any]]:
 	if not isinstance(payload, dict):
 		return []
 	orders_obj: Any = payload.get("orders", payload.get("data"))
 	if isinstance(orders_obj, list):
-		return cast(List[Dict[str, Any]], orders_obj)
+		return cast(list[dict[str, Any]], orders_obj)
 	return []
 
 
-def _extract_pnl_summary(payload_overview: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+def _extract_pnl_summary(payload_overview: dict[str, Any] | None) -> dict[str, Any]:
 	# Try common locations for P&L / equity snapshot
 	ov = payload_overview if isinstance(payload_overview, dict) else {}
-	portfolio: Dict[str, Any] = cast(Dict[str, Any], ov.get("portfolio", {})) if isinstance(ov.get("portfolio"), dict) else {}
-	perf: Dict[str, Any] = cast(Dict[str, Any], ov.get("performance", {})) if isinstance(ov.get("performance"), dict) else {}
-	market_data: Dict[str, Any] = cast(Dict[str, Any], ov.get("market_data", {})) if isinstance(ov.get("market_data"), dict) else {}
+	portfolio: dict[str, Any] = cast(dict[str, Any], ov.get("portfolio", {})) if isinstance(ov.get("portfolio"), dict) else {}
+	perf: dict[str, Any] = cast(dict[str, Any], ov.get("performance", {})) if isinstance(ov.get("performance"), dict) else {}
+	market_data: dict[str, Any] = cast(dict[str, Any], ov.get("market_data", {})) if isinstance(ov.get("market_data"), dict) else {}
 
 	return {
 		"equity": portfolio.get("total_value") or portfolio.get("equity") or perf.get("equity"),
@@ -53,7 +56,7 @@ def _extract_pnl_summary(payload_overview: Optional[Dict[str, Any]]) -> Dict[str
 	}
 
 
-def _format_positions_table(rows: List[Dict[str, Any]]) -> pd.DataFrame:
+def _format_positions_table(rows: list[dict[str, Any]]) -> pd.DataFrame:
 	if not rows:
 		return pd.DataFrame()
 	df = pd.DataFrame(rows)
@@ -63,7 +66,7 @@ def _format_positions_table(rows: List[Dict[str, Any]]) -> pd.DataFrame:
 	cols = [c for c in preferred_cols if c in df.columns] + [c for c in df.columns if c not in preferred_cols]
 	df = df[cols]
 	# Number coercion for numeric-like columns
-	num_cols: List[str] = [str(c) for c in df.columns if c not in ("symbol", "side", "status")]
+	num_cols: list[str] = [str(c) for c in df.columns if c not in ("symbol", "side", "status")]
 	for c in num_cols:
 		try:
 			df[c] = pd.to_numeric(df[c], errors="coerce")  # type: ignore[call-overload]
@@ -72,7 +75,7 @@ def _format_positions_table(rows: List[Dict[str, Any]]) -> pd.DataFrame:
 	return df
 
 
-def _format_orders_table(rows: List[Dict[str, Any]]) -> pd.DataFrame:
+def _format_orders_table(rows: list[dict[str, Any]]) -> pd.DataFrame:
 	if not rows:
 		return pd.DataFrame()
 	df = pd.DataFrame(rows)
@@ -81,7 +84,7 @@ def _format_orders_table(rows: List[Dict[str, Any]]) -> pd.DataFrame:
 	]
 	cols = [c for c in preferred if c in df.columns] + [c for c in df.columns if c not in preferred]
 	df = df[cols]
-	numeric: List[str] = ["price", "avg_fill_price", "qty", "filled", "remaining"]
+	numeric: list[str] = ["price", "avg_fill_price", "qty", "filled", "remaining"]
 	for c in numeric:
 		if c in df.columns:
 			try:
@@ -112,9 +115,9 @@ def main() -> None:
 		except Exception:
 			ord_payload_any = None
 
-	ov_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], ov_payload_any if isinstance(ov_payload_any, dict) else None)
-	pos_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], pos_payload_any if isinstance(pos_payload_any, dict) else None)
-	ord_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], ord_payload_any if isinstance(ord_payload_any, dict) else None)
+	ov_payload: dict[str, Any] | None = cast(dict[str, Any] | None, ov_payload_any if isinstance(ov_payload_any, dict) else None)
+	pos_payload: dict[str, Any] | None = cast(dict[str, Any] | None, pos_payload_any if isinstance(pos_payload_any, dict) else None)
+	ord_payload: dict[str, Any] | None = cast(dict[str, Any] | None, ord_payload_any if isinstance(ord_payload_any, dict) else None)
 
 	positions = _extract_positions(pos_payload or ov_payload)
 	orders = _extract_orders(ord_payload)

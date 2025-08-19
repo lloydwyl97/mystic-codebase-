@@ -9,15 +9,15 @@ Integrates all security components:
 - Security monitoring
 """
 
-import time
 import logging
-from typing import Any, Dict, List, Optional
+import time
+from typing import Any
+
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
-
-from security.rate_limiter import rate_limiter
 from security.authentication import auth_manager
 from security.error_handler import error_handler
+from security.rate_limiter import rate_limiter
 from security.secure_logger import secure_logger
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ class SecurityMiddleware:
         self.rate_limiter = rate_limiter
         self.auth_manager = auth_manager
 
-    async def process_request(self, request: Request) -> Optional[Response]:
+    async def process_request(self, request: Request) -> Response | None:
         """Process incoming request with security checks"""
         start_time = time.time()
         client_ip = self._get_client_ip(request)
@@ -156,7 +156,7 @@ class SecurityMiddleware:
 
         return any(pattern in endpoint for pattern in protected_patterns)
 
-    async def _authenticate_request(self, request: Request) -> Dict[str, Any]:
+    async def _authenticate_request(self, request: Request) -> dict[str, Any]:
         """Authenticate the request"""
         try:
             # Get authorization header
@@ -196,7 +196,7 @@ class SecurityMiddleware:
                 'reason': 'Authentication failed'
             }
 
-    def _authorize_request(self, user_info: Dict[str, Any], endpoint: str) -> bool:
+    def _authorize_request(self, user_info: dict[str, Any], endpoint: str) -> bool:
         """Authorize the request based on user permissions"""
         # For now, implement basic authorization
         # In a real system, you would check user roles and permissions
@@ -207,7 +207,7 @@ class SecurityMiddleware:
 
         return all(perm in user_permissions for perm in required_permissions)
 
-    def _get_required_permissions(self, endpoint: str) -> List[str]:
+    def _get_required_permissions(self, endpoint: str) -> list[str]:
         """Get required permissions for an endpoint"""
         # This is a simplified implementation
         # In a real system, you would have a more sophisticated permission mapping
@@ -220,7 +220,7 @@ class SecurityMiddleware:
         else:
             return []
 
-    def _create_rate_limit_response(self, rate_limit_info: Dict[str, Any]) -> JSONResponse:
+    def _create_rate_limit_response(self, rate_limit_info: dict[str, Any]) -> JSONResponse:
         """Create rate limit exceeded response"""
         return JSONResponse(
             status_code=429,
@@ -266,7 +266,7 @@ class SecurityDecorator:
     def __init__(self, security_middleware: SecurityMiddleware):
         self.middleware = security_middleware
 
-    def require_auth(self, required_permissions: Optional[List[str]] = None):
+    def require_auth(self, required_permissions: list[str] | None = None):
         """Decorator to require authentication and optional permissions"""
         def decorator(func):
             async def wrapper(*args, **kwargs):
@@ -292,7 +292,7 @@ class SecurityMonitor:
 
     def __init__(self, security_middleware: SecurityMiddleware):
         self.middleware = security_middleware
-        self.security_events: List[Dict[str, Any]] = []
+        self.security_events: list[dict[str, Any]] = []
 
     def log_security_event(self, event_type: str, severity: str,
                           description: str, **kwargs):
@@ -310,7 +310,7 @@ class SecurityMonitor:
             description, severity=severity, **kwargs
         )
 
-    def get_security_stats(self) -> Dict[str, Any]:
+    def get_security_stats(self) -> dict[str, Any]:
         """Get comprehensive security statistics"""
         return {
             'rate_limiting': self.middleware.rate_limiter.get_rate_limit_stats(),

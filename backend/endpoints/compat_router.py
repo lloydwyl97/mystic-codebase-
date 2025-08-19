@@ -6,7 +6,7 @@ without changing business logic. Prefer delegating to existing routers/services.
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="", tags=["compat"])  # mounted under /api by app fact
 
 
 @router.get("/system/performance")
-async def system_performance() -> Dict[str, Any]:
+async def system_performance() -> dict[str, Any]:
 	try:
 		# Try enhanced API performance if available
 		try:
@@ -30,9 +30,9 @@ async def system_performance() -> Dict[str, Any]:
 
 
 @router.get("/system/config")
-async def system_config() -> Dict[str, Any]:
+async def system_config() -> dict[str, Any]:
 	try:
-		cfg: Dict[str, Any] = {}
+		cfg: dict[str, Any] = {}
 		try:
 			from backend.config import settings  # type: ignore
 			cfg = {
@@ -48,7 +48,7 @@ async def system_config() -> Dict[str, Any]:
 
 
 @router.get("/coins")
-async def coins_proxy() -> Dict[str, Any]:
+async def coins_proxy() -> dict[str, Any]:
 	"""Expose /api/coins by delegating to crypto_autoengine if present."""
 	try:
 		try:

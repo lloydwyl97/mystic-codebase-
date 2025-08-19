@@ -12,14 +12,14 @@ import logging
 import os
 import time
 from base64 import b64encode
-from datetime import datetime
-from typing import Any, Dict
+from datetime import datetime, timezone
+from typing import Any
 from urllib.parse import urlencode
 
 import requests
 from dotenv import load_dotenv
+
 from backend.config import settings
-from datetime import datetime, timezone
 
 # Load environment variables
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -119,7 +119,7 @@ class AutoWithdrawSystem:
         amount: float,
         exchange: str,
         status: str,
-        details: Dict[str, Any],
+        details: dict[str, Any],
     ):
         """Log withdrawal to database and file"""
         try:
@@ -147,7 +147,7 @@ class AutoWithdrawSystem:
         except Exception as e:
             logger.error(f"Failed to log withdrawal: {e}")
 
-    def binance_withdraw(self) -> Dict[str, Any]:
+    def binance_withdraw(self) -> dict[str, Any]:
         """Handle Binance withdrawal"""
         try:
             base_url = "https://api.binance.us"
@@ -233,12 +233,12 @@ class AutoWithdrawSystem:
             logger.error(f"[BINANCE] {error_msg}")
             return {"status": "error", "error": str(e)}
 
-    def coinbase_withdraw(self) -> Dict[str, Any]:
+    def coinbase_withdraw(self) -> dict[str, Any]:
         """Handle Coinbase withdrawal"""
         try:
             base_url = "https://api.coinbase.com"
 
-            def get_headers(method: str, request_path: str, body: str = "") -> Dict[str, str]:
+            def get_headers(method: str, request_path: str, body: str = "") -> dict[str, str]:
                 """Generate Coinbase API headers"""
                 timestamp = str(time.time())
                 message = timestamp + method + request_path + body
@@ -316,7 +316,7 @@ class AutoWithdrawSystem:
             logger.error(f"[COINBASE] {error_msg}")
             return {"status": "error", "error": str(e)}
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get withdrawal statistics"""
         return {
             "exchange": self.exchange,
@@ -326,7 +326,7 @@ class AutoWithdrawSystem:
             "statistics": self.stats,
         }
 
-    def run_once(self) -> Dict[str, Any]:
+    def run_once(self) -> dict[str, Any]:
         """Run withdrawal check once"""
         logger.info(f"Checking {self.exchange} for withdrawal opportunity...")
 

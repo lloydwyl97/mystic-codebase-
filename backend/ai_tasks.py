@@ -3,19 +3,19 @@ Celery Task Configuration for Mystic Trading Platform
 Production-ready task queue system for AI trading operations
 """
 
-import os
 import json
+import os
 from datetime import datetime, timedelta, timezone
-from typing import Dict, List, Optional, Any
+from typing import Any
+
+import httpx
+import numpy as np
+import psutil
+import redis
+import structlog
 from celery import Celery
 from celery.utils.log import get_task_logger
-import redis
-import numpy as np
 from sqlalchemy import create_engine
-import httpx
-import psutil
-import structlog
-from datetime import datetime, timezone
 
 # Configure structured logging
 logger = structlog.get_logger()
@@ -103,7 +103,7 @@ class TradingTaskError(Exception):
 
 
 @celery_app.task(bind=True, name="ai_tasks.sync_market_data")
-def sync_market_data(self, symbols: Optional[List[str]] = None) -> Dict[str, Any]:
+def sync_market_data(self, symbols: list[str] | None = None) -> dict[str, Any]:
     """
     Synchronize market data from multiple exchanges
     Real-time price and volume data collection
@@ -168,7 +168,7 @@ def sync_market_data(self, symbols: Optional[List[str]] = None) -> Dict[str, Any
 
 
 @celery_app.task(bind=True, name="ai_tasks.rebalance_portfolio")
-def rebalance_portfolio(self, portfolio_id: Optional[str] = None) -> Dict[str, Any]:
+def rebalance_portfolio(self, portfolio_id: str | None = None) -> dict[str, Any]:
     """
     Rebalance portfolio based on AI strategy recommendations
     Advanced portfolio optimization with risk management
@@ -242,7 +242,7 @@ def rebalance_portfolio(self, portfolio_id: Optional[str] = None) -> Dict[str, A
 
 
 @celery_app.task(bind=True, name="ai_tasks.assess_risk")
-def assess_risk(self, portfolio_id: Optional[str] = None) -> Dict[str, Any]:
+def assess_risk(self, portfolio_id: str | None = None) -> dict[str, Any]:
     """
     Comprehensive risk assessment using AI models
     Real-time risk monitoring and alerting
@@ -320,7 +320,7 @@ def assess_risk(self, portfolio_id: Optional[str] = None) -> Dict[str, Any]:
 
 
 @celery_app.task(bind=True, name="ai_tasks.evaluate_ai_strategies")
-def evaluate_ai_strategies(self) -> Dict[str, Any]:
+def evaluate_ai_strategies(self) -> dict[str, Any]:
     """
     Evaluate and rank AI trading strategies
     Performance analysis and strategy optimization
@@ -420,7 +420,7 @@ def evaluate_ai_strategies(self) -> Dict[str, Any]:
 
 
 @celery_app.task(bind=True, name="ai_tasks.calculate_performance_metrics")
-def calculate_performance_metrics(self) -> Dict[str, Any]:
+def calculate_performance_metrics(self) -> dict[str, Any]:
     """
     Calculate comprehensive performance metrics
     Portfolio analytics and reporting
@@ -483,7 +483,7 @@ def calculate_performance_metrics(self) -> Dict[str, Any]:
 
 
 @celery_app.task(bind=True, name="ai_tasks.cleanup_old_data")
-def cleanup_old_data(self, days_to_keep: int = 30) -> Dict[str, Any]:
+def cleanup_old_data(self, days_to_keep: int = 30) -> dict[str, Any]:
     """
     Clean up old data to maintain system performance
     Database maintenance and optimization
@@ -525,7 +525,7 @@ def cleanup_old_data(self, days_to_keep: int = 30) -> Dict[str, Any]:
 
 
 @celery_app.task(bind=True, name="ai_tasks.send_risk_alert")
-def send_risk_alert(self, risk_data: Dict[str, Any]) -> Dict[str, Any]:
+def send_risk_alert(self, risk_data: dict[str, Any]) -> dict[str, Any]:
     """
     Send risk alerts via multiple channels
     Real-time notification system
@@ -577,12 +577,12 @@ def send_risk_alert(self, risk_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 # Helper functions
-def calculate_risk_score(portfolio: Dict[str, Any]) -> float:
+def calculate_risk_score(portfolio: dict[str, Any]) -> float:
     """Calculate portfolio risk score"""
     return np.random.uniform(0.1, 0.8)
 
 
-def calculate_var(volatility_data: Dict[str, float], confidence: float) -> float:
+def calculate_var(volatility_data: dict[str, float], confidence: float) -> float:
     """Calculate Value at Risk"""
     return np.random.uniform(0.02, 0.08)
 
@@ -603,8 +603,8 @@ def calculate_beta() -> float:
 
 
 def generate_correlation_matrix(
-    symbols: List[str],
-) -> Dict[str, Dict[str, float]]:
+    symbols: list[str],
+) -> dict[str, dict[str, float]]:
     """Generate correlation matrix"""
     matrix = {}
     for i, symbol1 in enumerate(symbols):
@@ -617,14 +617,14 @@ def generate_correlation_matrix(
     return matrix
 
 
-def calculate_overall_risk_score(risk_metrics: Dict[str, Any]) -> float:
+def calculate_overall_risk_score(risk_metrics: dict[str, Any]) -> float:
     """Calculate overall risk score"""
     return np.random.uniform(0.2, 0.7)
 
 
 def generate_risk_recommendations(
-    risk_metrics: Dict[str, Any], alerts: List[Dict[str, Any]]
-) -> List[str]:
+    risk_metrics: dict[str, Any], alerts: list[dict[str, Any]]
+) -> list[str]:
     """Generate risk recommendations"""
     recommendations = []
     if risk_metrics["var_95"] > 0.05:
@@ -634,7 +634,7 @@ def generate_risk_recommendations(
     return recommendations
 
 
-def calculate_strategy_score(strategy: Dict[str, Any]) -> float:
+def calculate_strategy_score(strategy: dict[str, Any]) -> float:
     """Calculate strategy performance score"""
     sharpe_weight = 0.4
     returns_weight = 0.3
@@ -654,7 +654,7 @@ def calculate_ulcer_index() -> float:
     return np.random.uniform(0.05, 0.15)
 
 
-def calculate_performance_grade(metrics: Dict[str, Any]) -> str:
+def calculate_performance_grade(metrics: dict[str, Any]) -> str:
     """Calculate performance grade"""
     score = (
         metrics["sharpe_ratio"] * 0.3
@@ -678,7 +678,7 @@ def calculate_performance_trend() -> str:
     return np.random.choice(trends)
 
 
-def check_system_health() -> Dict[str, Any]:
+def check_system_health() -> dict[str, Any]:
     """Check system health metrics"""
     return {
         "cpu_usage": psutil.cpu_percent(),
@@ -690,7 +690,7 @@ def check_system_health() -> Dict[str, Any]:
 
 # Task routing
 @celery_app.task
-def health_check() -> Dict[str, Any]:
+def health_check() -> dict[str, Any]:
     """Health check for the Celery system"""
     return {
         "status": "healthy",

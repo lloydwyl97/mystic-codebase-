@@ -1,9 +1,10 @@
+import os
+
+import cirq
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
-import cirq
-import os
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, generate_latest
 
 app = FastAPI(
     title="Mystic Cirq Quantum Service",

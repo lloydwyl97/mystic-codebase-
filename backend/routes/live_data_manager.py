@@ -7,7 +7,7 @@ validation, and response formatting.
 
 import logging
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from backend.services.market_data_sources import (
     SUPPORTED_COINS,
@@ -23,7 +23,7 @@ class LiveDataManager:
     def __init__(self, market_data_service: Any):
         self.market_data_service = market_data_service
 
-    def get_supported_symbols_data(self) -> Dict[str, Any]:
+    def get_supported_symbols_data(self) -> dict[str, Any]:
         """Get formatted data for supported symbols."""
         try:
             return {
@@ -35,7 +35,7 @@ class LiveDataManager:
             logger.error(f"Error getting supported symbols: {str(e)}")
             raise
 
-    def get_enhanced_live_data(self) -> Dict[str, Any]:
+    def get_enhanced_live_data(self) -> dict[str, Any]:
         """Get enhanced live data for all supported coins."""
         try:
             data = self.market_data_service.get_all_latest_enhanced()
@@ -48,16 +48,16 @@ class LiveDataManager:
             logger.error(f"Error getting enhanced live data: {str(e)}")
             raise
 
-    def get_all_live_data(self) -> Dict[str, Any]:
+    def get_all_live_data(self) -> dict[str, Any]:
         """Get all live data for supported coins."""
         try:
             # Get all supported symbols
-            all_coins: List[str] = []
+            all_coins: list[str] = []
             for _, coins in self.market_data_service.coin_config.items():
                 all_coins.extend(coins)
             supported_symbols = sorted(set(all_coins))
 
-            results: Dict[str, Any] = {
+            results: dict[str, Any] = {
                 "symbols": {},
                 "total_symbols": len(supported_symbols),
                 "timestamp": int(time.time()),
@@ -95,7 +95,7 @@ class LiveDataManager:
             logger.error(f"Error getting all live data: {str(e)}")
             raise
 
-    def get_live_data_for_symbol(self, symbol: str) -> Dict[str, Any]:
+    def get_live_data_for_symbol(self, symbol: str) -> dict[str, Any]:
         """Get live data for a specific symbol."""
         try:
             # Normalize symbol
@@ -142,7 +142,7 @@ class LiveDataManager:
             logger.error(f"Error getting live data for {symbol}: {str(e)}")
             raise
 
-    def get_supported_coins_data(self) -> Dict[str, Any]:
+    def get_supported_coins_data(self) -> dict[str, Any]:
         """Get formatted data for supported coins."""
         try:
             return {
@@ -154,7 +154,7 @@ class LiveDataManager:
             logger.error(f"Error getting supported coins: {str(e)}")
             raise
 
-    def get_coin_support_info(self) -> Dict[str, Any]:
+    def get_coin_support_info(self) -> dict[str, Any]:
         """Get detailed coin support information."""
         try:
             support_info = get_coin_support_summary()
@@ -166,11 +166,11 @@ class LiveDataManager:
             logger.error(f"Error getting coin support info: {str(e)}")
             raise
 
-    def get_coin_summary(self) -> Dict[str, Any]:
+    def get_coin_summary(self) -> dict[str, Any]:
         """Get summary of coin data."""
         try:
             # Get all supported symbols
-            all_coins: List[str] = []
+            all_coins: list[str] = []
             for _, coins in self.market_data_service.coin_config.items():
                 all_coins.extend(coins)
             supported_symbols = sorted(set(all_coins))
@@ -197,7 +197,7 @@ class LiveDataManager:
         symbol = symbol.upper()
         return any(symbol in coins for coins in self.market_data_service.coin_config.values())
 
-    def format_error_response(self, error: str, symbol: Optional[str] = None) -> Dict[str, Any]:
+    def format_error_response(self, error: str, symbol: str | None = None) -> dict[str, Any]:
         """Format error response for API endpoints."""
         response = {"error": error, "timestamp": int(time.time())}
         if symbol:

@@ -5,19 +5,20 @@ Handles reinforcement learning for trading strategy optimization
 
 import asyncio
 import json
+import os
+import random
+import sys
+from collections import deque
+from datetime import datetime, timedelta
+from typing import Any
+
+import joblib  # type: ignore[reportMissingTypeStubs]
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
-import os
-import sys
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from collections import deque
-import random
 from sklearn.preprocessing import StandardScaler
-import joblib
 
 # Make all imports live (F401_ = Tuple[int, int]
 
@@ -367,8 +368,8 @@ class ReinforcementLearningAgent(BaseAgent):
             print(f"âŒ Error initializing RL models: {e}")
 
     async def create_rl_model(
-        self, algorithm_name: str, algorithm_config: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+        self, algorithm_name: str, algorithm_config: dict[str, Any]
+    ) -> dict[str, Any] | None:
         """Create a reinforcement learning model"""
         try:
             algorithm_type = algorithm_config["type"]
@@ -500,7 +501,7 @@ class ReinforcementLearningAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for RL training"""
         try:
             symbol = market_data.get("symbol")
@@ -620,7 +621,7 @@ class ReinforcementLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error training RL models for {symbol}: {e}")
 
-    async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_symbol_market_data(self, symbol: str) -> list[dict[str, Any]]:
         """Get market data for a symbol"""
         try:
             # Get from training history
@@ -654,7 +655,7 @@ class ReinforcementLearningAgent(BaseAgent):
         self,
         symbol: str,
         algorithm_name: str,
-        model: Dict[str, Any],
+        model: dict[str, Any],
         environment: TradingEnvironment,
     ):
         """Train a specific RL model"""
@@ -676,9 +677,9 @@ class ReinforcementLearningAgent(BaseAgent):
         self,
         symbol: str,
         algorithm_name: str,
-        model: Dict[str, Any],
+        model: dict[str, Any],
         environment: TradingEnvironment,
-        training_config: Dict[str, Any],
+        training_config: dict[str, Any],
     ):
         """Train DQN model"""
         try:
@@ -785,13 +786,13 @@ class ReinforcementLearningAgent(BaseAgent):
         target_network: nn.Module,
         optimizer: optim.Optimizer,
         memory: deque,
-        config: Dict[str, Any],
+        config: dict[str, Any],
     ):
         """Train DQN for one step"""
         try:
             # Sample batch
             batch = random.sample(memory, config["batch_size"])
-            states, actions, rewards, next_states, dones = zip(*batch)
+            states, actions, rewards, next_states, dones = zip(*batch, strict=False)
 
             # Convert to tensors
             states = torch.FloatTensor(states).to(self.device)
@@ -822,9 +823,9 @@ class ReinforcementLearningAgent(BaseAgent):
         self,
         symbol: str,
         algorithm_name: str,
-        model: Dict[str, Any],
+        model: dict[str, Any],
         environment: TradingEnvironment,
-        training_config: Dict[str, Any],
+        training_config: dict[str, Any],
     ):
         """Train Actor-Critic model"""
         try:
@@ -976,9 +977,9 @@ class ReinforcementLearningAgent(BaseAgent):
         self,
         symbol: str,
         algorithm_name: str,
-        model: Dict[str, Any],
-        market_data: List[Dict[str, Any]],
-    ) -> Optional[Dict[str, Any]]:
+        model: dict[str, Any],
+        market_data: list[dict[str, Any]],
+    ) -> dict[str, Any] | None:
         """Generate strategy with a specific model"""
         try:
             algorithm_type = model["type"]
@@ -1044,7 +1045,7 @@ class ReinforcementLearningAgent(BaseAgent):
             print(f"âŒ Error generating strategy with {algorithm_name}: {e}")
             return None
 
-    async def broadcast_strategies(self, symbol: str, strategies: Dict[str, Any]):
+    async def broadcast_strategies(self, symbol: str, strategies: dict[str, Any]):
         """Broadcast strategies to other agents"""
         try:
             strategy_update = {
@@ -1064,7 +1065,7 @@ class ReinforcementLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting strategies: {e}")
 
-    async def handle_train_rl_model(self, message: Dict[str, Any]):
+    async def handle_train_rl_model(self, message: dict[str, Any]):
         """Handle manual RL model training request"""
         try:
             symbol = message.get("symbol")
@@ -1108,7 +1109,7 @@ class ReinforcementLearningAgent(BaseAgent):
             print(f"âŒ Error handling RL model training request: {e}")
             await self.broadcast_error(f"RL model training error: {e}")
 
-    async def handle_generate_strategy(self, message: Dict[str, Any]):
+    async def handle_generate_strategy(self, message: dict[str, Any]):
         """Handle manual strategy generation request"""
         try:
             symbol = message.get("symbol")
@@ -1174,7 +1175,7 @@ class ReinforcementLearningAgent(BaseAgent):
             print(f"âŒ Error handling strategy generation request: {e}")
             await self.broadcast_error(f"Strategy generation error: {e}")
 
-    async def handle_get_rl_status(self, message: Dict[str, Any]):
+    async def handle_get_rl_status(self, message: dict[str, Any]):
         """Handle RL status request"""
         try:
             symbol = message.get("symbol")
@@ -1253,7 +1254,7 @@ class ReinforcementLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error cleaning up cache: {e}")
 
-    async def handle_market_data(self, message: Dict[str, Any]):
+    async def handle_market_data(self, message: dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})

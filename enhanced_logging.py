@@ -1,19 +1,20 @@
-import redis
-from typing import Optional, List, Dict, Any
-import time
-import logging
-import functools
 import asyncio
+import functools
+import logging
+import time
 from datetime import datetime
+from typing import Any
+
+import redis
 
 logger = logging.getLogger(__name__)
 
 
 def log_event(
     event_type: str,
-    event_data: Dict[str, Any],
+    event_data: dict[str, Any],
     level: str = "info",
-    redis_client: Optional[redis.Redis] = None,
+    redis_client: redis.Redis | None = None,
 ):
     """
     Log an event with structured data and optional Redis storage.
@@ -104,7 +105,7 @@ class EnhancedLogger:
 
     def __init__(
         self,
-        redis_client: Optional[redis.Redis] = None,
+        redis_client: redis.Redis | None = None,
         key_prefix: str = "logs",
         max_logs: int = 1000,
     ):
@@ -121,7 +122,7 @@ class EnhancedLogger:
         self.max_logs = max_logs
         self.buffer_size = 100
         self.flush_interval = 60  # seconds
-        self.log_buffer: List[Dict[str, Any]] = []
+        self.log_buffer: list[dict[str, Any]] = []
         self.last_flush = time.time()
 
         # Initialize Redis if available

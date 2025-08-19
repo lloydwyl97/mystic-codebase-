@@ -4,7 +4,7 @@ Basic API endpoints for the application
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter
 
@@ -14,13 +14,13 @@ router = APIRouter(tags=["core"])
 
 
 @router.get("/")
-async def root() -> Dict[str, str]:
+async def root() -> dict[str, str]:
     """Root endpoint"""
     return {"message": "Mystic AI Trading Platform API"}
 
 
 @router.get("/test")
-async def test_endpoint() -> Dict[str, Any]:
+async def test_endpoint() -> dict[str, Any]:
     """Test endpoint for basic functionality"""
     return {
         "status": "success",
@@ -30,7 +30,7 @@ async def test_endpoint() -> Dict[str, Any]:
 
 
 @router.get("/version")
-async def get_version() -> Dict[str, Any]:
+async def get_version() -> dict[str, Any]:
     """Get application version information"""
     return {
         "version": "1.0.0",

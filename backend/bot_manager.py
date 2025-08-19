@@ -9,15 +9,14 @@ import signal
 import sys
 from datetime import datetime, timezone
 from types import FrameType
-from typing import Any, Dict, Union
-
-from binance_bot import BinanceBot
+from typing import Any
 
 # Import the bots
 from coinbase_bot import CoinbaseBot
 
 # Import rotated logging system
 from backend.utils.log_rotation_manager import get_log_rotation_manager
+from binance_bot import BinanceBot
 
 # Configure logging with rotation
 log_manager = get_log_rotation_manager()
@@ -40,7 +39,7 @@ class BotManager:
         }
 
         # Performance tracking
-        self.stats: Dict[str, Union[str, int, None]] = {
+        self.stats: dict[str, str | int | None] = {
             "start_time": None,
             "restart_count": 0,
             "last_health_check": None,
@@ -52,7 +51,7 @@ class BotManager:
 
         logger.info("Bot Manager initialized with rotated logging")
 
-    def signal_handler(self, signum: int, frame: Union[FrameType, None]) -> None:
+    def signal_handler(self, signum: int, frame: FrameType | None) -> None:
         """Handle shutdown signals gracefully"""
         logger.info(f"Received signal {signum}, shutting down gracefully...")
         if frame is not None:
@@ -61,7 +60,7 @@ class BotManager:
             )
         self.is_running = False
 
-    async def start_bot(self, bot: Union[CoinbaseBot, BinanceBot], bot_name: str) -> None:
+    async def start_bot(self, bot: CoinbaseBot | BinanceBot, bot_name: str) -> None:
         """Start a bot with error handling and auto-restart"""
         restart_attempts = 0
 
@@ -166,7 +165,7 @@ class BotManager:
 
         logger.info("All bots stopped")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get overall status of all bots"""
         return {
             "manager_status": "running" if self.is_running else "stopped",

@@ -6,10 +6,10 @@ Handles order execution, trade management, and position tracking
 import asyncio
 import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, Any
 import os
 import sys
+from datetime import datetime, timedelta
+from typing import Any
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -106,7 +106,8 @@ class ExecutionAgent(BaseAgent):
                 self.state["active_orders"] = json.loads(orders_data)
 
             # Load trade history
-            history_data = self.redis_client.lrange("trade_history", 0, -1)
+            from utils.redis_helpers import to_str_list
+            history_data = to_str_list(self.redis_client.lrange("trade_history", 0, -1))
             self.state["trade_history"] = [json.loads(item) for item in history_data]
 
             print(
@@ -170,7 +171,7 @@ class ExecutionAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process incoming market data for execution"""
         try:
             symbol = market_data.get("symbol")
@@ -186,7 +187,7 @@ class ExecutionAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing market data: {e}")
 
-    async def handle_approved_signal(self, message: Dict[str, Any]):
+    async def handle_approved_signal(self, message: dict[str, Any]):
         """Handle approved trading signal"""
         try:
             strategy_id = message.get("strategy_id")
@@ -230,7 +231,7 @@ class ExecutionAgent(BaseAgent):
             print(f"âŒ Error handling approved signal: {e}")
             await self.broadcast_error(f"Execution error: {e}")
 
-    async def handle_cancel_order(self, message: Dict[str, Any]):
+    async def handle_cancel_order(self, message: dict[str, Any]):
         """Handle order cancellation request"""
         try:
             order_id = message.get("order_id")
@@ -256,7 +257,7 @@ class ExecutionAgent(BaseAgent):
             print(f"âŒ Error cancelling order: {e}")
             await self.broadcast_error(f"Order cancellation error: {e}")
 
-    async def handle_modify_order(self, message: Dict[str, Any]):
+    async def handle_modify_order(self, message: dict[str, Any]):
         """Handle order modification request"""
         try:
             order_id = message.get("order_id")
@@ -283,7 +284,7 @@ class ExecutionAgent(BaseAgent):
             print(f"âŒ Error modifying order: {e}")
             await self.broadcast_error(f"Order modification error: {e}")
 
-    async def handle_portfolio_update(self, message: Dict[str, Any]):
+    async def handle_portfolio_update(self, message: dict[str, Any]):
         """Handle portfolio update"""
         try:
             portfolio = message.get("portfolio", {})
@@ -298,16 +299,16 @@ class ExecutionAgent(BaseAgent):
         self,
         symbol: str,
         signal_type: str,
-        position_size: Dict[str, Any],
+        position_size: dict[str, Any],
         price: float,
         strategy_id: str,
         confidence: float,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute a trade"""
         try:
             # Validate execution parameters
             if not await self.validate_execution_params(symbol, position_size, price):
-                from backend.utils.exceptions import TradingException, ErrorCode
+                from backend.utils.exceptions import ErrorCode, TradingException
             raise TradingException(
                 message="Invalid execution parameters",
                 error_code=ErrorCode.TRADING_ORDER_ERROR,
@@ -360,7 +361,7 @@ class ExecutionAgent(BaseAgent):
         except Exception as e:
             logger.error(f"Error executing trade: {e}")
             self.state["execution_stats"]["failed_trades"] += 1
-            from backend.utils.exceptions import TradingException, ErrorCode
+            from backend.utils.exceptions import ErrorCode, TradingException
             raise TradingException(
                 message="Failed to execute trade",
                 error_code=ErrorCode.TRADING_ORDER_ERROR,
@@ -369,7 +370,7 @@ class ExecutionAgent(BaseAgent):
             )
 
     async def validate_execution_params(
-        self, symbol: str, position_size: Dict[str, Any], price: float
+        self, symbol: str, position_size: dict[str, Any], price: float
     ) -> bool:
         """Validate execution parameters"""
         try:
@@ -404,9 +405,9 @@ class ExecutionAgent(BaseAgent):
         self,
         symbol: str,
         signal_type: str,
-        position_size: Dict[str, Any],
+        position_size: dict[str, Any],
         price: float,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate order parameters"""
         try:
             quantity = position_size.get("position_size", 0)
@@ -419,7 +420,7 @@ class ExecutionAgent(BaseAgent):
                 order_type = "market"
                 side = "sell"
             else:
-                from backend.utils.exceptions import TradingException, ErrorCode
+                from backend.utils.exceptions import ErrorCode, TradingException
             raise TradingException(
                 message=f"Invalid signal type: {signal_type}",
                 error_code=ErrorCode.TRADING_ORDER_ERROR,
@@ -451,7 +452,7 @@ class ExecutionAgent(BaseAgent):
             print(f"âŒ Error calculating order parameters: {e}")
             raise
 
-    async def place_order(self, order_params: Dict[str, Any]) -> Dict[str, Any]:
+    async def place_order(self, order_params: dict[str, Any]) -> dict[str, Any]:
         """Place order on exchange"""
         try:
             # Simulate order placement
@@ -493,7 +494,7 @@ class ExecutionAgent(BaseAgent):
             print(f"âŒ Error placing order: {e}")
             raise
 
-    async def cancel_order(self, order_id: str) -> Dict[str, Any]:
+    async def cancel_order(self, order_id: str) -> dict[str, Any]:
         """Cancel an order"""
         try:
             if order_id not in self.state["active_orders"]:
@@ -525,7 +526,7 @@ class ExecutionAgent(BaseAgent):
             print(f"âŒ Error cancelling order: {e}")
             raise
 
-    async def modify_order(self, order_id: str, new_params: Dict[str, Any]) -> Dict[str, Any]:
+    async def modify_order(self, order_id: str, new_params: dict[str, Any]) -> dict[str, Any]:
         """Modify an order"""
         try:
             if order_id not in self.state["active_orders"]:
@@ -610,7 +611,7 @@ class ExecutionAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating positions: {e}")
 
-    async def update_positions_from_portfolio(self, portfolio: Dict[str, Any]):
+    async def update_positions_from_portfolio(self, portfolio: dict[str, Any]):
         """Update positions from portfolio data"""
         try:
             positions = portfolio.get("positions", [])
@@ -630,7 +631,7 @@ class ExecutionAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating positions from portfolio: {e}")
 
-    async def get_exchange_positions(self) -> Dict[str, Any]:
+    async def get_exchange_positions(self) -> dict[str, Any]:
         """Get current positions from exchange"""
         try:
             # Simulate getting positions from exchange
@@ -682,7 +683,7 @@ class ExecutionAgent(BaseAgent):
             print(f"âŒ Error updating order prices: {e}")
 
     async def check_price_triggers(
-        self, order_id: str, order: Dict[str, Any], current_price: float
+        self, order_id: str, order: dict[str, Any], current_price: float
     ):
         """Check for price-based order triggers"""
         try:
@@ -730,7 +731,7 @@ class ExecutionAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating execution metrics: {e}")
 
-    async def handle_market_data(self, message: Dict[str, Any]):
+    async def handle_market_data(self, message: dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})

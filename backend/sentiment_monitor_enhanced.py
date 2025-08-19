@@ -1,13 +1,12 @@
-﻿import requests
+﻿import asyncio
 import json
-import sqlite3
-import asyncio
-import aiohttp
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from datetime import datetime
-from typing import Dict, List
 import re
+import sqlite3
 from datetime import datetime, timezone
+
+import aiohttp
+import requests
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Enhanced configuration
 NEWS_SOURCES = {
@@ -67,7 +66,7 @@ class SentimentDatabase:
         conn.commit()
         conn.close()
 
-    def save_sentiment(self, data: Dict):
+    def save_sentiment(self, data: dict):
         """Save sentiment data to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -115,7 +114,7 @@ class SentimentDatabase:
         conn.close()
 
 
-async def get_market_data() -> Dict:
+async def get_market_data() -> dict:
     """Get current market data for correlation"""
     try:
         async with aiohttp.ClientSession() as session:
@@ -136,7 +135,7 @@ async def get_market_data() -> Dict:
     return {}
 
 
-def fetch_headlines_enhanced() -> Dict[str, List[str]]:
+def fetch_headlines_enhanced() -> dict[str, list[str]]:
     """Fetch headlines from multiple sources"""
     headlines = {}
 

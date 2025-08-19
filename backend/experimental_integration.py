@@ -7,7 +7,8 @@ Integrates quantum, blockchain, satellite, and 5G services with autobuy decision
 import asyncio
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Any
+
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -38,11 +39,11 @@ class ExperimentalIntegration:
         }
 
         # Service status
-        self.service_status: Dict[str, Dict[str, Any]] = {}
+        self.service_status: dict[str, dict[str, Any]] = {}
         self.last_integration = None
 
         # Integration cache
-        self.integration_cache: Dict[str, Any] = {}
+        self.integration_cache: dict[str, Any] = {}
         self.cache_ttl = 300  # 5 minutes
 
         logger.info("âœ… Experimental Services Integration initialized")
@@ -103,7 +104,7 @@ class ExperimentalIntegration:
         except Exception as e:
             logger.error(f"âŒ Error collecting experimental data: {e}")
 
-    async def _collect_quantum_data(self) -> Dict[str, Any]:
+    async def _collect_quantum_data(self) -> dict[str, Any]:
         """Collect data from quantum services"""
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
@@ -129,7 +130,7 @@ class ExperimentalIntegration:
             logger.warning(f"âš ï¸ Quantum service unavailable: {e}")
             return {}
 
-    async def _collect_blockchain_data(self) -> Dict[str, Any]:
+    async def _collect_blockchain_data(self) -> dict[str, Any]:
         """Collect data from blockchain services"""
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
@@ -155,7 +156,7 @@ class ExperimentalIntegration:
             logger.warning(f"âš ï¸ Blockchain service unavailable: {e}")
             return {}
 
-    async def _collect_satellite_data(self) -> Dict[str, Any]:
+    async def _collect_satellite_data(self) -> dict[str, Any]:
         """Collect data from satellite services"""
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
@@ -181,7 +182,7 @@ class ExperimentalIntegration:
             logger.warning(f"âš ï¸ Satellite service unavailable: {e}")
             return {}
 
-    async def _collect_5g_data(self) -> Dict[str, Any]:
+    async def _collect_5g_data(self) -> dict[str, Any]:
         """Collect data from 5G services"""
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
@@ -204,7 +205,7 @@ class ExperimentalIntegration:
             logger.warning(f"âš ï¸ 5G service unavailable: {e}")
             return {}
 
-    async def _collect_ai_super_data(self) -> Dict[str, Any]:
+    async def _collect_ai_super_data(self) -> dict[str, Any]:
         """Collect data from AI supercomputer"""
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
@@ -232,12 +233,12 @@ class ExperimentalIntegration:
 
     async def _combine_experimental_signals(
         self,
-        quantum_data: Dict[str, Any],
-        blockchain_data: Dict[str, Any],
-        satellite_data: Dict[str, Any],
-        g5_data: Dict[str, Any],
-        ai_super_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        quantum_data: dict[str, Any],
+        blockchain_data: dict[str, Any],
+        satellite_data: dict[str, Any],
+        g5_data: dict[str, Any],
+        ai_super_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Combine signals from all experimental services"""
         try:
             combined_signals = {
@@ -355,7 +356,7 @@ class ExperimentalIntegration:
                 "error": str(e),
             }
 
-    def _process_quantum_signal(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _process_quantum_signal(self, data: dict[str, Any]) -> dict[str, Any]:
         """Process quantum computing signals"""
         try:
             # Extract quantum-specific signals
@@ -394,7 +395,7 @@ class ExperimentalIntegration:
                 "risk_factors": ["processing_error"],
             }
 
-    def _process_blockchain_signal(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _process_blockchain_signal(self, data: dict[str, Any]) -> dict[str, Any]:
         """Process blockchain signals"""
         try:
             # Extract blockchain-specific signals
@@ -433,7 +434,7 @@ class ExperimentalIntegration:
                 "risk_factors": ["processing_error"],
             }
 
-    def _process_satellite_signal(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _process_satellite_signal(self, data: dict[str, Any]) -> dict[str, Any]:
         """Process satellite signals"""
         try:
             # Extract satellite-specific signals
@@ -472,7 +473,7 @@ class ExperimentalIntegration:
                 "risk_factors": ["processing_error"],
             }
 
-    def _process_5g_signal(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _process_5g_signal(self, data: dict[str, Any]) -> dict[str, Any]:
         """Process 5G signals"""
         try:
             # Extract 5G-specific signals
@@ -511,7 +512,7 @@ class ExperimentalIntegration:
                 "risk_factors": ["processing_error"],
             }
 
-    def _process_ai_super_signal(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _process_ai_super_signal(self, data: dict[str, Any]) -> dict[str, Any]:
         """Process AI supercomputer signals"""
         try:
             # Extract AI super-specific signals
@@ -550,7 +551,7 @@ class ExperimentalIntegration:
                 "risk_factors": ["processing_error"],
             }
 
-    async def get_experimental_influence(self, symbol: str) -> Dict[str, Any]:
+    async def get_experimental_influence(self, symbol: str) -> dict[str, Any]:
         """Get experimental services influence on trading decisions"""
         try:
             if not self.integration_cache:
@@ -588,7 +589,7 @@ class ExperimentalIntegration:
                 "reason": str(e),
             }
 
-    def get_service_status(self) -> Dict[str, Any]:
+    def get_service_status(self) -> dict[str, Any]:
         """Get status of all experimental services"""
         return {
             "services": self.service_status,
@@ -603,7 +604,7 @@ class ExperimentalIntegration:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get integration system status"""
         return {
             "is_running": self.is_running,
@@ -615,7 +616,7 @@ class ExperimentalIntegration:
 
 
 # Global instance
-experimental_integration: Optional[ExperimentalIntegration] = None
+experimental_integration: ExperimentalIntegration | None = None
 
 
 def get_experimental_integration() -> ExperimentalIntegration:

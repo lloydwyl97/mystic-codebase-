@@ -6,16 +6,17 @@ Port 8003 - Standalone AI strategy execution service
 
 import asyncio
 import json
-import time
+import logging
 import os
 import sys
-import logging
+import time
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any
+
+import redis
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-import redis
 
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -80,7 +81,8 @@ class AIStrategyExecutorService:
         while self.running:
             try:
                 # Check for execution requests
-                request = self.redis_client.lpop("strategy_execution_queue")
+                from utils.redis_helpers import to_str
+                request = to_str(self.redis_client.lpop("strategy_execution_queue"))
 
                 if request:
                     request_data = json.loads(request)
@@ -93,7 +95,7 @@ class AIStrategyExecutorService:
                 logger.error(f"âŒ Error in execution monitor loop: {e}")
                 await asyncio.sleep(30)
 
-    async def execute_strategy_request(self, request_data: Dict[str, Any]):
+    async def execute_strategy_request(self, request_data: dict[str, Any]):
         """Execute a strategy request"""
         try:
             symbol_binance = request_data.get("symbol_binance", "ETHUSDT")
@@ -154,7 +156,7 @@ class AIStrategyExecutorService:
         symbol_coinbase: str,
         usd_amount: float,
         signal: bool,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute a specific strategy"""
         try:
             logger.info(f"ðŸŽ¯ Executing strategy {strategy_id}")
@@ -189,7 +191,7 @@ class AIStrategyExecutorService:
             logger.error(f"âŒ Error executing strategy: {e}")
             raise
 
-    async def get_execution_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+    async def get_execution_history(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get execution history"""
         try:
             # Return recent executions
@@ -198,7 +200,7 @@ class AIStrategyExecutorService:
             logger.error(f"âŒ Error getting execution history: {e}")
             return []
 
-    async def get_strategy_executions(self, strategy_id: str) -> List[Dict[str, Any]]:
+    async def get_strategy_executions(self, strategy_id: str) -> list[dict[str, Any]]:
         """Get executions for a specific strategy"""
         try:
             executions = []
@@ -339,7 +341,8 @@ async def process_execution_queue():
     try:
         processed = 0
         while True:
-            request = executor_service.redis_client.lpop("strategy_execution_queue")
+            from utils.redis_helpers import to_str
+            request = to_str(executor_service.redis_client.lpop("strategy_execution_queue"))
             if not request:
                 break
 

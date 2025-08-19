@@ -5,8 +5,8 @@ Handles order operations and order management.
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict, List, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class OrderService:
         self.orders = []
         self.order_history = []
 
-    async def get_orders(self) -> List[Dict[str, Any]]:
+    async def get_orders(self) -> list[dict[str, Any]]:
         """Get current orders with live data."""
         try:
             # Live orders data from exchange APIs
@@ -34,9 +34,9 @@ class OrderService:
         self,
         limit: int = 100,
         offset: int = 0,
-        symbol: Optional[str] = None,
-        strategy: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        symbol: str | None = None,
+        strategy: str | None = None,
+    ) -> dict[str, Any]:
         """Get detailed trade history with optional filtering."""
         try:
             # Live trade history data from exchange APIs
@@ -71,7 +71,7 @@ class OrderService:
                 "has_more": False,
             }
 
-    async def create_order(self, order_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_order(self, order_data: dict[str, Any]) -> dict[str, Any]:
         """Create a new order."""
         try:
             order = {

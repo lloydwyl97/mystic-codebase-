@@ -5,14 +5,14 @@ Monitors crypto news feeds and analyzes sentiment for trading signals.
 Built for Windows 11 Home + PowerShell + Docker.
 """
 
-import requests
-import time
 import json
-import os
 import logging
-from datetime import datetime
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import os
+import time
 from datetime import datetime, timezone
+
+import requests
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

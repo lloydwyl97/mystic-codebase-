@@ -9,7 +9,6 @@ import json
 import logging
 import os
 import time
-from datetime import datetime
 from datetime import datetime, timezone
 
 # Configure logging
@@ -46,7 +45,7 @@ def create_ping_file(strategies_deleted, total_strategies):
 def evaluate_strategy(filepath):
     """Evaluate a strategy's performance"""
     try:
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             data = json.load(f)
 
         # Get performance metrics

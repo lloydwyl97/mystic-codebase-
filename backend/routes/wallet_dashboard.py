@@ -2,7 +2,7 @@
 import os
 import sqlite3
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -19,7 +19,7 @@ def get_db_connection():
 
 
 @router.get("/wallets/summary")
-async def get_wallet_summary() -> List[Dict[str, Any]]:
+async def get_wallet_summary() -> list[dict[str, Any]]:
     """Get summary of all wallet allocations and balances"""
     try:
         # Attempt to load from a real database table 'wallets'
@@ -51,7 +51,7 @@ async def get_wallet_summary() -> List[Dict[str, Any]]:
 
 
 @router.get("/yield/leaderboard")
-async def get_yield_leaderboard() -> List[Dict[str, Any]]:
+async def get_yield_leaderboard() -> list[dict[str, Any]]:
     """Get DeFi yield leaderboard with APY comparisons"""
     try:
         # Attempt to load from a real database table 'yields'
@@ -83,7 +83,7 @@ async def get_yield_leaderboard() -> List[Dict[str, Any]]:
 
 
 @router.get("/staking/summary")
-async def get_staking_summary() -> Dict[str, Any]:
+async def get_staking_summary() -> dict[str, Any]:
     """Get staking summary across all platforms"""
     try:
         # Attempt to load from a real database table 'staking'
@@ -116,7 +116,7 @@ async def get_staking_summary() -> Dict[str, Any]:
 
 
 @router.get("/coldwallet/status")
-async def get_cold_wallet_status() -> Dict[str, Any]:
+async def get_cold_wallet_status() -> dict[str, Any]:
     """Get cold wallet sync status and metrics"""
     try:
         # Attempt to load from a real file or database table 'cold_wallet'
@@ -154,13 +154,13 @@ async def get_cold_wallet_status() -> Dict[str, Any]:
 
 
 @router.get("/ai/dashboard")
-async def get_ai_dashboard() -> Dict[str, Any]:
+async def get_ai_dashboard() -> dict[str, Any]:
     """Get AI trading engine status and performance"""
     try:
         # Load AI model state
         model_state = {}
         if os.path.exists(MODEL_STATE_FILE):
-            with open(MODEL_STATE_FILE, "r") as f:
+            with open(MODEL_STATE_FILE) as f:
                 model_state = json.load(f)
 
         # Get performance summary from database
@@ -193,7 +193,7 @@ async def get_ai_dashboard() -> Dict[str, Any]:
 
 
 @router.get("/trades/recent")
-async def get_recent_trades(limit: int = 20) -> List[Dict[str, Any]]:
+async def get_recent_trades(limit: int = 20) -> list[dict[str, Any]]:
     """Get recent trading activity for charting"""
     try:
         conn = get_db_connection()
@@ -231,7 +231,7 @@ async def get_recent_trades(limit: int = 20) -> List[Dict[str, Any]]:
 
 
 @router.get("/portfolio/overview")
-async def get_portfolio_overview() -> Dict[str, Any]:
+async def get_portfolio_overview() -> dict[str, Any]:
     """Get complete portfolio overview"""
     try:
         # Aggregate data from all endpoints
@@ -267,7 +267,7 @@ async def get_portfolio_overview() -> Dict[str, Any]:
 
 
 @router.post("/wallet/allocate")
-async def allocate_funds(amount: float, wallet_name: str) -> Dict[str, Any]:
+async def allocate_funds(amount: float, wallet_name: str) -> dict[str, Any]:
     """Allocate funds to a specific wallet"""
     try:
         # Real allocation using wallet service
@@ -281,7 +281,7 @@ async def allocate_funds(amount: float, wallet_name: str) -> Dict[str, Any]:
 
 
 @router.post("/yield/rotate")
-async def rotate_yield_funds() -> Dict[str, Any]:
+async def rotate_yield_funds() -> dict[str, Any]:
     """Rotate funds to highest yielding protocol"""
     try:
         # Real rotation using yield service

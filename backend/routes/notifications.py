@@ -5,8 +5,8 @@ Contains notification endpoints for managing user notifications.
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -105,7 +105,7 @@ async def get_notification_settings():
 
 
 @router.post("/api/notifications/settings")
-async def update_notification_settings(settings: Dict[str, Any]):
+async def update_notification_settings(settings: dict[str, Any]):
     """Update notification settings"""
     try:
         return {

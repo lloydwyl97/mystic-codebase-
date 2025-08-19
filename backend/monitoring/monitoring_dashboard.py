@@ -9,18 +9,18 @@ Integrates all monitoring components:
 - Real-time monitoring
 """
 
-import time
 import asyncio
-import threading
 import logging
-from typing import Any, Dict, List
-from dataclasses import dataclass
+import threading
+import time
 from collections import deque
+from dataclasses import dataclass
+from typing import Any
 
+from backend.monitoring.alerting_system import AlertChannel, AlertSeverity, alerting_system
 from backend.monitoring.enhanced_logger import enhanced_logger
-from backend.monitoring.performance_metrics import metrics_collector
 from backend.monitoring.health_checks import health_checker
-from backend.monitoring.alerting_system import alerting_system, AlertSeverity, AlertChannel
+from backend.monitoring.performance_metrics import metrics_collector
 
 logger = logging.getLogger(__name__)
 
@@ -34,13 +34,13 @@ HEALTH_CHECK_INTERVAL = 60  # seconds
 class DashboardMetrics:
     """Comprehensive dashboard metrics"""
     timestamp: float
-    system_metrics: Dict[str, Any]
-    application_metrics: Dict[str, Any]
-    database_metrics: Dict[str, Any]
-    health_status: Dict[str, Any]
-    alert_summary: Dict[str, Any]
-    logging_stats: Dict[str, Any]
-    custom_metrics: Dict[str, Any]
+    system_metrics: dict[str, Any]
+    application_metrics: dict[str, Any]
+    database_metrics: dict[str, Any]
+    health_status: dict[str, Any]
+    alert_summary: dict[str, Any]
+    logging_stats: dict[str, Any]
+    custom_metrics: dict[str, Any]
 
 
 class MonitoringDashboard:
@@ -247,7 +247,7 @@ class MonitoringDashboard:
             channel=AlertChannel.DATABASE
         )
 
-    def get_dashboard_summary(self) -> Dict[str, Any]:
+    def get_dashboard_summary(self) -> dict[str, Any]:
         """Get comprehensive dashboard summary"""
         with self.lock:
             if not self.dashboard_metrics:
@@ -286,7 +286,7 @@ class MonitoringDashboard:
                 'monitoring_active': self.monitoring_active
             }
 
-    def get_metrics_history(self, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_metrics_history(self, hours: int = 24) -> list[dict[str, Any]]:
         """Get metrics history"""
         cutoff_time = time.time() - (hours * 3600)
 
@@ -294,7 +294,7 @@ class MonitoringDashboard:
             recent_metrics = [m for m in self.dashboard_metrics if m.timestamp >= cutoff_time]
             return [m.__dict__ for m in recent_metrics]
 
-    def get_component_status(self, component: str) -> Dict[str, Any]:
+    def get_component_status(self, component: str) -> dict[str, Any]:
         """Get status of specific component"""
         with self.lock:
             if not self.dashboard_metrics:
@@ -329,7 +329,7 @@ class MonitoringDashboard:
             else:
                 return {}
 
-    def get_performance_trends(self, hours: int = 24) -> Dict[str, List[float]]:
+    def get_performance_trends(self, hours: int = 24) -> dict[str, list[float]]:
         """Get performance trends over time"""
         cutoff_time = time.time() - (hours * 3600)
 

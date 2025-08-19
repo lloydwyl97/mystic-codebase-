@@ -12,7 +12,7 @@ import logging
 import logging.handlers
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class LogRotationManager:
         self.logs_dir.mkdir(exist_ok=True)
 
         # Log rotation policies
-        self.policies: Dict[str, Dict[str, Any]] = {
+        self.policies: dict[str, dict[str, Any]] = {
             # Regular application logs - rotate daily, keep 7 days
             "regular": {
                 "rotation": "daily",
@@ -64,7 +64,7 @@ class LogRotationManager:
         }
 
         # Log file mappings
-        self.log_mappings: Dict[str, str] = {
+        self.log_mappings: dict[str, str] = {
             # Regular logs
             "mystic_trading.log": "regular",
             "trading_bots.log": "regular",
@@ -89,7 +89,7 @@ class LogRotationManager:
 
         logger.info("Log Rotation Manager initialized")
 
-    def get_handler(self, log_file: str, policy_type: Optional[str] = None) -> logging.Handler:
+    def get_handler(self, log_file: str, policy_type: str | None = None) -> logging.Handler:
         """Get appropriate log handler based on file and policy"""
 
         # Determine policy type
@@ -131,9 +131,9 @@ class LogRotationManager:
 
         return handler
 
-    def cleanup_old_logs(self) -> Dict[str, int]:
+    def cleanup_old_logs(self) -> dict[str, int]:
         """Clean up old log files based on retention policies"""
-        cleanup_stats: Dict[str, int] = {}
+        cleanup_stats: dict[str, int] = {}
 
         for log_file, policy_type in self.log_mappings.items():
             policy = self.policies[policy_type]
@@ -164,15 +164,15 @@ class LogRotationManager:
         logger.info(f"Log cleanup completed: {cleanup_stats}")
         return cleanup_stats
 
-    def get_log_stats(self) -> Dict[str, Dict[str, Any]]:
+    def get_log_stats(self) -> dict[str, dict[str, Any]]:
         """Get statistics about log files"""
-        stats: Dict[str, Dict[str, Any]] = {}
+        stats: dict[str, dict[str, Any]] = {}
 
         for log_file, policy_type in self.log_mappings.items():
             log_path = self.logs_dir / log_file
             policy = self.policies[policy_type]
 
-            file_stats: Dict[str, Any] = {
+            file_stats: dict[str, Any] = {
                 "policy_type": policy_type,
                 "rotation": policy["rotation"],
                 "retention_days": policy["retention_days"],
@@ -251,9 +251,9 @@ def get_log_rotation_manager() -> LogRotationManager:
     return log_rotation_manager
 
 
-def setup_rotated_logging() -> Dict[str, logging.Logger]:
+def setup_rotated_logging() -> dict[str, logging.Logger]:
     """Setup all loggers with rotation policies"""
-    loggers: Dict[str, logging.Logger] = {}
+    loggers: dict[str, logging.Logger] = {}
 
     # Setup main application logger
     loggers["app"] = log_rotation_manager.setup_logger("mystic.app", "mystic_trading.log")

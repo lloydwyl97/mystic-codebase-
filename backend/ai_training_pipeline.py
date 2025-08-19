@@ -8,11 +8,12 @@ import asyncio
 import json
 import logging
 import os
-from datetime import datetime, timezone, timedelta
-from typing import Any, Dict, List, Optional
-import pandas as pd
+from datetime import datetime, timedelta, timezone
+from typing import Any
 
+import pandas as pd
 from shared_cache import SharedCache
+
 from backend.services.mystic_signal_engine import mystic_signal_engine
 
 logger = logging.getLogger(__name__)
@@ -39,7 +40,7 @@ class AITrainingDataPipeline:
         self.prediction_horizon = 24  # Hours to predict ahead
 
         # Training data cache
-        self.training_cache: Dict[str, List[Dict[str, Any]]] = {}
+        self.training_cache: dict[str, list[dict[str, Any]]] = {}
         self.last_collection = {}
 
         logger.info("âœ… AI Training Data Pipeline initialized")
@@ -101,7 +102,7 @@ class AITrainingDataPipeline:
         except Exception as e:
             logger.error(f"âŒ Error collecting training data: {e}")
 
-    async def _collect_market_data(self) -> Dict[str, Any]:
+    async def _collect_market_data(self) -> dict[str, Any]:
         """Collect market data for training"""
         try:
             # Get market data from cache
@@ -124,7 +125,7 @@ class AITrainingDataPipeline:
             logger.error(f"âŒ Error collecting market data: {e}")
             return {}
 
-    async def _collect_mystic_data(self) -> Dict[str, Any]:
+    async def _collect_mystic_data(self) -> dict[str, Any]:
         """Collect mystic signal data for training"""
         try:
             # Generate comprehensive mystic signal
@@ -145,7 +146,7 @@ class AITrainingDataPipeline:
             logger.error(f"âŒ Error collecting mystic data: {e}")
             return {}
 
-    async def _collect_trade_data(self) -> Dict[str, Any]:
+    async def _collect_trade_data(self) -> dict[str, Any]:
         """Collect trade execution data for training"""
         try:
             # This would normally come from the autobuy system
@@ -167,7 +168,7 @@ class AITrainingDataPipeline:
             logger.error(f"âŒ Error collecting trade data: {e}")
             return {}
 
-    async def _collect_strategy_data(self) -> Dict[str, Any]:
+    async def _collect_strategy_data(self) -> dict[str, Any]:
         """Collect strategy performance data for training"""
         try:
             # This would normally come from the strategy system
@@ -185,10 +186,10 @@ class AITrainingDataPipeline:
 
     async def _extract_features(
         self,
-        market_data: Dict[str, Any],
-        mystic_data: Dict[str, Any],
-        trade_data: Dict[str, Any],
-    ) -> Dict[str, float]:
+        market_data: dict[str, Any],
+        mystic_data: dict[str, Any],
+        trade_data: dict[str, Any],
+    ) -> dict[str, float]:
         """Extract numerical features for AI training"""
         try:
             features = {}
@@ -231,8 +232,8 @@ class AITrainingDataPipeline:
             return {}
 
     async def _extract_targets(
-        self, trade_data: Dict[str, Any], strategy_data: Dict[str, Any]
-    ) -> Dict[str, float]:
+        self, trade_data: dict[str, Any], strategy_data: dict[str, Any]
+    ) -> dict[str, float]:
         """Extract target variables for AI training"""
         try:
             targets = {}
@@ -269,7 +270,7 @@ class AITrainingDataPipeline:
         }
         return encoding.get(signal_type, 0.5)
 
-    async def _store_training_sample(self, sample: Dict[str, Any]):
+    async def _store_training_sample(self, sample: dict[str, Any]):
         """Store training sample to file"""
         try:
             timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -283,7 +284,7 @@ class AITrainingDataPipeline:
         except Exception as e:
             logger.error(f"âŒ Error storing training sample: {e}")
 
-    async def _update_training_cache(self, sample: Dict[str, Any]):
+    async def _update_training_cache(self, sample: dict[str, Any]):
         """Update in-memory training cache"""
         try:
             timestamp = sample["timestamp"]
@@ -338,7 +339,7 @@ class AITrainingDataPipeline:
             logger.error(f"âŒ Error creating training dataset: {e}")
             return pd.DataFrame()
 
-    async def save_model_version(self, model_data: Dict[str, Any], version: str):
+    async def save_model_version(self, model_data: dict[str, Any], version: str):
         """Save model version with training metadata"""
         try:
             model_file = f"{self.model_versions_dir}/model_v{version}.json"
@@ -360,7 +361,7 @@ class AITrainingDataPipeline:
         except Exception as e:
             logger.error(f"âŒ Error saving model version: {e}")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get pipeline status"""
         try:
             total_samples = sum(len(samples) for samples in self.training_cache.values())
@@ -380,7 +381,7 @@ class AITrainingDataPipeline:
 
 
 # Global instance
-ai_training_pipeline: Optional[AITrainingDataPipeline] = None
+ai_training_pipeline: AITrainingDataPipeline | None = None
 
 
 def get_ai_training_pipeline(cache: SharedCache) -> AITrainingDataPipeline:

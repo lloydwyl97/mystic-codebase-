@@ -7,7 +7,7 @@ Centralized error handling for the application using standardized exceptions.
 import logging
 import os
 import traceback
-from typing import Any, Dict, cast
+from typing import Any, cast
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse
@@ -35,8 +35,8 @@ async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
         if isinstance(exc.detail, dict):
             # Try to get retry_after using get() method which is safer
             # Provide a default value of None to help with type inference
-            detail_dict: Dict[str, Any] = cast(Dict[str, Any], exc.detail)
-            retry_after_value: Any = detail_dict.get("retry_after", None)
+            detail_dict: dict[str, Any] = cast(dict[str, Any], exc.detail)
+            retry_after_value: Any = detail_dict.get("retry_after")
             if retry_after_value is not None:
                 retry_after = retry_after_value
         elif hasattr(exc.detail, "retry_after"):

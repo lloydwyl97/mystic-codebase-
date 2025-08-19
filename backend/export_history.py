@@ -1,6 +1,5 @@
 ﻿import json
 import sqlite3
-from datetime import datetime
 from datetime import datetime, timezone
 
 
@@ -11,7 +10,7 @@ def export_trade_history(output_file="trade_history.json"):
         FROM simulated_trades
         ORDER BY timestamp DESC
     """)
-    rows = [dict(zip([col[0] for col in cursor.description], row)) for row in cursor.fetchall()]
+    rows = [dict(zip([col[0] for col in cursor.description], row, strict=False)) for row in cursor.fetchall()]
     with open(output_file, "w") as f:
         json.dump(rows, f, indent=2)
     print(f"[Export] Trade history exported to {output_file}")

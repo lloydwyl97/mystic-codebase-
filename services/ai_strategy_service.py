@@ -5,7 +5,7 @@ Provides AI strategy functionality for the trading platform
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class AIStrategyService:
         self.status = "stopped"
         logger.info("✅ AI Strategy service stopped")
         
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         """Get AI strategy service status"""
         return {
             "status": self.status,
@@ -39,7 +39,7 @@ class AIStrategyService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_strategy_data(self) -> Dict[str, Any]:
+    async def get_strategy_data(self) -> dict[str, Any]:
         """Get AI strategy data"""
         return {
             "strategy_count": 5,

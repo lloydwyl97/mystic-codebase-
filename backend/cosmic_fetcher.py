@@ -12,8 +12,8 @@ import math
 import random
 import time
 from dataclasses import asdict, dataclass
-from datetime import timezone, datetime
-from typing import Any, Dict, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 import aiohttp
 
@@ -32,7 +32,7 @@ class CosmicSignal:
 class CosmicFetcher:
     def __init__(self, redis_client: Any):
         self.redis_client = redis_client
-        self.session: Optional[aiohttp.ClientSession] = None
+        self.session: aiohttp.ClientSession | None = None
         self.is_running = False
 
         # Tier 3 Configuration - OPTIMIZED FOR 20 COINS
@@ -45,7 +45,7 @@ class CosmicFetcher:
         }
 
         # Track last fetch times for throttling
-        self.last_fetch_times: Dict[str, float] = {}
+        self.last_fetch_times: dict[str, float] = {}
 
         # External API endpoints (mock/fallback)
         self.noaa_base_url = "https://services.swpc.noaa.gov/json"
@@ -83,7 +83,7 @@ class CosmicFetcher:
         """Update the last fetch time for throttling"""
         self.last_fetch_times[signal_type] = time.time()
 
-    async def fetch_mystic_score(self) -> Optional[float]:
+    async def fetch_mystic_score(self) -> float | None:
         """Fetch Mystic Score (1 hour frequency globally)"""
         if not self._should_fetch("mystic"):
             return None
@@ -126,7 +126,7 @@ class CosmicFetcher:
             logger.error(f"Error calculating mystic score: {e}")
             return None
 
-    async def fetch_solar_activity(self) -> Optional[float]:
+    async def fetch_solar_activity(self) -> float | None:
         """Fetch Solar Activity (1 hour frequency globally)"""
         if not self._should_fetch("solar"):
             return None
@@ -256,16 +256,16 @@ class CosmicFetcher:
             logger.error(f"Error calculating Earth frequency match: {e}")
             return 50.0  # Default neutral score
 
-    async def _cache_cosmic_data(self, data: Dict[str, Any]):
+    async def _cache_cosmic_data(self, data: dict[str, Any]):
         """Cache cosmic data"""
         try:
             self.redis_client.setex("cosmic_signals", self.config["cache_ttl"], json.dumps(data))
         except Exception as e:
             logger.error(f"Error caching cosmic data: {e}")
 
-    async def fetch_all_tier3_signals(self) -> Dict[str, Any]:
+    async def fetch_all_tier3_signals(self) -> dict[str, Any]:
         """Fetch all Tier 3 cosmic signals globally"""
-        results: Dict[str, Any] = {
+        results: dict[str, Any] = {
             "cosmic_signals": {},
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
@@ -332,7 +332,7 @@ class CosmicFetcher:
         finally:
             await self.close()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get cosmic fetcher status"""
         return {
             "status": "running" if self.is_running else "stopped",

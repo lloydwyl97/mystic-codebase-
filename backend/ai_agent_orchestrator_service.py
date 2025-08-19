@@ -6,24 +6,25 @@ Port 8006 - Orchestrates all AI agents in a single service
 
 import asyncio
 import json
-import time
+import logging
 import os
 import sys
-import logging
+import time
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any
+
+import redis
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-import redis
 
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # import backend.ai as ai agents
-from backend.agents.ai_model_manager import AIModelManager
-from backend.agents.agent_orchestrator import AgentOrchestrator
 from backend.agents.advanced_ai_orchestrator import AdvancedAIOrchestrator
+from backend.agents.agent_orchestrator import AgentOrchestrator
+from backend.agents.ai_model_manager import AIModelManager
 
 # Configure logging
 logging.basicConfig(
@@ -112,7 +113,8 @@ class AIAgentOrchestratorService:
         while self.running:
             try:
                 # Check for agent requests
-                request = self.redis_client.lpop("ai_agent_queue")
+                from utils.redis_helpers import to_str
+                request = to_str(self.redis_client.lpop("ai_agent_queue"))
 
                 if request:
                     request_data = json.loads(request)
@@ -125,7 +127,7 @@ class AIAgentOrchestratorService:
                 logger.error(f"âŒ Error in agent monitor loop: {e}")
                 await asyncio.sleep(30)
 
-    async def process_agent_request(self, request_data: Dict[str, Any]):
+    async def process_agent_request(self, request_data: dict[str, Any]):
         """Process an agent request"""
         try:
             agent_type = request_data.get("agent_type", "orchestrator")
@@ -181,8 +183,8 @@ class AIAgentOrchestratorService:
             return agent_record
 
     async def execute_agent_action(
-        self, agent_type: str, action: str, data: Dict[str, Any] = None
-    ) -> Dict[str, Any]:
+        self, agent_type: str, action: str, data: dict[str, Any] = None
+    ) -> dict[str, Any]:
         """Execute an agent action"""
         try:
             logger.info(f"ðŸ¤– Executing {agent_type} agent action: {action}")
@@ -218,7 +220,7 @@ class AIAgentOrchestratorService:
             logger.error(f"âŒ Error executing agent action: {e}")
             raise
 
-    async def get_agent_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+    async def get_agent_history(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get agent history"""
         try:
             # Return recent agent executions
@@ -227,7 +229,7 @@ class AIAgentOrchestratorService:
             logger.error(f"âŒ Error getting agent history: {e}")
             return []
 
-    async def get_agent_status(self) -> Dict[str, Any]:
+    async def get_agent_status(self) -> dict[str, Any]:
         """Get status of all agents"""
         try:
             agent_status = {}
@@ -316,7 +318,7 @@ async def service_status():
 
 
 @app.post("/execute")
-async def execute_agent_action(agent_type: str, action: str, data: Dict[str, Any] = None):
+async def execute_agent_action(agent_type: str, action: str, data: dict[str, Any] = None):
     """Execute an agent action"""
     if not agent_service:
         raise HTTPException(status_code=503, detail="Service not initialized")
@@ -375,7 +377,8 @@ async def process_agent_queue():
     try:
         processed = 0
         while True:
-            request = agent_service.redis_client.lpop("ai_agent_queue")
+            from utils.redis_helpers import to_str
+            request = to_str(agent_service.redis_client.lpop("ai_agent_queue"))
             if not request:
                 break
 

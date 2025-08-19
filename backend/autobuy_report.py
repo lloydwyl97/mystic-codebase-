@@ -7,12 +7,13 @@ Comprehensive reporting for SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT autobuy system
 import json
 import logging
 import os
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass, asdict
+from typing import Any
+
+from binance_us_autobuy import autobuy_system
 
 from backend.endpoints.autobuy.autobuy_config import get_config
-from binance_us_autobuy import autobuy_system
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -30,10 +31,10 @@ class TradeReport:
     price: float
     quantity: float
     confidence: float
-    signals: List[str]
+    signals: list[str]
     status: str
-    profit_loss: Optional[float] = None
-    execution_time: Optional[str] = None
+    profit_loss: float | None = None
+    execution_time: str | None = None
 
 
 @dataclass
@@ -50,8 +51,8 @@ class PairReport:
     success_rate: float
     avg_trade_amount: float
     avg_confidence: float
-    best_trade: Optional[TradeReport]
-    worst_trade: Optional[TradeReport]
+    best_trade: TradeReport | None
+    worst_trade: TradeReport | None
     recent_signals: int
     active_trades: int
 
@@ -71,10 +72,10 @@ class SystemReport:
     active_trades: int
     trading_enabled: bool
     emergency_stop: bool
-    pairs_performance: Dict[str, PairReport]
-    recent_trades: List[TradeReport]
-    system_health: Dict[str, Any]
-    recommendations: List[str]
+    pairs_performance: dict[str, PairReport]
+    recent_trades: list[TradeReport]
+    system_health: dict[str, Any]
+    recommendations: list[str]
 
 
 class AutobuyReporter:
@@ -85,7 +86,7 @@ class AutobuyReporter:
         self.reports_dir = "reports"
         os.makedirs(self.reports_dir, exist_ok=True)
 
-    def generate_trade_report(self, trade_data: Dict[str, Any]) -> TradeReport:
+    def generate_trade_report(self, trade_data: dict[str, Any]) -> TradeReport:
         """Generate a trade report from trade data"""
         return TradeReport(
             trade_id=trade_data.get("order_id", "unknown"),
@@ -229,7 +230,7 @@ class AutobuyReporter:
             recommendations=recommendations,
         )
 
-    def assess_system_health(self) -> Dict[str, Any]:
+    def assess_system_health(self) -> dict[str, Any]:
         """Assess overall system health"""
         health_score = 100
 
@@ -270,7 +271,7 @@ class AutobuyReporter:
             "last_update": datetime.now(timezone.utc).isoformat(),
         }
 
-    def identify_issues(self) -> List[str]:
+    def identify_issues(self) -> list[str]:
         """Identify potential issues with the system"""
         issues = []
 
@@ -295,7 +296,7 @@ class AutobuyReporter:
 
         return issues
 
-    def generate_recommendations(self) -> List[str]:
+    def generate_recommendations(self) -> list[str]:
         """Generate recommendations for system improvement"""
         recommendations = []
 
@@ -329,7 +330,7 @@ class AutobuyReporter:
 
         return recommendations
 
-    def save_report(self, report: SystemReport, filename: Optional[str] = None) -> str:
+    def save_report(self, report: SystemReport, filename: str | None = None) -> str:
         """Save report to file"""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

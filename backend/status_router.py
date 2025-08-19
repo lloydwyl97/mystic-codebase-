@@ -5,13 +5,13 @@ Provides real-time status of all AI trading modules.
 Built for Windows 11 Home + PowerShell + Docker.
 """
 
-from fastapi import APIRouter, HTTPException
-import os
 import json
 import logging
-from datetime import datetime
-from typing import Dict, List, Any
+import os
 from datetime import datetime, timezone
+from typing import Any
+
+from fastapi import APIRouter, HTTPException
 
 logger = logging.getLogger(__name__)
 
@@ -88,11 +88,11 @@ AI_MODULES = {
 }
 
 
-def read_ping_file(ping_file: str) -> Dict[str, Any]:
+def read_ping_file(ping_file: str) -> dict[str, Any]:
     """Read ping file and return status data"""
     try:
         if os.path.exists(ping_file):
-            with open(ping_file, "r") as f:
+            with open(ping_file) as f:
                 data = json.load(f)
                 return data
         return {"status": "offline", "last_update": None}
@@ -127,7 +127,7 @@ def calculate_health_percentage(last_update: str) -> int:
 
 
 @router.get("/")
-async def get_system_status() -> Dict[str, Any]:
+async def get_system_status() -> dict[str, Any]:
     """Get overall system status"""
     try:
         total_modules = len(AI_MODULES)
@@ -182,7 +182,7 @@ async def get_system_status() -> Dict[str, Any]:
 
 
 @router.get("/modules")
-async def get_modules_status() -> List[Dict[str, Any]]:
+async def get_modules_status() -> list[dict[str, Any]]:
     """Get status of all AI modules"""
     try:
         module_statuses = []
@@ -216,7 +216,7 @@ async def get_modules_status() -> List[Dict[str, Any]]:
 
 
 @router.get("/modules/{module_id}")
-async def get_module_status(module_id: str) -> Dict[str, Any]:
+async def get_module_status(module_id: str) -> dict[str, Any]:
     """Get status of a specific AI module"""
     try:
         if module_id not in AI_MODULES:
@@ -250,7 +250,7 @@ async def get_module_status(module_id: str) -> Dict[str, Any]:
 
 
 @router.get("/health")
-async def health_check() -> Dict[str, Any]:
+async def health_check() -> dict[str, Any]:
     """Simple health check endpoint"""
     return {
         "status": "healthy",
@@ -260,7 +260,7 @@ async def health_check() -> Dict[str, Any]:
 
 
 @router.get("/logs/{module_id}")
-async def get_module_logs(module_id: str, lines: int = 50) -> Dict[str, Any]:
+async def get_module_logs(module_id: str, lines: int = 50) -> dict[str, Any]:
     """Get recent logs for a specific module."""
     try:
         if module_id not in AI_MODULES:

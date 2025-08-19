@@ -9,7 +9,7 @@ import json
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import psutil
 
@@ -25,14 +25,14 @@ class MetricsCollector:
     """Metrics collector for system and trading performance monitoring"""
 
     def __init__(self):
-        self.metrics: Dict[str, Any] = {}
-        self.metrics_data: Dict[str, Any] = {}  # Added for test compatibility
+        self.metrics: dict[str, Any] = {}
+        self.metrics_data: dict[str, Any] = {}  # Added for test compatibility
         self.collection_interval: int = 60  # seconds
-        self.last_collection: Optional[datetime] = None
+        self.last_collection: datetime | None = None
         self.is_active: bool = True
-        self.metrics_history: List[Dict[str, Any]] = []
+        self.metrics_history: list[dict[str, Any]] = []
 
-    def collect_system_metrics(self) -> Dict[str, Any]:
+    def collect_system_metrics(self) -> dict[str, Any]:
         """Collect system performance metrics"""
         try:
             # CPU metrics
@@ -65,7 +65,7 @@ class MetricsCollector:
             logger.error(f"System metrics collection failed: {e}")
             return {"error": str(e)}
 
-    def collect_trading_metrics(self, trading_data: Dict[str, Any]) -> Dict[str, Any]:
+    def collect_trading_metrics(self, trading_data: dict[str, Any]) -> dict[str, Any]:
         """Collect trading performance metrics"""
         try:
             metrics = {
@@ -90,7 +90,7 @@ class MetricsCollector:
             logger.error(f"Trading metrics collection failed: {e}")
             return {"error": str(e)}
 
-    def collect_api_metrics(self, api_data: Dict[str, Any]) -> Dict[str, Any]:
+    def collect_api_metrics(self, api_data: dict[str, Any]) -> dict[str, Any]:
         """Collect API performance metrics"""
         try:
             metrics = {
@@ -111,7 +111,7 @@ class MetricsCollector:
             logger.error(f"API metrics collection failed: {e}")
             return {"error": str(e)}
 
-    def collect_trade_metrics(self, trade_data: Dict[str, Any]) -> Dict[str, Any]:
+    def collect_trade_metrics(self, trade_data: dict[str, Any]) -> dict[str, Any]:
         """Collect trade-specific metrics"""
         try:
             # Validate required fields
@@ -144,7 +144,7 @@ class MetricsCollector:
             logger.error(f"Trade metrics collection failed: {e}")
             raise MetricsException(f"Trade metrics collection failed: {e}")
 
-    def collect_performance_metrics(self, trades: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def collect_performance_metrics(self, trades: list[dict[str, Any]]) -> dict[str, Any]:
         """Collect performance metrics from trades list"""
         try:
             if not trades:
@@ -177,7 +177,7 @@ class MetricsCollector:
             logger.error(f"Performance metrics collection failed: {e}")
             return {"error": str(e)}
 
-    def collect_market_metrics(self, market_data: Dict[str, Any]) -> Dict[str, Any]:
+    def collect_market_metrics(self, market_data: dict[str, Any]) -> dict[str, Any]:
         """Collect market-related metrics"""
         try:
             total_symbols = len(market_data)
@@ -206,7 +206,7 @@ class MetricsCollector:
             logger.error(f"Market metrics collection failed: {e}")
             return {"error": str(e)}
 
-    def collect_ai_metrics(self, ai_data: Dict[str, Any]) -> Dict[str, Any]:
+    def collect_ai_metrics(self, ai_data: dict[str, Any]) -> dict[str, Any]:
         """Collect AI-related metrics"""
         try:
             metrics = {
@@ -226,7 +226,7 @@ class MetricsCollector:
             logger.error(f"AI metrics collection failed: {e}")
             return {"error": str(e)}
 
-    def store_metrics(self, category: str, metrics: Dict[str, Any]) -> bool:
+    def store_metrics(self, category: str, metrics: dict[str, Any]) -> bool:
         """Store metrics in a specific category"""
         try:
             self.metrics_data[category] = metrics
@@ -235,11 +235,11 @@ class MetricsCollector:
             logger.error(f"Failed to store metrics: {e}")
             return False
 
-    def get_metrics(self, category: str) -> Dict[str, Any]:
+    def get_metrics(self, category: str) -> dict[str, Any]:
         """Get metrics for a specific category"""
         return self.metrics_data.get(category, {})
 
-    def get_all_metrics(self) -> Dict[str, Any]:
+    def get_all_metrics(self) -> dict[str, Any]:
         """Get all stored metrics"""
         return self.metrics_data.copy()
 
@@ -252,7 +252,7 @@ class MetricsCollector:
         """Clear all stored metrics"""
         self.metrics_data.clear()
 
-    def import_metrics(self, import_data: Dict[str, Any]) -> bool:
+    def import_metrics(self, import_data: dict[str, Any]) -> bool:
         """Import metrics from external data"""
         try:
             if "metrics_data" not in import_data:
@@ -274,9 +274,9 @@ class MetricsCollector:
 
     def collect_all_metrics(
         self,
-        trading_data: Optional[Dict[str, Any]] = None,
-        api_data: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        trading_data: dict[str, Any] | None = None,
+        api_data: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Collect all available metrics"""
         all_metrics = {
             "timestamp": datetime.now().isoformat(),
@@ -295,12 +295,12 @@ class MetricsCollector:
         self.last_collection = datetime.now()
         return all_metrics
 
-    def get_metrics_summary(self) -> Dict[str, Any]:
+    def get_metrics_summary(self) -> dict[str, Any]:
         """Get a summary of collected metrics"""
         if not self.metrics_data:
             return {"error": "No metrics collected yet"}
 
-        summary: Dict[str, Any] = {
+        summary: dict[str, Any] = {
             "total_categories": len(self.metrics_data),
             "last_updated": datetime.now().isoformat(),
             "key_metrics": {},
@@ -317,7 +317,7 @@ class MetricsCollector:
 
         return summary
 
-    def get_metrics_history(self, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_metrics_history(self, hours: int = 24) -> list[dict[str, Any]]:
         """Get metrics history for specified hours"""
         if not self.metrics_history:
             return []
@@ -334,7 +334,7 @@ class MetricsCollector:
 
     def get_metrics_trends(
         self, metric_type: str, metric_name: str, hours: int = 24
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get trends for a specific metric"""
         history = self.get_metrics_history(hours)
 
@@ -376,7 +376,7 @@ class MetricsCollector:
             "values": values,
         }
 
-    def set_collection_interval(self, interval_seconds: int) -> Dict[str, Any]:
+    def set_collection_interval(self, interval_seconds: int) -> dict[str, Any]:
         """Set the metrics collection interval"""
         if interval_seconds < 10:
             return {"error": "Collection interval must be at least 10 seconds"}
@@ -386,19 +386,19 @@ class MetricsCollector:
 
         return {"success": True, "interval": interval_seconds}
 
-    def start_collection(self) -> Dict[str, Any]:
+    def start_collection(self) -> dict[str, Any]:
         """Start metrics collection"""
         self.is_active = True
         logger.info("Metrics collection started")
         return {"success": True, "status": "started"}
 
-    def stop_collection(self) -> Dict[str, Any]:
+    def stop_collection(self) -> dict[str, Any]:
         """Stop metrics collection"""
         self.is_active = False
         logger.info("Metrics collection stopped")
         return {"success": True, "status": "stopped"}
 
-    def clear_metrics_history(self) -> Dict[str, Any]:
+    def clear_metrics_history(self) -> dict[str, Any]:
         """Clear metrics history"""
         initial_count = len(self.metrics_history)
         self.metrics_history.clear()
@@ -406,7 +406,7 @@ class MetricsCollector:
 
         return {"success": True, "cleared_count": initial_count}
 
-    def export_metrics(self, format_type: str = "json") -> Dict[str, Any]:
+    def export_metrics(self, format_type: str = "json") -> dict[str, Any]:
         """Export metrics in specified format"""
         try:
             export_data = {
@@ -421,7 +421,7 @@ class MetricsCollector:
             logger.error(f"Failed to export metrics: {e}")
             return {"error": str(e), "success": False}
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """Get health status of metrics collection"""
         if not self.last_collection:
             return {

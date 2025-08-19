@@ -3,12 +3,12 @@ Persistent Cache Module for AI Services
 Provides SQLite-based persistent caching functionality for AI services and data.
 """
 
-import sqlite3
 import json
 import logging
-from typing import Dict, List, Any, Optional
+import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +95,7 @@ class PersistentCache:
 
         self.connection.commit()
 
-    def set_price(self, exchange: str, symbol: str, price: float, volume: Optional[float] = None) -> bool:
+    def set_price(self, exchange: str, symbol: str, price: float, volume: float | None = None) -> bool:
         """Store price data in the cache"""
         try:
             cursor = self.connection.cursor()
@@ -109,7 +109,7 @@ class PersistentCache:
             logger.error(f"âŒ Failed to set price for {symbol}: {e}")
             return False
 
-    def get_latest_price(self, exchange: str, symbol: str) -> Optional[float]:
+    def get_latest_price(self, exchange: str, symbol: str) -> float | None:
         """Get the latest price for a symbol from a specific exchange"""
         try:
             cursor = self.connection.cursor()
@@ -125,7 +125,7 @@ class PersistentCache:
             logger.error(f"âŒ Failed to get latest price for {symbol}: {e}")
             return None
 
-    def get_price_history(self, exchange: str, symbol: str, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_price_history(self, exchange: str, symbol: str, limit: int = 100) -> list[dict[str, Any]]:
         """Get price history for a symbol"""
         try:
             cursor = self.connection.cursor()
@@ -157,7 +157,7 @@ class PersistentCache:
             logger.error(f"âŒ Failed to log trade {trade_id}: {e}")
             return False
 
-    def get_trades(self, symbol: Optional[str] = None, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_trades(self, symbol: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
         """Get trade history"""
         try:
             cursor = self.connection.cursor()
@@ -180,9 +180,9 @@ class PersistentCache:
             return []
 
     def store_signal(self, signal_id: str, symbol: str, signal_type: str, confidence: float,
-                    price_target: Optional[float] = None, stop_loss: Optional[float] = None,
-                    take_profit: Optional[float] = None, strategy: Optional[str] = None,
-                    metadata: Optional[Dict[str, Any]] = None) -> bool:
+                    price_target: float | None = None, stop_loss: float | None = None,
+                    take_profit: float | None = None, strategy: str | None = None,
+                    metadata: dict[str, Any] | None = None) -> bool:
         """Store an AI signal"""
         try:
             metadata_json = json.dumps(metadata) if metadata else None
@@ -199,8 +199,8 @@ class PersistentCache:
             logger.error(f"âŒ Failed to store signal {signal_id}: {e}")
             return False
 
-    def get_signals(self, symbol: Optional[str] = None, signal_type: Optional[str] = None,
-                   limit: int = 100) -> List[Dict[str, Any]]:
+    def get_signals(self, symbol: str | None = None, signal_type: str | None = None,
+                   limit: int = 100) -> list[dict[str, Any]]:
         """Get AI signals"""
         try:
             cursor = self.connection.cursor()
@@ -246,11 +246,11 @@ class PersistentCache:
             logger.error(f"âŒ Failed to get signals: {e}")
             return []
 
-    def get_signals_by_type(self, signal_type: str, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_signals_by_type(self, signal_type: str, limit: int = 100) -> list[dict[str, Any]]:
         """Get signals by type (alias for get_signals with signal_type parameter)"""
         return self.get_signals(signal_type=signal_type, limit=limit)
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get cache statistics"""
         try:
             cursor = self.connection.cursor()

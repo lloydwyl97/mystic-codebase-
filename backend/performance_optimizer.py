@@ -5,15 +5,16 @@ Advanced performance optimizations including caching, connection pooling, and re
 
 import asyncio
 import time
-import psutil
-from typing import Dict, List, Optional, Any, Callable
+from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime, timedelta
-import structlog
+from datetime import datetime, timedelta, timezone
+from functools import wraps
+from typing import Any
+
 import aiohttp
 import aioredis
-from functools import wraps
-from datetime import datetime, timezone
+import psutil
+import structlog
 
 logger = structlog.get_logger()
 
@@ -23,9 +24,9 @@ class PerformanceMetrics:
     timestamp: datetime
     cpu_usage: float
     memory_usage: float
-    disk_io: Dict[str, float]
-    network_io: Dict[str, float]
-    response_times: Dict[str, float]
+    disk_io: dict[str, float]
+    network_io: dict[str, float]
+    response_times: dict[str, float]
     cache_hit_rate: float
     active_connections: int
     queue_size: int
@@ -57,7 +58,7 @@ class AdvancedCache:
         except Exception as e:
             logger.warning(f"Redis cache initialization failed: {e}")
 
-    async def get(self, key: str) -> Optional[Any]:
+    async def get(self, key: str) -> Any | None:
         """Get value from cache"""
         try:
             # Try memory cache first
@@ -88,7 +89,7 @@ class AdvancedCache:
             logger.error(f"Cache get error: {e}")
             return None
 
-    async def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
+    async def set(self, key: str, value: Any, ttl: int | None = None) -> bool:
         """Set value in cache"""
         try:
             ttl = ttl or self.config.ttl
@@ -141,7 +142,7 @@ class AdvancedCache:
         for key in expired_keys:
             del self.memory_cache[key]
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get cache statistics"""
         total_requests = self.cache_stats["hits"] + self.cache_stats["misses"]
         hit_rate = self.cache_stats["hits"] / total_requests if total_requests > 0 else 0
@@ -161,8 +162,8 @@ class ConnectionPool:
     """Connection pooling for external services"""
 
     def __init__(self):
-        self.http_session: Optional[aiohttp.ClientSession] = None
-        self.redis_pool: Optional[aioredis.ConnectionPool] = None
+        self.http_session: aiohttp.ClientSession | None = None
+        self.redis_pool: aioredis.ConnectionPool | None = None
         self.db_pool = None
         self.max_connections = 100
         self.connection_timeout = 30
@@ -186,7 +187,7 @@ class ConnectionPool:
         except Exception as e:
             logger.error(f"Connection pool initialization failed: {e}")
 
-    async def get_http_session(self) -> Optional[aiohttp.ClientSession]:
+    async def get_http_session(self) -> aiohttp.ClientSession | None:
         """Get HTTP session"""
         return self.http_session
 
@@ -206,7 +207,7 @@ class AsyncTaskQueue:
         self.max_workers = max_workers
         self.task_queue = asyncio.Queue()
         self.result_queue = asyncio.Queue()
-        self.workers: List[asyncio.Task] = []
+        self.workers: list[asyncio.Task] = []
         self.is_running = False
         self.stats = {
             "tasks_processed": 0,
@@ -310,7 +311,7 @@ class AsyncTaskQueue:
                 logger.error(f"Worker error: {e}")
                 self.stats["tasks_failed"] += 1
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get queue statistics"""
         return {
             **self.stats,
@@ -324,11 +325,11 @@ class PerformanceMonitor:
     """Real-time performance monitoring"""
 
     def __init__(self):
-        self.metrics_history: List[PerformanceMetrics] = []
+        self.metrics_history: list[PerformanceMetrics] = []
         self.max_history_size = 1000
         self.monitoring_interval = 60  # seconds
         self.is_monitoring = False
-        self.monitor_task: Optional[asyncio.Task] = None
+        self.monitor_task: asyncio.Task | None = None
 
     async def start_monitoring(self):
         """Start performance monitoring"""
@@ -415,16 +416,16 @@ class PerformanceMonitor:
             queue_size=queue_size,
         )
 
-    def get_current_metrics(self) -> Optional[PerformanceMetrics]:
+    def get_current_metrics(self) -> PerformanceMetrics | None:
         """Get most recent metrics"""
         return self.metrics_history[-1] if self.metrics_history else None
 
-    def get_metrics_history(self, hours: int = 24) -> List[PerformanceMetrics]:
+    def get_metrics_history(self, hours: int = 24) -> list[PerformanceMetrics]:
         """Get metrics history for specified hours"""
         cutoff_time = datetime.now(timezone.utc) - timedelta(hours=hours)
         return [metrics for metrics in self.metrics_history if metrics.timestamp >= cutoff_time]
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Get performance summary"""
         if not self.metrics_history:
             return {}
@@ -454,7 +455,7 @@ class PerformanceMonitor:
             "alerts": self._check_performance_alerts(recent_metrics),
         }
 
-    def _calculate_performance_score(self, metrics: List[PerformanceMetrics]) -> float:
+    def _calculate_performance_score(self, metrics: list[PerformanceMetrics]) -> float:
         """Calculate overall performance score (0-100)"""
         if not metrics:
             return 0.0
@@ -469,7 +470,7 @@ class PerformanceMonitor:
         # Weighted average
         return cpu_score * 0.4 + memory_score * 0.3 + response_score * 0.3
 
-    def _check_performance_alerts(self, metrics: List[PerformanceMetrics]) -> List[Dict[str, Any]]:
+    def _check_performance_alerts(self, metrics: list[PerformanceMetrics]) -> list[dict[str, Any]]:
         """Check for performance alerts"""
         alerts = []
 
@@ -550,7 +551,7 @@ class PerformanceOptimizer:
         except Exception as e:
             logger.error(f"Performance optimizer shutdown error: {e}")
 
-    def cache_decorator(self, ttl: Optional[int] = None):
+    def cache_decorator(self, ttl: int | None = None):
         """Decorator for caching function results"""
 
         def decorator(func):
@@ -597,7 +598,7 @@ class PerformanceOptimizer:
 
         return decorator
 
-    def get_optimization_status(self) -> Dict[str, Any]:
+    def get_optimization_status(self) -> dict[str, Any]:
         """Get optimization status and statistics"""
         return {
             "optimization_enabled": self.optimization_enabled,

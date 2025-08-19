@@ -6,7 +6,7 @@ Contains WebSocket endpoints for real-time market data, signals, and social trad
 
 import json
 import logging
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 

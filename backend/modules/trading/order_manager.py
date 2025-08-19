@@ -9,7 +9,7 @@ import logging
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ class Order:
     side: OrderSide
     order_type: OrderType
     quantity: float
-    price: Optional[float] = None
+    price: float | None = None
     status: OrderStatus = OrderStatus.PENDING
     timestamp: float = None
     exchange: str = "binance"
@@ -63,7 +63,7 @@ class OrderManager:
     """Manages order creation, execution, and tracking"""
 
     def __init__(self):
-        self.orders: Dict[str, Order] = {}
+        self.orders: dict[str, Order] = {}
         self.order_counter = 0
         logger.info("âœ… OrderManager initialized")
 
@@ -73,7 +73,7 @@ class OrderManager:
         side: OrderSide,
         order_type: OrderType,
         quantity: float,
-        price: Optional[float] = None,
+        price: float | None = None,
         exchange: str = "binance",
     ) -> Order:
         """Create a new order"""
@@ -99,16 +99,16 @@ class OrderManager:
             logger.error(f"âŒ Error creating order: {str(e)}")
             raise
 
-    def get_order(self, order_id: str) -> Optional[Order]:
+    def get_order(self, order_id: str) -> Order | None:
         """Get order by ID"""
         return self.orders.get(order_id)
 
     def get_orders(
         self,
-        symbol: Optional[str] = None,
-        status: Optional[OrderStatus] = None,
+        symbol: str | None = None,
+        status: OrderStatus | None = None,
         limit: int = 100,
-    ) -> List[Order]:
+    ) -> list[Order]:
         """Get orders with optional filtering"""
         try:
             orders = list(self.orders.values())
@@ -149,8 +149,8 @@ class OrderManager:
             return False
 
     def get_order_history(
-        self, symbol: Optional[str] = None, limit: int = 100, offset: int = 0
-    ) -> Dict[str, Any]:
+        self, symbol: str | None = None, limit: int = 100, offset: int = 0
+    ) -> dict[str, Any]:
         """Get order history with pagination"""
         try:
             orders = self.get_orders(symbol=symbol, limit=limit + offset)
@@ -166,7 +166,7 @@ class OrderManager:
             logger.error(f"âŒ Error getting order history: {str(e)}")
             return {"orders": [], "total": 0, "limit": limit, "offset": offset}
 
-    def _order_to_dict(self, order: Order) -> Dict[str, Any]:
+    def _order_to_dict(self, order: Order) -> dict[str, Any]:
         """Convert order to dictionary"""
         return {
             "id": order.id,
@@ -180,7 +180,7 @@ class OrderManager:
             "exchange": order.exchange,
         }
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get order statistics"""
         try:
             total_orders = len(self.orders)

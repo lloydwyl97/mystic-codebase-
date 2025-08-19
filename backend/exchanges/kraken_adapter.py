@@ -1,13 +1,14 @@
 ﻿from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Literal, cast
+from typing import Any, Literal, cast
 
 import aiohttp
 
+from backend.models.market_types import OHLCV, OrderBook, OrderResult, Ticker, Trade  # type: ignore[import-not-found]
+from backend.utils.symbols import normalize_symbol_to_dash, to_exchange_symbol  # type: ignore[import-not-found]
+
 from .base_adapter import AbstractExchangeAdapter
-from backend.models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
-from backend.utils.symbols import to_exchange_symbol, normalize_symbol_to_dash  # type: ignore[import-not-found]
 
 
 class KrakenAdapter(AbstractExchangeAdapter):
@@ -22,9 +23,9 @@ class KrakenAdapter(AbstractExchangeAdapter):
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
                 data = await resp.json()
-        result = cast(Dict[str, Any], data.get("result", {}))
+        result = cast(dict[str, Any], data.get("result", {}))
         first_key = next(iter(result)) if result else None
-        t: Dict[str, Any] = cast(Dict[str, Any], result.get(first_key, {})) if first_key else {}
+        t: dict[str, Any] = cast(dict[str, Any], result.get(first_key, {})) if first_key else {}
         last = float((t.get("c", [0])[0] if isinstance(t.get("c"), list) else 0) or 0)
         bid = float((t.get("b", [0])[0] if isinstance(t.get("b"), list) else 0) or 0) if t.get("b") is not None else None
         ask = float((t.get("a", [0])[0] if isinstance(t.get("a"), list) else 0) or 0) if t.get("a") is not None else None
@@ -37,24 +38,24 @@ class KrakenAdapter(AbstractExchangeAdapter):
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
                 data = await resp.json()
-        result = cast(Dict[str, Any], data.get("result", {}))
+        result = cast(dict[str, Any], data.get("result", {}))
         first_key = next(iter(result)) if result else None
-        ob: Dict[str, Any] = cast(Dict[str, Any], result.get(first_key, {})) if first_key else {}
-        bids = [(float(p), float(q)) for p, q, _ in cast(List[List[Any]], ob.get("bids", []))][:depth]
-        asks = [(float(p), float(q)) for p, q, _ in cast(List[List[Any]], ob.get("asks", []))][:depth]
+        ob: dict[str, Any] = cast(dict[str, Any], result.get(first_key, {})) if first_key else {}
+        bids = [(float(p), float(q)) for p, q, _ in cast(list[list[Any]], ob.get("bids", []))][:depth]
+        asks = [(float(p), float(q)) for p, q, _ in cast(list[list[Any]], ob.get("asks", []))][:depth]
         ts = int(datetime.now(timezone.utc).timestamp() * 1000)
         return OrderBook(exchange=self.name, symbol=normalize_symbol_to_dash(symbol), bids=bids, asks=asks, ts=ts)
 
-    async def get_trades(self, symbol: str, limit: int = 100) -> List[Trade]:
+    async def get_trades(self, symbol: str, limit: int = 100) -> list[Trade]:
         pair = to_exchange_symbol(self.name, normalize_symbol_to_dash(symbol))
         url = f"{self.api_base}/0/public/Trades?pair={pair}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
                 data = await resp.json()
-        result = cast(Dict[str, Any], data.get("result", {}))
+        result = cast(dict[str, Any], data.get("result", {}))
         first_key = next(iter(result)) if result else None
-        arr = cast(List[List[Any]], result.get(first_key, [])) if first_key else []
-        out: List[Trade] = []
+        arr = cast(list[list[Any]], result.get(first_key, [])) if first_key else []
+        out: list[Trade] = []
         for t in arr[:limit]:
             price = float(t[0])
             qty = float(t[1])
@@ -65,7 +66,7 @@ class KrakenAdapter(AbstractExchangeAdapter):
             )
         return out
 
-    async def get_ohlcv(self, symbol: str, interval: str, limit: int = 500) -> List[OHLCV]:
+    async def get_ohlcv(self, symbol: str, interval: str, limit: int = 500) -> list[OHLCV]:
         pair = to_exchange_symbol(self.name, normalize_symbol_to_dash(symbol))
         interval_map = {"1m": 1, "5m": 5, "15m": 15, "1h": 60, "4h": 240, "1d": 1440}
         it = interval_map.get(interval, 5)
@@ -73,10 +74,10 @@ class KrakenAdapter(AbstractExchangeAdapter):
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
                 data = await resp.json()
-        result = cast(Dict[str, Any], data.get("result", {}))
+        result = cast(dict[str, Any], data.get("result", {}))
         first_key = next(iter(result)) if result else None
-        arr = cast(List[List[Any]], result.get(first_key, [])) if first_key else []
-        ohlc: List[OHLCV] = []
+        arr = cast(list[list[Any]], result.get(first_key, [])) if first_key else []
+        ohlc: list[OHLCV] = []
         for c in arr[:limit]:
             ts = int(c[0]) * 1000
             ohlc.append(
@@ -93,7 +94,7 @@ class KrakenAdapter(AbstractExchangeAdapter):
             )
         return ohlc
 
-    async def get_balance(self) -> Dict[str, float]:
+    async def get_balance(self) -> dict[str, float]:
         return {}
 
     async def create_order(

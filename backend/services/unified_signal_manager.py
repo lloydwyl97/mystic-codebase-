@@ -4,19 +4,19 @@ Handles trading signals from multiple sources
 """
 
 import logging
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class UnifiedSignalManager:
     def __init__(self):
-        self.signals: List[Dict[str, Any]] = []
+        self.signals: list[dict[str, Any]] = []
         self.signal_sources = ["technical", "sentiment", "ai", "social"]
         self.is_running = False
 
-    async def add_signal(self, signal_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def add_signal(self, signal_data: dict[str, Any]) -> dict[str, Any]:
         """Add a new trading signal"""
         try:
             signal_id = f"signal_{len(self.signals) + 1}"
@@ -44,8 +44,8 @@ class UnifiedSignalManager:
             return {"status": "error", "message": str(e)}
 
     async def get_signals(
-        self, symbol: Optional[str] = None, source: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+        self, symbol: str | None = None, source: str | None = None
+    ) -> list[dict[str, Any]]:
         """Get signals with optional filtering"""
         filtered_signals = self.signals
 
@@ -57,7 +57,7 @@ class UnifiedSignalManager:
 
         return filtered_signals
 
-    async def get_latest_signals(self, limit: int = 10) -> List[Dict[str, Any]]:
+    async def get_latest_signals(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get latest signals"""
         return sorted(self.signals, key=lambda x: x.get("timestamp", ""), reverse=True)[:limit]
 

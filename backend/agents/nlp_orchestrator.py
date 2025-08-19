@@ -5,14 +5,15 @@ Coordinates all NLP agents and provides unified NLP services
 
 import asyncio
 import json
-from datetime import datetime
-from typing import Dict, Any, List, Optional
 import os
 import sys
+from datetime import datetime
+from typing import Any, Optional
+
 import numpy as np
 
 # Make all imports live (F401 = timedelta(hours=1
-_ = List[str]
+_ = list[str]
 _ = Optional[str]
 
 # Add parent directory to path for imports
@@ -257,7 +258,7 @@ class NLPOrchestrator(BaseAgent):
         finally:
             pubsub.close()
 
-    async def handle_agent_heartbeat(self, data: Dict[str, Any]):
+    async def handle_agent_heartbeat(self, data: dict[str, Any]):
         """Handle agent heartbeat updates"""
         try:
             agent_id = data.get("agent_id")
@@ -277,7 +278,7 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling agent heartbeat: {e}")
 
-    async def handle_market_data(self, data: Dict[str, Any]):
+    async def handle_market_data(self, data: dict[str, Any]):
         """Handle market data for NLP context"""
         try:
             symbol = data.get("symbol")
@@ -290,7 +291,7 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling market data: {e}")
 
-    async def handle_sentiment_update(self, data: Dict[str, Any]):
+    async def handle_sentiment_update(self, data: dict[str, Any]):
         """Handle aggregated sentiment updates"""
         try:
             symbol = data.get("symbol")
@@ -418,7 +419,7 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error distributing coordination tasks: {e}")
 
-    async def distribute_task(self, task: Dict[str, Any]):
+    async def distribute_task(self, task: dict[str, Any]):
         """Distribute a single task to target agents"""
         try:
             task_type = task["type"]
@@ -534,7 +535,7 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating unified sentiment: {e}")
 
-    async def broadcast_unified_sentiment(self, unified_sentiment: Dict[str, Any]):
+    async def broadcast_unified_sentiment(self, unified_sentiment: dict[str, Any]):
         """Broadcast unified sentiment to other agents"""
         try:
             sentiment_broadcast = {
@@ -564,7 +565,7 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error managing NLP services: {e}")
 
-    async def start_service(self, service_name: str, service_config: Dict[str, Any]):
+    async def start_service(self, service_name: str, service_config: dict[str, Any]):
         """Start an NLP service"""
         try:
             print(f"ðŸš€ Starting NLP service: {service_name}")
@@ -586,7 +587,7 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error starting service {service_name}: {e}")
 
-    async def update_service(self, service_name: str, service_config: Dict[str, Any]):
+    async def update_service(self, service_name: str, service_config: dict[str, Any]):
         """Update an NLP service"""
         try:
             # Check if service needs update
@@ -598,7 +599,7 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating service {service_name}: {e}")
 
-    async def monitor_agent_health(self, agent_name: str, agent_config: Dict[str, Any]):
+    async def monitor_agent_health(self, agent_name: str, agent_config: dict[str, Any]):
         """Monitor health of a specific agent"""
         try:
             agent_id = agent_config["agent_id"]
@@ -617,7 +618,7 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error monitoring agent {agent_name}: {e}")
 
-    async def handle_coordinate_nlp(self, message: Dict[str, Any]):
+    async def handle_coordinate_nlp(self, message: dict[str, Any]):
         """Handle manual NLP coordination request"""
         try:
             coordination_type = message.get("type", "full")
@@ -646,7 +647,7 @@ class NLPOrchestrator(BaseAgent):
             print(f"âŒ Error handling NLP coordination request: {e}")
             await self.broadcast_error(f"NLP coordination error: {e}")
 
-    async def handle_get_unified_sentiment(self, message: Dict[str, Any]):
+    async def handle_get_unified_sentiment(self, message: dict[str, Any]):
         """Handle unified sentiment request"""
         try:
             symbols = message.get("symbols", [])
@@ -681,7 +682,7 @@ class NLPOrchestrator(BaseAgent):
             print(f"âŒ Error handling unified sentiment request: {e}")
             await self.broadcast_error(f"Unified sentiment request error: {e}")
 
-    async def handle_nlp_service_request(self, message: Dict[str, Any]):
+    async def handle_nlp_service_request(self, message: dict[str, Any]):
         """Handle NLP service request"""
         try:
             service_name = message.get("service")
@@ -709,8 +710,8 @@ class NLPOrchestrator(BaseAgent):
             await self.broadcast_error(f"NLP service request error: {e}")
 
     async def route_service_request(
-        self, service_name: str, parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, service_name: str, parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Route service request to appropriate agent"""
         try:
             # Define service routing
@@ -785,10 +786,10 @@ class NLPOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error cleaning up tasks: {e}")
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process incoming market data for NLP coordination"""
         try:
-            print(f"ðŸ“Š Processing market data for NLP coordination")
+            print("ðŸ“Š Processing market data for NLP coordination")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -808,7 +809,7 @@ class NLPOrchestrator(BaseAgent):
             # Update coordination metrics
             await self.update_coordination_metrics()
 
-            print(f"âœ… Market data processed for NLP coordination")
+            print("âœ… Market data processed for NLP coordination")
 
         except Exception as e:
             print(f"âŒ Error processing market data for NLP coordination: {e}")

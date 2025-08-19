@@ -5,7 +5,7 @@ Handles all advanced analytics related API endpoints including performance, trad
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -33,7 +33,7 @@ router = APIRouter()
 async def get_performance_metrics(
     timeframe: str = "30d",
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get comprehensive performance metrics"""
     try:
         # Get real performance data from analytics service
@@ -51,10 +51,10 @@ async def get_performance_metrics(
 async def get_trade_history(
     limit: int = 100,
     offset: int = 0,
-    symbol: Optional[str] = None,
-    strategy: Optional[str] = None,
+    symbol: str | None = None,
+    strategy: str | None = None,
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get detailed trade history"""
     try:
         # Get real trade history from order service
@@ -70,7 +70,7 @@ async def get_trade_history(
 @router.get("/strategies")
 async def get_strategy_performance(
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get strategy performance comparison"""
     try:
         # Get real strategy performance from analytics service
@@ -87,7 +87,7 @@ async def get_strategy_performance(
 @router.get("/ai-insights")
 async def get_ai_insights(
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get AI-powered trading insights"""
     try:
         # Get real AI insights from analytics service

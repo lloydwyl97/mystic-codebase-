@@ -5,7 +5,7 @@ Contains various utility endpoints that don't fit into other categories.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api/misc", tags=["misc"])
 
 
 @router.get("/status")
-async def get_misc_status() -> Dict[str, Any]:
+async def get_misc_status() -> dict[str, Any]:
     """Get miscellaneous system status"""
     return {
         "status": "healthy",
@@ -25,7 +25,7 @@ async def get_misc_status() -> Dict[str, Any]:
 
 
 @router.get("/info")
-async def get_misc_info() -> Dict[str, Any]:
+async def get_misc_info() -> dict[str, Any]:
     """Get miscellaneous system information"""
     return {
         "service": "misc-endpoints",

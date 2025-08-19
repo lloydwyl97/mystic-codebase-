@@ -8,7 +8,7 @@ using live data from the market data service.
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -19,15 +19,15 @@ logger = logging.getLogger("dashboard_api")
 
 
 @router.get("/dashboard/overview")
-async def get_dashboard_overview() -> Dict[str, Any]:
+async def get_dashboard_overview() -> dict[str, Any]:
     try:
         market_data = await live_market_data_service.get_market_data("usd", 10)
-        coins: List[Dict[str, Any]] = (
+        coins: list[dict[str, Any]] = (
             market_data.get("coins", []) if isinstance(market_data, dict) else []
         )
 
         global_data = await live_market_data_service.get_global_data()
-        global_stats: Dict[str, Any] = (
+        global_stats: dict[str, Any] = (
             global_data.get("data", {}) if isinstance(global_data, dict) else {}
         )
 
@@ -69,10 +69,10 @@ async def get_dashboard_overview() -> Dict[str, Any]:
 
 
 @router.get("/dashboard/performance")
-async def get_dashboard_performance() -> Dict[str, Any]:
+async def get_dashboard_performance() -> dict[str, Any]:
     try:
         market_data = await live_market_data_service.get_market_data("usd", 20)
-        coins: List[Dict[str, Any]] = (
+        coins: list[dict[str, Any]] = (
             market_data.get("coins", []) if isinstance(market_data, dict) else []
         )
 
@@ -126,14 +126,14 @@ async def get_dashboard_performance() -> Dict[str, Any]:
 
 
 @router.get("/dashboard/alerts")
-async def get_dashboard_alerts() -> Dict[str, Any]:
+async def get_dashboard_alerts() -> dict[str, Any]:
     try:
         market_data = await live_market_data_service.get_market_data("usd", 30)
-        coins: List[Dict[str, Any]] = (
+        coins: list[dict[str, Any]] = (
             market_data.get("coins", []) if isinstance(market_data, dict) else []
         )
 
-        alerts: List[Dict[str, Any]] = []
+        alerts: list[dict[str, Any]] = []
 
         for coin in coins:
             change = coin.get("price_change_percentage_24h", 0)
@@ -171,7 +171,7 @@ async def get_dashboard_alerts() -> Dict[str, Any]:
                 )
 
         global_data = await live_market_data_service.get_global_data()
-        global_stats: Dict[str, Any] = (
+        global_stats: dict[str, Any] = (
             global_data.get("data", {}) if isinstance(global_data, dict) else {}
         )
 
@@ -198,15 +198,15 @@ async def get_dashboard_alerts() -> Dict[str, Any]:
 
 
 @router.get("/dashboard/summary")
-async def get_dashboard_summary() -> Dict[str, Any]:
+async def get_dashboard_summary() -> dict[str, Any]:
     try:
         market_data = await live_market_data_service.get_market_data("usd", 15)
-        coins: List[Dict[str, Any]] = (
+        coins: list[dict[str, Any]] = (
             market_data.get("coins", []) if isinstance(market_data, dict) else []
         )
 
         global_data = await live_market_data_service.get_global_data()
-        global_stats: Dict[str, Any] = (
+        global_stats: dict[str, Any] = (
             global_data.get("data", {}) if isinstance(global_data, dict) else {}
         )
 
@@ -245,7 +245,7 @@ async def get_dashboard_summary() -> Dict[str, Any]:
 
 
 @router.get("/dashboard/chart-data")
-async def get_dashboard_chart_data() -> Dict[str, Any]:
+async def get_dashboard_chart_data() -> dict[str, Any]:
     """Get chart data for dashboard"""
     try:
         # Get real portfolio chart data from database
@@ -293,7 +293,7 @@ async def get_dashboard_chart_data() -> Dict[str, Any]:
 
 
 @router.get("/dashboard/activity-data")
-async def get_dashboard_activity_data() -> Dict[str, Any]:
+async def get_dashboard_activity_data() -> dict[str, Any]:
     """Get activity data for dashboard"""
     try:
         # Get real activity data from database
@@ -348,10 +348,10 @@ async def get_dashboard_activity_data() -> Dict[str, Any]:
 
 
 @router.get("/dashboard/trends")
-async def get_dashboard_trends() -> Dict[str, Any]:
+async def get_dashboard_trends() -> dict[str, Any]:
     try:
         market_data = await live_market_data_service.get_market_data("usd", 40)
-        coins: List[Dict[str, Any]] = (
+        coins: list[dict[str, Any]] = (
             market_data.get("coins", []) if isinstance(market_data, dict) else []
         )
 

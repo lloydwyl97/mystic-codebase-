@@ -5,8 +5,8 @@ Handles bot control, monitoring, and auto-buy functionality.
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict
+from datetime import datetime, timezone
+from typing import Any
 
 from config import AUTO_BUY_CONFIG, BOT_MONITORING
 
@@ -20,7 +20,7 @@ class BotManager:
         self.auto_buy_config = AUTO_BUY_CONFIG.copy()
         self.bot_monitoring = BOT_MONITORING.copy()
 
-    def get_bot_status(self) -> Dict[str, Any]:
+    def get_bot_status(self) -> dict[str, Any]:
         """Get current bot status"""
         return {
             "bot_status": self.bot_monitoring,
@@ -28,7 +28,7 @@ class BotManager:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-    def start_bot(self) -> Dict[str, Any]:
+    def start_bot(self) -> dict[str, Any]:
         """Start the trading bot"""
         self.bot_monitoring["is_running"] = True
         self.auto_buy_config["bot_status"] = "running"
@@ -42,7 +42,7 @@ class BotManager:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-    def stop_bot(self) -> Dict[str, Any]:
+    def stop_bot(self) -> dict[str, Any]:
         """Stop the trading bot"""
         self.bot_monitoring["is_running"] = False
         self.auto_buy_config["bot_status"] = "stopped"
@@ -56,7 +56,7 @@ class BotManager:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-    def configure_auto_buy(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def configure_auto_buy(self, config: dict[str, Any]) -> dict[str, Any]:
         """Configure auto-buy settings"""
         try:
             required_fields = [
@@ -81,11 +81,11 @@ class BotManager:
             logger.error(f"Error configuring auto-buy: {e}")
             raise
 
-    def get_auto_buy_config(self) -> Dict[str, Any]:
+    def get_auto_buy_config(self) -> dict[str, Any]:
         """Get current auto-buy configuration"""
         return self.auto_buy_config
 
-    def get_bot_logs(self, limit: int = 100) -> Dict[str, Any]:
+    def get_bot_logs(self, limit: int = 100) -> dict[str, Any]:
         """Get bot logs"""
         try:
             logs = self.bot_monitoring["logs"]
@@ -108,7 +108,7 @@ class BotManager:
         action: str,
         amount: float = 1000,
         strategy: str = "default",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute a trade"""
         try:
             # Simulate trade execution

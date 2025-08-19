@@ -5,29 +5,30 @@ Endpoints for AI trading signals, thoughts, bots, and performance
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
+from backend.ai.trade_tracker import get_active_trades
+
 # Import actual AI services
 from backend.modules.ai.ai_signals import (
-    signal_scorer,
-    risk_adjusted_signals,
-    technical_signals,
-    market_strength_signals,
-    trend_analysis,
-    mystic_oracle,
-    get_trading_status,
     get_trade_summary,
+    get_trading_status,
+    market_strength_signals,
+    mystic_oracle,
+    risk_adjusted_signals,
+    signal_scorer,
+    technical_signals,
+    trend_analysis,
 )
-from backend.ai.trade_tracker import get_active_trades
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/ai", tags=["ai-trading"])
 
 
 @router.get("/signals")
-async def get_ai_signals() -> Dict[str, Any]:
+async def get_ai_signals() -> dict[str, Any]:
     """Get AI trading signals"""
     try:
         # Get real signals from AI services (using cached data)
@@ -120,7 +121,7 @@ async def get_ai_signals() -> Dict[str, Any]:
 
 
 @router.get("/thoughts")
-async def get_ai_thoughts() -> Dict[str, Any]:
+async def get_ai_thoughts() -> dict[str, Any]:
     """Get AI thoughts and analysis"""
     try:
         thoughts = []
@@ -202,7 +203,7 @@ async def get_ai_thoughts() -> Dict[str, Any]:
 
 
 @router.get("/bots")
-async def get_ai_bots() -> Dict[str, Any]:
+async def get_ai_bots() -> dict[str, Any]:
     """Get AI bot statuses"""
     try:
         trading_status = get_trading_status()
@@ -248,7 +249,7 @@ async def get_ai_bots() -> Dict[str, Any]:
 
 
 @router.get("/performance")
-async def get_ai_performance() -> Dict[str, Any]:
+async def get_ai_performance() -> dict[str, Any]:
     """Get AI trading performance metrics"""
     try:
         trade_summary = get_trade_summary()
@@ -278,7 +279,7 @@ async def get_ai_performance() -> Dict[str, Any]:
 
 
 @router.get("/status")
-async def get_ai_status() -> Dict[str, Any]:
+async def get_ai_status() -> dict[str, Any]:
     """Get AI system status"""
     try:
         trading_status = get_trading_status()
@@ -343,7 +344,7 @@ async def get_ai_status() -> Dict[str, Any]:
 
 
 @router.get("/predictions")
-async def get_ai_predictions() -> Dict[str, Any]:
+async def get_ai_predictions() -> dict[str, Any]:
     """Get AI predictions"""
     try:
         predictions = []

@@ -1,7 +1,8 @@
-﻿from strategy_leaderboard import get_strategy_leaderboard
+﻿import time
+
 from capital_allocator import allocate_capital
 from position_sizer import calculate_position_size
-import time
+from strategy_leaderboard import get_strategy_leaderboard
 
 
 class MetaAgent:

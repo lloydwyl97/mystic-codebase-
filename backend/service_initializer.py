@@ -4,7 +4,7 @@ Handles initialization of all services and managers
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger("service_initializer")
 
@@ -13,8 +13,8 @@ class ServiceInitializer:
     """Manages initialization of all platform services"""
 
     def __init__(self):
-        self.services: Dict[str, Any] = {}
-        self.service_manager: Optional[Any] = None
+        self.services: dict[str, Any] = {}
+        self.service_manager: Any | None = None
 
     def initialize_service_manager(self) -> bool:
         """Initialize the main service manager"""
@@ -115,11 +115,11 @@ class ServiceInitializer:
         except Exception as e:
             logger.warning(f"âš ï¸ {class_name} initialization failed: {e}")
 
-    def get_service(self, service_name: str) -> Optional[Any]:
+    def get_service(self, service_name: str) -> Any | None:
         """Get a service by name"""
         return self.services.get(service_name)
 
-    def get_all_services(self) -> Dict[str, Any]:
+    def get_all_services(self) -> dict[str, Any]:
         """Get all initialized services"""
         return self.services.copy()
 

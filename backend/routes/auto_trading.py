@@ -6,26 +6,27 @@ Focused on auto trading control and management with advanced signal filtering
 import asyncio
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
-# Import actual AI services
-from backend.modules.ai.ai_signals import (
-    signal_scorer,
-    risk_adjusted_signals,
-    technical_signals,
-    market_strength_signals,
-)
-from backend.ai.auto_trade import get_trading_status, enable_trading, disable_trading
-from backend.ai.trade_tracker import (
-    get_active_trades,
-    get_trade_summary,
-    get_trade_history,
-)
 from backend.ai.ai_brains import trend_analysis
 from backend.ai.ai_mystic import mystic_oracle
+from backend.ai.auto_trade import disable_trading, enable_trading, get_trading_status
 from backend.ai.poller import cache
+from backend.ai.trade_tracker import (
+    get_active_trades,
+    get_trade_history,
+    get_trade_summary,
+)
+
+# Import actual AI services
+from backend.modules.ai.ai_signals import (
+    market_strength_signals,
+    risk_adjusted_signals,
+    signal_scorer,
+    technical_signals,
+)
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/autobuy", tags=["auto-trading"])
@@ -35,7 +36,7 @@ class AdvancedSignalFilter:
     """Advanced signal filtering for higher win percentage"""
 
     def __init__(self):
-        self.signal_history: Dict[str, List[Dict[str, Any]]] = {}
+        self.signal_history: dict[str, list[dict[str, Any]]] = {}
         self.confirmation_threshold = 3  # Require 3+ signals to align
         self.min_confidence = 75
         self.volume_threshold = 1.5  # 50% above average volume
@@ -43,10 +44,10 @@ class AdvancedSignalFilter:
         self.trend_confirmation = True
         self.whale_activity_check = True
 
-    def validate_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_signal(self, signal: dict[str, Any]) -> dict[str, Any]:
         """Validate and score a trading signal"""
         score = 0
-        reasons: List[str] = []
+        reasons: list[str] = []
 
         # 1. Confidence Check
         if signal.get("confidence", 0) >= self.min_confidence:
@@ -99,7 +100,7 @@ class AdvancedSignalFilter:
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    def _check_technical_indicators(self, signal: Dict[str, Any]) -> int:
+    def _check_technical_indicators(self, signal: dict[str, Any]) -> int:
         """Check multiple technical indicators"""
         score = 0
 
@@ -122,7 +123,7 @@ class AdvancedSignalFilter:
 
         return score
 
-    def _check_market_sentiment(self, signal: Dict[str, Any]) -> int:
+    def _check_market_sentiment(self, signal: dict[str, Any]) -> int:
         """Check market sentiment indicators"""
         score = 0
 
@@ -141,7 +142,7 @@ class AdvancedSignalFilter:
 
         return score
 
-    async def get_signal_history(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_signal_history(self, symbol: str) -> list[dict[str, Any]]:
         """Get signal history for a symbol using asyncio"""
         await asyncio.sleep(0.1)  # Simulate async operation
         return self.signal_history.get(symbol, [])
@@ -152,7 +153,7 @@ signal_filter = AdvancedSignalFilter()
 
 
 @router.post("/start")
-async def start_auto_buy(data: Dict[str, Any]) -> Dict[str, Any]:
+async def start_auto_buy(data: dict[str, Any]) -> dict[str, Any]:
     """Start auto trading system with advanced filtering"""
     try:
         # Enable actual trading
@@ -186,7 +187,7 @@ async def start_auto_buy(data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @router.post("/validate-signal")
-async def validate_signal(signal: Dict[str, Any]) -> Dict[str, Any]:
+async def validate_signal(signal: dict[str, Any]) -> dict[str, Any]:
     """Validate a trading signal using advanced filtering"""
     try:
         validated = signal_filter.validate_signal(signal)
@@ -197,7 +198,7 @@ async def validate_signal(signal: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @router.post("/execute")
-async def execute_trade(signal: Dict[str, Any]) -> Dict[str, Any]:
+async def execute_trade(signal: dict[str, Any]) -> dict[str, Any]:
     """Execute a trade with advanced validation, ML enhancement, timing, and correlation analysis"""
     try:
         # First validate the signal
@@ -275,7 +276,7 @@ async def execute_trade(signal: Dict[str, Any]) -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail="Failed to execute trade")
 
 
-async def _check_multi_confirmation(symbol: str, signal: Dict[str, Any]) -> bool:
+async def _check_multi_confirmation(symbol: str, signal: dict[str, Any]) -> bool:
     """Check multiple confirmation sources"""
     try:
         # Get signals from multiple AI sources
@@ -308,12 +309,12 @@ async def _check_multi_confirmation(symbol: str, signal: Dict[str, Any]) -> bool
 
 
 async def _execute_trade_with_comprehensive_risk_management(
-    signal: Dict[str, Any],
-    validated: Dict[str, Any],
-    market_strength: Dict[str, Any],
-    trend_data: Dict[str, Any],
-    oracle_data: Dict[str, Any],
-) -> Dict[str, Any]:
+    signal: dict[str, Any],
+    validated: dict[str, Any],
+    market_strength: dict[str, Any],
+    trend_data: dict[str, Any],
+    oracle_data: dict[str, Any],
+) -> dict[str, Any]:
     """Execute trade with comprehensive risk management"""
     try:
         symbol = signal.get("symbol", "")
@@ -368,7 +369,7 @@ async def _execute_trade_with_comprehensive_risk_management(
 
 
 @router.post("/stop")
-async def stop_auto_buy() -> Dict[str, Any]:
+async def stop_auto_buy() -> dict[str, Any]:
     """Stop auto trading system"""
     try:
         # Disable actual trading
@@ -386,7 +387,7 @@ async def stop_auto_buy() -> Dict[str, Any]:
 
 
 @router.get("/status")
-async def get_auto_buy_status() -> Dict[str, Any]:
+async def get_auto_buy_status() -> dict[str, Any]:
     """Get auto trading system status"""
     try:
         trading_status = get_trading_status()
@@ -422,7 +423,7 @@ async def get_auto_buy_status() -> Dict[str, Any]:
 
 
 @router.get("/performance")
-async def get_auto_buy_performance() -> Dict[str, Any]:
+async def get_auto_buy_performance() -> dict[str, Any]:
     """Get auto trading performance metrics"""
     try:
         trade_summary = get_trade_summary()
@@ -477,7 +478,7 @@ async def get_auto_buy_performance() -> Dict[str, Any]:
 
 
 @router.get("/ml-status")
-async def get_ml_status() -> Dict[str, Any]:
+async def get_ml_status() -> dict[str, Any]:
     """Get ML model status and performance"""
     try:
         # Get AI system status
@@ -533,7 +534,7 @@ async def get_ml_status() -> Dict[str, Any]:
 
 
 @router.get("/sentiment-analysis/{symbol}")
-async def get_sentiment_analysis(symbol: str) -> Dict[str, Any]:
+async def get_sentiment_analysis(symbol: str) -> dict[str, Any]:
     """Get sentiment analysis for a specific symbol"""
     try:
         # Get market strength for overall sentiment
@@ -641,14 +642,14 @@ def _get_sentiment_recommendation(sentiment: Any) -> str:
 
 
 @router.get("/test-integrations")
-async def test_integrations() -> Dict[str, Any]:
+async def test_integrations() -> dict[str, Any]:
     """Test CoinGecko and Binance US integrations"""
     try:
         from backend.ai.auto_trade import (
-            CoinGeckoAPI,
             BinanceUSAPI,
-            get_market_data,
+            CoinGeckoAPI,
             get_account_balance,
+            get_market_data,
         )
 
         results = {
@@ -717,7 +718,7 @@ async def test_integrations() -> Dict[str, Any]:
 
 
 @router.get("/market-data/{symbol}")
-async def get_symbol_market_data(symbol: str) -> Dict[str, Any]:
+async def get_symbol_market_data(symbol: str) -> dict[str, Any]:
     """Get comprehensive market data for a specific symbol from both CoinGecko and Binance US"""
     try:
         from backend.ai.auto_trade import get_market_data
@@ -731,7 +732,7 @@ async def get_symbol_market_data(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/account-status")
-async def get_account_status() -> Dict[str, Any]:
+async def get_account_status() -> dict[str, Any]:
     """Get account status and balance from Binance US"""
     try:
         from backend.ai.auto_trade import get_account_balance, get_trading_status
@@ -751,11 +752,10 @@ async def get_account_status() -> Dict[str, Any]:
 
 
 @router.get("/system-status")
-async def get_system_status() -> Dict[str, Any]:
+async def get_system_status() -> dict[str, Any]:
     """Get comprehensive autobuy system status with all integrations"""
     try:
-        from backend.ai.auto_trade import get_trading_status, get_account_balance
-        from backend.ai.auto_trade import CoinGeckoAPI, BinanceUSAPI
+        from backend.ai.auto_trade import BinanceUSAPI, CoinGeckoAPI, get_account_balance, get_trading_status
 
         # Get trading status
         trading_status = get_trading_status()
@@ -885,15 +885,15 @@ async def get_system_status() -> Dict[str, Any]:
 
 
 @router.get("/comprehensive-status")
-async def get_comprehensive_status() -> Dict[str, Any]:
+async def get_comprehensive_status() -> dict[str, Any]:
     """Get comprehensive system status with all AI and experimental integrations"""
     try:
-        from backend.ai.auto_trade import get_trading_status, get_account_balance
-        from backend.ai.auto_trade import CoinGeckoAPI, BinanceUSAPI
-        from ai_training_pipeline import get_ai_training_pipeline
         from ai_model_versioning import get_ai_model_versioning
+        from ai_training_pipeline import get_ai_training_pipeline
         from experimental_integration import get_experimental_integration
         from shared_cache import SharedCache
+
+        from backend.ai.auto_trade import BinanceUSAPI, CoinGeckoAPI, get_account_balance, get_trading_status
 
         # Get trading status
         trading_status = get_trading_status()

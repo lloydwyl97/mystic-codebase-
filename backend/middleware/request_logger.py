@@ -6,7 +6,7 @@ FastAPI middleware for logging requests.
 
 import logging
 import time
-from typing import Awaitable, Callable, Union
+from collections.abc import Awaitable, Callable
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 @log_operation_performance("request_logger")
 async def request_logger_middleware(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
-) -> Union[Response, JSONResponse]:
+) -> Response | JSONResponse:
     """
     Middleware to log incoming requests and responses.
     """

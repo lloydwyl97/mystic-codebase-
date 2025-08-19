@@ -1,15 +1,17 @@
 import os
-from typing import Any, Dict, cast, List
+from typing import Any, cast
+
 import pandas as pd
+import plotly.graph_objects as go  # type: ignore[import-not-found]
 import requests
 import streamlit as st
-import plotly.graph_objects as go  # type: ignore[import-not-found]
+
 from backend.config.coins import FEATURED_EXCHANGE
 from mystic_ui import api_client
-from mystic_ui.top10_resolver import resolve_top10_binanceus
 from mystic_ui import ui_common as ui
-from mystic_ui.display import render_kpis, render_table
 from mystic_ui.data_client import get_trades
+from mystic_ui.display import render_kpis, render_table
+from mystic_ui.top10_resolver import resolve_top10_binanceus
 
 API = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:9000")
 _st = st
@@ -18,8 +20,8 @@ _st = st
 def render() -> None:
 	st.title(" Market")
 
-	global_data: Dict[str, Any] = cast(Dict[str, Any], api_client.request_json("GET", "/market/global") or {})
-	trends_data: Dict[str, Any] = cast(Dict[str, Any], api_client.request_json("GET", "/market/live") or {})
+	global_data: dict[str, Any] = cast(dict[str, Any], api_client.request_json("GET", "/market/global") or {})
+	trends_data: dict[str, Any] = cast(dict[str, Any], api_client.request_json("GET", "/market/live") or {})
 
 	gd = global_data.get("global_data") or global_data
 	render_kpis([
@@ -47,7 +49,7 @@ def render() -> None:
 	render_symbol_kpis(sym, tf)
 
 	if df.empty:
-		st.warning("No candles."); 
+		st.warning("No candles.") 
 	else:
 		_render_candles(df)
 
@@ -109,18 +111,18 @@ def render_ai_explain(symbol: str):
 	except Exception as e:
 		_st.error(f"Explain error: {e}")
 		return
-	if not (isinstance(data, dict) and cast(Dict[str, Any], data).get("ok")):
+	if not (isinstance(data, dict) and cast(dict[str, Any], data).get("ok")):
 		_st.info("No AI attribution yet.")
 		return
-	used_any: Any = cast(Dict[str, Any], data).get("used") or {}
-	used: Dict[str, Any] = cast(Dict[str, Any], used_any if isinstance(used_any, dict) else {})
+	used_any: Any = cast(dict[str, Any], data).get("used") or {}
+	used: dict[str, Any] = cast(dict[str, Any], used_any if isinstance(used_any, dict) else {})
 	_st.json(
 		{
 			"mode": os.environ.get("AI_TRADE_MODE", "off"),
 			"inputs": used.get("inputs"),
 			"weights": used.get("weights"),
 			"reason": used.get("reason"),
-			"ts": cast(Dict[str, Any], data).get("ts"),
+			"ts": cast(dict[str, Any], data).get("ts"),
 		}
 	)
 
@@ -130,7 +132,7 @@ def render_recent_trades(symbol: str, limit: int = 100):
 	trades: list[Any] = []
 	if isinstance(res_tr, dict) and "__meta__" in res_tr:
 		meta_any: Any = res_tr["__meta__"] if "__meta__" in res_tr else {}
-		meta: Dict[str, Any] = cast(Dict[str, Any], meta_any if isinstance(meta_any, dict) else {})
+		meta: dict[str, Any] = cast(dict[str, Any], meta_any if isinstance(meta_any, dict) else {})
 		route = meta.get("route")
 		status = meta.get("status")
 		err = meta.get("error")
@@ -143,7 +145,7 @@ def render_recent_trades(symbol: str, limit: int = 100):
 	else:
 		payload_tr: Any = res_tr
 		if isinstance(payload_tr, dict):
-			p2: Dict[str, Any] = cast(Dict[str, Any], payload_tr)
+			p2: dict[str, Any] = cast(dict[str, Any], payload_tr)
 			t_any = p2.get("trades") or p2.get("data")
 			if isinstance(t_any, list):
 				trades = t_any

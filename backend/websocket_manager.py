@@ -5,7 +5,7 @@ Manages WebSocket connections and provides broadcasting capabilities.
 """
 
 import logging
-from typing import Any, List
+from typing import Any
 
 from fastapi import WebSocket
 
@@ -17,7 +17,7 @@ class WebSocketConnectionManager:
     """Manages WebSocket connections and provides broadcasting capabilities."""
 
     def __init__(self):
-        self.active_connections: List[WebSocket] = []
+        self.active_connections: list[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
         """Accept and register a new WebSocket connection."""
@@ -34,7 +34,7 @@ class WebSocketConnectionManager:
 
     async def broadcast(self, message: str):
         """Broadcast a message to all connected clients."""
-        disconnected: List[WebSocket] = []
+        disconnected: list[WebSocket] = []
 
         for connection in self.active_connections:
             try:
@@ -62,7 +62,7 @@ class WebSocketConnectionManager:
 
     async def broadcast_json(self, message: dict[str, Any]):
         """Broadcast a JSON message to all connected clients."""
-        disconnected: List[WebSocket] = []
+        disconnected: list[WebSocket] = []
         for connection in self.active_connections:
             try:
                 await connection.send_json(message)

@@ -10,7 +10,7 @@ import logging
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class StrategyPromoter:
         self.testing_strategies_dir.mkdir(parents=True, exist_ok=True)
         self.backup_strategies_dir.mkdir(parents=True, exist_ok=True)
 
-    def promote_strategy(self, strategy_file: str, justification: str = "") -> Dict[str, Any]:
+    def promote_strategy(self, strategy_file: str, justification: str = "") -> dict[str, Any]:
         """Promote a strategy from testing to live"""
         try:
             # Find strategy file
@@ -40,7 +40,7 @@ class StrategyPromoter:
                 }
 
             # Load strategy data
-            with open(strategy_path, "r") as f:
+            with open(strategy_path) as f:
                 strategy_data = json.load(f)
 
             # Validate strategy
@@ -85,7 +85,7 @@ class StrategyPromoter:
             logger.error(f"âŒ Error promoting strategy: {e}")
             return {"success": False, "error": str(e)}
 
-    def demote_strategy(self, strategy_file: str, reason: str = "") -> Dict[str, Any]:
+    def demote_strategy(self, strategy_file: str, reason: str = "") -> dict[str, Any]:
         """Demote a strategy from live to testing"""
         try:
             promoted_path = self.promoted_strategies_dir / strategy_file
@@ -96,7 +96,7 @@ class StrategyPromoter:
                 }
 
             # Load strategy data
-            with open(promoted_path, "r") as f:
+            with open(promoted_path) as f:
                 strategy_data = json.load(f)
 
             # Update metadata
@@ -126,13 +126,13 @@ class StrategyPromoter:
             logger.error(f"âŒ Error demoting strategy: {e}")
             return {"success": False, "error": str(e)}
 
-    def get_promoted_strategies(self) -> List[Dict[str, Any]]:
+    def get_promoted_strategies(self) -> list[dict[str, Any]]:
         """Get list of promoted strategies"""
         strategies = []
 
         for strategy_file in self.promoted_strategies_dir.glob("*.json"):
             try:
-                with open(strategy_file, "r") as f:
+                with open(strategy_file) as f:
                     strategy_data = json.load(f)
 
                 strategies.append(
@@ -151,7 +151,7 @@ class StrategyPromoter:
 
         return strategies
 
-    def _find_strategy_file(self, strategy_file: str) -> Optional[Path]:
+    def _find_strategy_file(self, strategy_file: str) -> Path | None:
         """Find strategy file in various directories"""
         search_paths = [
             Path("strategies") / strategy_file,
@@ -166,7 +166,7 @@ class StrategyPromoter:
 
         return None
 
-    def _validate_strategy(self, strategy_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_strategy(self, strategy_data: dict[str, Any]) -> dict[str, Any]:
         """Validate strategy before promotion"""
         try:
             # Check required fields
@@ -209,7 +209,7 @@ class StrategyPromoter:
         except Exception as e:
             return {"valid": False, "error": f"Validation error: {str(e)}"}
 
-    def rollback_promotion(self, strategy_file: str, backup_file: str) -> Dict[str, Any]:
+    def rollback_promotion(self, strategy_file: str, backup_file: str) -> dict[str, Any]:
         """Rollback a promotion using backup file"""
         try:
             backup_path = Path(backup_file)

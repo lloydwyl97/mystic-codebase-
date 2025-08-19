@@ -6,9 +6,10 @@ Integrates with the main trading system for automated validation and confidence 
 """
 
 import logging
-import requests
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Any
+
+import requests
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -46,8 +47,8 @@ def fetch_real_world_trigger() -> bool:
 
 
 def self_validate_prediction(
-    prediction: Dict[str, Any], confidence: float, historical_accuracy: float
-) -> Optional[bool]:
+    prediction: dict[str, Any], confidence: float, historical_accuracy: float
+) -> bool | None:
     """
     Self-validate a trading prediction based on confidence and historical accuracy.
 
@@ -100,10 +101,10 @@ def self_validate_prediction(
 
 
 def calculate_oracle_confidence(
-    prediction_data: Dict[str, Any],
-    market_conditions: Dict[str, Any],
-    model_performance: Dict[str, float],
-) -> Dict[str, Any]:
+    prediction_data: dict[str, Any],
+    market_conditions: dict[str, Any],
+    model_performance: dict[str, float],
+) -> dict[str, Any]:
     """
     Calculate comprehensive oracle confidence score.
 
@@ -169,10 +170,10 @@ def calculate_oracle_confidence(
 
 
 def validate_trading_signal(
-    signal: Dict[str, Any],
-    market_data: Dict[str, Any],
-    risk_metrics: Dict[str, float],
-) -> Dict[str, Any]:
+    signal: dict[str, Any],
+    market_data: dict[str, Any],
+    risk_metrics: dict[str, float],
+) -> dict[str, Any]:
     """
     Validate a trading signal using oracle logic.
 

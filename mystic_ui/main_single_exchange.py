@@ -1,5 +1,7 @@
 ﻿# --- MystIC path bootstrap (put at very top) ---
-import os, sys
+import os
+import sys
+
 _ROOT    = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 _ST      = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 _BACKEND = os.path.join(_ROOT, "backend")
@@ -12,13 +14,14 @@ if ROOT not in sys.path: sys.path.append(ROOT)
 ST   = os.path.abspath(os.path.dirname(__file__))           # streamlit/
 if ST not in sys.path: sys.path.append(ST)
 # -------------------------------------------
-import streamlit as st
+from typing import Any, cast
+
 import pandas as pd
 import requests
-from typing import Any, Dict, cast
+import streamlit as st
+from data_client import get_ohlcv, get_trades
 
 from backend.config.coins import FEATURED_EXCHANGE, FEATURED_SYMBOLS
-from data_client import get_ohlcv, get_trades
 
 API = os.environ.get("MYSTIC_BACKEND", "http://127.0.0.1:8000")
 _st = cast(Any, st)
@@ -33,7 +36,7 @@ def chart_one(symbol: str):
         # Show compact notice if only metadata returned
         if isinstance(res_ohlcv, dict) and "__meta__" in res_ohlcv:
             meta_any: Any = res_ohlcv["__meta__"] if "__meta__" in res_ohlcv else {}
-            meta: Dict[str, Any] = cast(Dict[str, Any], meta_any if isinstance(meta_any, dict) else {})
+            meta: dict[str, Any] = cast(dict[str, Any], meta_any if isinstance(meta_any, dict) else {})
             route = meta.get("route")
             status = meta.get("status")
             err = meta.get("error")
@@ -49,7 +52,7 @@ def chart_one(symbol: str):
             # Try common shapes: top-level dict with "candles", or direct list
             candles = None
             if isinstance(payload, dict):
-                p_dict: Dict[str, Any] = cast(Dict[str, Any], payload)
+                p_dict: dict[str, Any] = cast(dict[str, Any], payload)
                 c_any = p_dict.get("candles")
                 if isinstance(c_any, list):
                     candles = cast(list[Any], c_any)
@@ -78,7 +81,7 @@ def chart_one(symbol: str):
         trades: list[Any] = []
         if isinstance(res_tr, dict) and "__meta__" in res_tr:
             meta_any: Any = res_tr["__meta__"] if "__meta__" in res_tr else {}
-            meta: Dict[str, Any] = cast(Dict[str, Any], meta_any if isinstance(meta_any, dict) else {})
+            meta: dict[str, Any] = cast(dict[str, Any], meta_any if isinstance(meta_any, dict) else {})
             route = meta.get("route")
             status = meta.get("status")
             err = meta.get("error")
@@ -91,7 +94,7 @@ def chart_one(symbol: str):
         else:
             payload_tr: Any = res_tr
             if isinstance(payload_tr, dict):
-                p2: Dict[str, Any] = cast(Dict[str, Any], payload_tr)
+                p2: dict[str, Any] = cast(dict[str, Any], payload_tr)
                 t_any = p2.get("trades") or p2.get("data")
                 if isinstance(t_any, list):
                     trades = t_any
@@ -112,18 +115,18 @@ def ai_explain(symbol: str):
     except Exception as e:
         _st.error(f"Explain error: {e}")
         return
-    if not (isinstance(data, dict) and cast(Dict[str, Any], data).get("ok")):
+    if not (isinstance(data, dict) and cast(dict[str, Any], data).get("ok")):
         _st.info("No AI attribution yet.")
         return
-    used_any: Any = cast(Dict[str, Any], data).get("used") or {}
-    used: Dict[str, Any] = cast(Dict[str, Any], used_any if isinstance(used_any, dict) else {})
+    used_any: Any = cast(dict[str, Any], data).get("used") or {}
+    used: dict[str, Any] = cast(dict[str, Any], used_any if isinstance(used_any, dict) else {})
     _st.json(
         {
             "mode": os.environ.get("AI_TRADE_MODE", "off"),
             "inputs": used.get("inputs"),
             "weights": used.get("weights"),
             "reason": used.get("reason"),
-            "ts": cast(Dict[str, Any], data).get("ts"),
+            "ts": cast(dict[str, Any], data).get("ts"),
         }
     )
 

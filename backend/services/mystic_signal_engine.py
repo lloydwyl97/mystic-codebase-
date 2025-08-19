@@ -9,7 +9,7 @@ import math
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any
 
 from mystic_config import mystic_config
 
@@ -33,9 +33,9 @@ class MysticSignal:
     signal_type: SignalType
     confidence: float
     strength: float
-    factors: Dict[str, Any]
+    factors: dict[str, Any]
     timestamp: datetime
-    reasoning: List[str]
+    reasoning: list[str]
 
 
 class Tesla369Engine:
@@ -45,7 +45,7 @@ class Tesla369Engine:
         self.base_frequency = 369  # Tesla's sacred number
         self.harmonics = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]
 
-    def calculate_tesla_signal(self, current_time: datetime) -> Dict[str, Any]:
+    def calculate_tesla_signal(self, current_time: datetime) -> dict[str, Any]:
         """Calculate Tesla 369 influence on trading"""
         # Tesla's time-based frequency calculations
         hour_factor = (current_time.hour % 12) / 12.0
@@ -85,7 +85,7 @@ class FaerieStarEngine:
         self.star_phases = ["Dawn", "Noon", "Dusk", "Midnight"]
         self.elemental_forces = ["Fire", "Water", "Earth", "Air", "Ether"]
 
-    def calculate_faerie_signal(self, current_time: datetime) -> Dict[str, Any]:
+    def calculate_faerie_signal(self, current_time: datetime) -> dict[str, Any]:
         """Calculate Faerie Star influence on trading"""
         # Faerie time cycles (based on lunar and solar alignments)
         lunar_cycle = (current_time.day % 29.5) / 29.5
@@ -131,7 +131,7 @@ class LagosAlignmentEngine:
         self.cosmic_cycles = ["Harmony", "Chaos", "Balance", "Transformation"]
         self.energy_levels = ["Low", "Medium", "High", "Peak"]
 
-    def calculate_lagos_signal(self, current_time: datetime) -> Dict[str, Any]:
+    def calculate_lagos_signal(self, current_time: datetime) -> dict[str, Any]:
         """Calculate Lagos alignment influence on trading"""
         # Cosmic time cycles
         cosmic_cycle = (current_time.hour + current_time.minute / 60) / 24
@@ -180,7 +180,7 @@ class MysticSignalEngine:
         self.tesla_engine = Tesla369Engine()
         self.faerie_engine = FaerieStarEngine()
         self.lagos_engine = LagosAlignmentEngine()
-        self.cache: Dict[str, Any] = {}
+        self.cache: dict[str, Any] = {}
         self.cache_ttl: int = 60  # 1 minute cache
 
     async def generate_comprehensive_signal(self, symbol: str = "BTCUSDT") -> MysticSignal:
@@ -245,7 +245,7 @@ class MysticSignalEngine:
         tesla: Any,
         faerie: Any,
         lagos: Any,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Combine all mystic signals with weighted importance"""
 
         # Weight definitions (total = 1.0)
@@ -299,7 +299,7 @@ class MysticSignalEngine:
             },
         }
 
-    def _schumann_to_signal(self, schumann_data: Any) -> Dict[str, Any]:
+    def _schumann_to_signal(self, schumann_data: Any) -> dict[str, Any]:
         """Convert Schumann data to signal value"""
         deviation = schumann_data.deviation
 
@@ -317,7 +317,7 @@ class MysticSignalEngine:
             "strength": abs(signal_value),
         }
 
-    def _fractal_to_signal(self, fractal_data: Any) -> Dict[str, Any]:
+    def _fractal_to_signal(self, fractal_data: Any) -> dict[str, Any]:
         """Convert fractal data to signal value"""
         # Higher fractal dimension and resonance = stronger signal
         fractal_factor = (fractal_data.fractal_dimension - 2.0) / 0.5  # Normalize around 2.0
@@ -334,7 +334,7 @@ class MysticSignalEngine:
             "strength": abs(signal_value),
         }
 
-    def _planetary_to_signal(self, planetary_data: Any) -> Dict[str, Any]:
+    def _planetary_to_signal(self, planetary_data: Any) -> dict[str, Any]:
         """Convert planetary data to signal value"""
         alignment_factor = planetary_data.alignment_strength
         influence_factor = planetary_data.influence_score
@@ -350,7 +350,7 @@ class MysticSignalEngine:
             "strength": abs(signal_value - 0.5) * 2,
         }
 
-    def _mystic_signal_to_signal(self, mystic_signal_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _mystic_signal_to_signal(self, mystic_signal_data: dict[str, Any]) -> dict[str, Any]:
         """Convert mystic signal data to signal value"""
         signal_strength = mystic_signal_data["signal_strength"]
 
@@ -365,7 +365,7 @@ class MysticSignalEngine:
             "strength": abs(signal_value),
         }
 
-    def _tesla_to_signal(self, tesla_signal: Dict[str, Any]) -> Dict[str, Any]:
+    def _tesla_to_signal(self, tesla_signal: dict[str, Any]) -> dict[str, Any]:
         """Convert Tesla signal to signal value"""
         direction_map = {"BUY": 1.0, "SELL": -1.0, "HOLD": 0.0}
         signal_value = direction_map[tesla_signal["direction"]] * tesla_signal["strength"]
@@ -376,7 +376,7 @@ class MysticSignalEngine:
             "strength": tesla_signal["strength"],
         }
 
-    def _faerie_to_signal(self, faerie_signal: Dict[str, Any]) -> Dict[str, Any]:
+    def _faerie_to_signal(self, faerie_signal: dict[str, Any]) -> dict[str, Any]:
         """Convert Faerie signal to signal value"""
         direction_map = {"BUY": 1.0, "SELL": -1.0, "HOLD": 0.0}
         signal_value = direction_map[faerie_signal["direction"]] * faerie_signal["strength"]
@@ -387,7 +387,7 @@ class MysticSignalEngine:
             "strength": faerie_signal["strength"],
         }
 
-    def _lagos_to_signal(self, lagos_signal: Dict[str, Any]) -> Dict[str, Any]:
+    def _lagos_to_signal(self, lagos_signal: dict[str, Any]) -> dict[str, Any]:
         """Convert Lagos signal to signal value"""
         direction_map = {"BUY": 1.0, "SELL": -1.0, "HOLD": 0.0}
         signal_value = direction_map[lagos_signal["direction"]] * lagos_signal["strength"]
@@ -398,7 +398,7 @@ class MysticSignalEngine:
             "strength": lagos_signal["strength"],
         }
 
-    def _determine_final_signal(self, signal_components: Dict[str, Any]) -> Dict[str, Any]:
+    def _determine_final_signal(self, signal_components: dict[str, Any]) -> dict[str, Any]:
         """Determine final signal type and strength"""
         final_signal = signal_components["final_signal"]
 
@@ -435,7 +435,7 @@ class MysticSignalEngine:
             "strength": abs(final_signal),
         }
 
-    def _generate_reasoning(self, signal_components: Dict[str, Any]) -> List[str]:
+    def _generate_reasoning(self, signal_components: dict[str, Any]) -> list[str]:
         """Generate human-readable reasoning for the signal"""
         reasoning = []
         components = signal_components["components"]

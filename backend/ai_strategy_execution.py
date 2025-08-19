@@ -5,11 +5,12 @@ import logging
 import os
 import time
 from base64 import b64encode
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urlencode
 
 import requests
 from dotenv import load_dotenv  # type: ignore
+
 from backend.config import settings
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -49,7 +50,7 @@ def send_alert(msg: str) -> None:
         logger.error(f"Failed to send alert: {e}")
 
 
-def get_binance_price(symbol: str = "ETHUSDT") -> Optional[float]:
+def get_binance_price(symbol: str = "ETHUSDT") -> float | None:
     try:
         url = f"https://api.binance.us/api/v3/ticker/price?symbol={symbol}"
         response = requests.get(url, timeout=10)
@@ -60,7 +61,7 @@ def get_binance_price(symbol: str = "ETHUSDT") -> Optional[float]:
         return None
 
 
-def get_coinbase_price(product_id: str = "ETH-USD") -> Optional[float]:
+def get_coinbase_price(product_id: str = "ETH-USD") -> float | None:
     try:
         url = f"https://api.coinbase.com/v2/prices/{product_id}/spot"
         response = requests.get(url, timeout=10)
@@ -147,7 +148,7 @@ def coinbase_market_buy(product_id: str = "ETH-USD", funds: str = "50") -> dict[
 
 def execute_ai_strategy_signal(
     symbol_binance: str, symbol_coinbase: str, usd_amount: float, signal: bool
-) -> Optional[dict[str, Any]]:
+) -> dict[str, Any] | None:
     try:
         if not signal:
             logger.info("No signal provided, skipping execution")

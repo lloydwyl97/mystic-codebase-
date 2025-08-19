@@ -1,5 +1,8 @@
-﻿import os, streamlit as st
-from typing import MutableMapping, Any, cast
+﻿import os
+from collections.abc import MutableMapping
+from typing import Any, cast
+
+import streamlit as st
 
 _st = cast(Any, st)
 

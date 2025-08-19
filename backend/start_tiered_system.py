@@ -7,17 +7,18 @@ Demonstrates how to initialize and run the new tiered signal architecture
 import asyncio
 import logging
 import time
-from typing import Any, Optional
+from typing import Any
 
 import redis.asyncio as redis
 
+# Import the tiered system components
+from unified_signal_manager import UnifiedSignalManager
+
 from backend.services.market_data import MarketDataService
+
 from .services.notification import get_notification_service
 from .services.service_manager import service_manager
 from .services.trading import get_trading_service
-
-# Import the tiered system components
-from unified_signal_manager import UnifiedSignalManager
 
 # Configure logging
 logging.basicConfig(
@@ -34,13 +35,13 @@ logger = logging.getLogger("tiered_system")
 class TieredSystemManager:
     def __init__(self, redis_url: str = "redis://localhost:6379"):
         self.redis_url = redis_url
-        self.redis_client: Optional[redis.Redis] = None
-        self.unified_manager: Optional[UnifiedSignalManager] = None
+        self.redis_client: redis.Redis | None = None
+        self.unified_manager: UnifiedSignalManager | None = None
         self.is_running = False
 
         # Service instances
         self.service_manager: Any = None
-        self.market_service: Optional[MarketDataService] = None
+        self.market_service: MarketDataService | None = None
         self.notification_service: Any = None
         self.trading_service: Any = None
 

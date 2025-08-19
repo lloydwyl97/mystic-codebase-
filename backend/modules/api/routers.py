@@ -10,9 +10,9 @@ from fastapi import APIRouter
 
 from .endpoints import (
     create_comprehensive_health_endpoint,
-    create_health_endpoint,
     create_data_mode_endpoint,
     create_data_status_endpoint,
+    create_health_endpoint,
     create_version_endpoint,
 )
 

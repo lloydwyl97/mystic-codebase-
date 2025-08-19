@@ -1,13 +1,12 @@
 ﻿import asyncio
-import openai
 import json
-import sqlite3
-import requests
-from datetime import datetime
-from typing import Dict, List
-import pandas as pd
 import os
+import sqlite3
 from datetime import datetime, timezone
+
+import openai
+import pandas as pd
+import requests
 
 # Enhanced configuration
 EXPLAINER_DB = "./data/trade_explanations.db"
@@ -78,7 +77,7 @@ class ExplainerDatabase:
         conn.commit()
         conn.close()
 
-    def save_trade_explanation(self, explanation: Dict):
+    def save_trade_explanation(self, explanation: dict):
         """Save trade explanation to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -109,7 +108,7 @@ class ExplainerDatabase:
         conn.commit()
         conn.close()
 
-    def save_factor_analysis(self, factors: List[Dict]):
+    def save_factor_analysis(self, factors: list[dict]):
         """Save factor analysis to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -135,7 +134,7 @@ class ExplainerDatabase:
         conn.close()
 
 
-def get_market_data(symbol: str) -> Dict:
+def get_market_data(symbol: str) -> dict:
     """Get comprehensive market data for analysis"""
     try:
         # Current price and 24h data
@@ -156,7 +155,7 @@ def get_market_data(symbol: str) -> Dict:
     return {}
 
 
-def get_technical_indicators(symbol: str) -> Dict:
+def get_technical_indicators(symbol: str) -> dict:
     """Get technical indicators for analysis"""
     try:
         # Get historical data for indicators
@@ -236,7 +235,7 @@ def get_technical_indicators(symbol: str) -> Dict:
     return {}
 
 
-def get_sentiment_data(symbol: str) -> Dict:
+def get_sentiment_data(symbol: str) -> dict:
     """Get sentiment data for analysis"""
     try:
         # Simplified sentiment analysis
@@ -266,7 +265,7 @@ def get_sentiment_data(symbol: str) -> Dict:
     return {}
 
 
-def analyze_trade_factors(symbol: str, trade_type: str, entry_price: float) -> List[Dict]:
+def analyze_trade_factors(symbol: str, trade_type: str, entry_price: float) -> list[dict]:
     """Analyze factors that influenced the trade"""
     factors = []
     timestamp = datetime.now(timezone.utc).isoformat()
@@ -369,7 +368,7 @@ def analyze_trade_factors(symbol: str, trade_type: str, entry_price: float) -> L
 
 
 def generate_ai_explanation(
-    symbol: str, trade_type: str, factors: List[Dict], market_context: str
+    symbol: str, trade_type: str, factors: list[dict], market_context: str
 ) -> str:
     """Generate AI-powered trade explanation"""
     try:
@@ -411,7 +410,7 @@ Write in a clear, professional tone suitable for traders."""
         return f"Trade explanation for {symbol} {trade_type}: Based on technical analysis and market conditions."
 
 
-def assess_risk(factors: List[Dict], trade_type: str) -> str:
+def assess_risk(factors: list[dict], trade_type: str) -> str:
     """Assess trade risk based on factors"""
     try:
         # Calculate risk score

@@ -5,8 +5,8 @@ Focused on mystic signal generation and management
 
 import logging
 import random
-from datetime import timezone, datetime
-from typing import Any, Dict, List
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api/mystic", tags=["mystic-signals"])
 
 
 @router.get("/signals")
-async def get_mystic_signals() -> List[Dict[str, Any]]:
+async def get_mystic_signals() -> list[dict[str, Any]]:
     """Get mystic trading signals"""
     try:
         # Get symbols dynamically from exchange APIs
@@ -53,7 +53,7 @@ async def get_mystic_signals() -> List[Dict[str, Any]]:
 
 
 @router.post("/execute")
-async def execute_mystic_signal(data: Dict[str, Any]) -> Dict[str, Any]:
+async def execute_mystic_signal(data: dict[str, Any]) -> dict[str, Any]:
     """Execute a mystic signal"""
     try:
         signal_id = data.get("signalId")

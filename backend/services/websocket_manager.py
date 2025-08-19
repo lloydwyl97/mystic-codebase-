@@ -4,7 +4,8 @@ Handles WebSocket connections and real-time data
 """
 
 import logging
-from typing import Dict, Any, List
+from typing import Any
+
 from fastapi import WebSocket
 
 logger = logging.getLogger(__name__)
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class WebSocketManager:
     def __init__(self):
-        self.active_connections: List[WebSocket] = []
+        self.active_connections: list[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
         """Connect a new WebSocket client"""
@@ -28,7 +29,7 @@ class WebSocketManager:
                 f"WebSocket disconnected. Total connections: {len(self.active_connections)}"
             )
 
-    async def broadcast(self, message: Dict[str, Any]):
+    async def broadcast(self, message: dict[str, Any]):
         """Broadcast message to all connected clients"""
         for connection in self.active_connections:
             try:

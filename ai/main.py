@@ -5,27 +5,28 @@ Port 8001 - AI processing and analysis service
 """
 
 import asyncio
+import logging
 import os
 import sys
-import logging
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any
+
+import redis
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-import redis
 
 # Add the ai directory to the path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import AI modules (compat: support both ai.ai.* and ai.* layouts)
 try:
-    from backend.modules.ai.ai_brains import AIBrains  # type: ignore[import-not-found]
-    from backend.modules.ai.ai_breakouts import AIBreakouts  # type: ignore[import-not-found]
     from ai.ai.ai_mystic import AIMystic  # type: ignore[import-not-found]
     from ai.ai.ai_signals import AISignals  # type: ignore[import-not-found]
     from ai.ai.ai_volume import AIVolume  # type: ignore[import-not-found]
     from ai.poller import AIPoller  # type: ignore[import-not-found]
+    from backend.modules.ai.ai_brains import AIBrains  # type: ignore[import-not-found]
+    from backend.modules.ai.ai_breakouts import AIBreakouts  # type: ignore[import-not-found]
     from backend.modules.ai.persistent_cache import PersistentCache  # type: ignore[import-not-found]
 except Exception:
     from ai_brains import AIBrains  # type: ignore[no-redef]
@@ -33,8 +34,8 @@ except Exception:
     from ai_mystic import AIMystic  # type: ignore[no-redef]
     from ai_signals import AISignals  # type: ignore[no-redef]
     from ai_volume import AIVolume  # type: ignore[no-redef]
-    from poller import AIPoller  # type: ignore[no-redef]
     from persistent_cache import PersistentCache  # type: ignore[no-redef]
+    from poller import AIPoller  # type: ignore[no-redef]
 
 # Configure logging
 logging.basicConfig(
@@ -251,7 +252,7 @@ async def ai_status():
 
 
 @app.post("/ai/process")
-async def process_ai_request(request_data: Dict[str, Any]):
+async def process_ai_request(request_data: dict[str, Any]):
     """Process AI request"""
     if not ai_service:
         raise HTTPException(status_code=503, detail="AI Service not initialized")

@@ -1,9 +1,9 @@
 ﻿import os
 from pathlib import Path
-from typing import Optional
 from types import SimpleNamespace
 
-def _read_env_value(env_path: Path, key: str) -> Optional[str]:
+
+def _read_env_value(env_path: Path, key: str) -> str | None:
     """Read a single KEY=value from .env if present (no third-party deps)."""
     try:
         if not env_path.exists():

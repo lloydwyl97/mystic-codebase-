@@ -4,16 +4,17 @@ Handles chart pattern recognition and technical analysis using computer vision
 """
 
 import asyncio
+import io
 import json
-import cv2
-import numpy as np
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
 import os
 import sys
-import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+from typing import Any
+
+import cv2
 import matplotlib.dates as mdates
-import io
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -177,7 +178,7 @@ class ChartPatternAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error initializing pattern templates: {e}")
 
-    async def create_pattern_template(self, pattern_name: str) -> Dict[str, Any]:
+    async def create_pattern_template(self, pattern_name: str) -> dict[str, Any]:
         """Create a template for pattern detection"""
         try:
             # Define pattern characteristics
@@ -367,7 +368,7 @@ class ChartPatternAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for chart generation"""
         try:
             symbol = market_data.get("symbol")
@@ -458,7 +459,7 @@ class ChartPatternAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error analyzing chart for {symbol}: {e}")
 
-    async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_symbol_market_data(self, symbol: str) -> list[dict[str, Any]]:
         """Get market data for a symbol"""
         try:
             # Get from cache first
@@ -489,8 +490,8 @@ class ChartPatternAgent(BaseAgent):
             return []
 
     async def generate_chart_image(
-        self, symbol: str, market_data: List[Dict[str, Any]]
-    ) -> Optional[np.ndarray]:
+        self, symbol: str, market_data: list[dict[str, Any]]
+    ) -> np.ndarray | None:
         """Generate chart image from market data"""
         try:
             if not market_data:
@@ -554,8 +555,8 @@ class ChartPatternAgent(BaseAgent):
         self,
         chart_image: np.ndarray,
         symbol: str,
-        market_data: List[Dict[str, Any]],
-    ) -> List[Dict[str, Any]]:
+        market_data: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
         """Detect patterns in chart image"""
         try:
             detected_patterns = []
@@ -588,7 +589,7 @@ class ChartPatternAgent(BaseAgent):
         self,
         gray_image: np.ndarray,
         pattern_name: str,
-        market_data: List[Dict[str, Any]],
+        market_data: list[dict[str, Any]],
     ) -> float:
         """Detect a specific pattern in the chart"""
         try:
@@ -621,7 +622,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error detecting {pattern_name}: {e}")
             return 0.0
 
-    async def detect_head_and_shoulders(self, prices: List[float]) -> float:
+    async def detect_head_and_shoulders(self, prices: list[float]) -> float:
         """Detect head and shoulders pattern"""
         try:
             if len(prices) < 20:
@@ -661,7 +662,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error detecting head and shoulders: {e}")
             return 0.0
 
-    async def detect_inverse_head_and_shoulders(self, prices: List[float]) -> float:
+    async def detect_inverse_head_and_shoulders(self, prices: list[float]) -> float:
         """Detect inverse head and shoulders pattern"""
         try:
             if len(prices) < 20:
@@ -701,7 +702,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error detecting inverse head and shoulders: {e}")
             return 0.0
 
-    async def detect_double_top(self, prices: List[float]) -> float:
+    async def detect_double_top(self, prices: list[float]) -> float:
         """Detect double top pattern"""
         try:
             if len(prices) < 15:
@@ -736,7 +737,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error detecting double top: {e}")
             return 0.0
 
-    async def detect_double_bottom(self, prices: List[float]) -> float:
+    async def detect_double_bottom(self, prices: list[float]) -> float:
         """Detect double bottom pattern"""
         try:
             if len(prices) < 15:
@@ -771,7 +772,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error detecting double bottom: {e}")
             return 0.0
 
-    async def detect_triangle_ascending(self, prices: List[float]) -> float:
+    async def detect_triangle_ascending(self, prices: list[float]) -> float:
         """Detect ascending triangle pattern"""
         try:
             if len(prices) < 20:
@@ -804,7 +805,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error detecting ascending triangle: {e}")
             return 0.0
 
-    async def detect_triangle_descending(self, prices: List[float]) -> float:
+    async def detect_triangle_descending(self, prices: list[float]) -> float:
         """Detect descending triangle pattern"""
         try:
             if len(prices) < 20:
@@ -837,7 +838,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error detecting descending triangle: {e}")
             return 0.0
 
-    async def detect_triangle_symmetrical(self, prices: List[float]) -> float:
+    async def detect_triangle_symmetrical(self, prices: list[float]) -> float:
         """Detect symmetrical triangle pattern"""
         try:
             if len(prices) < 20:
@@ -904,7 +905,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error detecting generic pattern {pattern_name}: {e}")
             return 0.0
 
-    def find_peaks(self, prices: List[float]) -> List[float]:
+    def find_peaks(self, prices: list[float]) -> list[float]:
         """Find peaks in price data"""
         try:
             peaks = []
@@ -916,7 +917,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error finding peaks: {e}")
             return []
 
-    def find_troughs(self, prices: List[float]) -> List[float]:
+    def find_troughs(self, prices: list[float]) -> list[float]:
         """Find troughs in price data"""
         try:
             troughs = []
@@ -928,7 +929,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error finding troughs: {e}")
             return []
 
-    async def broadcast_pattern_detection(self, symbol: str, patterns: List[Dict[str, Any]]):
+    async def broadcast_pattern_detection(self, symbol: str, patterns: list[dict[str, Any]]):
         """Broadcast pattern detection to other agents"""
         try:
             pattern_update = {
@@ -978,8 +979,8 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error generating pattern signals: {e}")
 
     async def generate_symbol_pattern_signal(
-        self, symbol: str, patterns: List[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, patterns: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
         """Generate trading signal for a symbol based on patterns"""
         try:
             if not patterns:
@@ -996,12 +997,7 @@ class ChartPatternAgent(BaseAgent):
             signal_type = "hold"
             strength = confidence
 
-            if template.get("type") == "reversal":
-                if template.get("direction") == "bullish":
-                    signal_type = "buy"
-                elif template.get("direction") == "bearish":
-                    signal_type = "sell"
-            elif template.get("type") == "continuation":
+            if template.get("type") == "reversal" or template.get("type") == "continuation":
                 if template.get("direction") == "bullish":
                     signal_type = "buy"
                 elif template.get("direction") == "bearish":
@@ -1021,7 +1017,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error generating pattern signal for {symbol}: {e}")
             return None
 
-    async def broadcast_pattern_signals(self, signals: Dict[str, Any]):
+    async def broadcast_pattern_signals(self, signals: dict[str, Any]):
         """Broadcast pattern signals to other agents"""
         try:
             signals_update = {
@@ -1040,7 +1036,7 @@ class ChartPatternAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting pattern signals: {e}")
 
-    async def handle_analyze_chart(self, message: Dict[str, Any]):
+    async def handle_analyze_chart(self, message: dict[str, Any]):
         """Handle manual chart analysis request"""
         try:
             symbol = message.get("symbol")
@@ -1065,7 +1061,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error handling chart analysis request: {e}")
             await self.broadcast_error(f"Chart analysis error: {e}")
 
-    async def handle_detect_patterns(self, message: Dict[str, Any]):
+    async def handle_detect_patterns(self, message: dict[str, Any]):
         """Handle pattern detection request"""
         try:
             symbol = message.get("symbol")
@@ -1102,7 +1098,7 @@ class ChartPatternAgent(BaseAgent):
             print(f"âŒ Error handling pattern detection request: {e}")
             await self.broadcast_error(f"Pattern detection error: {e}")
 
-    async def handle_get_pattern_signals(self, message: Dict[str, Any]):
+    async def handle_get_pattern_signals(self, message: dict[str, Any]):
         """Handle pattern signals request"""
         try:
             symbol = message.get("symbol")

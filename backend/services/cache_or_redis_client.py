@@ -1,6 +1,6 @@
 ﻿from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 _singleton_cache: Any | None = None
 
@@ -8,10 +8,10 @@ _singleton_cache: Any | None = None
 def _build_fallback_cache() -> Any:
     class _DataCache:
         def __init__(self) -> None:
-            self.binance: Dict[str, Any] = {}
-            self.coinbase: Dict[str, Any] = {}
-            self.coingecko: Dict[str, Any] = {}
-            self.last_update: Dict[str, Any] = {}
+            self.binance: dict[str, Any] = {}
+            self.coinbase: dict[str, Any] = {}
+            self.coingecko: dict[str, Any] = {}
+            self.last_update: dict[str, Any] = {}
 
     return _DataCache()
 

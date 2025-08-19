@@ -9,15 +9,15 @@ Provides comprehensive alerting with:
 - Custom alert rules
 """
 
-import time
 import asyncio
-import threading
+import json
 import logging
-from typing import Any, Dict, List, Optional
+import threading
+import time
+from collections import defaultdict, deque
 from dataclasses import dataclass
 from enum import Enum
-from collections import defaultdict, deque
-import json
+from typing import Any
 
 try:
     import redis
@@ -62,24 +62,24 @@ class Alert:
     severity: AlertSeverity
     component: str
     timestamp: float
-    channels: List[AlertChannel]
-    metadata: Optional[Dict[str, Any]] = None
+    channels: list[AlertChannel]
+    metadata: dict[str, Any] | None = None
     acknowledged: bool = False
-    acknowledged_by: Optional[str] = None
-    acknowledged_at: Optional[float] = None
+    acknowledged_by: str | None = None
+    acknowledged_at: float | None = None
 
 
 class AlertRule:
     """Alert rule definition"""
 
     def __init__(self, name: str, condition: str, severity: AlertSeverity,
-                 channels: List[AlertChannel], cooldown: int = 300):
+                 channels: list[AlertChannel], cooldown: int = 300):
         self.name = name
         self.condition = condition
         self.severity = severity
         self.channels = channels
         self.cooldown = cooldown
-        self.last_triggered: Optional[float] = None
+        self.last_triggered: float | None = None
 
     def should_trigger(self, current_time: float) -> bool:
         """Check if alert should trigger based on cooldown"""
@@ -104,7 +104,7 @@ class NotificationChannel:
 class EmailNotificationChannel(NotificationChannel):
     """Email notification channel"""
 
-    def __init__(self, smtp_config: Dict[str, Any]):
+    def __init__(self, smtp_config: dict[str, Any]):
         super().__init__(AlertChannel.EMAIL)
         self.smtp_config = smtp_config
 
@@ -164,10 +164,10 @@ class AlertingSystem:
 
     def __init__(self):
         self.alerts: deque = deque(maxlen=10000)
-        self.alert_rules: Dict[str, AlertRule] = {}
-        self.notification_channels: Dict[AlertChannel, NotificationChannel] = {}
-        self.alert_counts: Dict[str, int] = defaultdict(int)
-        self.rate_limit_times: Dict[str, List[float]] = defaultdict(list)
+        self.alert_rules: dict[str, AlertRule] = {}
+        self.notification_channels: dict[AlertChannel, NotificationChannel] = {}
+        self.alert_counts: dict[str, int] = defaultdict(int)
+        self.rate_limit_times: dict[str, list[float]] = defaultdict(list)
         self.redis_client = None
         self.lock = threading.Lock()
 
@@ -271,13 +271,13 @@ class AlertingSystem:
         )
 
     def add_alert_rule(self, name: str, condition: str, severity: AlertSeverity,
-                       channels: List[AlertChannel], cooldown: int = 300):
+                       channels: list[AlertChannel], cooldown: int = 300):
         """Add a new alert rule"""
         self.alert_rules[name] = AlertRule(name, condition, severity, channels, cooldown)
 
     def create_alert(self, title: str, message: str, severity: AlertSeverity,
-                    component: str, channels: List[AlertChannel],
-                    metadata: Optional[Dict[str, Any]] = None) -> Alert:
+                    component: str, channels: list[AlertChannel],
+                    metadata: dict[str, Any] | None = None) -> Alert:
         """Create and store a new alert"""
         current_time = time.time()
 
@@ -389,7 +389,7 @@ class AlertingSystem:
 
         return False
 
-    def get_alerts_summary(self) -> Dict[str, Any]:
+    def get_alerts_summary(self) -> dict[str, Any]:
         """Get comprehensive alerts summary"""
         with self.lock:
             current_time = time.time()
@@ -418,8 +418,8 @@ class AlertingSystem:
             }
 
     def get_alerts_history(self, hours: int = 24,
-                          severity: Optional[AlertSeverity] = None,
-                          component: Optional[str] = None) -> List[Dict[str, Any]]:
+                          severity: AlertSeverity | None = None,
+                          component: str | None = None) -> list[dict[str, Any]]:
         """Get alerts history with optional filtering"""
         cutoff_time = time.time() - (hours * 3600)
 

@@ -5,13 +5,14 @@ Handles social media sentiment analysis and monitoring
 
 import asyncio
 import json
-from datetime import datetime, timedelta
-from typing import Dict, Any, List
 import os
-import sys
 import re
-from textblob import TextBlob
+import sys
+from datetime import datetime, timedelta
+from typing import Any
+
 import numpy as np
+from textblob import TextBlob
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -220,7 +221,7 @@ class SocialMediaAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for social media context"""
         try:
             symbol = market_data.get("symbol")
@@ -262,7 +263,7 @@ class SocialMediaAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error fetching and analyzing social media: {e}")
 
-    async def fetch_posts_from_platform(self, platform: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def fetch_posts_from_platform(self, platform: dict[str, Any]) -> list[dict[str, Any]]:
         """Fetch posts from a specific platform"""
         try:
             posts = []
@@ -280,7 +281,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error fetching from {platform['name']}: {e}")
             return []
 
-    async def fetch_reddit_posts(self, platform: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def fetch_reddit_posts(self, platform: dict[str, Any]) -> list[dict[str, Any]]:
         """Fetch posts from Reddit"""
         try:
             posts = []
@@ -319,7 +320,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error fetching Reddit posts: {e}")
             return []
 
-    async def fetch_twitter_posts(self, platform: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def fetch_twitter_posts(self, platform: dict[str, Any]) -> list[dict[str, Any]]:
         """Fetch posts from Twitter"""
         try:
             posts = []
@@ -353,7 +354,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error fetching Twitter posts: {e}")
             return []
 
-    async def fetch_telegram_posts(self, platform: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def fetch_telegram_posts(self, platform: dict[str, Any]) -> list[dict[str, Any]]:
         """Fetch posts from Telegram"""
         try:
             posts = []
@@ -388,7 +389,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error fetching Telegram posts: {e}")
             return []
 
-    async def analyze_posts_sentiment(self, posts: List[Dict[str, Any]]):
+    async def analyze_posts_sentiment(self, posts: list[dict[str, Any]]):
         """Analyze sentiment for a list of posts"""
         try:
             for post in posts:
@@ -407,7 +408,7 @@ class SocialMediaAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error analyzing posts sentiment: {e}")
 
-    async def analyze_post_sentiment(self, post: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_post_sentiment(self, post: dict[str, Any]) -> dict[str, Any]:
         """Analyze sentiment for a single post"""
         try:
             # Combine title and content for analysis
@@ -483,7 +484,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error cleaning text: {e}")
             return text
 
-    def calculate_engagement_score(self, post: Dict[str, Any]) -> float:
+    def calculate_engagement_score(self, post: dict[str, Any]) -> float:
         """Calculate engagement score for a post"""
         try:
             score = 0.0
@@ -514,7 +515,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error calculating engagement score: {e}")
             return 0.0
 
-    async def extract_emoji_sentiment(self, text: str) -> Dict[str, float]:
+    async def extract_emoji_sentiment(self, text: str) -> dict[str, float]:
         """Extract sentiment from emojis"""
         try:
             emoji_sentiment = {}
@@ -549,7 +550,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error extracting emoji sentiment: {e}")
             return {}
 
-    def extract_hashtags(self, text: str) -> List[str]:
+    def extract_hashtags(self, text: str) -> list[str]:
         """Extract hashtags from text"""
         try:
             hashtags = re.findall(r"#\w+", text)
@@ -559,7 +560,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error extracting hashtags: {e}")
             return []
 
-    async def extract_symbols(self, post: Dict[str, Any]) -> List[str]:
+    async def extract_symbols(self, post: dict[str, Any]) -> list[str]:
         """Extract trading symbols from post"""
         try:
             text = f"{post.get('title', '')} {post.get('content', '')} {post.get('text', '')}"
@@ -584,9 +585,9 @@ class SocialMediaAgent(BaseAgent):
 
     async def update_sentiment_cache(
         self,
-        post: Dict[str, Any],
-        sentiment: Dict[str, Any],
-        symbols: List[str],
+        post: dict[str, Any],
+        sentiment: dict[str, Any],
+        symbols: list[str],
     ):
         """Update sentiment cache"""
         try:
@@ -623,9 +624,9 @@ class SocialMediaAgent(BaseAgent):
 
     async def broadcast_sentiment_update(
         self,
-        post: Dict[str, Any],
-        sentiment: Dict[str, Any],
-        symbols: List[str],
+        post: dict[str, Any],
+        sentiment: dict[str, Any],
+        symbols: list[str],
     ):
         """Broadcast sentiment update to other agents"""
         try:
@@ -747,7 +748,7 @@ class SocialMediaAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating symbol context: {e}")
 
-    async def handle_analyze_social(self, message: Dict[str, Any]):
+    async def handle_analyze_social(self, message: dict[str, Any]):
         """Handle manual social media analysis request"""
         try:
             platform = message.get("platform")
@@ -782,7 +783,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error handling social media analysis request: {e}")
             await self.broadcast_error(f"Social media analysis error: {e}")
 
-    async def handle_get_sentiment(self, message: Dict[str, Any]):
+    async def handle_get_sentiment(self, message: dict[str, Any]):
         """Handle sentiment request"""
         try:
             symbol = message.get("symbol")
@@ -812,7 +813,7 @@ class SocialMediaAgent(BaseAgent):
             print(f"âŒ Error handling sentiment request: {e}")
             await self.broadcast_error(f"Sentiment request error: {e}")
 
-    async def handle_monitor_influencer(self, message: Dict[str, Any]):
+    async def handle_monitor_influencer(self, message: dict[str, Any]):
         """Handle influencer monitoring request"""
         try:
             influencer = message.get("influencer")
@@ -843,7 +844,7 @@ class SocialMediaAgent(BaseAgent):
 
     async def get_symbol_sentiment(
         self, symbol: str, platform: str = "all", timeframe: str = "1h"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get sentiment data for a symbol"""
         try:
             symbol_sentiments = self.state["symbol_sentiment"].get(symbol, [])

@@ -5,8 +5,8 @@ Handles trading signals and signal-related operations.
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict, List
+from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class SignalService:
         self.signals = []
         self.signal_history = []
 
-    async def get_signals(self) -> List[Dict[str, Any]]:
+    async def get_signals(self) -> list[dict[str, Any]]:
         """Get current trading signals with live data."""
         try:
             # Return empty list - signals should come from AI endpoints
@@ -27,7 +27,7 @@ class SignalService:
             logger.error(f"Error getting signals: {str(e)}")
             return []
 
-    async def create_signal(self, signal_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_signal(self, signal_data: dict[str, Any]) -> dict[str, Any]:
         """Create a new trading signal."""
         try:
             signal = {
@@ -47,7 +47,7 @@ class SignalService:
             logger.error(f"Error creating signal: {str(e)}")
             return {}
 
-    async def get_signal(self, signal_id: str) -> Dict[str, Any]:
+    async def get_signal(self, signal_id: str) -> dict[str, Any]:
         """Get a specific signal by ID."""
         try:
             for signal in self.signals:
@@ -58,7 +58,7 @@ class SignalService:
             logger.error(f"Error getting signal {signal_id}: {str(e)}")
             return None
 
-    async def get_latest_signals(self) -> List[Dict[str, Any]]:
+    async def get_latest_signals(self) -> list[dict[str, Any]]:
         """Get latest trading signals."""
         try:
             # Return the same signals as get_signals() for consistency
@@ -67,7 +67,7 @@ class SignalService:
             logger.error(f"Error getting latest signals: {str(e)}")
             return []
 
-    async def get_signal_metrics(self) -> Dict[str, Any]:
+    async def get_signal_metrics(self) -> dict[str, Any]:
         """Get signal performance metrics."""
         try:
             total_signals = len(self.signals)

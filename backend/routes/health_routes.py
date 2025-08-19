@@ -6,7 +6,7 @@ Health check and monitoring endpoints
 import logging
 import os
 import time
-from typing import Any, Dict, Union
+from typing import Any
 
 import psutil
 from fastapi import APIRouter
@@ -17,7 +17,7 @@ router = APIRouter(prefix="/health", tags=["health"])
 
 
 @router.get("/")
-async def health_check() -> Dict[str, Any]:
+async def health_check() -> dict[str, Any]:
     """Basic health check"""
     return {
         "status": "healthy",
@@ -27,7 +27,7 @@ async def health_check() -> Dict[str, Any]:
 
 
 @router.get("/comprehensive")
-async def comprehensive_health_check() -> Dict[str, Union[str, float, Dict[str, str], None]]:
+async def comprehensive_health_check() -> dict[str, str | float | dict[str, str] | None]:
     """Comprehensive health check with system metrics"""
 
     # System metrics
@@ -66,7 +66,7 @@ async def comprehensive_health_check() -> Dict[str, Union[str, float, Dict[str, 
 
 
 @router.get("/services")
-async def services_health_check() -> Dict[str, Any]:
+async def services_health_check() -> dict[str, Any]:
     """Check health of all services"""
 
     from service_initializer import service_initializer

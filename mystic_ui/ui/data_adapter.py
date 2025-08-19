@@ -1,5 +1,6 @@
 ﻿import os
-from typing import Any, Dict, List, Optional, Mapping, Sequence, cast
+from collections.abc import Mapping, Sequence
+from typing import Any, cast
 
 import requests
 
@@ -18,7 +19,7 @@ def to_dash_symbol(symbol: str) -> str:
         return ""
 
     # Explicit top mappings (extendable)
-    explicit: Dict[str, str] = {
+    explicit: dict[str, str] = {
         "BTCUSDT": "BTC-USD",
         "ETHUSDT": "ETH-USD",
         "BNBUSDT": "BNB-USD",
@@ -72,7 +73,7 @@ def to_dash_symbol(symbol: str) -> str:
     return f"{s}-USD"
 
 
-def fetch_candles(exchange: str = "binanceus", symbol: str = "BTCUSDT", interval: str = "1h") -> Dict[str, Any]:
+def fetch_candles(exchange: str = "binanceus", symbol: str = "BTCUSDT", interval: str = "1h") -> dict[str, Any]:
     """
     Fetch candles from the backend and normalize into a stable shape.
 
@@ -92,9 +93,9 @@ def fetch_candles(exchange: str = "binanceus", symbol: str = "BTCUSDT", interval
     # Normalize to canonical market candles endpoints only
     candidates = ["/api/market/candles", "/market/candles"]
 
-    last_status: Optional[int] = None
+    last_status: int | None = None
     last_json: Any = None
-    last_url: Optional[str] = None
+    last_url: str | None = None
     try:
         for path in candidates:
             try:
@@ -163,7 +164,7 @@ def _to_float(x: Any) -> float:
         return 0.0
 
 
-def _extract_ts(item: Mapping[str, Any]) -> Optional[int]:
+def _extract_ts(item: Mapping[str, Any]) -> int | None:
     for k in ("ts", "timestamp", "time", "t", "open_time", "openTime"):
         v = item.get(k)
         if isinstance(v, (int, float)):
@@ -176,14 +177,14 @@ def _extract_ts(item: Mapping[str, Any]) -> Optional[int]:
     return None
 
 
-def _normalize_candles(data: Any) -> List[Dict[str, Any]]:
+def _normalize_candles(data: Any) -> list[dict[str, Any]]:
     """Best-effort normalization across several response shapes."""
     if not data:
         return []
 
     # Shape A: top-level dict with key "candles"
     if isinstance(data, dict):
-        data_dict: Dict[str, Any] = cast(Dict[str, Any], data)
+        data_dict: dict[str, Any] = cast(dict[str, Any], data)
         candles_obj: Any = data_dict.get("candles")
         if isinstance(candles_obj, list):
             return _normalize_candle_list(cast(Sequence[Any], candles_obj))
@@ -196,12 +197,12 @@ def _normalize_candles(data: Any) -> List[Dict[str, Any]]:
     return []
 
 
-def _normalize_candle_list(items: Sequence[Any]) -> List[Dict[str, Any]]:
-    out: List[Dict[str, Any]] = []
+def _normalize_candle_list(items: Sequence[Any]) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
     for it in items or []:
         # Dict-like candles
         if isinstance(it, dict):
-            d = cast(Dict[str, Any], it)
+            d = cast(dict[str, Any], it)
             ts = _extract_ts(d)
             o = d.get("o", d.get("open"))
             h = d.get("h", d.get("high"))

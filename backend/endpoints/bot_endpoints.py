@@ -5,7 +5,7 @@ Handles all bot-related API endpoints including creation, management, and contro
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -18,7 +18,7 @@ class BotConfig(BaseModel):
     model_config = {"protected_namespaces": ("settings_",)}
     bot_id: str
     strategy: str
-    symbols: List[str]
+    symbols: list[str]
     risk_level: str
     auto_trade: bool
 
@@ -37,7 +37,7 @@ router = APIRouter()
 
 
 @router.post("/create")
-async def create_bot(config: BotConfig) -> Dict[str, Any]:
+async def create_bot(config: BotConfig) -> dict[str, Any]:
     """Create a new trading bot"""
     try:
         if auto_trading_manager and hasattr(auto_trading_manager, "create_bot"):
@@ -51,7 +51,7 @@ async def create_bot(config: BotConfig) -> Dict[str, Any]:
 
 
 @router.get("/")
-async def get_bots() -> Dict[str, Any]:
+async def get_bots() -> dict[str, Any]:
     """Get all trading bots"""
     try:
         if auto_trading_manager and hasattr(auto_trading_manager, "get_bots"):
@@ -66,7 +66,7 @@ async def get_bots() -> Dict[str, Any]:
 
 
 @router.post("/{bot_id}/start")
-async def start_bot(bot_id: str) -> Dict[str, Any]:
+async def start_bot(bot_id: str) -> dict[str, Any]:
     """Start a trading bot"""
     try:
         if auto_trading_manager and hasattr(auto_trading_manager, "start_bot"):
@@ -80,7 +80,7 @@ async def start_bot(bot_id: str) -> Dict[str, Any]:
 
 
 @router.post("/{bot_id}/stop")
-async def stop_bot(bot_id: str) -> Dict[str, Any]:
+async def stop_bot(bot_id: str) -> dict[str, Any]:
     """Stop a trading bot"""
     try:
         if auto_trading_manager and hasattr(auto_trading_manager, "stop_bot"):

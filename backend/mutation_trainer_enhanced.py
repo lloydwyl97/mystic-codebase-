@@ -1,14 +1,14 @@
-﻿import numpy as np
-import time
-import json
-import sqlite3
-import random
-from datetime import datetime
-from typing import Dict, List, Tuple, Any
-import ast
+﻿import ast
 import hashlib
+import json
 import logging
+import random
+import sqlite3
+import time
 from datetime import datetime, timezone
+from typing import Any
+
+import numpy as np
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -82,7 +82,7 @@ class TrainerDatabase:
         conn.commit()
         conn.close()
 
-    def save_individual(self, individual: Dict):
+    def save_individual(self, individual: dict):
         """Save genetic individual to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -106,7 +106,7 @@ class TrainerDatabase:
         conn.commit()
         conn.close()
 
-    def save_evolution_progress(self, progress: Dict):
+    def save_evolution_progress(self, progress: dict):
         """Save evolution progress to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -130,7 +130,7 @@ class TrainerDatabase:
         conn.commit()
         conn.close()
 
-    def save_mutation_operation(self, operation: Dict):
+    def save_mutation_operation(self, operation: dict):
         """Save mutation operation to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -181,7 +181,7 @@ def base_strategy(df):
 """
 
 
-def parse_strategy_code(code: str) -> Dict[str, Any]:
+def parse_strategy_code(code: str) -> dict[str, Any]:
     """Parse strategy code into components"""
     try:
         tree = ast.parse(code)
@@ -292,7 +292,7 @@ def mutate_strategy_code(code: str, mutation_type: str = "random") -> str:
         return code
 
 
-def crossover_strategies(parent1_code: str, parent2_code: str) -> Tuple[str, str]:
+def crossover_strategies(parent1_code: str, parent2_code: str) -> tuple[str, str]:
     """Perform crossover between two parent strategies"""
     try:
         lines1 = parent1_code.split("\n")
@@ -330,11 +330,7 @@ def fix_indentation(code: str) -> str:
     fixed_lines = []
 
     for line in lines:
-        if line.strip().startswith("def "):
-            fixed_lines.append(line.strip())
-        elif line.strip().startswith("import ") or line.strip().startswith("from "):
-            fixed_lines.append(line.strip())
-        elif line.strip().startswith("#"):
+        if line.strip().startswith("def ") or line.strip().startswith("import ") or line.strip().startswith("from ") or line.strip().startswith("#"):
             fixed_lines.append(line.strip())
         elif line.strip():
             fixed_lines.append("    " + line.strip())
@@ -386,7 +382,7 @@ def evaluate_fitness(strategy_code: str) -> float:
         return 0.0
 
 
-def create_individual(generation: int, strategy_code: str = None) -> Dict:
+def create_individual(generation: int, strategy_code: str = None) -> dict:
     """Create a genetic individual"""
     if strategy_code is None:
         strategy_code = generate_base_strategy()
@@ -404,7 +400,7 @@ def create_individual(generation: int, strategy_code: str = None) -> Dict:
     }
 
 
-def select_parents(population: List[Dict], tournament_size: int = 3) -> Tuple[Dict, Dict]:
+def select_parents(population: list[dict], tournament_size: int = 3) -> tuple[dict, dict]:
     """Select parents using tournament selection"""
     if len(population) < 2:
         return population[0], population[0]
@@ -419,7 +415,7 @@ def select_parents(population: List[Dict], tournament_size: int = 3) -> Tuple[Di
     return parent1, parent2
 
 
-def evolve_population(population: List[Dict], generation: int) -> List[Dict]:
+def evolve_population(population: list[dict], generation: int) -> list[dict]:
     """Evolve population using genetic operators"""
     new_population = []
 
@@ -466,7 +462,7 @@ def evolve_population(population: List[Dict], generation: int) -> List[Dict]:
     return new_population[:POPULATION_SIZE]
 
 
-def calculate_population_metrics(population: List[Dict]) -> Dict:
+def calculate_population_metrics(population: list[dict]) -> dict:
     """Calculate population metrics"""
     fitness_scores = [ind["fitness_score"] for ind in population]
 

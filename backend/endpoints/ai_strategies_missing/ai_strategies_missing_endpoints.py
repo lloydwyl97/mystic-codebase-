@@ -7,7 +7,7 @@ Provides missing AI strategies endpoint that returns live data:
 
 import logging
 import time
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -18,7 +18,7 @@ router = APIRouter()
 
 
 @router.get("/api/ai/strategies")
-async def get_ai_strategies() -> Dict[str, Any]:
+async def get_ai_strategies() -> dict[str, Any]:
     """
     Get AI strategies with live data
 
@@ -35,9 +35,9 @@ async def get_ai_strategies() -> Dict[str, Any]:
         strategy_id = 1
 
         # Assume these services are available for live metrics
-        from backend.services.trading_logs_service import TradingLogsService
         from backend.services.ai_model_registry import AIModelRegistry
         from backend.services.analytics_service import AnalyticsService
+        from backend.services.trading_logs_service import TradingLogsService
 
         trading_logs_service = TradingLogsService()
         ai_model_registry = AIModelRegistry()

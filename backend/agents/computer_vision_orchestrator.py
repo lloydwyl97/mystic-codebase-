@@ -5,10 +5,10 @@ Coordinates all computer vision agents and provides unified API
 
 import asyncio
 import json
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
 import os
 import sys
+from datetime import datetime, timedelta
+from typing import Any
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -170,7 +170,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_cv_agent_update(self, agent_update: Dict[str, Any]):
+    async def process_cv_agent_update(self, agent_update: dict[str, Any]):
         """Process CV agent update"""
         try:
             agent_id = agent_update.get("agent_id")
@@ -194,7 +194,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing CV agent update: {e}")
 
-    async def handle_agent_analysis_complete(self, agent_id: str, update: Dict[str, Any]):
+    async def handle_agent_analysis_complete(self, agent_id: str, update: dict[str, Any]):
         """Handle agent analysis completion"""
         try:
             # Update agent analysis count
@@ -217,7 +217,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling agent analysis complete: {e}")
 
-    async def handle_pattern_detection(self, agent_id: str, update: Dict[str, Any]):
+    async def handle_pattern_detection(self, agent_id: str, update: dict[str, Any]):
         """Handle pattern detection from chart pattern agent"""
         try:
             symbol = update.get("symbol")
@@ -240,7 +240,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling pattern detection: {e}")
 
-    async def handle_indicator_signal(self, agent_id: str, update: Dict[str, Any]):
+    async def handle_indicator_signal(self, agent_id: str, update: dict[str, Any]):
         """Handle indicator signal from technical indicator agent"""
         try:
             symbol = update.get("symbol")
@@ -263,7 +263,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling indicator signal: {e}")
 
-    async def handle_chart_generation(self, agent_id: str, update: Dict[str, Any]):
+    async def handle_chart_generation(self, agent_id: str, update: dict[str, Any]):
         """Handle chart generation from market visualization agent"""
         try:
             symbol = update.get("symbol")
@@ -352,7 +352,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error triggering coordinated analysis: {e}")
 
-    async def get_symbols_for_analysis(self) -> List[str]:
+    async def get_symbols_for_analysis(self) -> list[str]:
         """Get symbols that need analysis"""
         try:
             # Get trading symbols from Redis
@@ -410,8 +410,8 @@ class ComputerVisionOrchestrator(BaseAgent):
             print(f"âŒ Error aggregating analysis results: {e}")
 
     async def generate_composite_signal(
-        self, symbol: str, results: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, results: dict[str, Any]
+    ) -> dict[str, Any] | None:
         """Generate composite signal from all analysis results"""
         try:
             composite_signal = {
@@ -494,7 +494,7 @@ class ComputerVisionOrchestrator(BaseAgent):
             print(f"âŒ Error generating composite signal for {symbol}: {e}")
             return None
 
-    async def broadcast_pattern_detection(self, symbol: str, patterns: List[Dict[str, Any]]):
+    async def broadcast_pattern_detection(self, symbol: str, patterns: list[dict[str, Any]]):
         """Broadcast pattern detection to other agents"""
         try:
             pattern_update = {
@@ -511,7 +511,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting pattern detection: {e}")
 
-    async def broadcast_indicator_signal(self, symbol: str, signal: Dict[str, Any]):
+    async def broadcast_indicator_signal(self, symbol: str, signal: dict[str, Any]):
         """Broadcast indicator signal to other agents"""
         try:
             signal_update = {
@@ -528,7 +528,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting indicator signal: {e}")
 
-    async def broadcast_chart_generation(self, symbol: str, charts: Dict[str, Any]):
+    async def broadcast_chart_generation(self, symbol: str, charts: dict[str, Any]):
         """Broadcast chart generation to other agents"""
         try:
             chart_update = {
@@ -545,7 +545,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting chart generation: {e}")
 
-    async def broadcast_aggregated_results(self, aggregated_results: Dict[str, Any]):
+    async def broadcast_aggregated_results(self, aggregated_results: dict[str, Any]):
         """Broadcast aggregated results to other agents"""
         try:
             aggregated_update = {
@@ -565,7 +565,7 @@ class ComputerVisionOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting aggregated results: {e}")
 
-    async def handle_coordinate_analysis(self, message: Dict[str, Any]):
+    async def handle_coordinate_analysis(self, message: dict[str, Any]):
         """Handle manual coordination request"""
         try:
             symbol = message.get("symbol")
@@ -597,7 +597,7 @@ class ComputerVisionOrchestrator(BaseAgent):
             print(f"âŒ Error handling coordination request: {e}")
             await self.broadcast_error(f"Coordination error: {e}")
 
-    async def handle_get_cv_results(self, message: Dict[str, Any]):
+    async def handle_get_cv_results(self, message: dict[str, Any]):
         """Handle CV results request"""
         try:
             symbol = message.get("symbol")
@@ -630,7 +630,7 @@ class ComputerVisionOrchestrator(BaseAgent):
             print(f"âŒ Error handling CV results request: {e}")
             await self.broadcast_error(f"CV results error: {e}")
 
-    async def handle_update_cv_config(self, message: Dict[str, Any]):
+    async def handle_update_cv_config(self, message: dict[str, Any]):
         """Handle CV configuration update request"""
         try:
             new_config = message.get("config", {})
@@ -665,7 +665,7 @@ class ComputerVisionOrchestrator(BaseAgent):
             print(f"âŒ Error handling CV config update: {e}")
             await self.broadcast_error(f"CV config update error: {e}")
 
-    async def handle_cv_agent_update(self, message: Dict[str, Any]):
+    async def handle_cv_agent_update(self, message: dict[str, Any]):
         """Handle CV agent update"""
         try:
             agent_id = message.get("agent_id")

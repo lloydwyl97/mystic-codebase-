@@ -7,8 +7,9 @@ import json
 import logging
 import os
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
+from database import get_db_connection
 from fastapi import APIRouter, Body, HTTPException
 from fastapi.responses import HTMLResponse
 
@@ -16,14 +17,13 @@ from backend.ai_mutation.mutation_manager import mutation_manager
 from backend.ai_mutation.promote_mutation import StrategyPromoter
 from backend.ai_mutation.strategy_locker import get_live_strategy
 from backend.ai_mutation.version_tracker import get_strategy_versions
-from database import get_db_connection
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/ai", tags=["ai-dashboard"])
 
 
 @router.get("/dashboard")
-async def get_ai_dashboard() -> Dict[str, Any]:
+async def get_ai_dashboard() -> dict[str, Any]:
     """Get comprehensive AI dashboard data"""
     try:
         # Get current live strategy
@@ -37,7 +37,7 @@ async def get_ai_dashboard() -> Dict[str, Any]:
                     strategy_path = os.path.join("mutated_strategies", live_strategy_file)
 
                 if os.path.exists(strategy_path):
-                    with open(strategy_path, "r") as f:
+                    with open(strategy_path) as f:
                         live_strategy_data = json.load(f)
             except Exception as e:
                 logger.error(f"Error loading live strategy: {e}")
@@ -82,7 +82,7 @@ async def get_ai_dashboard() -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail=f"Dashboard error: {str(e)}")
 
 
-async def get_recent_mutations(limit: int = 10) -> List[Dict[str, Any]]:
+async def get_recent_mutations(limit: int = 10) -> list[dict[str, Any]]:
     """Get recent mutations from the database"""
     try:
         conn = get_db_connection()
@@ -137,7 +137,7 @@ async def get_recent_mutations(limit: int = 10) -> List[Dict[str, Any]]:
         return []
 
 
-async def get_performance_metrics() -> Dict[str, Any]:
+async def get_performance_metrics() -> dict[str, Any]:
     """Get AI system performance metrics"""
     try:
         conn = get_db_connection()
@@ -215,7 +215,7 @@ async def get_performance_metrics() -> Dict[str, Any]:
 
 
 @router.get("/strategies/leaderboard")
-async def get_strategy_leaderboard(limit: int = 20) -> List[Dict[str, Any]]:
+async def get_strategy_leaderboard(limit: int = 20) -> list[dict[str, Any]]:
     """Get strategy leaderboard ranked by performance"""
     try:
         conn = get_db_connection()
@@ -261,7 +261,7 @@ async def get_strategy_leaderboard(limit: int = 20) -> List[Dict[str, Any]]:
 
 
 @router.get("/strategies/leaderboard/expanded")
-async def get_expanded_strategy_leaderboard(limit: int = 20) -> Dict[str, Any]:
+async def get_expanded_strategy_leaderboard(limit: int = 20) -> dict[str, Any]:
     """Get expanded strategy leaderboard with improvement, robustness, innovation, and badges"""
     try:
         conn = get_db_connection()
@@ -389,7 +389,7 @@ async def get_expanded_strategy_leaderboard(limit: int = 20) -> Dict[str, Any]:
 
 
 @router.post("/mutation/run-cycle")
-async def run_mutation_cycle() -> Dict[str, Any]:
+async def run_mutation_cycle() -> dict[str, Any]:
     """Manually trigger a mutation cycle"""
     try:
         if mutation_manager.is_running:
@@ -410,7 +410,7 @@ async def run_mutation_cycle() -> Dict[str, Any]:
 
 
 @router.get("/mutation/status")
-async def get_mutation_status() -> Dict[str, Any]:
+async def get_mutation_status() -> dict[str, Any]:
     """Get current mutation system status"""
     try:
         return {
@@ -433,7 +433,7 @@ async def get_mutation_status() -> Dict[str, Any]:
 
 
 @router.post("/mutation/start")
-async def start_mutation_engine() -> Dict[str, Any]:
+async def start_mutation_engine() -> dict[str, Any]:
     """Start the mutation engine"""
     try:
         if mutation_manager.is_running:
@@ -453,7 +453,7 @@ async def start_mutation_engine() -> Dict[str, Any]:
 
 
 @router.post("/mutation/stop")
-async def stop_mutation_engine() -> Dict[str, Any]:
+async def stop_mutation_engine() -> dict[str, Any]:
     """Stop the mutation engine"""
     try:
         if not mutation_manager.is_running:
@@ -610,7 +610,7 @@ async def get_ai_dashboard_html() -> str:
 
 
 @router.get("/performance/live")
-async def get_live_performance() -> Dict[str, Any]:
+async def get_live_performance() -> dict[str, Any]:
     """Get real-time performance metrics"""
     try:
         # Get current live strategy
@@ -708,7 +708,7 @@ async def get_live_performance() -> Dict[str, Any]:
 
 
 @router.get("/performance/trends")
-async def get_performance_trends(days: int = 7) -> Dict[str, Any]:
+async def get_performance_trends(days: int = 7) -> dict[str, Any]:
     """Get performance trends over time"""
     try:
         conn = get_db_connection()
@@ -789,7 +789,7 @@ async def get_performance_trends(days: int = 7) -> Dict[str, Any]:
 
 
 @router.get("/performance/analytics")
-async def get_performance_analytics() -> Dict[str, Any]:
+async def get_performance_analytics() -> dict[str, Any]:
     """Get advanced performance analytics"""
     try:
         conn = get_db_connection()
@@ -919,7 +919,7 @@ async def get_performance_analytics() -> Dict[str, Any]:
 
 
 @router.get("/system/health")
-async def get_system_health() -> Dict[str, Any]:
+async def get_system_health() -> dict[str, Any]:
     """Get comprehensive system health status"""
     try:
         # Check mutation system
@@ -992,7 +992,7 @@ async def get_system_health() -> Dict[str, Any]:
 
 
 @router.get("/monitoring/real-time")
-async def get_real_time_monitoring() -> Dict[str, Any]:
+async def get_real_time_monitoring() -> dict[str, Any]:
     """Get comprehensive real-time monitoring data"""
     try:
         # Get current system status
@@ -1126,7 +1126,7 @@ async def get_real_time_monitoring() -> Dict[str, Any]:
         live_strategy_info = None
         if live_strategy_file and os.path.exists(live_strategy_file):
             try:
-                with open(live_strategy_file, "r") as f:
+                with open(live_strategy_file) as f:
                     live_strategy_info = json.load(f)
             except Exception as e:
                 logger.error(f"Error reading live strategy: {e}")
@@ -1175,7 +1175,7 @@ async def get_real_time_monitoring() -> Dict[str, Any]:
 
 
 @router.get("/monitoring/alerts")
-async def get_system_alerts() -> Dict[str, Any]:
+async def get_system_alerts() -> dict[str, Any]:
     """Get system alerts and warnings"""
     try:
         alerts = []
@@ -1308,7 +1308,7 @@ async def get_system_alerts() -> Dict[str, Any]:
 
 
 @router.post("/monitoring/optimize")
-async def trigger_system_optimization() -> Dict[str, Any]:
+async def trigger_system_optimization() -> dict[str, Any]:
     """Trigger system optimization"""
     try:
         # This would integrate with the performance optimizer
@@ -1336,7 +1336,7 @@ async def trigger_system_optimization() -> Dict[str, Any]:
 async def manual_promote_strategy(
     strategy_file: str = Body(..., embed=True),
     justification: str = Body(..., embed=True),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Manually promote a strategy to live with operator justification"""
     try:
         # Promote the given strategy file
@@ -1359,7 +1359,7 @@ async def manual_promote_strategy(
 async def rollback_strategy(
     version_file: str = Body(..., embed=True),
     reason: str = Body(..., embed=True),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Rollback to a previous promoted strategy version"""
     try:
         import shutil
@@ -1379,7 +1379,7 @@ async def rollback_strategy(
 
 
 @router.get("/features")
-async def get_available_features() -> Dict[str, Any]:
+async def get_available_features() -> dict[str, Any]:
     """Get list of all available AI and trading platform features"""
     return {
         "features": [

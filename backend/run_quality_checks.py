@@ -9,20 +9,20 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 class QualityChecker:
     """Professional code quality checker with comprehensive reporting"""
 
     def __init__(self):
-        self.results: Dict[str, Any] = {}
+        self.results: dict[str, Any] = {}
         self.start_time = time.time()
         self.backend_dir = Path(__file__).parent
         self.project_root = self.backend_dir.parent
         self.python_executable = sys.executable
 
-    def run_command(self, command: List[str], name: str, cwd: Path = None) -> Dict[str, Any]:
+    def run_command(self, command: list[str], name: str, cwd: Path = None) -> dict[str, Any]:
         """Run a command and capture results"""
         if cwd is None:
             cwd = self.backend_dir

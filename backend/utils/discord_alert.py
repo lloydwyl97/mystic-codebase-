@@ -7,11 +7,10 @@ Sends Discord notifications when strategies are promoted or important events occ
 
 import json
 import logging
-from datetime import datetime
-from typing import Any, Dict, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 import requests
-from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +21,12 @@ DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/your_webhook_url_here"
 class DiscordNotifier:
     """Handles Discord notifications for the AI mutation system"""
 
-    def __init__(self, webhook_url: Optional[str] = None):
+    def __init__(self, webhook_url: str | None = None):
         self.webhook_url = webhook_url or DISCORD_WEBHOOK_URL
         self.enabled = webhook_url != "your_webhook_url_here"
 
     def send_strategy_promoted_alert(
-        self, strategy_name: str, backtest_results: Dict[str, Any]
+        self, strategy_name: str, backtest_results: dict[str, Any]
     ) -> bool:
         """
         Send enhanced alert when a strategy is promoted with rich formatting
@@ -142,7 +141,7 @@ class DiscordNotifier:
 
         return self._send_discord_message(payload)
 
-    def send_mutation_cycle_alert(self, cycle_results: Dict[str, Any]) -> bool:
+    def send_mutation_cycle_alert(self, cycle_results: dict[str, Any]) -> bool:
         """
         Send enhanced mutation cycle alert with detailed statistics
 
@@ -270,7 +269,7 @@ class DiscordNotifier:
 
         return self._send_discord_message(payload)
 
-    def send_system_startup_alert(self, system_info: Dict[str, Any]) -> bool:
+    def send_system_startup_alert(self, system_info: dict[str, Any]) -> bool:
         """
         Send system startup alert
 
@@ -341,7 +340,7 @@ class DiscordNotifier:
 
         return self._send_discord_message(payload)
 
-    def send_performance_summary_alert(self, performance_data: Dict[str, Any]) -> bool:
+    def send_performance_summary_alert(self, performance_data: dict[str, Any]) -> bool:
         """
         Send periodic performance summary alert
 
@@ -457,7 +456,7 @@ class DiscordNotifier:
 
         return self._send_discord_message(payload)
 
-    def send_system_status_alert(self, status: str, details: Dict[str, Any]) -> bool:
+    def send_system_status_alert(self, status: str, details: dict[str, Any]) -> bool:
         """
         Send system status alert
 
@@ -510,7 +509,7 @@ class DiscordNotifier:
 
         return self._send_discord_message(payload)
 
-    def _send_discord_message(self, payload: Dict[str, Any]) -> bool:
+    def _send_discord_message(self, payload: dict[str, Any]) -> bool:
         """
         Send message to Discord webhook
 
@@ -545,7 +544,7 @@ discord_notifier = DiscordNotifier()
 
 
 # Legacy functions for backward compatibility
-def send_discord_alert(strategy_name: str, results: Dict[str, Any]) -> bool:
+def send_discord_alert(strategy_name: str, results: dict[str, Any]) -> bool:
     """Simple Discord alert function for backward compatibility"""
     return discord_notifier.send_strategy_promoted_alert(strategy_name, results)
 

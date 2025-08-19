@@ -10,8 +10,8 @@ import json
 import logging
 import time
 from dataclasses import asdict, dataclass
-from datetime import timezone, datetime
-from typing import Any, Dict, List, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 import aiohttp
 
@@ -26,13 +26,13 @@ class PriceSignal:
     volume_1m: float
     timestamp: str
     api_source: str
-    orderbook_depth: Optional[Dict[str, Any]] = None
+    orderbook_depth: dict[str, Any] | None = None
 
 
 class PriceFetcher:
     def __init__(self, redis_client: Any):
         self.redis_client = redis_client
-        self.session: Optional[aiohttp.ClientSession] = None
+        self.session: aiohttp.ClientSession | None = None
         self.is_running = False
 
         # Tier 1 Configuration - OPTIMIZED FOR 20 COINS
@@ -50,7 +50,7 @@ class PriceFetcher:
         self.coinbase_base_url = "https://api.pro.coinbase.us"
 
         # Track last fetch times for throttling
-        self.last_fetch_times: Dict[str, float] = {}
+        self.last_fetch_times: dict[str, float] = {}
         self.last_momentum_fetch = 0
 
         # OPTIMIZED COIN LISTS - Updated with user specified pairs
@@ -80,7 +80,7 @@ class PriceFetcher:
         ]
 
         # Price history for momentum calculations
-        self.price_history: Dict[str, List[Dict[str, Any]]] = {}
+        self.price_history: dict[str, list[dict[str, Any]]] = {}
 
         logger.info(
             f"Price Fetcher initialized with {len(self.binance_coins)} Binance + {len(self.coinbase_coins)} Coinbase coins"
@@ -116,7 +116,7 @@ class PriceFetcher:
         now = time.time()
         return (now - self.last_momentum_fetch) >= self.config["momentum_fetch_interval"]
 
-    def _update_fetch_time(self, fetch_type: str, symbol: Optional[str] = None):
+    def _update_fetch_time(self, fetch_type: str, symbol: str | None = None):
         """Update the last fetch time for throttling"""
         if fetch_type == "momentum":
             self.last_momentum_fetch = time.time()
@@ -124,7 +124,7 @@ class PriceFetcher:
             key = f"{fetch_type}_{symbol}"
             self.last_fetch_times[key] = time.time()
 
-    async def fetch_price(self, symbol: str, exchange: str) -> Optional[PriceSignal]:
+    async def fetch_price(self, symbol: str, exchange: str) -> PriceSignal | None:
         """Fetch real-time price data (10 second frequency per coin)"""
         if not self._should_fetch_price(symbol):
             return None
@@ -149,13 +149,13 @@ class PriceFetcher:
 
         return None
 
-    async def fetch_momentum_signals(self) -> Dict[str, float]:
+    async def fetch_momentum_signals(self) -> dict[str, float]:
         """Fetch momentum signals globally (15 second frequency)"""
         if not self._should_fetch_momentum():
             return {}
 
         try:
-            momentum_data: Dict[str, float] = {}
+            momentum_data: dict[str, float] = {}
 
             # Calculate 1-minute change for all coins
             all_coins = self.binance_coins + self.coinbase_coins
@@ -174,7 +174,7 @@ class PriceFetcher:
             logger.error(f"Error calculating momentum signals: {e}")
             return {}
 
-    async def _calculate_1m_change(self, symbol: str) -> Optional[float]:
+    async def _calculate_1m_change(self, symbol: str) -> float | None:
         """Calculate 1-minute price change for a symbol"""
         try:
             # Get current price from cache
@@ -205,7 +205,7 @@ class PriceFetcher:
             logger.error(f"Error calculating 1m change for {symbol}: {e}")
             return None
 
-    async def _fetch_binance_price(self, symbol: str) -> Optional[PriceSignal]:
+    async def _fetch_binance_price(self, symbol: str) -> PriceSignal | None:
         """Fetch price from Binance"""
         if not self.session:
             return None
@@ -232,7 +232,7 @@ class PriceFetcher:
             logger.error(f"Error fetching Binance price: {e}")
             return None
 
-    async def _fetch_coinbase_price(self, symbol: str) -> Optional[PriceSignal]:
+    async def _fetch_coinbase_price(self, symbol: str) -> PriceSignal | None:
         """Fetch price from Coinbase"""
         if not self.session:
             return None
@@ -282,7 +282,7 @@ class PriceFetcher:
         except Exception as e:
             logger.error(f"Error caching price signal: {e}")
 
-    async def _cache_momentum_data(self, data: Dict[str, float]):
+    async def _cache_momentum_data(self, data: dict[str, float]):
         """Cache momentum data in Redis"""
         try:
             key = "momentum_signals"
@@ -290,7 +290,7 @@ class PriceFetcher:
         except Exception as e:
             logger.error(f"Error caching momentum data: {e}")
 
-    async def _get_cached_price_signal(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def _get_cached_price_signal(self, symbol: str) -> dict[str, Any] | None:
         """Get cached price signal from Redis"""
         try:
             key = f"price_signal_{symbol}"
@@ -300,9 +300,9 @@ class PriceFetcher:
             logger.error(f"Error getting cached price signal: {e}")
             return None
 
-    async def fetch_all_tier1_signals(self) -> Dict[str, Any]:
+    async def fetch_all_tier1_signals(self) -> dict[str, Any]:
         """Fetch all Tier 1 signals for all 20 coins"""
-        results: Dict[str, Any] = {
+        results: dict[str, Any] = {
             "prices": {},
             "momentum": {},
             "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -334,7 +334,7 @@ class PriceFetcher:
 
         return results
 
-    async def _cache_tier1_data(self, data: Dict[str, Any]):
+    async def _cache_tier1_data(self, data: dict[str, Any]):
         """Cache complete Tier 1 data"""
         try:
             self.redis_client.setex("tier1_signals", self.config["cache_ttl"], json.dumps(data))
@@ -368,7 +368,7 @@ class PriceFetcher:
         finally:
             await self.close()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get price fetcher status"""
         return {
             "status": "running" if self.is_running else "stopped",

@@ -5,10 +5,11 @@ Provides real-time risk monitoring and alerting for trading operations.
 
 import logging
 import os
-import requests
-from typing import Dict, List, Any, Optional
-from datetime import datetime, timezone, timedelta
 import sys
+from datetime import datetime, timedelta, timezone
+from typing import Any
+
+import requests
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -68,7 +69,7 @@ class RiskAlertService:
             logger.error(f"Failed to calculate drawdown: {e}")
             return 0.0
 
-    def _calculate_volatility(self, prices: List[float], window_minutes: int = 5) -> float:
+    def _calculate_volatility(self, prices: list[float], window_minutes: int = 5) -> float:
         """Calculate volatility over a time window"""
         try:
             if len(prices) < 2:
@@ -92,7 +93,7 @@ class RiskAlertService:
             logger.error(f"Failed to calculate volatility: {e}")
             return 0.0
 
-    def _get_recent_prices(self, symbol: str, minutes: int = 5) -> List[float]:
+    def _get_recent_prices(self, symbol: str, minutes: int = 5) -> list[float]:
         """Get recent price data for volatility calculation"""
         try:
             # Get recent price signals from cache
@@ -116,7 +117,7 @@ class RiskAlertService:
             logger.error(f"Failed to get recent prices for {symbol}: {e}")
             return []
 
-    def _get_portfolio_exposure(self) -> Dict[str, float]:
+    def _get_portfolio_exposure(self) -> dict[str, float]:
         """Get current portfolio exposure from cache"""
         try:
             # Get recent trade signals
@@ -142,7 +143,7 @@ class RiskAlertService:
             logger.error(f"Failed to get portfolio exposure: {e}")
             return {}
 
-    def _get_last_trade_prices(self) -> Dict[str, float]:
+    def _get_last_trade_prices(self) -> dict[str, float]:
         """Get last trade prices for drawdown calculation"""
         try:
             # Get recent trade signals
@@ -166,7 +167,7 @@ class RiskAlertService:
             logger.error(f"Failed to get last trade prices: {e}")
             return {}
 
-    def _check_drawdown_risk(self, symbol: str, current_price: float) -> Optional[Dict[str, Any]]:
+    def _check_drawdown_risk(self, symbol: str, current_price: float) -> dict[str, Any] | None:
         """Check for drawdown risk"""
         try:
             last_trade_price = self.last_trade_prices.get(symbol, 0.0)
@@ -194,7 +195,7 @@ class RiskAlertService:
             logger.error(f"Failed to check drawdown risk for {symbol}: {e}")
             return None
 
-    def _check_volatility_risk(self, symbol: str) -> Optional[Dict[str, Any]]:
+    def _check_volatility_risk(self, symbol: str) -> dict[str, Any] | None:
         """Check for volatility spike risk"""
         try:
             recent_prices = self._get_recent_prices(symbol, minutes=5)
@@ -221,7 +222,7 @@ class RiskAlertService:
             logger.error(f"Failed to check volatility risk for {symbol}: {e}")
             return None
 
-    def _check_exposure_risk(self, symbol: str, current_exposure: float) -> Optional[Dict[str, Any]]:
+    def _check_exposure_risk(self, symbol: str, current_exposure: float) -> dict[str, Any] | None:
         """Check for portfolio exposure risk"""
         try:
             # Calculate total portfolio value (simplified)
@@ -250,7 +251,7 @@ class RiskAlertService:
             logger.error(f"Failed to check exposure risk for {symbol}: {e}")
             return None
 
-    def _check_api_health(self) -> List[Dict[str, Any]]:
+    def _check_api_health(self) -> list[dict[str, Any]]:
         """Check API health and data freshness"""
         try:
             api_alerts = []
@@ -293,7 +294,7 @@ class RiskAlertService:
                 "message": f"API health check failed: {str(e)}"
             }]
 
-    def _send_discord_alert(self, alert: Dict[str, Any]) -> bool:
+    def _send_discord_alert(self, alert: dict[str, Any]) -> bool:
         """Send alert to Discord webhook if configured"""
         try:
             if not self.discord_enabled or not self.discord_webhook_url:
@@ -334,7 +335,7 @@ class RiskAlertService:
             logger.error(f"Failed to send Discord alert: {e}")
             return False
 
-    def _store_alert(self, alert: Dict[str, Any]) -> None:
+    def _store_alert(self, alert: dict[str, Any]) -> None:
         """Store alert in cache"""
         try:
             alert_id = f"risk_alert_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
@@ -365,7 +366,7 @@ class RiskAlertService:
         except Exception as e:
             logger.error(f"Failed to store alert: {e}")
 
-    def _print_alert(self, alert: Dict[str, Any]) -> None:
+    def _print_alert(self, alert: dict[str, Any]) -> None:
         """Print alert to console"""
         try:
             level_emoji = self.alert_levels.get(alert.get("level", "MEDIUM"), "ðŸŸ¡")
@@ -383,7 +384,7 @@ class RiskAlertService:
         except Exception as e:
             logger.error(f"Failed to print alert: {e}")
 
-    def check_risks(self) -> Dict[str, Any]:
+    def check_risks(self) -> dict[str, Any]:
         """Check all risk conditions and trigger alerts"""
         try:
             logger.info("ðŸ” Checking risk conditions...")
@@ -465,7 +466,7 @@ class RiskAlertService:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_latest_alerts(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_latest_alerts(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get latest risk alerts"""
         try:
             # Get recent alerts from cache
@@ -492,7 +493,7 @@ class RiskAlertService:
             logger.error(f"Failed to get latest alerts: {e}")
             return []
 
-    def get_risk_status(self) -> Dict[str, Any]:
+    def get_risk_status(self) -> dict[str, Any]:
         """Get current risk service status"""
         try:
             return {

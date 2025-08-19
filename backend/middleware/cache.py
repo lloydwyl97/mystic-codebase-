@@ -5,10 +5,11 @@ Provides a simple async cache middleware for FastAPI/Starlette apps.
 Uses aioredis if available, else acts as a no-op cache.
 """
 
+import asyncio
 import logging
+
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-import asyncio
 
 try:
     import aioredis

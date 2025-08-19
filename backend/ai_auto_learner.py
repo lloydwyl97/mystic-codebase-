@@ -1,9 +1,8 @@
 ﻿import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 from simulation_logger import SimulationLogger
-from datetime import datetime, timezone
 
 MODEL_STATE_FILE = os.getenv("MODEL_STATE_PATH", "ai_model_state.json")
 
@@ -15,7 +14,7 @@ class AIAutoLearner:
 
     def _load_state(self):
         if os.path.exists(MODEL_STATE_FILE):
-            with open(MODEL_STATE_FILE, "r") as f:
+            with open(MODEL_STATE_FILE) as f:
                 return json.load(f)
         return {
             "version": 1,

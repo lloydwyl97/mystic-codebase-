@@ -10,7 +10,7 @@ def safe_number_format(value: t.Any, digits: int = 2) -> str:
         return "-"
 
 
-def ensure_state_defaults(state: t.Optional[dict[str, t.Any]] | t.MutableMapping[str, t.Any], defaults: dict[str, t.Any]) -> dict[str, t.Any]:
+def ensure_state_defaults(state: dict[str, t.Any] | None | t.MutableMapping[str, t.Any], defaults: dict[str, t.Any]) -> dict[str, t.Any]:
     s = dict(state) if state is not None else {}
     for k, v in defaults.items():
         s.setdefault(k, v)

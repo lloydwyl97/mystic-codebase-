@@ -5,14 +5,13 @@ Provides the missing endpoints that the frontend components require for live dat
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
 from backend.ai.ai_brains import trend_analysis
 from backend.ai.ai_mystic import mystic_oracle
 from backend.ai.auto_trade import get_trading_status
-from backend.modules.ai.persistent_cache import get_persistent_cache
 from backend.ai.trade_tracker import (
     get_active_trades,
     get_trade_history,
@@ -26,12 +25,13 @@ from backend.modules.ai.ai_signals import (
     signal_scorer,
     technical_signals,
 )
+from backend.modules.ai.persistent_cache import get_persistent_cache
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=["missing-endpoints"])
 
 
-def get_real_portfolio_data() -> Dict[str, Any]:
+def get_real_portfolio_data() -> dict[str, Any]:
     """Get real portfolio data from AI services"""
     try:
         cache = get_persistent_cache()
@@ -136,7 +136,7 @@ def get_real_portfolio_data() -> Dict[str, Any]:
         }
 
 
-def get_real_analytics_metrics() -> Dict[str, Any]:
+def get_real_analytics_metrics() -> dict[str, Any]:
     """Get real analytics metrics from AI services"""
     try:
         trade_summary = get_trade_summary()
@@ -216,7 +216,7 @@ def get_real_analytics_metrics() -> Dict[str, Any]:
         }
 
 
-def get_real_trading_history() -> List[Dict[str, Any]]:
+def get_real_trading_history() -> list[dict[str, Any]]:
     """Get real trading history from AI services"""
     try:
         trade_history = get_trade_history(limit=20)
@@ -247,7 +247,7 @@ def get_real_trading_history() -> List[Dict[str, Any]]:
         return []
 
 
-def get_real_strategies() -> List[Dict[str, Any]]:
+def get_real_strategies() -> list[dict[str, Any]]:
     """Get real strategies from AI services"""
     try:
         # Get AI signal performance
@@ -294,7 +294,7 @@ def get_real_strategies() -> List[Dict[str, Any]]:
         return []
 
 
-def get_real_ai_insights() -> List[Dict[str, Any]]:
+def get_real_ai_insights() -> list[dict[str, Any]]:
     """Get real AI insights from AI services"""
     try:
         insights = []
@@ -387,7 +387,7 @@ def get_real_ai_insights() -> List[Dict[str, Any]]:
         return []
 
 
-def get_real_candlestick_data(symbol: str, interval: str) -> List[Dict[str, Any]]:
+def get_real_candlestick_data(symbol: str, interval: str) -> list[dict[str, Any]]:
     """Get real candlestick data from cache"""
     try:
         # Try to get real candlestick data from market data service
@@ -415,7 +415,7 @@ def get_real_candlestick_data(symbol: str, interval: str) -> List[Dict[str, Any]
         return []
 
 
-def get_real_alerts() -> List[Dict[str, Any]]:
+def get_real_alerts() -> list[dict[str, Any]]:
     """Get real alerts from AI services"""
     try:
         cache = get_persistent_cache()
@@ -488,7 +488,7 @@ def get_real_alerts() -> List[Dict[str, Any]]:
 
 
 @router.get("/portfolio")
-async def get_portfolio() -> Dict[str, Any]:
+async def get_portfolio() -> dict[str, Any]:
     """Get portfolio data"""
     try:
         return get_real_portfolio_data()
@@ -498,7 +498,7 @@ async def get_portfolio() -> Dict[str, Any]:
 
 
 @router.get("/analytics/metrics")
-async def get_analytics_metrics() -> Dict[str, Any]:
+async def get_analytics_metrics() -> dict[str, Any]:
     """Get analytics metrics"""
     try:
         return get_real_analytics_metrics()
@@ -508,7 +508,7 @@ async def get_analytics_metrics() -> Dict[str, Any]:
 
 
 @router.get("/trading/history")
-async def get_trading_history(limit: int = 10) -> List[Dict[str, Any]]:
+async def get_trading_history(limit: int = 10) -> list[dict[str, Any]]:
     """Get trading history"""
     try:
         history = get_real_trading_history()
@@ -519,7 +519,7 @@ async def get_trading_history(limit: int = 10) -> List[Dict[str, Any]]:
 
 
 @router.get("/analytics/strategies")
-async def get_analytics_strategies() -> List[Dict[str, Any]]:
+async def get_analytics_strategies() -> list[dict[str, Any]]:
     """Get strategies data"""
     try:
         return get_real_strategies()
@@ -529,7 +529,7 @@ async def get_analytics_strategies() -> List[Dict[str, Any]]:
 
 
 @router.get("/ai/insights")
-async def get_ai_insights() -> List[Dict[str, Any]]:
+async def get_ai_insights() -> list[dict[str, Any]]:
     """Get AI insights"""
     try:
         return get_real_ai_insights()
@@ -539,7 +539,7 @@ async def get_ai_insights() -> List[Dict[str, Any]]:
 
 
 @router.get("/market/candles")
-async def get_candlestick_data(symbol: str = "BTC", interval: str = "1h") -> List[Dict[str, Any]]:
+async def get_candlestick_data(symbol: str = "BTC", interval: str = "1h") -> list[dict[str, Any]]:
     """Get candlestick data"""
     try:
         return await get_real_candlestick_data(symbol, interval)
@@ -549,7 +549,7 @@ async def get_candlestick_data(symbol: str = "BTC", interval: str = "1h") -> Lis
 
 
 @router.get("/wallet/transactions")
-async def get_wallet_transactions(limit: int = 10) -> List[Dict[str, Any]]:
+async def get_wallet_transactions(limit: int = 10) -> list[dict[str, Any]]:
     """Get wallet transactions"""
     try:
         # This would need actual wallet integration
@@ -560,7 +560,7 @@ async def get_wallet_transactions(limit: int = 10) -> List[Dict[str, Any]]:
 
 
 @router.get("/alerts")
-async def get_alerts() -> List[Dict[str, Any]]:
+async def get_alerts() -> list[dict[str, Any]]:
     """Get alerts"""
     try:
         return get_real_alerts()

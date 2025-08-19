@@ -6,8 +6,8 @@ Contains PWA endpoints, offline sync, and mobile-specific functionality.
 
 import logging
 import time
-from datetime import timezone, datetime
-from typing import Any, Dict
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -60,7 +60,7 @@ async def get_mobile_status():
 
 
 @router.post("/api/mobile/sync")
-async def sync_mobile_data(sync_data: Dict[str, Any]):
+async def sync_mobile_data(sync_data: dict[str, Any]):
     """Sync mobile app data with server using live data when available"""
     try:
         # Use the sync_data parameter to satisfy linter
@@ -169,7 +169,7 @@ async def get_offline_data():
 
 
 @router.post("/api/mobile/register-device")
-async def register_mobile_device(device_data: Dict[str, Any]):
+async def register_mobile_device(device_data: dict[str, Any]):
     """Register a mobile device for push notifications"""
     try:
         device_id = device_data.get("device_id", "")

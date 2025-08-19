@@ -1,10 +1,11 @@
+import os
+
+import numpy as np
+import pennylane as qml
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
-import pennylane as qml
-import numpy as np
-import os
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, generate_latest
 
 app = FastAPI(
     title="Mystic PennyLane Quantum Service",

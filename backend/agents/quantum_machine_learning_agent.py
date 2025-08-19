@@ -5,35 +5,36 @@ Implements quantum machine learning algorithms for trading
 
 import asyncio
 import json
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
 import os
 import sys
-from qiskit import (
-    QuantumCircuit,
-    QuantumRegister,
-    ClassicalRegister,
-    execute,
-    Aer,
-)
-from qiskit.algorithms.optimizers import SPSA, COBYLA, ADAM
-from qiskit.circuit.library import TwoLocal, RealAmplitudes, ZZFeatureMap
-from qiskit.primitives import Sampler, Estimator
-from qiskit_machine_learning.algorithms import VQC, VQR, QSVC, QSVR
-from qiskit_machine_learning.neural_networks import CircuitQNN, TwoLayerQNN
-from qiskit_machine_learning.connectors import TorchConnector
-from qiskit_machine_learning.kernels import QuantumKernel
+from datetime import datetime, timedelta
+from typing import Any
+
+import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.model_selection import train_test_split
+from qiskit import (
+    Aer,
+    ClassicalRegister,
+    QuantumCircuit,
+    QuantumRegister,
+    execute,
+)
+from qiskit.algorithms.optimizers import ADAM, COBYLA, SPSA
+from qiskit.circuit.library import RealAmplitudes, TwoLocal, ZZFeatureMap
+from qiskit.primitives import Estimator, Sampler
+from qiskit_machine_learning.algorithms import QSVC, QSVR, VQC, VQR
+from qiskit_machine_learning.connectors import TorchConnector
+from qiskit_machine_learning.kernels import QuantumKernel
+from qiskit_machine_learning.neural_networks import CircuitQNN, TwoLayerQNN
 from sklearn.metrics import (
     accuracy_score,
-    mean_squared_error,
     classification_report,
+    mean_squared_error,
 )
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 # Make all imports live (F41= qiskit.__version__
 _ = QuantumCircuit(2)
@@ -446,7 +447,7 @@ class QuantumMachineLearningAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for quantum ML training"""
         try:
             symbol = market_data.get("symbol")
@@ -591,7 +592,7 @@ class QuantumMachineLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error training quantum models for {symbol}: {e}")
 
-    async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_symbol_market_data(self, symbol: str) -> list[dict[str, Any]]:
         """Get market data for a symbol"""
         try:
             # Get from training history
@@ -622,8 +623,8 @@ class QuantumMachineLearningAgent(BaseAgent):
             return []
 
     async def prepare_training_data(
-        self, market_data: List[Dict[str, Any]]
-    ) -> Tuple[Optional[np.ndarray], Optional[np.ndarray], Optional[np.ndarray]]:
+        self, market_data: list[dict[str, Any]]
+    ) -> tuple[np.ndarray | None, np.ndarray | None, np.ndarray | None]:
         """Prepare training data for quantum models"""
         try:
             # Convert to DataFrame
@@ -765,8 +766,8 @@ class QuantumMachineLearningAgent(BaseAgent):
             print(f"âŒ Error making quantum predictions for {symbol}: {e}")
 
     async def prepare_prediction_data(
-        self, market_data: List[Dict[str, Any]]
-    ) -> Optional[np.ndarray]:
+        self, market_data: list[dict[str, Any]]
+    ) -> np.ndarray | None:
         """Prepare data for quantum predictions"""
         try:
             # Get recent 20 data points
@@ -800,7 +801,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             print(f"âŒ Error preparing prediction data: {e}")
             return None
 
-    async def broadcast_quantum_predictions(self, symbol: str, predictions: Dict[str, Any]):
+    async def broadcast_quantum_predictions(self, symbol: str, predictions: dict[str, Any]):
         """Broadcast quantum predictions to other agents"""
         try:
             prediction_update = {
@@ -820,7 +821,7 @@ class QuantumMachineLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting quantum predictions: {e}")
 
-    async def handle_train_quantum_model(self, message: Dict[str, Any]):
+    async def handle_train_quantum_model(self, message: dict[str, Any]):
         """Handle manual quantum model training request"""
         try:
             symbol = message.get("symbol")
@@ -883,7 +884,7 @@ class QuantumMachineLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error training specific quantum model: {e}")
 
-    async def handle_quantum_prediction(self, message: Dict[str, Any]):
+    async def handle_quantum_prediction(self, message: dict[str, Any]):
         """Handle manual quantum prediction request"""
         try:
             symbol = message.get("symbol")
@@ -947,8 +948,8 @@ class QuantumMachineLearningAgent(BaseAgent):
             await self.broadcast_error(f"Quantum prediction error: {e}")
 
     async def make_specific_quantum_prediction(
-        self, symbol: str, model_type: str, market_data: List[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, model_type: str, market_data: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
         """Make prediction with a specific quantum model"""
         try:
             X_pred = await self.prepare_prediction_data(market_data)
@@ -986,7 +987,7 @@ class QuantumMachineLearningAgent(BaseAgent):
             print(f"âŒ Error making specific quantum prediction: {e}")
             return None
 
-    async def handle_get_quantum_ml_status(self, message: Dict[str, Any]):
+    async def handle_get_quantum_ml_status(self, message: dict[str, Any]):
         """Handle quantum ML status request"""
         try:
             symbol = message.get("symbol")

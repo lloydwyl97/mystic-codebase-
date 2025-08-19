@@ -11,7 +11,7 @@ import logging
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class TechnicalIndicator:
     symbol: str
     rsi: float
-    macd: Dict[str, float]
+    macd: dict[str, float]
     volume_24h: float
     volatility_index: float
     change_5m: float
@@ -48,10 +48,10 @@ class IndicatorsFetcher:
         }
 
         # Track last fetch times for throttling
-        self.last_fetch_times: Dict[str, float] = {}
+        self.last_fetch_times: dict[str, float] = {}
 
         # Price history for calculations
-        self.price_history: Dict[str, List[Dict[str, Any]]] = {}
+        self.price_history: dict[str, list[dict[str, Any]]] = {}
 
         # OPTIMIZED COIN LISTS - Updated with user specified pairs
         self.binance_coins = [
@@ -101,7 +101,7 @@ class IndicatorsFetcher:
         key = f"{indicator_type}_{symbol}"
         self.last_fetch_times[key] = time.time()
 
-    async def calculate_rsi(self, symbol: str) -> Optional[float]:
+    async def calculate_rsi(self, symbol: str) -> float | None:
         """Calculate RSI for a symbol (2 minute frequency per coin)"""
         if not self._should_fetch("rsi", symbol):
             return None
@@ -113,8 +113,8 @@ class IndicatorsFetcher:
                 return None
 
             # Calculate RSI
-            gains: List[float] = []
-            losses: List[float] = []
+            gains: list[float] = []
+            losses: list[float] = []
 
             for i in range(1, len(price_history)):
                 change = price_history[i]["price"] - price_history[i - 1]["price"]
@@ -145,7 +145,7 @@ class IndicatorsFetcher:
             logger.error(f"Error calculating RSI for {symbol}: {e}")
             return None
 
-    async def calculate_macd(self, symbol: str) -> Optional[Dict[str, float]]:
+    async def calculate_macd(self, symbol: str) -> dict[str, float] | None:
         """Calculate MACD for a symbol (2 minute frequency per coin)"""
         if not self._should_fetch("rsi", symbol):  # Use same interval as RSI
             return None
@@ -189,12 +189,12 @@ class IndicatorsFetcher:
             logger.error(f"Error calculating MACD for {symbol}: {e}")
             return None
 
-    def _calculate_ema(self, prices: List[float], period: int) -> List[float]:
+    def _calculate_ema(self, prices: list[float], period: int) -> list[float]:
         """Calculate Exponential Moving Average"""
         if len(prices) < period:
             return []
 
-        ema_values: List[float] = []
+        ema_values: list[float] = []
         multiplier = 2 / (period + 1)
 
         # First EMA is SMA
@@ -208,7 +208,7 @@ class IndicatorsFetcher:
 
         return ema_values
 
-    async def fetch_24h_volume(self, symbol: str) -> Optional[float]:
+    async def fetch_24h_volume(self, symbol: str) -> float | None:
         """Fetch 24h volume data (3 minute frequency per coin)"""
         if not self._should_fetch("volume", symbol):
             return None
@@ -245,7 +245,7 @@ class IndicatorsFetcher:
 
         return None
 
-    async def calculate_volatility_index(self, symbol: str) -> Optional[float]:
+    async def calculate_volatility_index(self, symbol: str) -> float | None:
         """Calculate custom volatility index (5 minute frequency per coin)"""
         if not self._should_fetch("volatility", symbol):
             return None
@@ -258,7 +258,7 @@ class IndicatorsFetcher:
             prices = [p["price"] for p in price_history[-20:]]  # Last 20 prices
 
             # Calculate price changes
-            changes: List[float] = []
+            changes: list[float] = []
             for i in range(1, len(prices)):
                 change = ((prices[i] - prices[i - 1]) / prices[i - 1]) * 100
                 changes.append(abs(change))
@@ -276,7 +276,7 @@ class IndicatorsFetcher:
             logger.error(f"Error calculating volatility index for {symbol}: {e}")
             return None
 
-    async def calculate_time_changes(self, symbol: str) -> Dict[str, float]:
+    async def calculate_time_changes(self, symbol: str) -> dict[str, float]:
         """Calculate price changes over different time periods"""
         try:
             price_history = await self._get_price_history(symbol)
@@ -286,7 +286,7 @@ class IndicatorsFetcher:
             current_price = price_history[-1]["price"]
 
             # Calculate changes for different periods
-            changes: Dict[str, float] = {}
+            changes: dict[str, float] = {}
 
             # 5-minute change (assuming 10-second intervals)
             if len(price_history) >= 30:  # 5 minutes = 30 intervals
@@ -309,7 +309,7 @@ class IndicatorsFetcher:
             logger.error(f"Error calculating time changes for {symbol}: {e}")
             return {"change_5m": 0.0, "change_15m": 0.0, "change_1h": 0.0}
 
-    async def _get_price_history(self, symbol: str) -> List[Dict[str, Any]]:
+    async def _get_price_history(self, symbol: str) -> list[dict[str, Any]]:
         """Get price history from cache"""
         try:
             # Get from Tier 1 cache
@@ -337,7 +337,7 @@ class IndicatorsFetcher:
             logger.error(f"Error getting price history for {symbol}: {e}")
             return []
 
-    async def _cache_indicator_data(self, symbol: str, data: Dict[str, Any]):
+    async def _cache_indicator_data(self, symbol: str, data: dict[str, Any]):
         """Cache indicator data"""
         try:
             key = f"indicators_{symbol}"
@@ -345,9 +345,9 @@ class IndicatorsFetcher:
         except Exception as e:
             logger.error(f"Error caching indicator data: {e}")
 
-    async def fetch_all_tier2_indicators(self) -> Dict[str, Any]:
+    async def fetch_all_tier2_indicators(self) -> dict[str, Any]:
         """Fetch all Tier 2 indicators for all 20 coins"""
-        results: Dict[str, Any] = {
+        results: dict[str, Any] = {
             "indicators": {},
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
@@ -398,7 +398,7 @@ class IndicatorsFetcher:
 
         return results
 
-    async def _cache_tier2_data(self, data: Dict[str, Any]):
+    async def _cache_tier2_data(self, data: dict[str, Any]):
         """Cache complete Tier 2 data"""
         try:
             self.redis_client.setex("tier2_indicators", self.config["cache_ttl"], json.dumps(data))
@@ -432,7 +432,7 @@ class IndicatorsFetcher:
         finally:
             self.is_running = False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get indicators fetcher status"""
         return {
             "status": "running" if self.is_running else "stopped",

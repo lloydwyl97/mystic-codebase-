@@ -4,11 +4,11 @@ Smart Capital Allocator
 Manages capital distribution across multiple trading strategies based on performance.
 """
 
-from typing import Dict, List, Any
-from datetime import datetime
-from strategy_leaderboard import get_strategy_leaderboard
-from position_sizer import PositionSizer
 from datetime import datetime, timezone
+from typing import Any
+
+from position_sizer import PositionSizer
+from strategy_leaderboard import get_strategy_leaderboard
 
 
 class CapitalAllocator:
@@ -32,7 +32,7 @@ class CapitalAllocator:
 
     def allocate_by_performance(
         self, hours_back: int = 24, min_win_rate: float = 0.55
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """
         Allocate capital based on strategy performance.
 
@@ -80,7 +80,7 @@ class CapitalAllocator:
             print(f"âŒ Error in performance-based allocation: {e}")
             return {}
 
-    def allocate_by_risk_parity(self, target_volatility: float = 0.15) -> Dict[str, float]:
+    def allocate_by_risk_parity(self, target_volatility: float = 0.15) -> dict[str, float]:
         """
         Allocate capital using risk parity approach.
 
@@ -137,7 +137,7 @@ class CapitalAllocator:
             print(f"âŒ Error in risk parity allocation: {e}")
             return {}
 
-    def allocate_by_equal_weight(self) -> Dict[str, float]:
+    def allocate_by_equal_weight(self) -> dict[str, float]:
         """
         Allocate capital equally across top strategies.
 
@@ -168,7 +168,7 @@ class CapitalAllocator:
             print(f"âŒ Error in equal weight allocation: {e}")
             return {}
 
-    def allocate_by_kelly_criterion(self) -> Dict[str, float]:
+    def allocate_by_kelly_criterion(self) -> dict[str, float]:
         """
         Allocate capital using Kelly Criterion for each strategy.
 
@@ -229,7 +229,7 @@ class CapitalAllocator:
             print(f"âŒ Error in Kelly criterion allocation: {e}")
             return {}
 
-    def allocate_by_momentum(self, momentum_period: int = 7) -> Dict[str, float]:
+    def allocate_by_momentum(self, momentum_period: int = 7) -> dict[str, float]:
         """
         Allocate capital based on recent momentum (performance trend).
 
@@ -297,9 +297,9 @@ class CapitalAllocator:
 
     def rebalance_portfolio(
         self,
-        current_allocations: Dict[str, float],
+        current_allocations: dict[str, float],
         method: str = "performance",
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """
         Rebalance existing portfolio allocations.
 
@@ -348,8 +348,8 @@ class CapitalAllocator:
     def _log_allocation(
         self,
         method: str,
-        allocations: Dict[str, float],
-        strategies: List[Dict[str, Any]],
+        allocations: dict[str, float],
+        strategies: list[dict[str, Any]],
     ):
         """Log allocation decision."""
         log_entry = {
@@ -371,9 +371,9 @@ class CapitalAllocator:
 
     def _log_rebalancing(
         self,
-        current: Dict[str, float],
-        new: Dict[str, float],
-        trades: Dict[str, Any],
+        current: dict[str, float],
+        new: dict[str, float],
+        trades: dict[str, Any],
     ):
         """Log rebalancing decision."""
         log_entry = {
@@ -393,11 +393,11 @@ class CapitalAllocator:
         else:
             print("âœ… No rebalancing needed")
 
-    def get_allocation_history(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_allocation_history(self, limit: int = 50) -> list[dict[str, Any]]:
         """Get allocation history."""
         return self.allocation_history[-limit:]
 
-    def get_portfolio_summary(self) -> Dict[str, Any]:
+    def get_portfolio_summary(self) -> dict[str, Any]:
         """Get current portfolio summary."""
         if not self.current_allocations:
             return {"total_allocated": 0, "strategies_count": 0}
@@ -415,7 +415,7 @@ class CapitalAllocator:
 
 
 # Convenience functions
-def allocate_capital(total_capital: float, method: str = "performance") -> Dict[str, float]:
+def allocate_capital(total_capital: float, method: str = "performance") -> dict[str, float]:
     """
     Simple capital allocation function.
 
@@ -443,10 +443,10 @@ def allocate_capital(total_capital: float, method: str = "performance") -> Dict[
 
 
 def rebalance_portfolio(
-    current_allocations: Dict[str, float],
+    current_allocations: dict[str, float],
     total_capital: float,
     method: str = "performance",
-) -> Dict[str, float]:
+) -> dict[str, float]:
     """
     Rebalance existing portfolio.
 

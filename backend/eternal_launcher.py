@@ -12,14 +12,14 @@ def launch_eternal_systems():
 
     # Import all eternal modules
     try:
+        from agent_cluster import MemoryAgent
+        from ai_world_core import AIWorldSystem
         from cosmic_terraformer import expand_to_node
+        from final_codex import eternal_constitution
+        from holographic_projection import broadcast_hologram
         from memory_persistence import save_agent_memory
         from self_replicator import replicate_to
         from simulation_override import detect_simulation, override_simulation
-        from holographic_projection import broadcast_hologram
-        from final_codex import eternal_constitution
-        from agent_cluster import MemoryAgent
-        from ai_world_core import AIWorldSystem
 
         print("âœ… All eternal modules imported successfully")
     except ImportError as e:
@@ -65,8 +65,8 @@ def launch_eternal_systems():
     print("=" * 60)
 
     try:
-        from self_writer import auto_write_loop
         from auto_executor import run_generated_module
+        from self_writer import auto_write_loop
 
         print("[OVERRIDE] Beginning self-writing cycle...")
         path = auto_write_loop()
@@ -95,9 +95,10 @@ def run_continuous_evolution():
     print("\nðŸ”„ Starting continuous evolution loop...")
 
     try:
-        from self_writer import auto_write_loop
-        from auto_executor import run_generated_module
         import time
+
+        from auto_executor import run_generated_module
+        from self_writer import auto_write_loop
 
         cycle = 1
         while True:

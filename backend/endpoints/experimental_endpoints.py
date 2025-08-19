@@ -4,7 +4,7 @@ Provides unified API access to all experimental services in the Mystic AI Tradin
 """
 
 import time
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -218,7 +218,7 @@ async def get_quantum_status():
 
 
 @router.post("/quantum/optimize")
-async def quantum_optimize_portfolio(portfolio_data: Dict[str, Any]):
+async def quantum_optimize_portfolio(portfolio_data: dict[str, Any]):
     """Optimize portfolio using quantum algorithms"""
     if not QUANTUM_AVAILABLE or not quantum_engine:
         raise HTTPException(status_code=503, detail="Quantum services not available")
@@ -254,7 +254,7 @@ async def get_ai_super_status():
 
 
 @router.post("/ai-super/train")
-async def ai_super_train_model(training_config: Dict[str, Any]):
+async def ai_super_train_model(training_config: dict[str, Any]):
     """Train model using AI supercomputer"""
     if not AI_SUPER_AVAILABLE or not ai_super:
         raise HTTPException(status_code=503, detail="AI Supercomputer not available")
@@ -367,7 +367,7 @@ async def get_edge_status():
 
 
 @router.post("/edge/compute")
-async def edge_compute_task(task_data: Dict[str, Any]):
+async def edge_compute_task(task_data: dict[str, Any]):
     """Execute computation task on edge nodes"""
     if not EDGE_AVAILABLE or not edge_orchestrator:
         raise HTTPException(status_code=503, detail="Edge computing services not available")
@@ -399,7 +399,7 @@ async def get_5g_status():
 
 
 @router.post("/5g/slice")
-async def create_5g_slice(slice_config: Dict[str, Any]):
+async def create_5g_slice(slice_config: dict[str, Any]):
     """Create 5G network slice"""
     if not FIVEG_AVAILABLE or not fiveg_slice_manager:
         raise HTTPException(status_code=503, detail="5G services not available")
@@ -464,7 +464,7 @@ async def execute_experimental_task(
         description="Service to use: quantum, ai_super, blockchain, satellite, edge, 5g",
     ),
     task: str = Query(..., description="Task to execute"),
-    parameters: Dict[str, Any] = {},
+    parameters: dict[str, Any] = {},
 ):
     """Execute task on specified experimental service"""
     try:

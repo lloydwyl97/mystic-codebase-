@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import threading
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class WhaleAlertService:
@@ -24,7 +24,7 @@ class WhaleAlertService:
     def __init__(self, ttl_seconds: int = 3600, max_buffer: int = 5000) -> None:
         self._ttl_seconds: int = ttl_seconds
         self._max_buffer: int = max(100, int(max_buffer))
-        self._alerts: List[Dict[str, Any]] = []
+        self._alerts: list[dict[str, Any]] = []
         self._lock = threading.Lock()
 
     def _now(self) -> float:
@@ -39,7 +39,7 @@ class WhaleAlertService:
             # Cheap trim: assume mostly-ordered inserts; keep last N
             self._alerts = self._alerts[-self._max_buffer :]
 
-    def ingest(self, alert: Dict[str, Any]) -> None:
+    def ingest(self, alert: dict[str, Any]) -> None:
         """Ingest a single alert. Adds timestamp if missing and prunes TTL."""
         # Defensive: only dict payloads are accepted (runtime guard for external callers)
         if not isinstance(alert, dict):  # type: ignore[unreachable]
@@ -52,7 +52,7 @@ class WhaleAlertService:
             # Defer strict ordering to read; prune now to bound memory
             self._prune_locked()
 
-    def bulk_ingest(self, alerts: List[Dict[str, Any]]) -> int:
+    def bulk_ingest(self, alerts: list[dict[str, Any]]) -> int:
         """Ingest many alerts; returns number ingested."""
         if not isinstance(alerts, list):  # type: ignore[unreachable]
             return 0
@@ -69,7 +69,7 @@ class WhaleAlertService:
             self._prune_locked()
         return count
 
-    def get_alerts(self, limit: Optional[int] = 200) -> List[Dict[str, Any]]:
+    def get_alerts(self, limit: int | None = 200) -> list[dict[str, Any]]:
         """Return recent alerts, newest-first, pruned by TTL and limited."""
         with self._lock:
             self._prune_locked()

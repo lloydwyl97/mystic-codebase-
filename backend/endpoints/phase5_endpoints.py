@@ -6,7 +6,7 @@ Contains endpoints for Phase5 overlay metrics and quantum visualization services
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 import redis.asyncio as redis
@@ -31,7 +31,7 @@ async def fetch_metric(key: str, default: str = "..."):
 
 
 @router.get("/metrics")
-async def get_phase5_metrics() -> Dict[str, Any]:
+async def get_phase5_metrics() -> dict[str, Any]:
     """Get Phase5 metrics"""
     try:
         neuro_sync = await fetch_metric("neuro_sync_index")
@@ -58,7 +58,7 @@ async def get_phase5_metrics() -> Dict[str, Any]:
 
 
 @router.get("/signal-types")
-async def get_phase5_signal_types() -> Dict[str, Any]:
+async def get_phase5_signal_types() -> dict[str, Any]:
     """Get Phase 5 signal types"""
     return {
         "signal_types": ["Neuro-Sync", "Cosmic Harmonic", "Aura Alignment", "Interdim Signal", "Quantum Coherence"]
@@ -66,7 +66,7 @@ async def get_phase5_signal_types() -> Dict[str, Any]:
 
 
 @router.get("/monitoring-levels")
-async def get_phase5_monitoring_levels() -> Dict[str, Any]:
+async def get_phase5_monitoring_levels() -> dict[str, Any]:
     """Get Phase 5 monitoring levels"""
     return {
         "levels": ["Low", "Medium", "High", "Critical"]
@@ -74,7 +74,7 @@ async def get_phase5_monitoring_levels() -> Dict[str, Any]:
 
 
 @router.get("/time-periods")
-async def get_phase5_time_periods() -> Dict[str, Any]:
+async def get_phase5_time_periods() -> dict[str, Any]:
     """Get Phase 5 time periods"""
     return {
         "periods": ["1h", "4h", "1d", "1w", "1m"]
@@ -82,7 +82,7 @@ async def get_phase5_time_periods() -> Dict[str, Any]:
 
 
 @router.get("/alert-types")
-async def get_phase5_alert_types() -> Dict[str, Any]:
+async def get_phase5_alert_types() -> dict[str, Any]:
     """Get Phase 5 alert types"""
     return {
         "alert_types": ["Signal", "Threshold", "Anomaly", "Trend"]
@@ -90,7 +90,7 @@ async def get_phase5_alert_types() -> Dict[str, Any]:
 
 
 @router.get("/trends")
-async def get_phase5_trends() -> Dict[str, Any]:
+async def get_phase5_trends() -> dict[str, Any]:
     """Get Phase 5 trends"""
     return {
         "trends": ["Rising", "Falling", "Stable", "Volatile"],
@@ -99,7 +99,7 @@ async def get_phase5_trends() -> Dict[str, Any]:
 
 
 @router.get("/distribution")
-async def get_phase5_distribution() -> Dict[str, Any]:
+async def get_phase5_distribution() -> dict[str, Any]:
     """Get Phase 5 distribution"""
     return {
         "distribution": {
@@ -111,7 +111,7 @@ async def get_phase5_distribution() -> Dict[str, Any]:
 
 
 @router.get("/harmonization")
-async def get_phase5_harmonization() -> Dict[str, Any]:
+async def get_phase5_harmonization() -> dict[str, Any]:
     """Get Phase 5 harmonization"""
     return {
         "harmonization_score": 0.85,
@@ -121,7 +121,7 @@ async def get_phase5_harmonization() -> Dict[str, Any]:
 
 
 @router.get("/thresholds")
-async def get_phase5_thresholds() -> Dict[str, Any]:
+async def get_phase5_thresholds() -> dict[str, Any]:
     """Get Phase 5 thresholds"""
     return {
         "thresholds": {
@@ -133,7 +133,7 @@ async def get_phase5_thresholds() -> Dict[str, Any]:
 
 
 @router.get("/alerts")
-async def get_phase5_alerts() -> Dict[str, Any]:
+async def get_phase5_alerts() -> dict[str, Any]:
     """Get Phase 5 alerts"""
     return {
         "alerts": [
@@ -145,7 +145,7 @@ async def get_phase5_alerts() -> Dict[str, Any]:
 
 
 @router.get("/recent-activity")
-async def get_phase5_recent_activity() -> Dict[str, Any]:
+async def get_phase5_recent_activity() -> dict[str, Any]:
     """Get Phase 5 recent activity"""
     return {
         "activities": [
@@ -157,7 +157,7 @@ async def get_phase5_recent_activity() -> Dict[str, Any]:
 
 
 @router.get("/monitoring/settings")
-async def get_phase5_monitoring_settings() -> Dict[str, Any]:
+async def get_phase5_monitoring_settings() -> dict[str, Any]:
     """Get Phase 5 monitoring settings"""
     return {
         "settings": {
@@ -169,7 +169,7 @@ async def get_phase5_monitoring_settings() -> Dict[str, Any]:
 
 
 @router.get("/overlay-metrics")
-async def get_phase5_overlay_metrics() -> Dict[str, Any]:
+async def get_phase5_overlay_metrics() -> dict[str, Any]:
     """Get Phase5 overlay metrics"""
     try:
         neuro_sync = await fetch_metric("neuro_sync_index")
@@ -194,7 +194,7 @@ async def get_phase5_overlay_metrics() -> Dict[str, Any]:
 
 
 @router.get("/quantum-indicators")
-async def get_quantum_indicators() -> Dict[str, Any]:
+async def get_quantum_indicators() -> dict[str, Any]:
     """Get quantum indicators data"""
     try:
         q_signal = await fetch_metric("quantum_signal_level")
@@ -215,7 +215,7 @@ async def get_quantum_indicators() -> Dict[str, Any]:
         }
 
 
-async def get_waveform_data() -> List[float]:
+async def get_waveform_data() -> list[float]:
     """Get quantum waveform data"""
     try:
         raw = await r.lrange("quantum_waveform_data", 0, -1)
@@ -239,7 +239,7 @@ async def get_waveform_data() -> List[float]:
 
 
 @router.get("/quantum-waveform")
-async def get_quantum_waveform() -> Dict[str, Any]:
+async def get_quantum_waveform() -> dict[str, Any]:
     """Get quantum waveform data for charting"""
     try:
         y = await get_waveform_data()
@@ -264,7 +264,7 @@ async def get_quantum_waveform() -> Dict[str, Any]:
 
 
 @router.get("/status")
-async def get_phase5_status() -> Dict[str, Any]:
+async def get_phase5_status() -> dict[str, Any]:
     """Get Phase5 service status"""
     return {
         "status": "healthy",

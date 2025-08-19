@@ -6,7 +6,7 @@ Advanced AI system focusing on important signals and adapting to market conditio
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 
@@ -18,10 +18,10 @@ class NeuralPrediction:
     """Neural ensemble prediction result"""
 
     ensemble_prediction: float
-    attention_weights: Dict[str, float]
+    attention_weights: dict[str, float]
     model_confidence: float
     adaptation_score: float
-    signal_importance: Dict[str, float]
+    signal_importance: dict[str, float]
     ensemble_variance: float
     recommendation: str
     timestamp: datetime
@@ -31,14 +31,14 @@ class NeuralEnsemble:
     """Advanced neural ensemble with attention mechanisms"""
 
     def __init__(self):
-        self.models: Dict[str, Any] = {}
-        self.attention_weights: Dict[str, float] = {}
-        self.adaptation_history: List[Dict[str, Any]] = []
-        self.signal_importance: Dict[str, float] = {}
+        self.models: dict[str, Any] = {}
+        self.attention_weights: dict[str, float] = {}
+        self.adaptation_history: list[dict[str, Any]] = []
+        self.signal_importance: dict[str, float] = {}
         self.ensemble_variance_threshold = 0.1
         self.min_confidence_threshold = 0.7
 
-    async def predict_with_attention(self, signal: Dict[str, Any]) -> NeuralPrediction:
+    async def predict_with_attention(self, signal: dict[str, Any]) -> NeuralPrediction:
         """Make prediction using neural ensemble with attention"""
         try:
             # Extract features for neural models
@@ -92,7 +92,7 @@ class NeuralEnsemble:
             logger.error(f"Error in neural ensemble prediction: {e}")
             return self._create_fallback_prediction()
 
-    def _extract_neural_features(self, signal: Dict[str, Any]) -> Dict[str, float]:
+    def _extract_neural_features(self, signal: dict[str, Any]) -> dict[str, float]:
         """Extract features for neural network models"""
         try:
             features = {}
@@ -155,7 +155,7 @@ class NeuralEnsemble:
                 "whale_volume": 0,
             }
 
-    async def _get_ensemble_predictions(self, features: Dict[str, float]) -> Dict[str, float]:
+    async def _get_ensemble_predictions(self, features: dict[str, float]) -> dict[str, float]:
         """Get predictions from ensemble models"""
         try:
             # Simulate ensemble model predictions
@@ -206,8 +206,8 @@ class NeuralEnsemble:
             }
 
     def _calculate_attention_weights(
-        self, features: Dict[str, float], predictions: Dict[str, float]
-    ) -> Dict[str, float]:
+        self, features: dict[str, float], predictions: dict[str, float]
+    ) -> dict[str, float]:
         """Calculate attention weights for ensemble models"""
         try:
             # Calculate attention based on feature importance and prediction confidence
@@ -246,7 +246,7 @@ class NeuralEnsemble:
             if total_attention > 0:
                 attention_weights = {k: v / total_attention for k, v in attention_scores.items()}
             else:
-                attention_weights = {k: 0.2 for k in attention_scores.keys()}
+                attention_weights = dict.fromkeys(attention_scores.keys(), 0.2)
 
             return attention_weights
 
@@ -262,8 +262,8 @@ class NeuralEnsemble:
 
     def _calculate_weighted_prediction(
         self,
-        predictions: Dict[str, float],
-        attention_weights: Dict[str, float],
+        predictions: dict[str, float],
+        attention_weights: dict[str, float],
     ) -> float:
         """Calculate weighted ensemble prediction"""
         try:
@@ -286,8 +286,8 @@ class NeuralEnsemble:
 
     def _calculate_model_confidence(
         self,
-        predictions: Dict[str, float],
-        attention_weights: Dict[str, float],
+        predictions: dict[str, float],
+        attention_weights: dict[str, float],
     ) -> float:
         """Calculate overall model confidence"""
         try:
@@ -313,7 +313,7 @@ class NeuralEnsemble:
             logger.error(f"Error calculating model confidence: {e}")
             return 0.5
 
-    def _calculate_adaptation_score(self, signal: Dict[str, Any]) -> float:
+    def _calculate_adaptation_score(self, signal: dict[str, Any]) -> float:
         """Calculate adaptation score based on market conditions"""
         try:
             # Adaptation based on market volatility
@@ -342,8 +342,8 @@ class NeuralEnsemble:
             return 0.5
 
     def _calculate_signal_importance(
-        self, features: Dict[str, float], attention_weights: Dict[str, float]
-    ) -> Dict[str, float]:
+        self, features: dict[str, float], attention_weights: dict[str, float]
+    ) -> dict[str, float]:
         """Calculate importance of different signal components"""
         try:
             importance = {}
@@ -385,7 +385,7 @@ class NeuralEnsemble:
                 "whale": 0.5,
             }
 
-    def _calculate_ensemble_variance(self, predictions: Dict[str, float]) -> float:
+    def _calculate_ensemble_variance(self, predictions: dict[str, float]) -> float:
         """Calculate variance in ensemble predictions"""
         try:
             prediction_values = list(predictions.values())
@@ -453,7 +453,7 @@ class NeuralEnsemble:
             timestamp=datetime.now(),
         )
 
-    def get_neural_summary(self) -> Dict[str, Any]:
+    def get_neural_summary(self) -> dict[str, Any]:
         """Get neural ensemble summary"""
         return {
             "models_active": len(self.models),

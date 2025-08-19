@@ -2,11 +2,9 @@
 import os
 import sqlite3
 import time
-from datetime import datetime
-from typing import Dict, List, Optional, Tuple
+from datetime import datetime, timezone
 
 import numpy as np
-from datetime import datetime, timezone
 
 # Enhanced configuration
 REAPER_DB = "./data/strategy_reaper.db"
@@ -81,7 +79,7 @@ class ReaperDatabase:
         conn.commit()
         conn.close()
 
-    def save_strategy_performance(self, performance: Dict):
+    def save_strategy_performance(self, performance: dict):
         """Save strategy performance to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -112,7 +110,7 @@ class ReaperDatabase:
         conn.commit()
         conn.close()
 
-    def save_reaper_action(self, action: Dict):
+    def save_reaper_action(self, action: dict):
         """Save reaper action to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -135,7 +133,7 @@ class ReaperDatabase:
         conn.commit()
         conn.close()
 
-    def save_lifecycle_event(self, lifecycle: Dict):
+    def save_lifecycle_event(self, lifecycle: dict):
         """Save strategy lifecycle event"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -159,7 +157,7 @@ class ReaperDatabase:
         conn.commit()
         conn.close()
 
-    def get_latest_strategy_performance(self, strategy_name: str) -> Optional[Dict]:
+    def get_latest_strategy_performance(self, strategy_name: str) -> dict | None:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute(
@@ -185,7 +183,7 @@ class ReaperDatabase:
         return None
 
 
-def get_strategy_files() -> List[str]:
+def get_strategy_files() -> list[str]:
     """Get all strategy files from directories"""
     strategy_files = []
 
@@ -204,7 +202,7 @@ def get_strategy_files() -> List[str]:
     return strategy_files
 
 
-def analyze_strategy_performance(strategy_file: str) -> Optional[Dict]:
+def analyze_strategy_performance(strategy_file: str) -> dict | None:
     """Analyze strategy performance using live data from the database"""
     strategy_name = os.path.basename(strategy_file)
     db = ReaperDatabase(REAPER_DB)
@@ -216,7 +214,7 @@ def analyze_strategy_performance(strategy_file: str) -> Optional[Dict]:
         return None
 
 
-def calculate_adaptive_thresholds(performances: List[Dict]) -> Dict:
+def calculate_adaptive_thresholds(performances: list[dict]) -> dict:
     """Calculate adaptive thresholds based on current performance distribution"""
     if not performances:
         return {
@@ -241,7 +239,7 @@ def calculate_adaptive_thresholds(performances: List[Dict]) -> Dict:
     }
 
 
-def evaluate_strategy_lifecycle(performance: Dict) -> str:
+def evaluate_strategy_lifecycle(performance: dict) -> str:
     """Evaluate strategy lifecycle phase"""
     score = performance["performance_score"]
     trades = performance["total_trades"]
@@ -261,7 +259,7 @@ def evaluate_strategy_lifecycle(performance: Dict) -> str:
         return "new"
 
 
-def should_reap_strategy(performance: Dict, thresholds: Dict) -> Tuple[bool, str]:
+def should_reap_strategy(performance: dict, thresholds: dict) -> tuple[bool, str]:
     """Determine if strategy should be reaped"""
     reasons = []
 
@@ -294,7 +292,7 @@ def should_reap_strategy(performance: Dict, thresholds: Dict) -> Tuple[bool, str
     return should_reap, reason
 
 
-def reap_strategy(strategy_file: str, reason: str, performance: Dict):
+def reap_strategy(strategy_file: str, reason: str, performance: dict):
     """Reap (delete) underperforming strategy"""
     try:
         # Create backup before deletion
@@ -325,7 +323,7 @@ def reap_strategy(strategy_file: str, reason: str, performance: Dict):
         return False
 
 
-def optimize_strategy_count(performances: List[Dict], max_strategies: int) -> List[str]:
+def optimize_strategy_count(performances: list[dict], max_strategies: int) -> list[str]:
     """Optimize strategy count by keeping best performers"""
     if len(performances) <= max_strategies:
         return []

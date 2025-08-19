@@ -2,13 +2,14 @@
 
 import os
 from datetime import datetime, timezone
-from typing import Dict, List, Literal
+from typing import Literal
 
 import aiohttp
 
+from backend.models.market_types import OHLCV, OrderBook, OrderResult, Ticker, Trade  # type: ignore[import-not-found]
+from backend.utils.symbols import normalize_symbol_to_dash, to_exchange_symbol  # type: ignore[import-not-found]
+
 from .base_adapter import AbstractExchangeAdapter
-from backend.models.market_types import Ticker, OrderBook, Trade, OHLCV, OrderResult  # type: ignore[import-not-found]
-from backend.utils.symbols import to_exchange_symbol, normalize_symbol_to_dash  # type: ignore[import-not-found]
 
 
 class CoinbaseAdapter(AbstractExchangeAdapter):
@@ -42,13 +43,13 @@ class CoinbaseAdapter(AbstractExchangeAdapter):
         ts = int(datetime.now(timezone.utc).timestamp() * 1000)
         return OrderBook(exchange=self.name, symbol=normalize_symbol_to_dash(symbol), bids=bids, asks=asks, ts=ts)
 
-    async def get_trades(self, symbol: str, limit: int = 100) -> List[Trade]:
+    async def get_trades(self, symbol: str, limit: int = 100) -> list[Trade]:
         prod = to_exchange_symbol(self.name, normalize_symbol_to_dash(symbol))
         url = f"{self.api_base}/products/{prod}/trades?limit={min(limit, 100)}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as resp:
                 data = await resp.json()
-        trades: List[Trade] = []
+        trades: list[Trade] = []
         for t in data:
             side = "buy" if t.get("side") == "buy" else "sell"
             ts = int(datetime.fromisoformat(t.get("time").replace("Z", "+00:00")).timestamp() * 1000)
@@ -65,7 +66,7 @@ class CoinbaseAdapter(AbstractExchangeAdapter):
         return trades[:limit]
 
     def _granularity(self, interval: str) -> int:
-        mapping: Dict[str, int] = {
+        mapping: dict[str, int] = {
             "1m": 60,
             "5m": 300,
             "15m": 900,
@@ -75,7 +76,7 @@ class CoinbaseAdapter(AbstractExchangeAdapter):
         }
         return mapping.get(interval, 300)
 
-    async def get_ohlcv(self, symbol: str, interval: str, limit: int = 500) -> List[OHLCV]:
+    async def get_ohlcv(self, symbol: str, interval: str, limit: int = 500) -> list[OHLCV]:
         prod = to_exchange_symbol(self.name, normalize_symbol_to_dash(symbol))
         gran = self._granularity(interval)
         url = f"{self.api_base}/products/{prod}/candles?granularity={gran}"
@@ -100,7 +101,7 @@ class CoinbaseAdapter(AbstractExchangeAdapter):
         candles.sort(key=lambda x: x.ts)  # type: ignore[call-arg]
         return candles
 
-    async def get_balance(self) -> Dict[str, float]:
+    async def get_balance(self) -> dict[str, float]:
         if not self.api_key or not self.api_secret:
             raise RuntimeError("Missing env: COINBASE_API_KEY or COINBASE_API_SECRET")
         # Public-only fallback: return empty balances if keys not configured to avoid secret leakage

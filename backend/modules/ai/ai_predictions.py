@@ -8,7 +8,7 @@ Handles AI-powered market predictions and forecasting.
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -29,14 +29,14 @@ class AIPredictor:
     """AI Predictor for market forecasting and predictions"""
 
     def __init__(self):
-        self.model: Optional[RandomForestRegressor] = None
+        self.model: RandomForestRegressor | None = None
         self.feature_scaler = StandardScaler()
-        self.feature_cache: Dict[str, Any] = {}
-        self.prediction_cache: Dict[str, Any] = {}
+        self.feature_cache: dict[str, Any] = {}
+        self.prediction_cache: dict[str, Any] = {}
         self.model_path: str = "models/predictor_model.pkl"
         self.is_loaded: bool = False
 
-    def preprocess_features(self, market_data: Dict[str, Any]) -> np.ndarray:
+    def preprocess_features(self, market_data: dict[str, Any]) -> np.ndarray:
         """Preprocess market data into features for prediction"""
         if not market_data:
             raise AIException("Empty market data provided")
@@ -55,7 +55,7 @@ class AIPredictor:
 
         return np.array(features) if features else np.array([])
 
-    def make_prediction(self, market_data: Dict[str, Any]) -> Dict[str, Any]:
+    def make_prediction(self, market_data: dict[str, Any]) -> dict[str, Any]:
         """Make prediction based on market data"""
         if not self.model:
             raise AIException("No trained model available")
@@ -94,7 +94,7 @@ class AIPredictor:
                 pred_str = "sell"
 
             # Format results
-            result: Dict[str, Any] = {
+            result: dict[str, Any] = {
                 "prediction": pred_str,
                 "confidence": self._calculate_confidence(features),
                 "probabilities": probabilities,
@@ -111,7 +111,7 @@ class AIPredictor:
             logger.error(f"Prediction failed: {e}")
             raise AIException(f"Prediction failed: {e}")
 
-    def get_cached_prediction(self, market_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def get_cached_prediction(self, market_data: dict[str, Any]) -> dict[str, Any] | None:
         """Get cached prediction if available"""
         if isinstance(market_data, str):
             # If market_data is already a cache key
@@ -121,7 +121,7 @@ class AIPredictor:
             cache_key = self._generate_cache_key(market_data)
             return self.prediction_cache.get(cache_key)
 
-    def cache_prediction(self, market_data: Dict[str, Any], prediction: Dict[str, Any]) -> None:
+    def cache_prediction(self, market_data: dict[str, Any], prediction: dict[str, Any]) -> None:
         """Cache a prediction result"""
         if isinstance(market_data, str):
             # If market_data is already a cache key
@@ -230,7 +230,7 @@ class AIPredictor:
                 if len(row) >= 3 and (float(row[2]) < 0 or float(row[2]) > 100):
                     raise ValueError(f"RSI must be in [0, 100] in row {i}")
 
-    def _extract_technical_indicators(self, data: Dict[str, Any]) -> List[float]:
+    def _extract_technical_indicators(self, data: dict[str, Any]) -> list[float]:
         """Extract technical indicators from market data"""
         indicators = []
 
@@ -285,7 +285,7 @@ class AIPredictor:
 
         return min(1.0, confidence)
 
-    def _generate_cache_key(self, market_data: Dict[str, Any]) -> str:
+    def _generate_cache_key(self, market_data: dict[str, Any]) -> str:
         """Generate cache key for market data"""
         # Generate key based on symbol and date for test compatibility
         symbols = list(market_data.keys())
@@ -296,7 +296,7 @@ class AIPredictor:
         data_str = json.dumps(market_data, sort_keys=True)
         return str(hash(data_str))
 
-    def extract_technical_indicators(self, price_data: List[float]) -> Dict[str, float]:
+    def extract_technical_indicators(self, price_data: list[float]) -> dict[str, float]:
         """Extract technical indicators from price data"""
         if not price_data or len(price_data) < 2:
             return {
@@ -327,7 +327,7 @@ class AIPredictor:
             }
         }
 
-    def calculate_rsi(self, prices: List[float], period: int = 14) -> float:
+    def calculate_rsi(self, prices: list[float], period: int = 14) -> float:
         """Calculate RSI (Relative Strength Index)"""
         if len(prices) < period + 1:
             return 50.0  # Default neutral RSI
@@ -347,7 +347,7 @@ class AIPredictor:
 
         return float(rsi)
 
-    def calculate_macd(self, prices: List[float], fast: int = 12, slow: int = 26) -> float:
+    def calculate_macd(self, prices: list[float], fast: int = 12, slow: int = 26) -> float:
         """Calculate MACD (Moving Average Convergence Divergence)"""
         if len(prices) < slow:
             return 0.0
@@ -361,8 +361,8 @@ class AIPredictor:
         return float(macd_line[-1]) if len(macd_line) > 0 else 0.0
 
     def calculate_bollinger_bands(
-        self, prices: List[float], period: int = 20, std_dev: float = 2.0
-    ) -> Dict[str, float]:
+        self, prices: list[float], period: int = 20, std_dev: float = 2.0
+    ) -> dict[str, float]:
         """Calculate Bollinger Bands"""
         if len(prices) < period:
             current_price = prices[-1] if prices else 0

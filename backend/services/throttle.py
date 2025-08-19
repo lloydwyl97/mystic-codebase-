@@ -1,11 +1,10 @@
 ﻿import time
-from typing import Dict
 
-last_call: Dict[str, float] = {}
-limits: Dict[str, float] = {}
+last_call: dict[str, float] = {}
+limits: dict[str, float] = {}
 
 
-def setup_limits(provider_limits: Dict[str, int]) -> None:
+def setup_limits(provider_limits: dict[str, int]) -> None:
     global limits
     limits = {k: 60 / v for k, v in provider_limits.items()}  # seconds between requests
 

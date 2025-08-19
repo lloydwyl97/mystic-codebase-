@@ -1,16 +1,18 @@
-﻿import os, time, pandas as pd, streamlit as st
-from datetime import datetime
-from typing import Any, Dict, List
+﻿import os
+from typing import Any
+
+import pandas as pd
+import streamlit as st
 
 # Base env is read by api_client; we keep here for display convenience.
 BASE = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:8000")
 
-def metric_row(items: List[tuple[str, Any, str | None]]):
+def metric_row(items: list[tuple[str, Any, str | None]]):
     cols = st.columns(len(items))
-    for col, (label, val, help_text) in zip(cols, items):
+    for col, (label, val, help_text) in zip(cols, items, strict=False):
         col.metric(label, val, help=help_text)
 
-def to_df(candles: Dict[str, List[Any]]) -> pd.DataFrame:
+def to_df(candles: dict[str, list[Any]]) -> pd.DataFrame:
     if not candles or not candles.get("timestamps"):
         return pd.DataFrame()
     df = pd.DataFrame({

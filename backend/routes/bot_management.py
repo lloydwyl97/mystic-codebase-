@@ -4,7 +4,7 @@ Focused on bot control and status management
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api/bots", tags=["bot-management"])
 
 
 @router.get("/status")
-async def get_bot_status() -> List[Dict[str, Any]]:
+async def get_bot_status() -> list[dict[str, Any]]:
     """Get status of all trading bots"""
     try:
         bots = [
@@ -52,7 +52,7 @@ async def get_bot_status() -> List[Dict[str, Any]]:
 
 
 @router.post("/toggle")
-async def toggle_bot(data: Dict[str, Any]) -> Dict[str, Any]:
+async def toggle_bot(data: dict[str, Any]) -> dict[str, Any]:
     """Toggle bot on/off"""
     try:
         bot_id = data.get("botId")
@@ -68,7 +68,7 @@ async def toggle_bot(data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @router.put("/config")
-async def update_bot_config(data: Dict[str, Any]) -> Dict[str, Any]:
+async def update_bot_config(data: dict[str, Any]) -> dict[str, Any]:
     """Update bot configuration"""
     try:
         bot_id = data.get("botId")

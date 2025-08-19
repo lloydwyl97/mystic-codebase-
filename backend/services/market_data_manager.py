@@ -8,7 +8,7 @@ API health management, and data processing.
 import logging
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -17,13 +17,13 @@ class MarketDataManager:
     """Manages market data business logic and operations."""
 
     def __init__(self):
-        self.api_health: Dict[str, Dict[str, Any]] = {
+        self.api_health: dict[str, dict[str, Any]] = {
             "binance": {"healthy": True, "last_check": time.time()},
             "coinbase": {"healthy": True, "last_check": time.time()},
         }
         self.current_api = "binance"
 
-    def calculate_signal_strength(self, data: Dict[str, Any]) -> str:
+    def calculate_signal_strength(self, data: dict[str, Any]) -> str:
         """Calculate signal strength from market data."""
         change_24h = data.get("change_24h", 0)
 
@@ -40,9 +40,9 @@ class MarketDataManager:
         else:
             return "STRONG_SELL"
 
-    def calculate_confidence(self, data: Dict[str, Any]) -> float:
+    def calculate_confidence(self, data: dict[str, Any]) -> float:
         """Calculate confidence level from market data."""
-        confidence_factors: List[float] = []
+        confidence_factors: list[float] = []
 
         # Price momentum
         change_24h = abs(data.get("change_24h", 0))
@@ -71,9 +71,9 @@ class MarketDataManager:
 
         return 0.6
 
-    def determine_trade_action(self, data: Dict[str, Any]) -> Tuple[str, str]:
+    def determine_trade_action(self, data: dict[str, Any]) -> tuple[str, str]:
         """Determine trade action from market data."""
-        reasons: List[str] = []
+        reasons: list[str] = []
         buy_signals = 0
         sell_signals = 0
 
@@ -100,7 +100,7 @@ class MarketDataManager:
         else:
             return "HOLD", "Insufficient signal strength"
 
-    def update_api_health(self, api_name: str, success: bool, error: Optional[str] = None):
+    def update_api_health(self, api_name: str, success: bool, error: str | None = None):
         """Update API health status."""
         self.api_health[api_name] = {
             "healthy": success,
@@ -127,10 +127,10 @@ class MarketDataManager:
         return self.current_api
 
     def process_market_data(
-        self, cached_data: Dict[str, Dict[str, Any]]
-    ) -> Dict[str, Dict[str, Any]]:
+        self, cached_data: dict[str, dict[str, Any]]
+    ) -> dict[str, dict[str, Any]]:
         """Process market data into signals format."""
-        signals: Dict[str, Dict[str, Any]] = {}
+        signals: dict[str, dict[str, Any]] = {}
 
         for coin, data in cached_data.items():
             signals[coin] = {
@@ -147,10 +147,10 @@ class MarketDataManager:
         return signals
 
     def format_markets_data(
-        self, cached_data: Dict[str, Dict[str, Any]]
-    ) -> Dict[str, Dict[str, Any]]:
+        self, cached_data: dict[str, dict[str, Any]]
+    ) -> dict[str, dict[str, Any]]:
         """Format cached data into markets overview format."""
-        markets_data: Dict[str, Dict[str, Any]] = {}
+        markets_data: dict[str, dict[str, Any]] = {}
         for symbol, data in cached_data.items():
             markets_data[symbol] = {
                 "symbol": symbol,

@@ -1,14 +1,15 @@
 ﻿# mutator.py
+import logging
 import random
 import uuid
-import logging
-from typing import List, Dict, Any, Optional
-from db_logger import register_strategy, get_session
-from reward_engine import get_top_performers
-from models import Strategy
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
 from datetime import datetime, timezone
+from typing import Any
+
+from db_logger import get_session, register_strategy
+from models import Strategy
+from reward_engine import get_top_performers
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ engine = create_engine(DB_URL, echo=False)
 SessionLocal = sessionmaker(bind=engine)
 
 
-def mutate_top_strategies(top_n: int = 3, mutation_count: int = 2) -> List[Dict[str, Any]]:
+def mutate_top_strategies(top_n: int = 3, mutation_count: int = 2) -> list[dict[str, Any]]:
     """
     Create mutations of top performing strategies
 
@@ -56,7 +57,7 @@ def mutate_top_strategies(top_n: int = 3, mutation_count: int = 2) -> List[Dict[
     return mutations_created
 
 
-def generate_mutation_description(parent_name: str, parent_stats: Dict[str, Any]) -> str:
+def generate_mutation_description(parent_name: str, parent_stats: dict[str, Any]) -> str:
     """
     Generate a description for a mutated strategy
 
@@ -98,7 +99,7 @@ def generate_mutation_description(parent_name: str, parent_stats: Dict[str, Any]
     return base_mutation + performance_note
 
 
-def crossover_strategies(strategy1_id: int, strategy2_id: int) -> Optional[int]:
+def crossover_strategies(strategy1_id: int, strategy2_id: int) -> int | None:
     """
     Create a new strategy by combining two existing strategies
 
@@ -141,7 +142,7 @@ def crossover_strategies(strategy1_id: int, strategy2_id: int) -> Optional[int]:
         session.close()
 
 
-def create_random_strategy() -> Optional[int]:
+def create_random_strategy() -> int | None:
     """
     Create a completely random strategy for exploration
 
@@ -184,7 +185,7 @@ def evolve_strategy_population(
     mutation_rate: float = 0.3,
     crossover_rate: float = 0.2,
     random_rate: float = 0.1,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Evolve the entire strategy population
 
@@ -255,7 +256,7 @@ def evolve_strategy_population(
 
 def cleanup_poor_strategies(
     max_strategies: int = 50, min_win_rate: float = 0.3
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Clean up poor performing strategies to keep population manageable
 
@@ -283,11 +284,7 @@ def cleanup_poor_strategies(
             should_deactivate = False
 
             # Deactivate if too many strategies
-            if i >= max_strategies:
-                should_deactivate = True
-
-            # Deactivate if poor performance and enough trades
-            elif (
+            if i >= max_strategies or (
                 strat.trades_executed >= 10
                 and strat.win_rate < min_win_rate
                 and strat.avg_profit < 0
@@ -322,7 +319,7 @@ def cleanup_poor_strategies(
         session.close()
 
 
-def run_evolution_cycle() -> Dict[str, Any]:
+def run_evolution_cycle() -> dict[str, Any]:
     """
     Run a complete evolution cycle (can be called by scheduler)
 
@@ -361,9 +358,9 @@ def run_evolution_cycle() -> Dict[str, Any]:
 
 
 if __name__ == "__main__":
-    import time
     import signal
     import sys
+    import time
 
     # Configure logging
     logging.basicConfig(

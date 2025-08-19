@@ -11,7 +11,6 @@ import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
 
 
 @dataclass
@@ -31,13 +30,13 @@ class SimpleQualityChecker:
 
     def __init__(self):
         self.project_root = Path(__file__).parent.parent
-        self.results: List[QualityResult] = []
+        self.results: list[QualityResult] = []
         self.start_time = time.time()
 
         print("ðŸ” Mystic Trading Platform - Simple Quality Check")
         print("=" * 50)
 
-    def run_command(self, cmd: List[str]) -> subprocess.CompletedProcess:
+    def run_command(self, cmd: list[str]) -> subprocess.CompletedProcess:
         """Run a command with proper encoding handling"""
         try:
             return subprocess.run(
@@ -164,7 +163,7 @@ class SimpleQualityChecker:
 
         # Parse bandit results
         try:
-            with open("bandit-report.json", "r", encoding="utf-8") as f:
+            with open("bandit-report.json", encoding="utf-8") as f:
                 bandit_data = json.load(f)
                 error_count = len(
                     [
@@ -233,7 +232,7 @@ class SimpleQualityChecker:
             duration=duration,
         )
 
-    def run_all_checks(self) -> List[QualityResult]:
+    def run_all_checks(self) -> list[QualityResult]:
         """Run all quality checks"""
         checks = [
             self.check_black,

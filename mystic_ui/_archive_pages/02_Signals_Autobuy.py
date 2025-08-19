@@ -1,29 +1,33 @@
 ﻿from __future__ import annotations
 
-from typing import Any, Dict, List, MutableMapping, Optional, cast
+from collections.abc import MutableMapping
+from typing import Any, cast
 
 import pandas as pd
 import streamlit as st
 
+from mystic_ui._archive_pages.components.common_utils import (  # public wrapper
+    get_app_state,
+    inject_global_theme,  # public wrapper
+    render_sidebar_controls,
+    safe_number_format,  # public wrapper
+)
 from mystic_ui.api_client import request_json as _req
-from mystic_ui._archive_pages.components.common_utils import get_app_state, render_sidebar_controls  # public wrapper
-from mystic_ui._archive_pages.components.common_utils import safe_number_format  # public wrapper
-from mystic_ui._archive_pages.components.common_utils import inject_global_theme  # public wrapper
 
 # Silence type checker for Streamlit's dynamic attributes
 _st = cast(Any, st)
 
 
-def _extract_signals(payload: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _extract_signals(payload: dict[str, Any] | None) -> list[dict[str, Any]]:
     if not isinstance(payload, dict):
         return []
     data: Any = payload.get("signals", payload)
     if isinstance(data, list):
-        return cast(List[Dict[str, Any]], data)
+        return cast(list[dict[str, Any]], data)
     return []
 
 
-def _extract_status_ok(payload: Optional[Dict[str, Any]]) -> bool:
+def _extract_status_ok(payload: dict[str, Any] | None) -> bool:
     try:
         if not isinstance(payload, dict):
             return False
@@ -59,8 +63,8 @@ def main() -> None:
         except Exception:
             autobuy_payload_any = None
 
-    signals_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], signals_payload_any if isinstance(signals_payload_any, dict) else None)
-    autobuy_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], autobuy_payload_any if isinstance(autobuy_payload_any, dict) else None)
+    signals_payload: dict[str, Any] | None = cast(dict[str, Any] | None, signals_payload_any if isinstance(signals_payload_any, dict) else None)
+    autobuy_payload: dict[str, Any] | None = cast(dict[str, Any] | None, autobuy_payload_any if isinstance(autobuy_payload_any, dict) else None)
 
     if not signals_payload:
         _st.info("Signals unavailable")
@@ -68,7 +72,7 @@ def main() -> None:
     if not autobuy_payload:
         _st.info("Autobuy status unavailable")
 
-    signals: List[Dict[str, Any]] = _extract_signals(signals_payload)
+    signals: list[dict[str, Any]] = _extract_signals(signals_payload)
     unique_symbols = len({str(x.get("symbol", "")).upper() for x in signals}) if signals else 0
     total_signals = len(signals)
     limit_val = 0
@@ -97,7 +101,7 @@ def main() -> None:
         # Optional: filter by selected symbol before DataFrame creation to avoid pandas typing issues
         selected_symbol = str(s.get("symbol", "")).upper()
         if selected_symbol:
-            filtered_signals: List[Dict[str, Any]] = [
+            filtered_signals: list[dict[str, Any]] = [
                 row for row in signals
                 if str(row.get("symbol", "")).upper() == selected_symbol
             ]

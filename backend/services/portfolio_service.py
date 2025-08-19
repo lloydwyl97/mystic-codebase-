@@ -4,10 +4,10 @@ Provides comprehensive portfolio tracking and analysis using cached trade data.
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict, List
-import sys
 import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -29,7 +29,7 @@ class PortfolioService:
 
         logger.info("âœ… PortfolioService initialized")
 
-    def _get_trade_history(self, limit: int = 1000) -> List[Dict[str, Any]]:
+    def _get_trade_history(self, limit: int = 1000) -> list[dict[str, Any]]:
         """Get trade history from cache"""
         try:
             # Get recent trade signals from cache
@@ -56,7 +56,7 @@ class PortfolioService:
             logger.error(f"Failed to get trade history: {e}")
             return []
 
-    def _get_latest_prices(self) -> Dict[str, float]:
+    def _get_latest_prices(self) -> dict[str, float]:
         """Get latest prices for all symbols from cache"""
         try:
             # Get recent price signals from cache
@@ -67,10 +67,9 @@ class PortfolioService:
                 symbol = signal.get("symbol", "")
                 price = signal.get("metadata", {}).get("price", 0.0)
 
-                if symbol and price > 0:
+                if symbol and price > 0 and symbol not in latest_prices:
                     # Keep the most recent price for each symbol
-                    if symbol not in latest_prices:
-                        latest_prices[symbol] = price
+                    latest_prices[symbol] = price
 
             return latest_prices
 
@@ -78,7 +77,7 @@ class PortfolioService:
             logger.error(f"Failed to get latest prices: {e}")
             return {}
 
-    def _calculate_holdings(self, trades: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    def _calculate_holdings(self, trades: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
         """Calculate holdings per symbol from trade history"""
         try:
             holdings = {}
@@ -126,7 +125,7 @@ class PortfolioService:
             logger.error(f"Failed to calculate holdings: {e}")
             return {}
 
-    def _calculate_unrealized_pnl(self, holdings: Dict[str, Dict[str, Any]], latest_prices: Dict[str, float]) -> Dict[str, Any]:
+    def _calculate_unrealized_pnl(self, holdings: dict[str, dict[str, Any]], latest_prices: dict[str, float]) -> dict[str, Any]:
         """Calculate unrealized PnL for all holdings"""
         try:
             total_pnl = 0.0
@@ -172,7 +171,7 @@ class PortfolioService:
                 "pnl_by_symbol": {}
             }
 
-    def get_portfolio_overview(self) -> Dict[str, Any]:
+    def get_portfolio_overview(self) -> dict[str, Any]:
         """Get comprehensive portfolio overview with live data from cache"""
         try:
             logger.info("ðŸ“Š Getting portfolio overview...")
@@ -197,7 +196,11 @@ class PortfolioService:
                 "performance": {
                     "total_pnl": pnl_data["total_pnl"],
                     "total_value": pnl_data["total_value"],
-                    "pnl_percentage": (pnl_data["total_pnl"] / pnl_data["total_value"] * 100) if pnl_data["total_value"] > 0 else 0.0
+                    "pnl_percentage": (
+                        pnl_data["total_pnl"] / pnl_data["total_value"] * 100
+                    )
+                    if pnl_data["total_value"] > 0
+                    else 0.0
                 },
                 "last_updated": datetime.now(timezone.utc).isoformat(),
                 "source": "cached_trade_data"
@@ -244,11 +247,11 @@ class PortfolioService:
                 "error": str(e)
             }
 
-    async def get_overview(self) -> Dict[str, Any]:
+    async def get_overview(self) -> dict[str, Any]:
         """Alias for get_portfolio_overview() to match API expectations"""
         return self.get_portfolio_overview()
 
-    async def get_positions(self) -> List[Dict[str, Any]]:
+    async def get_positions(self) -> list[dict[str, Any]]:
         """Get portfolio positions for API endpoint"""
         try:
             overview = self.get_portfolio_overview()
@@ -277,7 +280,7 @@ class PortfolioService:
             logger.error(f"Failed to get positions: {e}")
             return []
 
-    async def get_portfolio_summary(self) -> Dict[str, Any]:
+    async def get_portfolio_summary(self) -> dict[str, Any]:
         """Get portfolio summary for API endpoints"""
         try:
             overview = self.get_portfolio_overview()
@@ -302,7 +305,30 @@ class PortfolioService:
                 "source": "error"
             }
 
-    def get_usdt_balance(self) -> Dict[str, float]:
+    async def get_transactions(self, limit: int = 50) -> list[dict[str, Any]]:
+        """Return recent trades as transactions for API endpoints."""
+        try:
+            history = self._get_trade_history(limit=limit)
+            transactions: list[dict[str, Any]] = []
+            for t in history:
+                transactions.append(
+                    {
+                        "timestamp": t.get("timestamp"),
+                        "symbol": t.get("symbol"),
+                        "side": t.get("trade_type") or t.get("side") or t.get("type"),
+                        "quantity": t.get("quantity") or t.get("qty") or 0.0,
+                        "price": t.get("price", 0.0),
+                        "amount_usd": t.get("amount_usd", 0.0),
+                        "exchange": t.get("exchange", ""),
+                        "trade_id": t.get("trade_id") or t.get("id"),
+                    }
+                )
+            return transactions[: max(0, int(limit))]
+        except Exception as e:
+            logger.error(f"Failed to get transactions: {e}")
+            return []
+
+    def get_usdt_balance(self) -> dict[str, float]:
         """Get USDT balance from portfolio"""
         try:
             # Get portfolio overview
@@ -342,7 +368,7 @@ class PortfolioService:
             logger.error(f"Failed to get total value: {e}")
             return 0.0
 
-    def store_portfolio_snapshot(self) -> Dict[str, Any]:
+    def store_portfolio_snapshot(self) -> dict[str, Any]:
         """Store portfolio snapshot in cache for dashboard use"""
         try:
             logger.info("ðŸ’¾ Storing portfolio snapshot...")
@@ -389,7 +415,7 @@ class PortfolioService:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_portfolio_status(self) -> Dict[str, Any]:
+    def get_portfolio_status(self) -> dict[str, Any]:
         """Get current portfolio service status"""
         try:
             return {

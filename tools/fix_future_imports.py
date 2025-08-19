@@ -1,4 +1,7 @@
-﻿import os, re, sys, ast
+﻿import ast
+import os
+import re
+import sys
 
 FUTURE_LINE = "from __future__ import annotations\n"
 
@@ -43,7 +46,7 @@ def normalize_text(text: str) -> str:
 
 def fix_file(path: str) -> bool:
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             orig = f.read()
     except Exception:
         return False

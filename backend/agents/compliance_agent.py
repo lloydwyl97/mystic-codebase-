@@ -5,11 +5,11 @@ Handles regulatory compliance, trading limits, and audit logging
 
 import asyncio
 import json
-import uuid
-from datetime import datetime
-from typing import Dict, Any, List
 import os
 import sys
+import uuid
+from datetime import datetime
+from typing import Any
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -130,7 +130,8 @@ class ComplianceAgent(BaseAgent):
             os.makedirs(audit_dir, exist_ok=True)
 
             # Load existing audit logs
-            audit_data = self.redis_client.lrange("audit_log", 0, -1)
+            from utils.redis_helpers import to_str_list
+            audit_data = to_str_list(self.redis_client.lrange("audit_log", 0, -1))
             self.state["audit_log"] = [json.loads(item) for item in audit_data]
 
             print("ðŸ“ Audit system initialized")
@@ -169,7 +170,7 @@ class ComplianceAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_trading_event(self, event_data: Dict[str, Any]):
+    async def process_trading_event(self, event_data: dict[str, Any]):
         """Process trading event for compliance"""
         try:
             event_type = event_data.get("type")
@@ -184,7 +185,7 @@ class ComplianceAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing trading event: {e}")
 
-    async def handle_validate_trade(self, message: Dict[str, Any]):
+    async def handle_validate_trade(self, message: dict[str, Any]):
         """Handle trade validation request"""
         try:
             trade_data = message.get("trade_data", {})
@@ -211,7 +212,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error validating trade: {e}")
             await self.broadcast_error(f"Trade validation error: {e}")
 
-    async def handle_check_compliance(self, message: Dict[str, Any]):
+    async def handle_check_compliance(self, message: dict[str, Any]):
         """Handle compliance check request"""
         try:
             check_type = message.get("check_type", "general")
@@ -236,7 +237,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error checking compliance: {e}")
             await self.broadcast_error(f"Compliance check error: {e}")
 
-    async def handle_audit_request(self, message: Dict[str, Any]):
+    async def handle_audit_request(self, message: dict[str, Any]):
         """Handle audit request"""
         try:
             audit_type = message.get("audit_type", "general")
@@ -264,7 +265,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error performing audit: {e}")
             await self.broadcast_error(f"Audit error: {e}")
 
-    async def handle_update_limits(self, message: Dict[str, Any]):
+    async def handle_update_limits(self, message: dict[str, Any]):
         """Handle trading limits update"""
         try:
             new_limits = message.get("limits", {})
@@ -296,7 +297,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error updating limits: {e}")
             await self.broadcast_error(f"Limits update error: {e}")
 
-    async def handle_trading_signal(self, message: Dict[str, Any]):
+    async def handle_trading_signal(self, message: dict[str, Any]):
         """Handle trading signal for compliance validation"""
         try:
             signal = message.get("signal", {})
@@ -335,7 +336,7 @@ class ComplianceAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling trading signal: {e}")
 
-    async def validate_trade_compliance(self, trade_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def validate_trade_compliance(self, trade_data: dict[str, Any]) -> dict[str, Any]:
         """Validate trade for compliance"""
         try:
             violations = []
@@ -390,8 +391,8 @@ class ComplianceAgent(BaseAgent):
             }
 
     async def validate_signal_compliance(
-        self, signal: Dict[str, Any], market_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, signal: dict[str, Any], market_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Validate trading signal for compliance"""
         try:
             symbol = market_data.get("symbol")
@@ -443,7 +444,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error checking daily trade limit: {e}")
             return True
 
-    async def check_daily_volume_limit(self, trade_data: Dict[str, Any]) -> bool:
+    async def check_daily_volume_limit(self, trade_data: dict[str, Any]) -> bool:
         try:
             max_volume = self.state["compliance_rules"].get("max_daily_volume", 100000)
             current_volume = self.state["trading_limits"].get("daily_volume", 0)
@@ -455,7 +456,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error checking daily volume limit: {e}")
             return True
 
-    async def check_position_size_limit(self, trade_data: Dict[str, Any]) -> bool:
+    async def check_position_size_limit(self, trade_data: dict[str, Any]) -> bool:
         try:
             max_position_size = self.state["compliance_rules"].get("max_position_size", 0.1)
             trade_quantity = trade_data.get("quantity", 0)
@@ -468,7 +469,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error checking position size limit: {e}")
             return True
 
-    async def check_prohibited_symbols(self, trade_data: Dict[str, Any]) -> bool:
+    async def check_prohibited_symbols(self, trade_data: dict[str, Any]) -> bool:
         try:
             prohibited_symbols = self.state["compliance_rules"].get("prohibited_symbols", [])
             symbol = trade_data.get("symbol", "")
@@ -496,7 +497,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error checking rest period: {e}")
             return True
 
-    async def check_daily_loss_limit(self, trade_data: Dict[str, Any]) -> bool:
+    async def check_daily_loss_limit(self, trade_data: dict[str, Any]) -> bool:
         try:
             max_daily_loss = self.state["compliance_rules"].get("max_loss_per_day", 0.05)
             current_daily_loss = self.state["trading_limits"].get("daily_loss", 0)
@@ -509,7 +510,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error checking daily loss limit: {e}")
             return True
 
-    async def audit_trade(self, trade_data: Dict[str, Any]):
+    async def audit_trade(self, trade_data: dict[str, Any]):
         """Audit a trade"""
         try:
             audit_entry = {
@@ -536,7 +537,7 @@ class ComplianceAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error auditing trade: {e}")
 
-    async def audit_order(self, order_data: Dict[str, Any]):
+    async def audit_order(self, order_data: dict[str, Any]):
         """Audit an order"""
         try:
             audit_entry = {
@@ -558,7 +559,7 @@ class ComplianceAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error auditing order: {e}")
 
-    async def audit_position(self, position_data: Dict[str, Any]):
+    async def audit_position(self, position_data: dict[str, Any]):
         """Audit a position"""
         try:
             audit_entry = {
@@ -580,7 +581,7 @@ class ComplianceAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error auditing position: {e}")
 
-    async def update_trading_limits(self, trade_data: Dict[str, Any]):
+    async def update_trading_limits(self, trade_data: dict[str, Any]):
         """Update trading limits after a trade"""
         try:
             # Update daily trade count
@@ -603,7 +604,7 @@ class ComplianceAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating trading limits: {e}")
 
-    async def perform_compliance_check(self, check_type: str) -> Dict[str, Any]:
+    async def perform_compliance_check(self, check_type: str) -> dict[str, Any]:
         """Perform a compliance check"""
         try:
             check_result = {
@@ -637,7 +638,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error performing compliance check: {e}")
             return {"status": "error", "error": str(e)}
 
-    async def check_all_compliance_rules(self) -> List[str]:
+    async def check_all_compliance_rules(self) -> list[str]:
         """Check all compliance rules"""
         try:
             violations = []
@@ -660,7 +661,7 @@ class ComplianceAgent(BaseAgent):
             print(f"âŒ Error checking compliance rules: {e}")
             return [f"Compliance check error: {e}"]
 
-    async def check_trading_limits(self) -> List[str]:
+    async def check_trading_limits(self) -> list[str]:
         """Check trading limits"""
         try:
             violations = []
@@ -684,7 +685,7 @@ class ComplianceAgent(BaseAgent):
 
     async def perform_audit(
         self, audit_type: str, start_date: str = None, end_date: str = None
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Perform an audit"""
         try:
             audit_result = {
@@ -759,7 +760,7 @@ class ComplianceAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error checking violations: {e}")
 
-    async def create_violation_report(self, violations: List[str]):
+    async def create_violation_report(self, violations: list[str]):
         """Create a violation report"""
         try:
             violation_report = {
@@ -826,10 +827,10 @@ class ComplianceAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error cleaning up audit logs: {e}")
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process incoming market data for compliance monitoring"""
         try:
-            print(f"ðŸ“Š Processing market data for compliance monitoring")
+            print("ðŸ“Š Processing market data for compliance monitoring")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -853,13 +854,13 @@ class ComplianceAgent(BaseAgent):
             # Update compliance metrics
             await self.update_compliance_metrics()
 
-            print(f"âœ… Market data processed for compliance monitoring")
+            print("âœ… Market data processed for compliance monitoring")
 
         except Exception as e:
             print(f"âŒ Error processing market data for compliance: {e}")
             await self.broadcast_error(f"Compliance market data error: {e}")
 
-    async def audit_market_anomaly(self, symbol: str, anomaly_type: str, data: Dict[str, Any]):
+    async def audit_market_anomaly(self, symbol: str, anomaly_type: str, data: dict[str, Any]):
         """Audit market anomalies for compliance"""
         try:
             audit_entry = {

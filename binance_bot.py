@@ -1,5 +1,4 @@
 import logging
-from typing import Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +10,7 @@ class BinanceBot:
         self.api_key = api_key
         self.api_secret = api_secret
 
-    def execute_trade(self, symbol: str, amount: float) -> Optional[Dict[str, str]]:
+    def execute_trade(self, symbol: str, amount: float) -> dict[str, str] | None:
         """Execute a trade on Binance"""
         try:
             # Placeholder for trade execution logic

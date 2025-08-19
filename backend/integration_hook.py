@@ -6,9 +6,10 @@ This file shows how to add trade logging to your existing trading bots
 with minimal code changes.
 """
 
-from trade_memory_integration import log_trade_entry, log_trade_exit
-from db_logger import get_strategy_stats
 import logging
+
+from db_logger import get_strategy_stats
+from trade_memory_integration import log_trade_entry, log_trade_exit
 
 logger = logging.getLogger(__name__)
 

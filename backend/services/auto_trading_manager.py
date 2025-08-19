@@ -4,21 +4,21 @@ Handles automated trading operations
 """
 
 import logging
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class AutoTradingManager:
     def __init__(self):
-        self.active_strategies: List[Dict[str, Any]] = []
-        self.trading_bots: List[Dict[str, Any]] = []
+        self.active_strategies: list[dict[str, Any]] = []
+        self.trading_bots: list[dict[str, Any]] = []
         self.is_running = False
         self.total_trades = 0
         self.total_pnl = 0.0
 
-    async def start_strategy(self, strategy_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def start_strategy(self, strategy_data: dict[str, Any]) -> dict[str, Any]:
         """Start an automated trading strategy"""
         try:
             strategy_id = f"strategy_{len(self.active_strategies) + 1}"
@@ -46,7 +46,7 @@ class AutoTradingManager:
             logger.error(f"Error starting strategy: {e}")
             return {"status": "error", "message": str(e)}
 
-    async def stop_strategy(self, strategy_id: str) -> Dict[str, Any]:
+    async def stop_strategy(self, strategy_id: str) -> dict[str, Any]:
         """Stop an automated trading strategy"""
         try:
             for strategy in self.active_strategies:
@@ -61,11 +61,11 @@ class AutoTradingManager:
             logger.error(f"Error stopping strategy: {e}")
             return {"status": "error", "message": str(e)}
 
-    async def get_active_strategies(self) -> List[Dict[str, Any]]:
+    async def get_active_strategies(self) -> list[dict[str, Any]]:
         """Get all active strategies"""
         return [s for s in self.active_strategies if s.get("status") == "active"]
 
-    async def get_strategy_performance(self, strategy_id: str) -> Optional[Dict[str, Any]]:
+    async def get_strategy_performance(self, strategy_id: str) -> dict[str, Any] | None:
         """Get performance metrics for a strategy"""
         try:
             for strategy in self.active_strategies:
@@ -82,7 +82,7 @@ class AutoTradingManager:
             logger.error(f"Error getting strategy performance: {e}")
             return None
 
-    async def update_strategy_trade(self, strategy_id: str, trade_data: Dict[str, Any]) -> bool:
+    async def update_strategy_trade(self, strategy_id: str, trade_data: dict[str, Any]) -> bool:
         """Update strategy with new trade data"""
         try:
             for strategy in self.active_strategies:

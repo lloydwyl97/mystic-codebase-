@@ -2,7 +2,7 @@
 
 import os
 import sys
-from typing import Any, Dict, Optional, List, cast
+from typing import Any, cast
 
 import streamlit as st
 
@@ -11,8 +11,8 @@ _ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if _ROOT not in sys.path:
     sys.path.append(_ROOT)
 
+from mystic_ui._archive_pages.components.common_utils import display_guard, render_sidebar_controls
 from mystic_ui.api_client import request_json as _req
-from mystic_ui._archive_pages.components.common_utils import render_sidebar_controls, display_guard
 
 _st = cast(Any, st)
 
@@ -24,7 +24,7 @@ def _safe_len(x: Any) -> int:
         return 0
 
 
-def _display_small_stat(label: str, value: Any, help_text: Optional[str] = None) -> None:
+def _display_small_stat(label: str, value: Any, help_text: str | None = None) -> None:
     _st.metric(label, value if value is not None else "N/A", help=help_text)
 
 
@@ -39,9 +39,9 @@ def main() -> None:
     with display_guard("Feature Flags"):
         with c1:
             _st.subheader("Feature Flags")
-            features_payload = cast(Optional[Dict[str, Any]], _req("GET", "/api/features"))
+            features_payload = cast(dict[str, Any] | None, _req("GET", "/api/features"))
             if isinstance(features_payload, dict) and "__meta__" in features_payload:
-                meta = cast(Dict[str, Any], features_payload.get("__meta__") or {})
+                meta = cast(dict[str, Any], features_payload.get("__meta__") or {})
                 route = meta.get("route")
                 status = meta.get("status")
                 err = meta.get("error")
@@ -51,17 +51,17 @@ def main() -> None:
                 if err:
                     msg += f" • {err}"
                 _st.info(msg.strip())
-            features_list: List[Any] = []
+            features_list: list[Any] = []
             enabled_count: int = 0
             if features_payload is not None:
                 raw_features = features_payload.get("features")
                 if isinstance(raw_features, list):
-                    features_list = cast(List[Any], raw_features)
+                    features_list = cast(list[Any], raw_features)
                 try:
                     cnt = 0
                     for item in features_list:
                         if isinstance(item, dict):
-                            d = cast(Dict[str, Any], item)
+                            d = cast(dict[str, Any], item)
                             if d.get("enabled") is True:
                                 cnt += 1
                     enabled_count = cnt
@@ -76,9 +76,9 @@ def main() -> None:
     with display_guard("AI Status"):
         with c2:
             _st.subheader("AI Status")
-            ai_payload = cast(Optional[Dict[str, Any]], _req("GET", "/api/ai/heartbeat"))
+            ai_payload = cast(dict[str, Any] | None, _req("GET", "/api/ai/heartbeat"))
             if isinstance(ai_payload, dict) and "__meta__" in ai_payload:
-                meta = cast(Dict[str, Any], ai_payload.get("__meta__") or {})
+                meta = cast(dict[str, Any], ai_payload.get("__meta__") or {})
                 route = meta.get("route")
                 status = meta.get("status")
                 err = meta.get("error")
@@ -88,8 +88,8 @@ def main() -> None:
                 if err:
                     msg += f" • {err}"
                 _st.info(msg.strip())
-            running: Optional[bool] = None
-            strategies_active: Optional[int] = None
+            running: bool | None = None
+            strategies_active: int | None = None
             if isinstance(ai_payload, dict):
                 running = ai_payload.get("running")
                 strategies_active = ai_payload.get("strategies_active")
@@ -102,9 +102,9 @@ def main() -> None:
     with display_guard("Autobuy Status"):
         with c3:
             _st.subheader("Autobuy Status")
-            ab_payload = cast(Optional[Dict[str, Any]], _req("GET", "/api/autobuy/status"))
+            ab_payload = cast(dict[str, Any] | None, _req("GET", "/api/autobuy/status"))
             if isinstance(ab_payload, dict) and "__meta__" in ab_payload:
-                meta = cast(Dict[str, Any], ab_payload.get("__meta__") or {})
+                meta = cast(dict[str, Any], ab_payload.get("__meta__") or {})
                 route = meta.get("route")
                 status = meta.get("status")
                 err = meta.get("error")
@@ -114,19 +114,19 @@ def main() -> None:
                 if err:
                     msg += f" • {err}"
                 _st.info(msg.strip())
-            status_text: Optional[str] = None
-            active_orders: Optional[int] = None
+            status_text: str | None = None
+            active_orders: int | None = None
             if ab_payload is not None:
                 # Best-effort extraction from common shapes
-                status_obj: Dict[str, Any] = {}
-                svc_obj: Dict[str, Any] = {}
+                status_obj: dict[str, Any] = {}
+                svc_obj: dict[str, Any] = {}
                 s_val = ab_payload.get("status")
                 if isinstance(s_val, dict):
-                    status_obj = cast(Dict[str, Any], s_val)
+                    status_obj = cast(dict[str, Any], s_val)
                 svc_val = ab_payload.get("service_status")
                 if isinstance(svc_val, dict):
-                    svc_obj = cast(Dict[str, Any], svc_val)
-                status_text = cast(Optional[str], status_obj.get("status"))
+                    svc_obj = cast(dict[str, Any], svc_val)
+                status_text = cast(str | None, status_obj.get("status"))
                 ao_val = svc_obj.get("active_orders")
                 active_orders = ao_val if isinstance(ao_val, int) else None
             _display_small_stat("State", status_text or "N/A")
@@ -138,12 +138,12 @@ def main() -> None:
     with display_guard("Server Health Pings"):
         with c4:
             _st.subheader("Server Health")
-            basic = cast(Optional[Dict[str, Any]], _req("GET", "/api/health"))
-            detailed = cast(Optional[Dict[str, Any]], _req("GET", "/health/comprehensive"))
+            basic = cast(dict[str, Any] | None, _req("GET", "/api/health"))
+            detailed = cast(dict[str, Any] | None, _req("GET", "/health/comprehensive"))
             # Notices if metadata only
             for name, payload in ("basic", basic), ("detailed", detailed):
                 if isinstance(payload, dict) and "__meta__" in payload:
-                    meta = cast(Dict[str, Any], payload.get("__meta__") or {})
+                    meta = cast(dict[str, Any], payload.get("__meta__") or {})
                     route = meta.get("route")
                     status = meta.get("status")
                     err = meta.get("error")

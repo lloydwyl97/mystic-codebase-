@@ -4,7 +4,7 @@ import os
 import sys
 import time
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 import ccxt
 import numpy as np
@@ -38,11 +38,11 @@ class StrategyRunner:
         self.trades = []
         self.current_balance = self.config.get("capital", 1000.0)
 
-    def load_config(self) -> Dict[str, Any]:
+    def load_config(self) -> dict[str, Any]:
         """Load strategy configuration"""
         try:
             config_path = "/app/agent/config.json"
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 return json.load(f)
         except Exception as e:
             logger.error(f"Failed to load config: {e}")
@@ -118,7 +118,7 @@ class StrategyRunner:
 
         return df
 
-    def generate_signals(self, df: pd.DataFrame) -> Dict[str, Any]:
+    def generate_signals(self, df: pd.DataFrame) -> dict[str, Any]:
         """Generate trading signals based on strategy type"""
         strategy_type = self.config.get("strategy_type", "momentum")
         signals = {}

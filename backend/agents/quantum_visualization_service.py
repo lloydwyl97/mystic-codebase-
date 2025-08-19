@@ -1,8 +1,9 @@
-﻿import streamlit as st
-import redis.asyncio as redis
-import asyncio
+﻿import asyncio
+
 import numpy as np
 import plotly.graph_objs as go
+import redis.asyncio as redis
+import streamlit as st
 
 r = redis.Redis(decode_responses=True)
 

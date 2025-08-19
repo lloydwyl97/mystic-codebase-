@@ -6,9 +6,10 @@ Monitors and tracks strategy performance
 import asyncio
 import json
 import os
-import redis
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any
+
+import redis
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -55,7 +56,7 @@ class StrategyMonitor:
                 print(f"âŒ Error in strategy monitoring: {e}")
                 await asyncio.sleep(600)
 
-    async def calculate_strategy_performance(self) -> Dict[str, Any]:
+    async def calculate_strategy_performance(self) -> dict[str, Any]:
         """Calculate strategy performance metrics"""
         try:
             performance_data = {
@@ -110,7 +111,7 @@ class StrategyMonitor:
             print(f"Error calculating strategy performance: {e}")
             return {}
 
-    async def store_performance_data(self, data: Dict[str, Any]):
+    async def store_performance_data(self, data: dict[str, Any]):
         """Store performance data in Redis"""
         try:
             self.redis_client.set(
@@ -119,7 +120,7 @@ class StrategyMonitor:
         except Exception as e:
             print(f"Error storing performance data: {e}")
 
-    async def publish_performance_updates(self, data: Dict[str, Any]):
+    async def publish_performance_updates(self, data: dict[str, Any]):
         """Publish performance updates to Redis channels"""
         try:
             self.redis_client.publish("strategy_performance", json.dumps(data))

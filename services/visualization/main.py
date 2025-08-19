@@ -1,18 +1,18 @@
 import os
 import sys
-from flask import Flask, request, jsonify, send_file
-from dotenv import load_dotenv
 
 # Load environment variables (optional)
-try:
+from contextlib import suppress
+
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request, send_file
+
+with suppress(Exception):
     load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
-except Exception:
-    # If .env file doesn't exist or is corrupted, continue without it
-    pass
 
 # Import visualization modules
 try:
-    from chart_generator import plot_trades, plot_performance_over_time
+    from chart_generator import plot_performance_over_time, plot_trades
     from mutation_graph import plot_strategy_graph
 except ImportError as e:
     print(f"Error importing visualization modules: {e}")
@@ -150,7 +150,7 @@ def generate_mutation_graph():
 
 
 @app.route("/chart/<filename>", methods=["GET"])
-def get_chart_file(filename):
+def get_chart_file(filename: str):
     """Serve generated chart files"""
     try:
         return send_file(filename, mimetype="image/png")

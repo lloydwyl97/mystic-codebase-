@@ -1,19 +1,20 @@
 ﻿import os
+from datetime import datetime
+
 from dotenv import load_dotenv
 from sqlalchemy import (
-    create_engine,
+    Boolean,
     Column,
+    DateTime,
+    Float,
+    ForeignKey,
     Integer,
     String,
-    Float,
-    DateTime,
-    Boolean,
-    ForeignKey,
+    create_engine,
     func,
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, scoped_session
-from datetime import datetime
+from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 

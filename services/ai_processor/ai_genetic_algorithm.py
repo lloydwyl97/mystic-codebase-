@@ -4,16 +4,17 @@ Advanced genetic algorithm implementation for trading strategy optimization
 """
 
 import asyncio
+import copy
 import json
 import os
-import redis
+import random
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from typing import Any
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Tuple
-import random
-import copy
-from dataclasses import dataclass, field
+import redis
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -25,16 +26,16 @@ class StrategyGene:
     """Individual strategy gene representation"""
 
     id: str
-    parameters: Dict[str, Any]
+    parameters: dict[str, Any]
     fitness: float = 0.0
     generation: int = 0
-    parent_ids: List[str] = field(default_factory=list)
+    parent_ids: list[str] = field(default_factory=list)
     mutation_count: int = 0
     crossover_count: int = 0
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
-    performance_history: List[Dict[str, Any]] = field(default_factory=list)
+    performance_history: list[dict[str, Any]] = field(default_factory=list)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "id": self.id,
@@ -49,7 +50,7 @@ class StrategyGene:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "StrategyGene":
+    def from_dict(cls, data: dict[str, Any]) -> "StrategyGene":
         """Create from dictionary"""
         return cls(**data)
 
@@ -64,7 +65,7 @@ class GeneticAlgorithmEngine:
             decode_responses=True,
         )
         self.running = False
-        self.population: List[StrategyGene] = []
+        self.population: list[StrategyGene] = []
         self.generation = 0
         self.best_fitness = 0.0
         self.evolution_history = []
@@ -220,7 +221,7 @@ class GeneticAlgorithmEngine:
             print(f"Error evaluating gene {gene.id}: {e}")
             return 0.0
 
-    async def simulate_backtest(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
+    async def simulate_backtest(self, parameters: dict[str, Any]) -> dict[str, Any]:
         """Simulate backtest with given parameters"""
         try:
             # Generate historical data
@@ -283,8 +284,8 @@ class GeneticAlgorithmEngine:
         return data
 
     def apply_strategy(
-        self, data: pd.DataFrame, parameters: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, data: pd.DataFrame, parameters: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Apply trading strategy with given parameters"""
         trades = []
         position = None
@@ -376,8 +377,8 @@ class GeneticAlgorithmEngine:
         return trades
 
     def calculate_performance_metrics(
-        self, trades: List[Dict[str, Any]], data: pd.DataFrame
-    ) -> Dict[str, Any]:
+        self, trades: list[dict[str, Any]], data: pd.DataFrame
+    ) -> dict[str, Any]:
         """Calculate performance metrics from trades"""
         if not trades:
             return {
@@ -419,7 +420,7 @@ class GeneticAlgorithmEngine:
             "total_trades": len(trades),
         }
 
-    def calculate_fitness(self, performance: Dict[str, Any]) -> float:
+    def calculate_fitness(self, performance: dict[str, Any]) -> float:
         """Calculate fitness score from performance metrics"""
         try:
             # Weighted fitness calculation
@@ -608,7 +609,7 @@ class GeneticAlgorithmEngine:
 
     def calculate_bollinger_bands(
         self, prices: pd.Series, period: int = 20, std_dev: float = 2
-    ) -> Tuple[pd.Series, pd.Series, pd.Series]:
+    ) -> tuple[pd.Series, pd.Series, pd.Series]:
         """Calculate Bollinger Bands"""
         sma = prices.rolling(window=period).mean()
         std = prices.rolling(window=period).std()

@@ -7,6 +7,7 @@ Replaces the chaotic multiple router loading systems
 import logging
 
 from fastapi import APIRouter
+
 # settings may be used by downstream includes; keep import local when needed
 
 logger = logging.getLogger(__name__)

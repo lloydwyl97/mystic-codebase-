@@ -5,7 +5,6 @@ Analyzes volume patterns and pump detection
 """
 
 import logging
-from typing import List
 
 logger = logging.getLogger("ai_volume")
 
@@ -21,7 +20,7 @@ class AIVolume:
         return pump_detector()
 
 
-def pump_detector() -> List[str]:
+def pump_detector() -> list[str]:
     """Detect pump patterns in volume data"""
     try:
         return []

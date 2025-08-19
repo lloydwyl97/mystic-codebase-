@@ -1,7 +1,7 @@
 ﻿from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -9,11 +9,11 @@ router = APIRouter()
 
 
 @router.get("/ai/heartbeat")
-async def get_ai_heartbeat() -> Dict[str, Any]:
+async def get_ai_heartbeat() -> dict[str, Any]:
     try:
         try:
             from backend.services.autobuy_service import autobuy_service  # type: ignore[import-not-found]
-            hb: Dict[str, Any] = await autobuy_service.heartbeat()  # type: ignore[attr-defined]
+            hb: dict[str, Any] = await autobuy_service.heartbeat()  # type: ignore[attr-defined]
             running = str(hb.get("status", "")) == "ready"
             return {
                 "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -26,8 +26,8 @@ async def get_ai_heartbeat() -> Dict[str, Any]:
             # Back-compat: try autobuy status
             from backend.endpoints.trading.autobuy_endpoints import get_autobuy_status  # type: ignore
 
-            st: Dict[str, Any] = await get_autobuy_status()  # type: ignore[assignment]
-            svc: Dict[str, Any] = st.get("service_status", {}) if isinstance(st, dict) else {}
+            st: dict[str, Any] = await get_autobuy_status()  # type: ignore[assignment]
+            svc: dict[str, Any] = st.get("service_status", {}) if isinstance(st, dict) else {}
             running = str(svc.get("status", "")) == "active"
             return {
                 "timestamp": st.get("timestamp"),

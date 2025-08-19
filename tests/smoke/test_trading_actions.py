@@ -34,7 +34,7 @@ def test_trading_cancel_all_alias() -> None:
     client = _get_client()
     r = client.post("/trading/cancel-all")
     assert r.status_code in (200, 202)
-    data: t.Dict[str, t.Any] = r.json()
+    data: dict[str, t.Any] = r.json()
     assert isinstance(data, dict)
     assert data.get("ok") in (True, False)
 

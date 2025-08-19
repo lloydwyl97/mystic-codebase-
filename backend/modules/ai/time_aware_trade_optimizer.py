@@ -4,11 +4,12 @@ Analyzes historical price data to identify optimal trading windows and timing pa
 """
 
 import logging
-import numpy as np
-from typing import Dict, List, Any
-from datetime import datetime, timezone
-import sys
 import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
+
+import numpy as np
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -49,7 +50,7 @@ class TimeAwareTradeOptimizer:
 
         logger.info("âœ… TimeAwareTradeOptimizer initialized")
 
-    def _get_historical_data(self, symbol: str, hours: int = 168) -> List[Dict[str, Any]]:
+    def _get_historical_data(self, symbol: str, hours: int = 168) -> list[dict[str, Any]]:
         """Get historical price data from cache"""
         try:
             # Get price history from cache
@@ -85,7 +86,7 @@ class TimeAwareTradeOptimizer:
             logger.error(f"Failed to get historical data for {symbol}: {e}")
             return []
 
-    def _calculate_intraday_volatility(self, data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_intraday_volatility(self, data: list[dict[str, Any]]) -> dict[str, Any]:
         """Calculate intraday volatility patterns"""
         try:
             if len(data) < 24:
@@ -131,7 +132,7 @@ class TimeAwareTradeOptimizer:
             logger.error(f"Failed to calculate intraday volatility: {e}")
             return {"hourly_volatility": {}, "peak_hours": []}
 
-    def _identify_volume_surges(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _identify_volume_surges(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Identify volume surge patterns"""
         try:
             if len(data) < 24:
@@ -171,7 +172,7 @@ class TimeAwareTradeOptimizer:
             logger.error(f"Failed to identify volume surges: {e}")
             return []
 
-    def _analyze_historical_trades(self, data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_historical_trades(self, data: list[dict[str, Any]]) -> dict[str, Any]:
         """Analyze historical trade patterns"""
         try:
             if len(data) < self.min_trades_for_pattern:
@@ -227,9 +228,9 @@ class TimeAwareTradeOptimizer:
             logger.error(f"Failed to analyze historical trades: {e}")
             return {"entry_times": [], "exit_times": [], "successful_hours": []}
 
-    def _calculate_optimal_windows(self, volatility_analysis: Dict[str, Any],
-                                 volume_surges: List[Dict[str, Any]],
-                                 trade_analysis: Dict[str, Any]) -> Dict[str, Any]:
+    def _calculate_optimal_windows(self, volatility_analysis: dict[str, Any],
+                                 volume_surges: list[dict[str, Any]],
+                                 trade_analysis: dict[str, Any]) -> dict[str, Any]:
         """Calculate optimal trading windows"""
         try:
             optimal_windows = {
@@ -291,7 +292,7 @@ class TimeAwareTradeOptimizer:
                 'confidence': 0.0
             }
 
-    def _format_time_decision(self, symbol: str, optimal_windows: Dict[str, Any]) -> Dict[str, Any]:
+    def _format_time_decision(self, symbol: str, optimal_windows: dict[str, Any]) -> dict[str, Any]:
         """Format time decision for output"""
         try:
             # Convert hours to UTC time strings
@@ -334,7 +335,7 @@ class TimeAwareTradeOptimizer:
                 'timestamp': datetime.now(timezone.utc).isoformat()
             }
 
-    def get_optimal_trade_times(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def get_optimal_trade_times(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get optimal trade times for a symbol"""
         try:
             logger.info(f"â° Analyzing optimal trade times for {symbol}")
@@ -397,7 +398,7 @@ class TimeAwareTradeOptimizer:
                 'timestamp': datetime.now(timezone.utc).isoformat()
             }
 
-    def optimize_all_symbols(self) -> Dict[str, Any]:
+    def optimize_all_symbols(self) -> dict[str, Any]:
         """Optimize trade times for all available symbols"""
         try:
             logger.info("ðŸ”„ Starting optimization for all symbols")
@@ -440,7 +441,7 @@ class TimeAwareTradeOptimizer:
                 'timestamp': datetime.now(timezone.utc).isoformat()
             }
 
-    def get_optimization_history(self, symbol: str, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_optimization_history(self, symbol: str, limit: int = 10) -> list[dict[str, Any]]:
         """Get time optimization history for a symbol"""
         try:
             # Get recent time optimization signals from cache
@@ -458,7 +459,7 @@ class TimeAwareTradeOptimizer:
             logger.error(f"Failed to get optimization history: {e}")
             return []
 
-    def get_optimizer_status(self) -> Dict[str, Any]:
+    def get_optimizer_status(self) -> dict[str, Any]:
         """Get current optimizer status"""
         try:
             return {

@@ -9,18 +9,17 @@ Provides comprehensive logging with:
 - Log aggregation and analysis
 """
 
+import json
 import logging
 import logging.handlers
-import json
-import time
 import os
 import sys
-from datetime import datetime
-from typing import Any, Dict, List, Optional
-from collections import defaultdict, deque
 import threading
+import time
 import traceback
-
+from collections import defaultdict, deque
+from datetime import datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +78,7 @@ class PerformanceLogger:
         self.lock = threading.Lock()
 
     def log_performance(self, operation: str, duration: float,
-                       metadata: Optional[Dict[str, Any]] = None):
+                       metadata: dict[str, Any] | None = None):
         """Log performance metric"""
         metric = {
             'operation': operation,
@@ -96,7 +95,7 @@ class PerformanceLogger:
                 self.slow_operations.append(metric)
 
     def log_error(self, error_type: str, error_message: str,
-                  context: Optional[Dict[str, Any]] = None):
+                  context: dict[str, Any] | None = None):
         """Log error for monitoring"""
         with self.lock:
             self.error_counts[error_type] += 1
@@ -107,7 +106,7 @@ class PerformanceLogger:
             'context': context
         })
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get performance statistics"""
         with self.lock:
             if not self.performance_metrics:
@@ -133,16 +132,16 @@ class LogAggregator:
 
     def __init__(self):
         self.log_entries: deque = deque(maxlen=100000)
-        self.log_stats: Dict[str, int] = defaultdict(int)
+        self.log_stats: dict[str, int] = defaultdict(int)
         self.lock = threading.Lock()
 
-    def add_log_entry(self, entry: Dict[str, Any]):
+    def add_log_entry(self, entry: dict[str, Any]):
         """Add log entry to aggregator"""
         with self.lock:
             self.log_entries.append(entry)
             self.log_stats[entry.get('level', 'UNKNOWN')] += 1
 
-    def get_log_analysis(self) -> Dict[str, Any]:
+    def get_log_analysis(self) -> dict[str, Any]:
         """Get log analysis and statistics"""
         with self.lock:
             if not self.log_entries:
@@ -163,8 +162,8 @@ class EnhancedLogger:
     """Enhanced logging system with performance monitoring"""
 
     def __init__(self):
-        self.loggers: Dict[str, logging.Logger] = {}
-        self.handlers: List[logging.Handler] = []
+        self.loggers: dict[str, logging.Logger] = {}
+        self.handlers: list[logging.Handler] = []
         self.performance_logger = PerformanceLogger()
         self.log_aggregator = LogAggregator()
 
@@ -281,7 +280,7 @@ class EnhancedLogger:
             **kwargs
         })
 
-    def log_error(self, message: str, error: Optional[Exception] = None,
+    def log_error(self, message: str, error: Exception | None = None,
                   logger_name: str = "main", **kwargs):
         """Log error message with optional exception"""
         logger_instance = self.get_logger(logger_name)
@@ -341,7 +340,7 @@ class EnhancedLogger:
             **kwargs
         })
 
-    def log_business_event(self, event_type: str, event_data: Dict[str, Any],
+    def log_business_event(self, event_type: str, event_data: dict[str, Any],
                           logger_name: str = "business"):
         """Log business event"""
         business_logger = self.get_logger(logger_name)
@@ -360,7 +359,7 @@ class EnhancedLogger:
             'event_data': event_data
         })
 
-    def get_logging_stats(self) -> Dict[str, Any]:
+    def get_logging_stats(self) -> dict[str, Any]:
         """Get comprehensive logging statistics"""
         return {
             'performance_stats': self.performance_logger.get_performance_stats(),

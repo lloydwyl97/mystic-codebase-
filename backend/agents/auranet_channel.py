@@ -5,11 +5,12 @@ Biofeedback/EEG-driven API interface for personal energy tuning and system align
 
 import asyncio
 import json
-import numpy as np
-from datetime import datetime
-from typing import Dict, Any
 import os
 import sys
+from datetime import datetime
+from typing import Any
+
+import numpy as np
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -90,7 +91,7 @@ class AuraNetChannel(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_biofeedback_data(self, data: Dict[str, Any]):
+    async def process_biofeedback_data(self, data: dict[str, Any]):
         try:
             input_type = data.get("input_type", "manual")
             if input_type not in self.input_types:
@@ -170,7 +171,7 @@ class AuraNetChannel(BaseAgent):
         except Exception as e:
             print(f"âŒ Error cleaning up old data: {e}")
 
-    async def handle_sync_energy_status(self, message: Dict[str, Any]):
+    async def handle_sync_energy_status(self, message: dict[str, Any]):
         try:
             input_type = message.get("input_type", "manual")
             energy_level = message.get("energy_level", 0.5)
@@ -209,7 +210,7 @@ class AuraNetChannel(BaseAgent):
             print(f"âŒ Error handling energy sync: {e}")
             await self.broadcast_error(f"Energy sync error: {e}")
 
-    async def handle_get_alignment_metrics(self, message: Dict[str, Any]):
+    async def handle_get_alignment_metrics(self, message: dict[str, Any]):
         try:
             print("ðŸŒ€ Alignment metrics requested")
             response = {
@@ -224,7 +225,7 @@ class AuraNetChannel(BaseAgent):
             print(f"âŒ Error handling alignment metrics request: {e}")
             await self.broadcast_error(f"Alignment metrics error: {e}")
 
-    async def handle_update_biofeedback(self, message: Dict[str, Any]):
+    async def handle_update_biofeedback(self, message: dict[str, Any]):
         try:
             print("ðŸŒ€ Biofeedback update received")
             await self.process_biofeedback_data(message)

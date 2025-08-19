@@ -6,10 +6,11 @@ Contains health checks, version information, and common API endpoints.
 
 import logging
 import time
-from datetime import timezone, datetime
-from typing import Any, Dict, Optional, Union
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, HTTPException, Request
+
 from backend.middleware.rate_limiter import rate_limit
 
 # Rate limiting configuration
@@ -47,7 +48,7 @@ def get_redis_client():
 
 @router.get("/api/health")
 @rate_limit(max_requests=default_rate_limit, window_seconds=60)
-async def health_check(request: Request) -> Dict[str, Any]:
+async def health_check(request: Request) -> dict[str, Any]:
     """Simple health check endpoint"""
     return {
         "status": "healthy",
@@ -59,7 +60,7 @@ async def health_check(request: Request) -> Dict[str, Any]:
 
 @router.get("/api/version")
 @rate_limit(max_requests=default_rate_limit, window_seconds=60)
-async def version(request: Request) -> Dict[str, Any]:
+async def version(request: Request) -> dict[str, Any]:
     """Get application version and build information"""
     return {
         "version": "1.0.0",
@@ -82,7 +83,7 @@ async def version(request: Request) -> Dict[str, Any]:
 async def comprehensive_health_check():
     """Comprehensive health check with live service status"""
     try:
-        health_status: Dict[str, Union[str, float, Dict[str, str], Optional[Dict[str, Any]]]] = {
+        health_status: dict[str, str | float | dict[str, str] | dict[str, Any] | None] = {
             "status": "healthy",
             "timestamp": time.time(),
             "version": "1.0.0",

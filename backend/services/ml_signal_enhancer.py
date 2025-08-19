@@ -6,7 +6,7 @@ Uses advanced ML models to increase signal accuracy and win percentage
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
@@ -23,7 +23,7 @@ class MLPrediction:
 
     probability: float
     confidence: float
-    features_importance: Dict[str, float]
+    features_importance: dict[str, float]
     model_version: str
     prediction_time: datetime
 
@@ -32,13 +32,13 @@ class MLSignalEnhancer:
     """Advanced ML signal enhancement for higher win percentage"""
 
     def __init__(self):
-        self.models: Dict[str, Dict[str, Any]] = {}
-        self.scalers: Dict[str, Any] = {}
-        self.feature_importance: Dict[str, Any] = {}
-        self.model_versions: Dict[str, str] = {}
-        self.accuracy_history: List[float] = []
+        self.models: dict[str, dict[str, Any]] = {}
+        self.scalers: dict[str, Any] = {}
+        self.feature_importance: dict[str, Any] = {}
+        self.model_versions: dict[str, str] = {}
+        self.accuracy_history: list[float] = []
         self.min_confidence_threshold = 0.75
-        self.ml_predictions: List[Dict[str, Any]] = []
+        self.ml_predictions: list[dict[str, Any]] = []
 
     async def initialize_models(self):
         """Initialize ML models for different timeframes"""
@@ -66,9 +66,9 @@ class MLSignalEnhancer:
 
         logger.info("ML models initialized successfully")
 
-    def extract_features(self, signal: Dict[str, Any]) -> np.ndarray:
+    def extract_features(self, signal: dict[str, Any]) -> np.ndarray:
         """Extract advanced features from signal"""
-        features: List[float] = []
+        features: list[float] = []
 
         # Price-based features
         features.extend(
@@ -142,7 +142,7 @@ class MLSignalEnhancer:
         return np.array(features, dtype=np.float64).reshape(1, -1)
 
     async def predict_signal_strength(
-        self, signal: Dict[str, Any], timeframe: str = "4h"
+        self, signal: dict[str, Any], timeframe: str = "4h"
     ) -> MLPrediction:
         """Predict signal strength using ML models"""
         try:
@@ -156,8 +156,8 @@ class MLSignalEnhancer:
                 features_scaled = features
 
             # Get predictions from ensemble
-            predictions: List[float] = []
-            confidences: List[float] = []
+            predictions: list[float] = []
+            confidences: list[float] = []
 
             for model_name, model in self.models[timeframe].items():
                 if hasattr(model, "predict_proba"):
@@ -202,9 +202,9 @@ class MLSignalEnhancer:
             # Calculate feature importance from Random Forest
             rf_model = self.models[timeframe]["rf"]
             if hasattr(rf_model, "feature_importances_"):
-                importance_dict = dict(zip(feature_names, rf_model.feature_importances_))
+                importance_dict = dict(zip(feature_names, rf_model.feature_importances_, strict=False))
             else:
-                importance_dict = {name: 0.0 for name in feature_names}
+                importance_dict = dict.fromkeys(feature_names, 0.0)
 
             return MLPrediction(
                 probability=avg_probability,
@@ -225,7 +225,7 @@ class MLSignalEnhancer:
                 prediction_time=datetime.now(),
             )
 
-    async def train_models(self, historical_data: List[Dict[str, Any]]):
+    async def train_models(self, historical_data: list[dict[str, Any]]):
         """Train ML models with historical data"""
         try:
             for timeframe in ["1h", "4h", "1d"]:
@@ -237,8 +237,8 @@ class MLSignalEnhancer:
                     continue
 
                 # Prepare features and labels
-                X: List[np.ndarray] = []
-                y: List[int] = []
+                X: list[np.ndarray] = []
+                y: list[int] = []
 
                 for data_point in timeframe_data:
                     features = self.extract_features(data_point).flatten()
@@ -289,7 +289,7 @@ class MLSignalEnhancer:
         except Exception as e:
             logger.error(f"Error training ML models: {e}")
 
-    def get_model_performance(self) -> Dict[str, Any]:
+    def get_model_performance(self) -> dict[str, Any]:
         """Get ML model performance metrics"""
         return {
             "model_versions": self.model_versions,

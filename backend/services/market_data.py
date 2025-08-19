@@ -6,7 +6,7 @@ Handles live market data fetching and caching
 import asyncio
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from backend.services.market_data_sources import (
     fetch_from_binance,
@@ -22,8 +22,8 @@ class MarketDataService:
     """Service for managing live market data"""
 
     def __init__(self):
-        self.cache: Dict[str, Dict[str, Any]] = {}
-        self.background_tasks: List[asyncio.Task] = []
+        self.cache: dict[str, dict[str, Any]] = {}
+        self.background_tasks: list[asyncio.Task] = []
         self.is_running = False
         logger.info("âœ… MarketDataService initialized")
 
@@ -90,7 +90,7 @@ class MarketDataService:
                 logger.error(f"Normal priority update error: {e}")
                 await asyncio.sleep(60)
 
-    async def _batch_update_coins(self, coins: List[str], priority: str):
+    async def _batch_update_coins(self, coins: list[str], priority: str):
         """Process a batch of coins"""
         logger.info(f"Processing {len(coins)} coins for {priority} priority: {coins}")
         tasks = []
@@ -104,7 +104,7 @@ class MarketDataService:
 
         if tasks:
             results = await asyncio.gather(*tasks, return_exceptions=True)
-            for coin, result in zip(coins, results):
+            for coin, result in zip(coins, results, strict=False):
                 if isinstance(result, Exception):
                     logger.warning(f"Failed to fetch {coin}: {result}")
                 elif isinstance(result, dict):
@@ -115,7 +115,7 @@ class MarketDataService:
         else:
             logger.warning("No tasks created - no supported coins found")
 
-    async def _fetch_coin_data(self, coin: str) -> Optional[Dict[str, Any]]:
+    async def _fetch_coin_data(self, coin: str) -> dict[str, Any] | None:
         """Fetch data for a single coin"""
         try:
             # Try Binance first
@@ -137,7 +137,7 @@ class MarketDataService:
 
         return None
 
-    async def _update_cache(self, coin: str, data: Dict[str, Any]):
+    async def _update_cache(self, coin: str, data: dict[str, Any]):
         """Update the cache with new data"""
         self.cache[coin] = data
         logger.debug(f"Updated cache for {coin}")
@@ -161,7 +161,7 @@ class MarketDataService:
         except Exception as e:
             logger.error(f"Error broadcasting update: {e}")
 
-    async def get_market_data(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def get_market_data(self, symbol: str) -> dict[str, Any] | None:
         """Get market data for a specific symbol"""
         # Try cache first
         cached_data = self.cache.get(symbol)
@@ -176,15 +176,15 @@ class MarketDataService:
 
         return None
 
-    async def get_cached_data(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def get_cached_data(self, symbol: str) -> dict[str, Any] | None:
         """Get cached data for a specific symbol"""
         return self.cache.get(symbol)
 
-    async def get_all_cached_data(self) -> Dict[str, Dict[str, Any]]:
+    async def get_all_cached_data(self) -> dict[str, dict[str, Any]]:
         """Get all cached data"""
         return self.cache.copy()
 
-    async def get_markets(self) -> Dict[str, Any]:
+    async def get_markets(self) -> dict[str, Any]:
         """Get markets overview with current data"""
         try:
             cached_data = await self.get_all_cached_data()
@@ -214,7 +214,7 @@ class MarketDataService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def get_live_signals(self, symbol: str = "all") -> Dict[str, Any]:
+    async def get_live_signals(self, symbol: str = "all") -> dict[str, Any]:
         """Get live trading signals for symbols"""
         try:
             if symbol.lower() == "all":

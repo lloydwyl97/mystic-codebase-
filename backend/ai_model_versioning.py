@@ -9,8 +9,7 @@ import logging
 import os
 import shutil
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
-
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +28,9 @@ class AIModelVersioning:
         os.makedirs(self.performance_dir, exist_ok=True)
 
         # Model registry
-        self.model_registry: Dict[str, Dict[str, Any]] = {}
-        self.active_model: Optional[str] = None
-        self.model_performance: Dict[str, Dict[str, Any]] = {}
+        self.model_registry: dict[str, dict[str, Any]] = {}
+        self.active_model: str | None = None
+        self.model_performance: dict[str, dict[str, Any]] = {}
 
         # Performance thresholds
         self.performance_thresholds = {
@@ -51,7 +50,7 @@ class AIModelVersioning:
         try:
             registry_file = f"{self.models_dir}/model_registry.json"
             if os.path.exists(registry_file):
-                with open(registry_file, "r") as f:
+                with open(registry_file) as f:
                     self.model_registry = json.load(f)
 
                 # Set active model
@@ -79,7 +78,7 @@ class AIModelVersioning:
             logger.error(f"âŒ Error saving model registry: {e}")
 
     async def create_model_version(
-        self, model_data: Dict[str, Any], version: str, description: str = ""
+        self, model_data: dict[str, Any], version: str, description: str = ""
     ) -> bool:
         """Create a new model version"""
         try:
@@ -125,7 +124,7 @@ class AIModelVersioning:
             logger.error(f"âŒ Error creating model version {version}: {e}")
             return False
 
-    def _validate_model_data(self, model_data: Dict[str, Any]) -> bool:
+    def _validate_model_data(self, model_data: dict[str, Any]) -> bool:
         """Validate model data structure"""
         required_fields = [
             "model_type",
@@ -229,7 +228,7 @@ class AIModelVersioning:
             logger.error(f"âŒ Error creating model backup: {e}")
 
     async def update_model_performance(
-        self, version: str, performance_data: Dict[str, Any]
+        self, version: str, performance_data: dict[str, Any]
     ) -> bool:
         """Update performance metrics for a model version"""
         try:
@@ -267,7 +266,7 @@ class AIModelVersioning:
             logger.error(f"âŒ Error updating performance for model version {version}: {e}")
             return False
 
-    async def evaluate_model_performance(self, version: str) -> Dict[str, Any]:
+    async def evaluate_model_performance(self, version: str) -> dict[str, Any]:
         """Evaluate if a model meets performance thresholds"""
         try:
             if version not in self.model_registry:
@@ -328,7 +327,7 @@ class AIModelVersioning:
             logger.error(f"âŒ Error evaluating model performance: {e}")
             return {"error": str(e)}
 
-    async def get_best_performing_model(self) -> Optional[str]:
+    async def get_best_performing_model(self) -> str | None:
         """Get the best performing model version"""
         try:
             best_model = None
@@ -356,7 +355,7 @@ class AIModelVersioning:
             logger.error(f"âŒ Error finding best performing model: {e}")
             return None
 
-    async def auto_optimize_models(self) -> Dict[str, Any]:
+    async def auto_optimize_models(self) -> dict[str, Any]:
         """Automatically optimize model selection based on performance"""
         try:
             optimization_result = {
@@ -406,7 +405,7 @@ class AIModelVersioning:
             logger.error(f"âŒ Error in auto-optimization: {e}")
             return {"error": str(e)}
 
-    def get_model_registry(self) -> Dict[str, Any]:
+    def get_model_registry(self) -> dict[str, Any]:
         """Get the complete model registry"""
         return {
             "models": self.model_registry,
@@ -415,13 +414,13 @@ class AIModelVersioning:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-    def get_model_performance_history(self, version: str) -> List[Dict[str, Any]]:
+    def get_model_performance_history(self, version: str) -> list[dict[str, Any]]:
         """Get performance history for a specific model version"""
         try:
             performance_file = f"{self.performance_dir}/performance_v{version}.json"
 
             if os.path.exists(performance_file):
-                with open(performance_file, "r") as f:
+                with open(performance_file) as f:
                     return json.load(f)
             else:
                 return []
@@ -430,7 +429,7 @@ class AIModelVersioning:
             logger.error(f"âŒ Error getting performance history for {version}: {e}")
             return []
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get system status"""
         try:
             return {
@@ -449,7 +448,7 @@ class AIModelVersioning:
 
 
 # Global instance
-ai_model_versioning: Optional[AIModelVersioning] = None
+ai_model_versioning: AIModelVersioning | None = None
 
 
 def get_ai_model_versioning() -> AIModelVersioning:

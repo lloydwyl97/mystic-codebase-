@@ -4,10 +4,11 @@ Handles database and external service connections
 """
 
 import logging
-from typing import Dict, Any
 from datetime import datetime, timezone
-import redis
+from typing import Any
+
 import pika
+import redis
 
 logger = logging.getLogger(__name__)
 
@@ -23,14 +24,14 @@ class ConnectionManager:
         }
         logger.info("âœ… ConnectionManager initialized")
 
-    async def get_connection_status(self) -> Dict[str, Any]:
+    async def get_connection_status(self) -> dict[str, Any]:
         """Get status of all connections"""
         return {
             "connections": self.connection_status,
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    async def connect_redis(self, host: str = "localhost", port: int = 6379) -> Dict[str, Any]:
+    async def connect_redis(self, host: str = "localhost", port: int = 6379) -> dict[str, Any]:
         """Connect to Redis"""
         try:
             self.redis_client = redis.Redis(host=host, port=port, decode_responses=True)
@@ -44,7 +45,7 @@ class ConnectionManager:
             logger.error(f"âŒ Redis connection failed: {e}")
             return {"success": False, "error": str(e)}
 
-    async def connect_rabbitmq(self, host: str = "localhost", port: int = 5672) -> Dict[str, Any]:
+    async def connect_rabbitmq(self, host: str = "localhost", port: int = 5672) -> dict[str, Any]:
         """Connect to RabbitMQ"""
         try:
             self.rabbitmq_connection = pika.BlockingConnection(
@@ -58,7 +59,7 @@ class ConnectionManager:
             logger.error(f"âŒ RabbitMQ connection failed: {e}")
             return {"success": False, "error": str(e)}
 
-    async def test_redis_connection(self) -> Dict[str, Any]:
+    async def test_redis_connection(self) -> dict[str, Any]:
         """Test Redis connection"""
         try:
             if self.redis_client:
@@ -68,7 +69,7 @@ class ConnectionManager:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    async def test_rabbitmq_connection(self) -> Dict[str, Any]:
+    async def test_rabbitmq_connection(self) -> dict[str, Any]:
         """Test RabbitMQ connection"""
         try:
             if self.rabbitmq_connection and not self.rabbitmq_connection.is_closed:
@@ -80,7 +81,7 @@ class ConnectionManager:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    async def get_redis_info(self) -> Dict[str, Any]:
+    async def get_redis_info(self) -> dict[str, Any]:
         """Get Redis server information"""
         try:
             if self.redis_client:
@@ -95,7 +96,7 @@ class ConnectionManager:
         except Exception as e:
             return {"error": str(e)}
 
-    async def close_connections(self) -> Dict[str, Any]:
+    async def close_connections(self) -> dict[str, Any]:
         """Close all connections"""
         try:
             if self.redis_client:

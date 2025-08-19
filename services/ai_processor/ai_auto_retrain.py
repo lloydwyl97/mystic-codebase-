@@ -7,23 +7,27 @@ import asyncio
 import json
 import logging
 import os
-import redis
+from datetime import datetime, timedelta
+from typing import Any
+
+import joblib  # type: ignore[reportMissingTypeStubs]
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, Tuple
+import redis
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from sklearn.preprocessing import MinMaxScaler
+from dotenv import load_dotenv
+from numpy.typing import NDArray
 from sklearn.metrics import (
     accuracy_score,
+    f1_score,
     precision_score,
     recall_score,
-    f1_score,
 )
-import joblib
-from dotenv import load_dotenv
+from sklearn.preprocessing import MinMaxScaler
+
+from utils.redis_helpers import to_str, to_str_list
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -84,13 +88,13 @@ class AutoRetrainService:
         while self.running:
             try:
                 # Check all active models
-                active_models = self.redis_client.lrange("ai_strategies", 0, -1)
+                active_models = to_str_list(self.redis_client.lrange("ai_strategies", 0, -1))
 
                 for model_id in active_models:
                     await self.check_model_performance(model_id)
 
                 # Check for retraining requests
-                retrain_request = self.redis_client.lpop("retrain_queue")
+                retrain_request = to_str(self.redis_client.lpop("retrain_queue"))
                 if retrain_request:
                     request_data = json.loads(retrain_request)
                     await self.process_retrain_request(request_data)
@@ -133,7 +137,7 @@ class AutoRetrainService:
         except Exception as e:
             logger.error(f"Error checking model performance: {e}")
 
-    async def get_recent_performance(self, model_id: str) -> Optional[Dict[str, Any]]:
+    async def get_recent_performance(self, model_id: str) -> dict[str, Any] | None:
         """Get recent performance data for model"""
         try:
             # Get performance data from last 7 days
@@ -157,7 +161,7 @@ class AutoRetrainService:
             return None
 
     async def should_retrain(
-        self, model: Dict[str, Any], recent_performance: Dict[str, Any]
+        self, model: dict[str, Any], recent_performance: dict[str, Any]
     ) -> bool:
         """Determine if model should be retrained"""
         try:
@@ -199,7 +203,7 @@ class AutoRetrainService:
             logger.error(f"Error checking if should retrain: {e}")
             return False
 
-    async def process_retrain_request(self, request_data: Dict[str, Any]):
+    async def process_retrain_request(self, request_data: dict[str, Any]):
         """Process retraining request"""
         try:
             model_id = request_data.get("model_id")
@@ -232,7 +236,7 @@ class AutoRetrainService:
         except Exception as e:
             logger.error(f"Error processing retrain request: {e}")
 
-    async def retrain_model(self, model: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def retrain_model(self, model: dict[str, Any]) -> dict[str, Any] | None:
         """Retrain a model with new data"""
         try:
             model_type = model.get("type", "lstm")
@@ -343,7 +347,7 @@ class AutoRetrainService:
             logger.error(f"Error getting training data: {e}")
             return pd.DataFrame()
 
-    def prepare_features(self, data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def prepare_features(self, data: pd.DataFrame) -> tuple[NDArray[Any], NDArray[Any]]:
         """Prepare features for model training"""
         try:
             # Calculate technical indicators
@@ -402,9 +406,9 @@ class AutoRetrainService:
     async def train_model(
         self,
         strategy_type: str,
-        features: np.ndarray,
-        parameters: Dict[str, Any] = None,
-    ) -> Tuple[Optional[nn.Module], Optional[MinMaxScaler]]:
+        features: NDArray[Any],
+        parameters: dict[str, Any] | None = None,
+    ) -> tuple[nn.Module | None, MinMaxScaler | None]:
         """Train the AI model"""
         try:
             if len(features) == 0:
@@ -503,8 +507,8 @@ class AutoRetrainService:
             return None, None
 
     def create_sequences(
-        self, X: np.ndarray, y: np.ndarray, sequence_length: int
-    ) -> Tuple[np.ndarray, np.ndarray]:
+        self, X: NDArray[Any], y: NDArray[Any], sequence_length: int
+    ) -> tuple[NDArray[Any], NDArray[Any]]:
         """Create sequences for time series prediction"""
         try:
             X_sequences, y_sequences = [], []
@@ -521,7 +525,7 @@ class AutoRetrainService:
 
     async def evaluate_model(
         self, model: nn.Module, scaler: MinMaxScaler, data: pd.DataFrame
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Evaluate model performance"""
         try:
             # Prepare test data
@@ -588,7 +592,7 @@ class AutoRetrainService:
         self,
         model: nn.Module,
         scaler: MinMaxScaler,
-        model_data: Dict[str, Any],
+        model_data: dict[str, Any],
     ):
         """Save model and scaler"""
         try:
@@ -607,7 +611,7 @@ class AutoRetrainService:
         except Exception as e:
             logger.error(f"Error saving model: {e}")
 
-    async def update_model(self, model_id: str, new_model_data: Dict[str, Any]):
+    async def update_model(self, model_id: str, new_model_data: dict[str, Any]):
         """Update model in Redis"""
         try:
             # Update model data
@@ -635,7 +639,7 @@ class AutoRetrainService:
         """Broadcast model performance metrics"""
         try:
             # Get all active models
-            active_models = self.redis_client.lrange("ai_strategies", 0, -1)
+            active_models = to_str_list(self.redis_client.lrange("ai_strategies", 0, -1))
             models_data = []
 
             for model_id in active_models:
@@ -663,7 +667,7 @@ class AutoRetrainService:
         """Broadcast retrain status and queue"""
         try:
             # Get retrain queue
-            queue_data = self.redis_client.lrange("retrain_queue", 0, -1)
+            queue_data = to_str_list(self.redis_client.lrange("retrain_queue", 0, -1))
             queue = [json.loads(item) for item in queue_data]
 
             # Get current retrain status
@@ -717,7 +721,7 @@ class AutoRetrainService:
 
     def calculate_bollinger_bands(
         self, prices: pd.Series, period: int = 20, std_dev: float = 2
-    ) -> Tuple[pd.Series, pd.Series, pd.Series]:
+    ) -> tuple[pd.Series, pd.Series, pd.Series]:
         """Calculate Bollinger Bands"""
         sma = prices.rolling(window=period).mean()
         std = prices.rolling(window=period).std()

@@ -1,9 +1,10 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
-from qiskit import QuantumCircuit, execute, Aer
-import os
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, generate_latest
+from qiskit import Aer, QuantumCircuit, execute
 
 app = FastAPI(
     title="Mystic Qiskit Quantum Service",

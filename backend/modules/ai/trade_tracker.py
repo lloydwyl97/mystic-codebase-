@@ -5,11 +5,11 @@ Provides functions for tracking trades, history, and summaries.
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
-def get_active_trades() -> List[Dict[str, Any]]:
+def get_active_trades() -> list[dict[str, Any]]:
     """Get list of active trades"""
     try:
         # For now, return empty list as placeholder
@@ -19,7 +19,7 @@ def get_active_trades() -> List[Dict[str, Any]]:
         logger.error(f"Error getting active trades: {e}")
         return []
 
-def get_trade_history() -> List[Dict[str, Any]]:
+def get_trade_history() -> list[dict[str, Any]]:
     """Get trade history"""
     try:
         # For now, return empty list as placeholder
@@ -29,7 +29,7 @@ def get_trade_history() -> List[Dict[str, Any]]:
         logger.error(f"Error getting trade history: {e}")
         return []
 
-def get_trade_summary() -> Dict[str, Any]:
+def get_trade_summary() -> dict[str, Any]:
     """Get trade summary"""
     try:
         # Import from ai.ai_signals where it's actually defined

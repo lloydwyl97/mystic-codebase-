@@ -1,13 +1,12 @@
-﻿import numpy as np
-import pandas as pd
-import time
-import json
+﻿import json
 import sqlite3
-import requests
-from datetime import datetime
-from typing import Dict, List, Tuple
-from scipy.optimize import minimize
+import time
 from datetime import datetime, timezone
+
+import numpy as np
+import pandas as pd
+import requests
+from scipy.optimize import minimize
 
 # Enhanced configuration
 BALANCE_DB = "./data/portfolio_balance.db"
@@ -79,7 +78,7 @@ class BalanceDatabase:
         conn.commit()
         conn.close()
 
-    def save_portfolio_snapshot(self, snapshot: Dict):
+    def save_portfolio_snapshot(self, snapshot: dict):
         """Save portfolio snapshot to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -103,7 +102,7 @@ class BalanceDatabase:
         conn.commit()
         conn.close()
 
-    def save_rebalance_action(self, action: Dict):
+    def save_rebalance_action(self, action: dict):
         """Save rebalance action to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -128,7 +127,7 @@ class BalanceDatabase:
         conn.commit()
         conn.close()
 
-    def save_asset_performance(self, performance: Dict):
+    def save_asset_performance(self, performance: dict):
         """Save asset performance to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -156,7 +155,7 @@ class BalanceDatabase:
         conn.close()
 
 
-def get_market_data(symbols: List[str]) -> Dict[str, Dict]:
+def get_market_data(symbols: list[str]) -> dict[str, dict]:
     """Get comprehensive market data for portfolio analysis"""
     market_data = {}
 
@@ -203,7 +202,7 @@ def get_historical_returns(symbol: str, days: int = 30) -> pd.Series:
     return pd.Series()
 
 
-def calculate_asset_metrics(symbol: str, current_weight: float) -> Dict:
+def calculate_asset_metrics(symbol: str, current_weight: float) -> dict:
     """Calculate comprehensive asset metrics"""
     returns = get_historical_returns(symbol, days=30)
 
@@ -250,8 +249,8 @@ def calculate_asset_metrics(symbol: str, current_weight: float) -> Dict:
 
 
 def optimize_portfolio_weights(
-    current_weights: Dict[str, float], asset_metrics: List[Dict]
-) -> Dict[str, float]:
+    current_weights: dict[str, float], asset_metrics: list[dict]
+) -> dict[str, float]:
     """Optimize portfolio weights using modern portfolio theory"""
     try:
         symbols = list(current_weights.keys())
@@ -312,7 +311,7 @@ def optimize_portfolio_weights(
 
         if result.success:
             optimal_weights = result.x
-            return {symbol: weight for symbol, weight in zip(symbols, optimal_weights)}
+            return {symbol: weight for symbol, weight in zip(symbols, optimal_weights, strict=False)}
         else:
             print(f"Portfolio optimization failed: {result.message}")
             return current_weights
@@ -322,7 +321,7 @@ def optimize_portfolio_weights(
         return current_weights
 
 
-def calculate_portfolio_risk_metrics(weights: Dict[str, float], asset_metrics: List[Dict]) -> Dict:
+def calculate_portfolio_risk_metrics(weights: dict[str, float], asset_metrics: list[dict]) -> dict:
     """Calculate portfolio risk metrics"""
     try:
         # Calculate weighted metrics
@@ -339,12 +338,12 @@ def calculate_portfolio_risk_metrics(weights: Dict[str, float], asset_metrics: L
         # Weighted returns and volatility
         weighted_return = sum(
             weights[symbol] * metrics["return_30d"]
-            for symbol, metrics in zip(weights.keys(), asset_metrics)
+            for symbol, metrics in zip(weights.keys(), asset_metrics, strict=False)
             if symbol in weights
         )
         weighted_volatility = sum(
             weights[symbol] * metrics["volatility"]
-            for symbol, metrics in zip(weights.keys(), asset_metrics)
+            for symbol, metrics in zip(weights.keys(), asset_metrics, strict=False)
             if symbol in weights
         )
 
@@ -385,8 +384,8 @@ def calculate_portfolio_risk_metrics(weights: Dict[str, float], asset_metrics: L
 
 
 def check_rebalance_needed(
-    current_weights: Dict[str, float], target_weights: Dict[str, float]
-) -> Tuple[bool, List[Dict]]:
+    current_weights: dict[str, float], target_weights: dict[str, float]
+) -> tuple[bool, list[dict]]:
     """Check if rebalancing is needed and generate actions"""
     rebalance_actions = []
     rebalance_needed = False

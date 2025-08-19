@@ -5,11 +5,12 @@ Handles technical indicator analysis and signal generation
 
 import asyncio
 import json
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
 import os
 import sys
+from datetime import datetime, timedelta
+from typing import Any
+
+import pandas as pd
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -228,7 +229,7 @@ class TechnicalIndicatorAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for indicator calculation"""
         try:
             symbol = market_data.get("symbol")
@@ -330,7 +331,7 @@ class TechnicalIndicatorAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error calculating indicators for {symbol}: {e}")
 
-    async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_symbol_market_data(self, symbol: str) -> list[dict[str, Any]]:
         """Get market data for a symbol"""
         try:
             # Get from cache first
@@ -362,7 +363,7 @@ class TechnicalIndicatorAgent(BaseAgent):
 
     async def calculate_indicator(
         self, df: pd.DataFrame, indicator_name: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Calculate a specific indicator using pandas-ta"""
         try:
             if indicator_name not in self.indicator_functions:
@@ -549,7 +550,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error calculating {indicator_name}: {e}")
             return None
 
-    async def broadcast_indicator_update(self, symbol: str, indicators: Dict[str, Any]):
+    async def broadcast_indicator_update(self, symbol: str, indicators: dict[str, Any]):
         """Broadcast indicator update to other agents"""
         try:
             indicator_update = {
@@ -593,8 +594,8 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error generating indicator signals: {e}")
 
     async def generate_symbol_indicator_signal(
-        self, symbol: str, indicators: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, indicators: dict[str, Any]
+    ) -> dict[str, Any] | None:
         """Generate trading signal for a symbol based on indicators"""
         try:
             if not indicators:
@@ -674,7 +675,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error generating indicator signal for {symbol}: {e}")
             return None
 
-    async def analyze_rsi_signal(self, rsi_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def analyze_rsi_signal(self, rsi_data: dict[str, Any]) -> dict[str, Any] | None:
         """Analyze RSI for trading signals"""
         try:
             current_rsi = rsi_data.get("current")
@@ -703,7 +704,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error analyzing RSI signal: {e}")
             return None
 
-    async def analyze_macd_signal(self, macd_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def analyze_macd_signal(self, macd_data: dict[str, Any]) -> dict[str, Any] | None:
         """Analyze MACD for trading signals"""
         try:
             macd = macd_data.get("macd")
@@ -733,7 +734,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error analyzing MACD signal: {e}")
             return None
 
-    async def analyze_bollinger_signal(self, bb_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def analyze_bollinger_signal(self, bb_data: dict[str, Any]) -> dict[str, Any] | None:
         """Analyze Bollinger Bands for trading signals"""
         try:
             upper = bb_data.get("upper")
@@ -767,8 +768,8 @@ class TechnicalIndicatorAgent(BaseAgent):
             return None
 
     async def analyze_stochastic_signal(
-        self, stoch_data: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+        self, stoch_data: dict[str, Any]
+    ) -> dict[str, Any] | None:
         """Analyze Stochastic for trading signals"""
         try:
             k = stoch_data.get("k")
@@ -800,8 +801,8 @@ class TechnicalIndicatorAgent(BaseAgent):
             return None
 
     async def analyze_williams_r_signal(
-        self, willr_data: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+        self, willr_data: dict[str, Any]
+    ) -> dict[str, Any] | None:
         """Analyze Williams %R for trading signals"""
         try:
             current = willr_data.get("current")
@@ -830,7 +831,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error analyzing Williams %R signal: {e}")
             return None
 
-    async def analyze_cci_signal(self, cci_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def analyze_cci_signal(self, cci_data: dict[str, Any]) -> dict[str, Any] | None:
         """Analyze CCI for trading signals"""
         try:
             current = cci_data.get("current")
@@ -859,7 +860,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error analyzing CCI signal: {e}")
             return None
 
-    async def determine_signal_type(self, signal_analysis: Dict[str, Any]) -> str:
+    async def determine_signal_type(self, signal_analysis: dict[str, Any]) -> str:
         """Determine overall signal type based on indicator analysis"""
         try:
             buy_signals = 0
@@ -882,7 +883,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error determining signal type: {e}")
             return "neutral"
 
-    async def broadcast_indicator_signals(self, signals: Dict[str, Any]):
+    async def broadcast_indicator_signals(self, signals: dict[str, Any]):
         """Broadcast indicator signals to other agents"""
         try:
             signals_update = {
@@ -961,7 +962,7 @@ class TechnicalIndicatorAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error analyzing crossovers for {symbol}: {e}")
 
-    async def analyze_sma_crossover(self, sma_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def analyze_sma_crossover(self, sma_data: dict[str, Any]) -> dict[str, Any] | None:
         """Analyze SMA crossover"""
         try:
             sma_20 = sma_data.get("sma_20")
@@ -992,7 +993,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error analyzing SMA crossover: {e}")
             return None
 
-    async def analyze_ema_crossover(self, ema_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def analyze_ema_crossover(self, ema_data: dict[str, Any]) -> dict[str, Any] | None:
         """Analyze EMA crossover"""
         try:
             ema_12 = ema_data.get("ema_12")
@@ -1023,7 +1024,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error analyzing EMA crossover: {e}")
             return None
 
-    async def analyze_macd_crossover(self, macd_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def analyze_macd_crossover(self, macd_data: dict[str, Any]) -> dict[str, Any] | None:
         """Analyze MACD crossover"""
         try:
             macd = macd_data.get("macd")
@@ -1054,7 +1055,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error analyzing MACD crossover: {e}")
             return None
 
-    async def broadcast_crossover_analysis(self, symbol: str, crossovers: Dict[str, Any]):
+    async def broadcast_crossover_analysis(self, symbol: str, crossovers: dict[str, Any]):
         """Broadcast crossover analysis to other agents"""
         try:
             crossover_update = {
@@ -1074,7 +1075,7 @@ class TechnicalIndicatorAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting crossover analysis: {e}")
 
-    async def handle_calculate_indicators(self, message: Dict[str, Any]):
+    async def handle_calculate_indicators(self, message: dict[str, Any]):
         """Handle manual indicator calculation request"""
         try:
             symbol = message.get("symbol")
@@ -1101,7 +1102,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error handling indicator calculation request: {e}")
             await self.broadcast_error(f"Indicator calculation error: {e}")
 
-    async def handle_get_indicator_signals(self, message: Dict[str, Any]):
+    async def handle_get_indicator_signals(self, message: dict[str, Any]):
         """Handle indicator signals request"""
         try:
             symbol = message.get("symbol")
@@ -1134,7 +1135,7 @@ class TechnicalIndicatorAgent(BaseAgent):
             print(f"âŒ Error handling indicator signals request: {e}")
             await self.broadcast_error(f"Indicator signals error: {e}")
 
-    async def handle_analyze_crossovers(self, message: Dict[str, Any]):
+    async def handle_analyze_crossovers(self, message: dict[str, Any]):
         """Handle crossover analysis request"""
         try:
             symbol = message.get("symbol")
@@ -1205,7 +1206,7 @@ class TechnicalIndicatorAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error cleaning up cache: {e}")
 
-    async def handle_market_data(self, message: Dict[str, Any]):
+    async def handle_market_data(self, message: dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})

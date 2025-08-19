@@ -5,8 +5,7 @@ Simple data models for market data and trading signals without database dependen
 """
 
 import uuid
-from datetime import timezone, datetime
-from typing import Optional
+from datetime import datetime, timezone
 
 from pydantic import BaseModel, Field
 
@@ -85,12 +84,12 @@ class TradingSignal(BaseModel):
     )
     symbol: str = Field(..., description="Trading symbol")
     signal_type: str = Field(..., description="Signal type (buy/sell/hold)")
-    price: Optional[float] = Field(None, description="Signal price")
+    price: float | None = Field(None, description="Signal price")
     timestamp: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         description="Signal timestamp",
     )
-    confidence: Optional[float] = Field(None, description="Signal confidence (0-1)")
+    confidence: float | None = Field(None, description="Signal confidence (0-1)")
 
 
 class UserSettings(BaseModel):
@@ -102,7 +101,7 @@ class UserSettings(BaseModel):
     )
     user_id: str = Field(..., description="User ID")
     setting_name: str = Field(..., description="Setting name")
-    setting_value: Optional[str] = Field(None, description="Setting value")
+    setting_value: str | None = Field(None, description="Setting value")
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         description="Creation timestamp",

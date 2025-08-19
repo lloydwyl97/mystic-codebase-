@@ -5,7 +5,7 @@ Use this to set the correct Python interpreter in your IDE
 """
 
 import sys
-import os
+
 
 def main():
     print("=" * 60)

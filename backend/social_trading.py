@@ -9,7 +9,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +49,8 @@ class TraderProfile:
     is_pro_trader: bool
     created_at: datetime
     last_active: datetime
-    tags: List[str] = field(default_factory=list)
-    achievements: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
+    achievements: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -79,8 +79,8 @@ class TradeSignal:
     side: str  # 'buy' or 'sell'
     quantity: float
     price: float
-    stop_loss: Optional[float]
-    take_profit: Optional[float]
+    stop_loss: float | None
+    take_profit: float | None
     confidence: float
     reasoning: str
     timestamp: datetime
@@ -88,7 +88,7 @@ class TradeSignal:
     likes_count: int
     comments_count: int
     is_public: bool
-    tags: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -243,10 +243,10 @@ class SocialTradingManager:
         price: float,
         confidence: float,
         reasoning: str,
-        stop_loss: Optional[float] = None,
-        take_profit: Optional[float] = None,
+        stop_loss: float | None = None,
+        take_profit: float | None = None,
         is_public: bool = True,
-        tags: List[str] = None,
+        tags: list[str] = None,
     ) -> TradeSignal:
         """Create a trade signal for followers to copy."""
         signal_id = str(uuid.uuid4())
@@ -363,7 +363,7 @@ class SocialTradingManager:
             return True
         return False
 
-    def get_trader_feed(self, trader_id: str, limit: int = 50) -> List[TradeSignal]:
+    def get_trader_feed(self, trader_id: str, limit: int = 50) -> list[TradeSignal]:
         """Get trade signals from followed traders."""
         following = self.following.get(trader_id, [])
         signals = []
@@ -380,7 +380,7 @@ class SocialTradingManager:
         signals.sort(key=lambda x: x.timestamp, reverse=True)
         return signals[:limit]
 
-    def get_trader_signals(self, trader_id: str, limit: int = 50) -> List[TradeSignal]:
+    def get_trader_signals(self, trader_id: str, limit: int = 50) -> list[TradeSignal]:
         """Get all signals from a specific trader."""
         signals = [
             signal
@@ -475,14 +475,14 @@ class LeaderboardManager:
 
         logger.info(f"Updated {period} leaderboard with {len(leaderboard)} traders")
 
-    def get_leaderboard(self, period: str = "all_time", limit: int = 100) -> List[LeaderboardEntry]:
+    def get_leaderboard(self, period: str = "all_time", limit: int = 100) -> list[LeaderboardEntry]:
         """Get leaderboard for a specific period."""
         if period not in self.leaderboards:
             return []
 
         return self.leaderboards[period][:limit]
 
-    def get_trader_rank(self, trader_id: str, period: str = "all_time") -> Optional[int]:
+    def get_trader_rank(self, trader_id: str, period: str = "all_time") -> int | None:
         """Get rank of a specific trader."""
         leaderboard = self.leaderboards.get(period, [])
         for entry in leaderboard:
@@ -549,7 +549,7 @@ class AchievementSystem:
         self.user_achievements = {}  # user_id -> [achievement_ids]
         self.user_points = {}  # user_id -> total_points
 
-    def check_achievements(self, user_id: str, user_stats: Dict[str, Any]) -> List[str]:
+    def check_achievements(self, user_id: str, user_stats: dict[str, Any]) -> list[str]:
         """Check and award achievements based on user stats."""
         earned_achievements = []
 
@@ -599,7 +599,7 @@ class AchievementSystem:
                 f"Awarded achievement '{achievement_id}' to user {user_id} (+{points} points)"
             )
 
-    def get_user_achievements(self, user_id: str) -> List[Dict[str, Any]]:
+    def get_user_achievements(self, user_id: str) -> list[dict[str, Any]]:
         """Get all achievements for a user."""
         user_achievements = self.user_achievements.get(user_id, [])
         return [self.achievements[achievement_id] for achievement_id in user_achievements]

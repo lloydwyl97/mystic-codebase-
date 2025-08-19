@@ -8,9 +8,10 @@ Provides missing portfolio endpoints that return live data:
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
+
 from backend.services.portfolio_service import PortfolioService
 
 logger = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ portfolio_service = PortfolioService()
 
 
 @router.get("/api/portfolio/performance")
-async def get_portfolio_performance() -> Dict[str, Any]:
+async def get_portfolio_performance() -> dict[str, Any]:
     """
     Get portfolio performance metrics with live data
 
@@ -42,7 +43,7 @@ async def get_portfolio_performance() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio/balance")
-async def get_portfolio_balance() -> Dict[str, Any]:
+async def get_portfolio_balance() -> dict[str, Any]:
     """
     Get portfolio balance with live data
 
@@ -64,7 +65,7 @@ async def get_portfolio_balance() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio/transactions")
-async def get_portfolio_transactions(limit: int = 50, offset: int = 0) -> Dict[str, Any]:
+async def get_portfolio_transactions(limit: int = 50, offset: int = 0) -> dict[str, Any]:
     """
     Get portfolio transaction history with live data
 

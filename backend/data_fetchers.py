@@ -9,7 +9,7 @@ import asyncio
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import aiohttp
 import redis
@@ -27,7 +27,7 @@ class PriceFetcher:
     def __init__(self, cache: SharedCache) -> None:
         self.cache = cache
         self.config = get_config()
-        self.session: Optional[aiohttp.ClientSession] = None
+        self.session: aiohttp.ClientSession | None = None
         self.last_fetch: float = 0
 
     async def start(self) -> None:
@@ -84,7 +84,7 @@ class PriceFetcher:
         except Exception as e:
             logger.error(f"Error fetching Coinbase prices: {e}")
 
-    async def _fetch_coinbase_batch(self, coins: List[Any]) -> None:
+    async def _fetch_coinbase_batch(self, coins: list[Any]) -> None:
         """Fetch comprehensive data for a batch of Coinbase coins"""
         for coin_config in coins:
             symbol = coin_config.symbol
@@ -161,7 +161,7 @@ class PriceFetcher:
         except Exception as e:
             logger.error(f"Error fetching Binance prices: {e}")
 
-    async def _fetch_binance_batch(self, coins: List[Any]) -> None:
+    async def _fetch_binance_batch(self, coins: list[Any]) -> None:
         """Fetch prices for a batch of Binance coins"""
         for coin_config in coins:
             symbol = coin_config.symbol
@@ -278,7 +278,7 @@ class VolumeFetcher:
     def __init__(self, cache: SharedCache) -> None:
         self.cache = cache
         self.config = get_config()
-        self.session: Optional[aiohttp.ClientSession] = None
+        self.session: aiohttp.ClientSession | None = None
         self.last_fetch: float = 0
 
     async def start(self) -> None:
@@ -424,13 +424,13 @@ class IndicatorCalculator:
         except Exception as e:
             logger.error(f"Error calculating indicators for {symbol}: {e}")
 
-    def _calculate_rsi(self, prices: List[float], period: int = 14) -> float:
+    def _calculate_rsi(self, prices: list[float], period: int = 14) -> float:
         """Calculate RSI"""
         if len(prices) < period + 1:
             return 50.0
 
-        gains: List[float] = []
-        losses: List[float] = []
+        gains: list[float] = []
+        losses: list[float] = []
 
         for i in range(1, len(prices)):
             change = prices[i] - prices[i - 1]
@@ -455,7 +455,7 @@ class IndicatorCalculator:
         rsi = 100 - (100 / (1 + rs))
         return rsi
 
-    def _calculate_macd(self, prices: List[float]) -> Dict[str, float]:
+    def _calculate_macd(self, prices: list[float]) -> dict[str, float]:
         """Calculate MACD"""
         if len(prices) < 26:
             return {"macd_line": 0.0, "signal_line": 0.0, "histogram": 0.0}
@@ -468,7 +468,7 @@ class IndicatorCalculator:
 
         # Calculate signal line
         if len(prices) >= 35:
-            macd_values: List[float] = []
+            macd_values: list[float] = []
             for i in range(26, len(prices)):
                 ema12_i = self._calculate_ema(prices[: i + 1], 12)
                 ema26_i = self._calculate_ema(prices[: i + 1], 26)
@@ -489,7 +489,7 @@ class IndicatorCalculator:
             "histogram": histogram,
         }
 
-    def _calculate_ema(self, prices: List[float], period: int) -> float:
+    def _calculate_ema(self, prices: list[float], period: int) -> float:
         """Calculate EMA"""
         if len(prices) < period:
             return prices[-1] if prices else 0.0
@@ -502,12 +502,12 @@ class IndicatorCalculator:
 
         return ema
 
-    def _calculate_volatility(self, prices: List[float], period: int = 20) -> float:
+    def _calculate_volatility(self, prices: list[float], period: int = 20) -> float:
         """Calculate volatility"""
         if len(prices) < period + 1:
             return 0.0
 
-        returns: List[float] = []
+        returns: list[float] = []
         for i in range(1, len(prices)):
             if prices[i - 1] != 0:
                 returns.append((prices[i] - prices[i - 1]) / prices[i - 1])
@@ -632,7 +632,7 @@ class MysticFetcher:
         else:  # Nighttime
             return 0.2
 
-    def _calculate_schumann_resonance(self) -> Dict[str, Any]:
+    def _calculate_schumann_resonance(self) -> dict[str, Any]:
         """Fetch Schumann resonance data"""
         # This is a simplified version - real implementation would need actual API
         return {
@@ -642,7 +642,7 @@ class MysticFetcher:
             "harmonic": 1,
         }
 
-    def _calculate_cosmic_alignment(self) -> Dict[str, Any]:
+    def _calculate_cosmic_alignment(self) -> dict[str, Any]:
         """Calculate cosmic alignment factors"""
         now = datetime.now()
 
@@ -710,7 +710,7 @@ class DataFetcherManager:
 
         logger.info("All data fetchers stopped")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get status of all fetchers"""
         return {
             "price_fetcher": {

@@ -4,12 +4,13 @@ Binance Data Fetcher Module for Mystic Trading Platform
 Handles all Binance US API interactions with centralized coin management.
 """
 
+import asyncio
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
 import ccxt
-import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,7 @@ class BinanceMarketData:
     timestamp: float
     exchange: str = "binance"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "symbol": self.symbol,
             "price": self.price,
@@ -103,10 +104,10 @@ class BinanceDataFetcher:
             logger.error(f"âŒ Error removing coin {coin}: {str(e)}")
             return False
 
-    def get_supported_coins(self) -> List[str]:
+    def get_supported_coins(self) -> list[str]:
         return self.supported_coins.copy()
 
-    async def get_market_data(self, symbol: str) -> Optional[BinanceMarketData]:
+    async def get_market_data(self, symbol: str) -> BinanceMarketData | None:
         """Get live market data for a symbol"""
         try:
             if symbol not in self.trading_pairs:
@@ -131,7 +132,7 @@ class BinanceDataFetcher:
             logger.error(f"âŒ Error getting Binance data for {symbol}: {str(e)}")
             return None
 
-    async def get_all_market_data(self) -> Dict[str, BinanceMarketData]:
+    async def get_all_market_data(self) -> dict[str, BinanceMarketData]:
         if not self.client:
             return {}
 
@@ -139,7 +140,7 @@ class BinanceDataFetcher:
             tasks = [self.get_market_data(symbol) for symbol in self.supported_coins]
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
-            market_data: Dict[str, BinanceMarketData] = {}
+            market_data: dict[str, BinanceMarketData] = {}
             for i, result in enumerate(results):
                 if isinstance(result, BinanceMarketData):
                     market_data[self.supported_coins[i]] = result
@@ -152,7 +153,7 @@ class BinanceDataFetcher:
             logger.error(f"âŒ Error getting all market data: {str(e)}")
             raise BinanceDataError("Error getting all market data")
 
-    async def get_order_book(self, symbol: str, limit: int = 10) -> Optional[Dict[str, Any]]:
+    async def get_order_book(self, symbol: str, limit: int = 10) -> dict[str, Any] | None:
         """Get order book for a symbol"""
         try:
             if symbol not in self.trading_pairs:
@@ -174,7 +175,7 @@ class BinanceDataFetcher:
 
     async def get_recent_trades(
         self, symbol: str, limit: int = 50
-    ) -> Optional[List[Dict[str, Any]]]:
+    ) -> list[dict[str, Any]] | None:
         """Get recent trades for a symbol"""
         try:
             if symbol not in self.trading_pairs:
@@ -198,7 +199,7 @@ class BinanceDataFetcher:
             logger.error(f"âŒ Error getting recent trades for {symbol}: {str(e)}")
             return None
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         return {
             "supported_coins": len(self.supported_coins),
             "trading_pairs": len(self.trading_pairs),
@@ -220,7 +221,7 @@ class LocalClient:
         self.tld = tld
         self.is_local = True
 
-    def get_ticker(self, symbol: str) -> Optional[Dict[str, Any]]:
+    def get_ticker(self, symbol: str) -> dict[str, Any] | None:
         """Get mock ticker data for local testing"""
         return {
             "symbol": symbol,
@@ -233,7 +234,7 @@ class LocalClient:
             "exchange": "local",
         }
 
-    def get_order_book(self, symbol: str, limit: int = 10) -> Optional[Dict[str, Any]]:
+    def get_order_book(self, symbol: str, limit: int = 10) -> dict[str, Any] | None:
         """Get mock order book for local testing"""
         return {
             "symbol": symbol,
@@ -243,7 +244,7 @@ class LocalClient:
             "exchange": "local",
         }
 
-    def get_recent_trades(self, symbol: str, limit: int = 50) -> Optional[List[Dict[str, Any]]]:
+    def get_recent_trades(self, symbol: str, limit: int = 50) -> list[dict[str, Any]] | None:
         """Get mock recent trades for local testing"""
         return [
             {

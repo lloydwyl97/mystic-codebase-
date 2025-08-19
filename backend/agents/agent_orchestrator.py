@@ -5,42 +5,41 @@ Manages all AI agents, coordinates communication, and provides central control
 
 import asyncio
 import json
-import time
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
 import os
 import sys
+from datetime import datetime
+from typing import Any
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # noqa: E402
 
-from backend.agents.base_agent import BaseAgent  # noqa: E402
-from backend.agents.strategy_agent import StrategyAgent  # noqa: E402
-from backend.agents.risk_agent import RiskAgent  # noqa: E402
-from backend.agents.execution_agent import ExecutionAgent  # noqa: E402
-from backend.agents.compliance_agent import ComplianceAgent  # noqa: E402
-from backend.agents.news_sentiment_agent import NewsSentimentAgent  # noqa: E402
-from backend.agents.social_media_agent import SocialMediaAgent  # noqa: E402
-from backend.agents.market_sentiment_agent import MarketSentimentAgent  # noqa: E402
-from backend.agents.deep_learning_agent import DeepLearningAgent  # noqa: E402
-from backend.agents.reinforcement_learning_agent import ReinforcementLearningAgent  # noqa: E402
-from backend.agents.ai_model_manager import AIModelManager  # noqa: E402
 from backend.agents.advanced_ai_orchestrator import AdvancedAIOrchestrator  # noqa: E402
-from backend.agents.nlp_orchestrator import NLPOrchestrator  # noqa: E402
+from backend.agents.ai_model_manager import AIModelManager  # noqa: E402
+from backend.agents.auranet_channel import AuraNetChannel  # noqa: E402
+from backend.agents.base_agent import BaseAgent  # noqa: E402
 from backend.agents.chart_pattern_agent import ChartPatternAgent  # noqa: E402
-from backend.agents.technical_indicator_agent import TechnicalIndicatorAgent  # noqa: E402
-from backend.agents.market_visualization_agent import MarketVisualizationAgent  # noqa: E402
+from backend.agents.compliance_agent import ComplianceAgent  # noqa: E402
 from backend.agents.computer_vision_orchestrator import ComputerVisionOrchestrator  # noqa: E402
+from backend.agents.cosmic_pattern_recognizer import CosmicPatternRecognizer  # noqa: E402
+from backend.agents.deep_learning_agent import DeepLearningAgent  # noqa: E402
+from backend.agents.execution_agent import ExecutionAgent  # noqa: E402
+from backend.agents.interdimensional_signal_decoder import (  # noqa: E402
+    InterdimensionalSignalDecoder,
+)
+from backend.agents.market_sentiment_agent import MarketSentimentAgent  # noqa: E402
+from backend.agents.market_visualization_agent import MarketVisualizationAgent  # noqa: E402
+from backend.agents.neuro_synchronization_engine import NeuroSynchronizationEngine  # noqa: E402
+from backend.agents.news_sentiment_agent import NewsSentimentAgent  # noqa: E402
+from backend.agents.nlp_orchestrator import NLPOrchestrator  # noqa: E402
 from backend.agents.quantum_algorithm_engine import QuantumAlgorithmEngine  # noqa: E402
 from backend.agents.quantum_machine_learning_agent import QuantumMachineLearningAgent  # noqa: E402
 from backend.agents.quantum_optimization_agent import QuantumOptimizationAgent  # noqa: E402
 from backend.agents.quantum_trading_engine import QuantumTradingEngine  # noqa: E402
-from backend.agents.interdimensional_signal_decoder import (  # noqa: E402
-    InterdimensionalSignalDecoder,
-)
-from backend.agents.neuro_synchronization_engine import NeuroSynchronizationEngine  # noqa: E402
-from backend.agents.cosmic_pattern_recognizer import CosmicPatternRecognizer  # noqa: E402
-from backend.agents.auranet_channel import AuraNetChannel  # noqa: E402
+from backend.agents.reinforcement_learning_agent import ReinforcementLearningAgent  # noqa: E402
+from backend.agents.risk_agent import RiskAgent  # noqa: E402
+from backend.agents.social_media_agent import SocialMediaAgent  # noqa: E402
+from backend.agents.strategy_agent import StrategyAgent  # noqa: E402
+from backend.agents.technical_indicator_agent import TechnicalIndicatorAgent  # noqa: E402
 
 
 class AgentOrchestrator(BaseAgent):
@@ -345,7 +344,7 @@ class AgentOrchestrator(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_agent_update(self, update_data: Dict[str, Any]):
+    async def process_agent_update(self, update_data: dict[str, Any]):
         """Process agent update"""
         try:
             update_type = update_data.get("type")
@@ -531,7 +530,7 @@ class AgentOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error coordinating agent activities: {e}")
 
-    async def handle_agent_status_update(self, message: Dict[str, Any]):
+    async def handle_agent_status_update(self, message: dict[str, Any]):
         """Handle agent status update"""
         try:
             agent_id = message.get("agent_id")
@@ -549,7 +548,7 @@ class AgentOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling agent status update: {e}")
 
-    async def handle_agent_error(self, message: Dict[str, Any]):
+    async def handle_agent_error(self, message: dict[str, Any]):
         """Handle agent error"""
         try:
             agent_id = message.get("agent_id")
@@ -587,7 +586,7 @@ class AgentOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling agent recovery: {e}")
 
-    async def handle_system_command(self, message: Dict[str, Any]):
+    async def handle_system_command(self, message: dict[str, Any]):
         """Handle system command"""
         try:
             command = message.get("command")
@@ -615,7 +614,7 @@ class AgentOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling system command: {e}")
 
-    async def handle_performance_report(self, message: Dict[str, Any]):
+    async def handle_performance_report(self, message: dict[str, Any]):
         """Handle performance report from agent"""
         try:
             agent_id = message.get("agent_id")
@@ -634,7 +633,7 @@ class AgentOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling performance report: {e}")
 
-    async def handle_agent_communication(self, message: Dict[str, Any]):
+    async def handle_agent_communication(self, message: dict[str, Any]):
         """Handle agent communication"""
         try:
             from_agent = message.get("from_agent")
@@ -723,7 +722,7 @@ class AgentOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error sending system status: {e}")
 
-    async def update_system_config(self, config: Dict[str, Any]):
+    async def update_system_config(self, config: dict[str, Any]):
         """Update system configuration"""
         try:
             # Update orchestrator configuration
@@ -800,10 +799,10 @@ class AgentOrchestrator(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating system metrics: {e}")
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process incoming market data and distribute to agents"""
         try:
-            print(f"ðŸ“Š Processing market data for agent orchestration")
+            print("ðŸ“Š Processing market data for agent orchestration")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -826,7 +825,7 @@ class AgentOrchestrator(BaseAgent):
             # Check system health after processing
             await self.check_system_health()
 
-            print(f"âœ… Market data processed for agent orchestration")
+            print("âœ… Market data processed for agent orchestration")
 
         except Exception as e:
             print(f"âŒ Error processing market data for orchestration: {e}")

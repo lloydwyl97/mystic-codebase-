@@ -1,10 +1,9 @@
 ﻿"""
 Export coin config from repo-level config/coins.py with safe defaults.
 """
-from typing import List
 
 DEFAULT_FEATURED_EXCHANGE = "binanceus"
-DEFAULT_FEATURED_SYMBOLS: List[str] = ["BTCUSDT", "ETHUSDT"]
+DEFAULT_FEATURED_SYMBOLS: list[str] = ["BTCUSDT", "ETHUSDT"]
 
 try:
     from config.coins import FEATURED_EXCHANGE as FEATURED_EXCHANGE  # type: ignore[no-redef]

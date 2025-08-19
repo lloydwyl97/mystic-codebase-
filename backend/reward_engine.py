@@ -1,12 +1,13 @@
 ﻿# reward_engine.py
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
-from models import Strategy, Trade, StrategyPerformance
-from db_logger import get_session
 import datetime
 import logging
-from typing import List, Dict, Any
 from datetime import datetime, timezone
+from typing import Any
+
+from db_logger import get_session
+from models import Strategy, StrategyPerformance, Trade
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +16,7 @@ engine = create_engine(DB_URL, echo=False)
 SessionLocal = sessionmaker(bind=engine)
 
 
-def evaluate_strategies(min_trades: int = 5, days: int = 7) -> Dict[str, Any]:
+def evaluate_strategies(min_trades: int = 5, days: int = 7) -> dict[str, Any]:
     """
     Evaluate all strategies and update their performance metrics
 
@@ -120,7 +121,7 @@ def evaluate_strategies(min_trades: int = 5, days: int = 7) -> Dict[str, Any]:
         session.close()
 
 
-def calculate_sharpe_ratio(profits: List[float], risk_free_rate: float = 0.02) -> float:
+def calculate_sharpe_ratio(profits: list[float], risk_free_rate: float = 0.02) -> float:
     """
     Calculate Sharpe ratio for a list of profits
 
@@ -148,7 +149,7 @@ def calculate_sharpe_ratio(profits: List[float], risk_free_rate: float = 0.02) -
     return round(sharpe, 4)
 
 
-def get_top_performers(top_n: int = 5, min_trades: int = 5) -> List[Dict[str, Any]]:
+def get_top_performers(top_n: int = 5, min_trades: int = 5) -> list[dict[str, Any]]:
     """
     Get top performing strategies
 
@@ -185,7 +186,7 @@ def get_top_performers(top_n: int = 5, min_trades: int = 5) -> List[Dict[str, An
         session.close()
 
 
-def get_poor_performers(min_trades: int = 5, max_win_rate: float = 0.4) -> List[Dict[str, Any]]:
+def get_poor_performers(min_trades: int = 5, max_win_rate: float = 0.4) -> list[dict[str, Any]]:
     """
     Get poorly performing strategies that might need to be deactivated
 
@@ -250,7 +251,7 @@ def deactivate_strategy(strategy_id: int) -> bool:
         session.close()
 
 
-def get_strategy_performance_history(strategy_id: int, days: int = 30) -> List[Dict[str, Any]]:
+def get_strategy_performance_history(strategy_id: int, days: int = 30) -> list[dict[str, Any]]:
     """
     Get performance history for a strategy
 
@@ -289,7 +290,7 @@ def get_strategy_performance_history(strategy_id: int, days: int = 30) -> List[D
         session.close()
 
 
-def run_daily_evaluation() -> Dict[str, Any]:
+def run_daily_evaluation() -> dict[str, Any]:
     """
     Run daily strategy evaluation (can be called by scheduler)
 

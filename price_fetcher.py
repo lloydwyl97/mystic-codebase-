@@ -1,6 +1,6 @@
 import logging
+
 import requests
-from typing import Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -11,12 +11,12 @@ class PriceFetcher:
     def __init__(self, api_url: str):
         self.api_url = api_url
 
-    def fetch_price(self, symbol: str) -> Optional[float]:
+    def fetch_price(self, symbol: str) -> float | None:
         """Fetch the current price for a given symbol"""
         try:
             response = requests.get(f"{self.api_url}/price/{symbol}")
             response.raise_for_status()
-            data: Dict[str, float] = response.json()
+            data: dict[str, float] = response.json()
             price = data.get("price")
             logger.info(f"Fetched price for {symbol}: {price}")
             return price

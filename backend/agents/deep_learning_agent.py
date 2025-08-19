@@ -5,18 +5,19 @@ Handles deep learning models for price prediction and pattern recognition
 
 import asyncio
 import json
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
 import os
 import sys
+from datetime import datetime, timedelta
+from typing import Any
+
+import joblib  # type: ignore[reportMissingTypeStubs]
+import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import MinMaxScaler
-import joblib
+from torch.utils.data import DataLoader, TensorDataset
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -252,8 +253,8 @@ class DeepLearningAgent(BaseAgent):
             print(f"âŒ Error initializing models: {e}")
 
     async def create_model(
-        self, model_name: str, model_config: Dict[str, Any]
-    ) -> Optional[nn.Module]:
+        self, model_name: str, model_config: dict[str, Any]
+    ) -> nn.Module | None:
         """Create a deep learning model"""
         try:
             model_type = model_config["type"]
@@ -339,7 +340,7 @@ class DeepLearningAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for model training"""
         try:
             symbol = market_data.get("symbol")
@@ -451,7 +452,7 @@ class DeepLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error training models for {symbol}: {e}")
 
-    async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_symbol_market_data(self, symbol: str) -> list[dict[str, Any]]:
         """Get market data for a symbol"""
         try:
             # Get from cache first
@@ -486,7 +487,7 @@ class DeepLearningAgent(BaseAgent):
         symbol: str,
         model_name: str,
         model: nn.Module,
-        market_data: List[Dict[str, Any]],
+        market_data: list[dict[str, Any]],
     ):
         """Train a specific model"""
         try:
@@ -591,8 +592,8 @@ class DeepLearningAgent(BaseAgent):
             print(f"âŒ Error training {model_name} for {symbol}: {e}")
 
     async def prepare_training_data(
-        self, symbol: str, model_name: str, market_data: List[Dict[str, Any]]
-    ) -> Tuple[Optional[np.ndarray], Optional[np.ndarray]]:
+        self, symbol: str, model_name: str, market_data: list[dict[str, Any]]
+    ) -> tuple[np.ndarray | None, np.ndarray | None]:
         """Prepare training data for a model"""
         try:
             model_config = self.model_config["models"][model_name]
@@ -615,8 +616,8 @@ class DeepLearningAgent(BaseAgent):
             return None, None
 
     async def prepare_lstm_data(
-        self, df: pd.DataFrame, model_config: Dict[str, Any]
-    ) -> Tuple[np.ndarray, np.ndarray]:
+        self, df: pd.DataFrame, model_config: dict[str, Any]
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Prepare data for LSTM model"""
         try:
             sequence_length = model_config["sequence_length"]
@@ -666,8 +667,8 @@ class DeepLearningAgent(BaseAgent):
             return None, None
 
     async def prepare_cnn_data(
-        self, df: pd.DataFrame, model_config: Dict[str, Any]
-    ) -> Tuple[np.ndarray, np.ndarray]:
+        self, df: pd.DataFrame, model_config: dict[str, Any]
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Prepare data for CNN model"""
         try:
             sequence_length = model_config["sequence_length"]
@@ -776,8 +777,8 @@ class DeepLearningAgent(BaseAgent):
         symbol: str,
         model_name: str,
         model: nn.Module,
-        market_data: List[Dict[str, Any]],
-    ) -> Optional[Dict[str, Any]]:
+        market_data: list[dict[str, Any]],
+    ) -> dict[str, Any] | None:
         """Make prediction with a specific model"""
         try:
             model_config = self.model_config["models"][model_name]
@@ -816,8 +817,8 @@ class DeepLearningAgent(BaseAgent):
             return None
 
     async def prepare_lstm_prediction_data(
-        self, market_data: List[Dict[str, Any]], model_config: Dict[str, Any]
-    ) -> Optional[np.ndarray]:
+        self, market_data: list[dict[str, Any]], model_config: dict[str, Any]
+    ) -> np.ndarray | None:
         """Prepare data for LSTM prediction"""
         try:
             sequence_length = model_config["sequence_length"]
@@ -860,8 +861,8 @@ class DeepLearningAgent(BaseAgent):
             return None
 
     async def prepare_cnn_prediction_data(
-        self, market_data: List[Dict[str, Any]], model_config: Dict[str, Any]
-    ) -> Optional[np.ndarray]:
+        self, market_data: list[dict[str, Any]], model_config: dict[str, Any]
+    ) -> np.ndarray | None:
         """Prepare data for CNN prediction"""
         try:
             sequence_length = model_config["sequence_length"]
@@ -903,7 +904,7 @@ class DeepLearningAgent(BaseAgent):
             print(f"âŒ Error preparing CNN prediction data: {e}")
             return None
 
-    async def broadcast_predictions(self, symbol: str, predictions: Dict[str, Any]):
+    async def broadcast_predictions(self, symbol: str, predictions: dict[str, Any]):
         """Broadcast predictions to other agents"""
         try:
             prediction_update = {
@@ -923,7 +924,7 @@ class DeepLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting predictions: {e}")
 
-    async def handle_train_model(self, message: Dict[str, Any]):
+    async def handle_train_model(self, message: dict[str, Any]):
         """Handle manual model training request"""
         try:
             symbol = message.get("symbol")
@@ -962,7 +963,7 @@ class DeepLearningAgent(BaseAgent):
             print(f"âŒ Error handling model training request: {e}")
             await self.broadcast_error(f"Model training error: {e}")
 
-    async def handle_make_prediction(self, message: Dict[str, Any]):
+    async def handle_make_prediction(self, message: dict[str, Any]):
         """Handle manual prediction request"""
         try:
             symbol = message.get("symbol")
@@ -1028,7 +1029,7 @@ class DeepLearningAgent(BaseAgent):
             print(f"âŒ Error handling prediction request: {e}")
             await self.broadcast_error(f"Prediction error: {e}")
 
-    async def handle_get_model_status(self, message: Dict[str, Any]):
+    async def handle_get_model_status(self, message: dict[str, Any]):
         """Handle model status request"""
         try:
             symbol = message.get("symbol")
@@ -1107,7 +1108,7 @@ class DeepLearningAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error cleaning up cache: {e}")
 
-    async def handle_market_data(self, message: Dict[str, Any]):
+    async def handle_market_data(self, message: dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})

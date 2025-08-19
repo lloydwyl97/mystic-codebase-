@@ -6,12 +6,11 @@ All endpoints return live data - no stubs or placeholders
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Protocol, runtime_checkable, TypedDict, cast
+from typing import Any, Protocol, TypedDict, cast, runtime_checkable
 
 import aiohttp
-
 from fastapi import APIRouter, HTTPException
-from typing import Any, List
+
 from backend.config.coins import FEATURED_SYMBOLS
 
 # Import real services
@@ -35,47 +34,47 @@ except ImportError as e:
             pass
 
     class FallbackCoinGeckoService:
-        async def get_global_data(self) -> Dict[str, Any]:
+        async def get_global_data(self) -> dict[str, Any]:
             return {}
 
     class FallbackMarketDataService:
-        async def get_live_data(self) -> Dict[str, Any]:
+        async def get_live_data(self) -> dict[str, Any]:
             return {}
 
-        async def get_market_trends(self) -> Dict[str, Any]:
+        async def get_market_trends(self) -> dict[str, Any]:
             return {}
 
-        async def get_prices(self, symbols: List[str]) -> Dict[str, Any]:
+        async def get_prices(self, symbols: list[str]) -> dict[str, Any]:
             return {}
 
-        async def get_priceHistory(self, symbols: List[str]) -> Dict[str, Any]:  # noqa: N802
+        async def get_priceHistory(self, symbols: list[str]) -> dict[str, Any]:  # noqa: N802
             return {}
 
-        async def get_price_history(self, symbols: List[str]) -> Dict[str, Any]:
+        async def get_price_history(self, symbols: list[str]) -> dict[str, Any]:
             return {}
 
-        async def get_technical_analysis(self) -> Dict[str, Any]:
+        async def get_technical_analysis(self) -> dict[str, Any]:
             return {}
 
-        async def get_market_sentiment(self) -> Dict[str, Any]:
+        async def get_market_sentiment(self) -> dict[str, Any]:
             return {}
 
-        async def get_volume_data(self) -> Dict[str, Any]:
+        async def get_volume_data(self) -> dict[str, Any]:
             return {}
 
-        async def get_volume_trends(self) -> Dict[str, Any]:
+        async def get_volume_trends(self) -> dict[str, Any]:
             return {}
 
-        async def get_market_cap_data(self) -> Dict[str, Any]:
+        async def get_market_cap_data(self) -> dict[str, Any]:
             return {}
 
-        async def get_top_movers(self) -> Dict[str, Any]:
+        async def get_top_movers(self) -> dict[str, Any]:
             return {}
 
-        async def get_exchange_data(self) -> Dict[str, Any]:
+        async def get_exchange_data(self) -> dict[str, Any]:
             return {}
 
-        async def get_trading_pairs(self) -> Dict[str, Any]:
+        async def get_trading_pairs(self) -> dict[str, Any]:
             return {}
 
     BinanceData = FallbackBinanceData  # type: ignore[assignment]
@@ -87,8 +86,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-def _filter_to_featured(items: List[Any]) -> List[Any]:
-    out: List[Any] = []
+def _filter_to_featured(items: list[Any]) -> list[Any]:
+    out: list[Any] = []
     for it in items:
         sym = it.get("symbol") if isinstance(it, dict) else str(it)
         if sym in FEATURED_SYMBOLS:
@@ -97,46 +96,46 @@ def _filter_to_featured(items: List[Any]) -> List[Any]:
 
 @runtime_checkable
 class MarketDataServiceProtocol(Protocol):
-    async def get_live_data(self) -> Dict[str, Any]:
+    async def get_live_data(self) -> dict[str, Any]:
         ...
 
-    async def get_market_trends(self) -> Dict[str, Any]:
+    async def get_market_trends(self) -> dict[str, Any]:
         ...
 
-    async def get_prices(self, symbols: List[str]) -> Dict[str, Any]:
+    async def get_prices(self, symbols: list[str]) -> dict[str, Any]:
         ...
 
-    async def get_price_history(self, symbols: List[str]) -> Dict[str, Any]:
+    async def get_price_history(self, symbols: list[str]) -> dict[str, Any]:
         ...
 
-    async def get_technical_analysis(self) -> Dict[str, Any]:
+    async def get_technical_analysis(self) -> dict[str, Any]:
         ...
 
-    async def get_market_sentiment(self) -> Dict[str, Any]:
+    async def get_market_sentiment(self) -> dict[str, Any]:
         ...
 
-    async def get_volume_data(self) -> Dict[str, Any]:
+    async def get_volume_data(self) -> dict[str, Any]:
         ...
 
-    async def get_volume_trends(self) -> Dict[str, Any]:
+    async def get_volume_trends(self) -> dict[str, Any]:
         ...
 
-    async def get_market_cap_data(self) -> Dict[str, Any]:
+    async def get_market_cap_data(self) -> dict[str, Any]:
         ...
 
-    async def get_top_movers(self) -> Dict[str, Any]:
+    async def get_top_movers(self) -> dict[str, Any]:
         ...
 
-    async def get_exchange_data(self) -> Dict[str, Any]:
+    async def get_exchange_data(self) -> dict[str, Any]:
         ...
 
-    async def get_trading_pairs(self) -> Dict[str, Any]:
+    async def get_trading_pairs(self) -> dict[str, Any]:
         ...
 
 
 @runtime_checkable
 class CoinGeckoServiceProtocol(Protocol):
-    async def get_global_data(self) -> Dict[str, Any]:
+    async def get_global_data(self) -> dict[str, Any]:
         ...
 
 
@@ -160,7 +159,7 @@ except Exception as e:
     logger.warning(f"Could not initialize some market data services: {e}")
 
 
-async def _fetch_json(session: aiohttp.ClientSession, url: str, timeout: int = 10) -> Optional[Dict[str, Any]]:
+async def _fetch_json(session: aiohttp.ClientSession, url: str, timeout: int = 10) -> dict[str, Any] | None:
     try:
         async with session.get(url, timeout=timeout) as resp:
             if resp.status == 200:
@@ -186,12 +185,12 @@ def _to_kraken_pair(symbol_dash: str) -> str:
 
 
 async def _fetch_symbol_prices_from_exchanges(
-    session: aiohttp.ClientSession, symbols_dash: List[str]
-) -> Dict[str, PriceEntry]:
-    results: Dict[str, PriceEntry] = {}
+    session: aiohttp.ClientSession, symbols_dash: list[str]
+) -> dict[str, PriceEntry]:
+    results: dict[str, PriceEntry] = {}
 
     # CoinGecko batch (ids mapping for BTC, ETH, ADA, DOT, LINK; fallback by lower)
-    id_map: Dict[str, str] = {
+    id_map: dict[str, str] = {
         "BTC-USD": "bitcoin",
         "ETH-USD": "ethereum",
         "ADA-USD": "cardano",
@@ -199,7 +198,7 @@ async def _fetch_symbol_prices_from_exchanges(
         "LINK-USD": "chainlink",
     }
     cg_ids = ",".join({id_map.get(s, "") for s in symbols_dash if id_map.get(s)})
-    coingecko_data: Dict[str, Any] = {}
+    coingecko_data: dict[str, Any] = {}
     if cg_ids:
         url = (
             "https://api.coingecko.com/api/v3/simple/price"
@@ -298,7 +297,7 @@ async def _fetch_symbol_prices_from_exchanges(
 
 
 @router.get("/market/live")
-async def get_market_live() -> Dict[str, Any]:
+async def get_market_live() -> dict[str, Any]:
     """Get live market data and prices"""
     try:
         # Get real live market data
@@ -311,12 +310,12 @@ async def get_market_live() -> Dict[str, Any]:
             live_data = {"error": "Live market data unavailable"}
 
         # Get latest prices from cache
-        prices: Dict[str, Any] = {}
+        prices: dict[str, Any] = {}
         try:
             cache = get_persistent_cache()
             if cache:
                 cache_any: Any = cache
-                prices = cast(Dict[str, Any], cache_any.get_latest_prices())
+                prices = cast(dict[str, Any], cache_any.get_latest_prices())
         except Exception as e:
             logger.error(f"Error getting latest prices: {e}")
             prices = {"error": "Latest prices unavailable"}
@@ -355,7 +354,7 @@ async def get_market_live() -> Dict[str, Any]:
 
 
 @router.get("/market/prices")
-async def get_market_prices(symbols: Optional[str] = None) -> Dict[str, Any]:
+async def get_market_prices(symbols: str | None = None) -> dict[str, Any]:
     """Get current market prices for specified symbols"""
     try:
         # Parse symbols parameter
@@ -405,7 +404,7 @@ async def get_market_prices(symbols: Optional[str] = None) -> Dict[str, Any]:
 
 
 @router.get("/market/trends")
-async def get_market_trends() -> Dict[str, Any]:
+async def get_market_trends() -> dict[str, Any]:
     """Get market trends and analysis"""
     try:
         # Get real market trends
@@ -451,7 +450,7 @@ async def get_market_trends() -> Dict[str, Any]:
 
 
 @router.get("/market/volume")
-async def get_market_volume() -> Dict[str, Any]:
+async def get_market_volume() -> dict[str, Any]:
     """Get market volume data"""
     try:
         # Get real volume data
@@ -487,7 +486,7 @@ async def get_market_volume() -> Dict[str, Any]:
 
 
 @router.get("/market/global")
-async def get_global_market_data() -> Dict[str, Any]:
+async def get_global_market_data() -> dict[str, Any]:
     """Get global market data and statistics"""
     try:
         # Get real global market data
@@ -533,7 +532,7 @@ async def get_global_market_data() -> Dict[str, Any]:
 
 
 @router.get("/market/exchanges")
-async def get_exchange_data() -> Dict[str, Any]:
+async def get_exchange_data() -> dict[str, Any]:
     """Get exchange data and trading pairs"""
     try:
         # Get real exchange data

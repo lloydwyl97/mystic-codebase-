@@ -6,7 +6,7 @@ Handles portfolio rebalancing operations and health monitoring.
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List, cast
+from typing import Any, cast
 
 from .services.websocket_manager import websocket_manager
 
@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 def rebalance_portfolio(
-    current_holdings: Dict[str, Any],
+    current_holdings: dict[str, Any],
     stablecoin: str = "USDT",
     threshold: float = 0.05,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Rebalance portfolio based on current holdings and target allocation.
 
@@ -84,21 +84,21 @@ class PortfolioRebalancer:
     """Advanced portfolio rebalancing with real-time updates."""
 
     def __init__(self):
-        self.current_positions: Dict[str, Dict[str, Any]] = {}
-        self.target_allocation: Dict[str, float] = {}
-        self.rebalancing_history: List[Dict[str, Any]] = []
+        self.current_positions: dict[str, dict[str, Any]] = {}
+        self.target_allocation: dict[str, float] = {}
+        self.rebalancing_history: list[dict[str, Any]] = []
 
-    async def get_current_positions(self) -> Dict[str, Dict[str, Any]]:
+    async def get_current_positions(self) -> dict[str, dict[str, Any]]:
         """Get current portfolio positions."""
         return self.current_positions.copy()
 
     def _calculate_current_allocation(
-        self, positions: Dict[str, Dict[str, Any]]
-    ) -> Dict[str, float]:
+        self, positions: dict[str, dict[str, Any]]
+    ) -> dict[str, float]:
         """Calculate current allocation percentages."""
         total_value = sum(pos.get("value", 0) for pos in positions.values())
         if total_value == 0:
-            return cast(Dict[str, float], {})
+            return cast(dict[str, float], {})
 
         allocation = {}
         for symbol, position in positions.items():
@@ -108,10 +108,10 @@ class PortfolioRebalancer:
         return allocation
 
     def _calculate_rebalancing_trades(
-        self, current: Dict[str, float], target: Dict[str, float]
-    ) -> List[Dict[str, Any]]:
+        self, current: dict[str, float], target: dict[str, float]
+    ) -> list[dict[str, Any]]:
         """Calculate required trades to reach target allocation."""
-        trades: List[Dict[str, Any]] = []
+        trades: list[dict[str, Any]] = []
         threshold = 0.05  # 5% threshold
 
         for symbol in set(current.keys()) | set(target.keys()):
@@ -142,7 +142,7 @@ class PortfolioRebalancer:
 
         return trades
 
-    async def _execute_trade(self, trade: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute_trade(self, trade: dict[str, Any]) -> dict[str, Any]:
         """Execute a single trade."""
         try:
             # Simulate trade execution
@@ -175,7 +175,7 @@ class PortfolioRebalancer:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def rebalance_portfolio(self, target_allocation: Dict[str, float]) -> Dict[str, Any]:
+    async def rebalance_portfolio(self, target_allocation: dict[str, float]) -> dict[str, Any]:
         """Rebalance portfolio to target allocation."""
         try:
             current_positions = await self.get_current_positions()
@@ -185,7 +185,7 @@ class PortfolioRebalancer:
             trades = self._calculate_rebalancing_trades(current_allocation, target_allocation)
 
             # Execute trades
-            executed_trades: List[Dict[str, Any]] = []
+            executed_trades: list[dict[str, Any]] = []
             for trade in trades:
                 if trade["action"] != "hold":
                     result = await self._execute_trade(trade)
@@ -196,7 +196,7 @@ class PortfolioRebalancer:
             new_positions = await self.get_current_positions()
             new_allocation = self._calculate_current_allocation(new_positions)
 
-            result: Dict[str, Any] = {
+            result: dict[str, Any] = {
                 "success": True,
                 "trades_executed": len(executed_trades),
                 "current_allocation": new_allocation,

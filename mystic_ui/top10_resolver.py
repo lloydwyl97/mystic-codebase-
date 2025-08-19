@@ -1,9 +1,10 @@
 ﻿from __future__ import annotations
-from typing import List, Dict, Any
+
+from typing import Any
 
 _VOLUME_KEYS = ("quoteVolume", "volume_quote", "volume_24h", "volume", "vol")
 
-def _lower(d: Dict[str, Any]) -> Dict[str, Any]:
+def _lower(d: dict[str, Any]) -> dict[str, Any]:
 	return {str(k).lower(): v for k, v in d.items()}
 
 def _rows(payload: Any) -> list[dict]:
@@ -19,13 +20,13 @@ def _rows(payload: Any) -> list[dict]:
 			return vals
 	return []
 
-def resolve_top10_binanceus(base_api: str, limit: int = 10) -> List[str]:
+def resolve_top10_binanceus(base_api: str, limit: int = 10) -> list[str]:
 	try:
 		from mystic_ui.api_client import request_json as _request_json
 	except Exception:
 		from mystic_ui.api_client import _request_json as _request_json
 
-	symbols: List[str] = []
+	symbols: list[str] = []
 	try:
 		global_payload = _request_json(f"{base_api}/market/global", params=None)
 		ranked: list[tuple[str, float]] = []

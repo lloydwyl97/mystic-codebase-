@@ -9,7 +9,7 @@ import math
 import random
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 from mystic_config import mystic_config
 
@@ -42,7 +42,7 @@ class PlanetaryAlignmentData:
     """Planetary alignment data structure"""
 
     alignment_strength: float
-    planets_involved: List[str]
+    planets_involved: list[str]
     influence_score: float
     timestamp: datetime
 
@@ -167,7 +167,7 @@ class MysticIntegrationService:
                 timestamp=datetime.now(),
             )
 
-    async def get_mystic_signal_strength(self) -> Dict[str, Any]:
+    async def get_mystic_signal_strength(self) -> dict[str, Any]:
         """Calculate overall mystic signal strength based on all factors"""
         try:
             schumann = await self.get_schumann_resonance()

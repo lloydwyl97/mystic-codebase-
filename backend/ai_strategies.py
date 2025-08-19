@@ -10,7 +10,7 @@ import warnings
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -56,16 +56,16 @@ class TradingSignal:
     price: float
     timestamp: datetime
     strategy: str
-    indicators: Dict[str, float]
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    indicators: dict[str, float]
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
 class StrategyConfig:
     name: str
     strategy_type: StrategyType
-    symbols: List[str]
-    parameters: Dict[str, Any]
+    symbols: list[str]
+    parameters: dict[str, Any]
     risk_level: str
     enabled: bool = True
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.timezone.utc))
@@ -80,8 +80,8 @@ class MLModel:
     recall: float
     f1_score: float
     last_trained: datetime
-    features: List[str]
-    parameters: Dict[str, Any]
+    features: list[str]
+    parameters: dict[str, Any]
 
 
 class TechnicalIndicators:
@@ -110,7 +110,7 @@ class TechnicalIndicators:
     @staticmethod
     def calculate_macd(
         data: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9
-    ) -> Tuple[pd.Series, pd.Series, pd.Series]:
+    ) -> tuple[pd.Series, pd.Series, pd.Series]:
         """MACD (Moving Average Convergence Divergence)."""
         ema_fast = data.ewm(span=fast).mean()
         ema_slow = data.ewm(span=slow).mean()
@@ -122,7 +122,7 @@ class TechnicalIndicators:
     @staticmethod
     def calculate_bollinger_bands(
         data: pd.Series, period: int = 20, std_dev: float = 2
-    ) -> Tuple[pd.Series, pd.Series, pd.Series]:
+    ) -> tuple[pd.Series, pd.Series, pd.Series]:
         """Bollinger Bands."""
         sma = data.rolling(window=period).mean()
         std = data.rolling(window=period).std()
@@ -137,7 +137,7 @@ class TechnicalIndicators:
         close: pd.Series,
         k_period: int = 14,
         d_period: int = 3,
-    ) -> Tuple[pd.Series, pd.Series]:
+    ) -> tuple[pd.Series, pd.Series]:
         """Stochastic Oscillator."""
         lowest_low = low.rolling(window=k_period).min()
         highest_high = high.rolling(window=k_period).max()
@@ -160,7 +160,7 @@ class TechnicalIndicators:
     @staticmethod
     def calculate_volume_profile(
         volume: pd.Series, price: pd.Series, bins: int = 50
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """Volume Profile Analysis."""
         price_bins = pd.cut(price, bins=bins)
         volume_profile = volume.groupby(price_bins).sum()
@@ -176,9 +176,9 @@ class PatternRecognition:
         high: pd.Series,
         low: pd.Series,
         close: pd.Series,
-    ) -> Dict[str, List[int]]:
+    ) -> dict[str, list[int]]:
         """Detect candlestick patterns using ta library."""
-        patterns: Dict[str, List[int]] = {}
+        patterns: dict[str, list[int]] = {}
 
         # Note: ta library doesn't have built-in candlestick patterns like TA-Lib
         # We'll implement basic pattern detection manually
@@ -213,7 +213,7 @@ class PatternRecognition:
     @staticmethod
     def detect_chart_patterns(
         high: pd.Series, low: pd.Series, close: pd.Series
-    ) -> Dict[str, List[Dict[str, Any]]]:
+    ) -> dict[str, list[dict[str, Any]]]:
         """Detect chart patterns like triangles, flags, etc."""
         patterns = {}
 
@@ -237,7 +237,7 @@ class PatternRecognition:
     @staticmethod
     def _detect_head_shoulders(
         high: pd.Series, low: pd.Series, close: pd.Series
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Detect Head and Shoulders pattern."""
         patterns = []
         window = 20
@@ -268,7 +268,7 @@ class PatternRecognition:
     @staticmethod
     def _detect_double_patterns(
         high: pd.Series, low: pd.Series, close: pd.Series
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Detect Double Top and Double Bottom patterns."""
         patterns = []
         window = 15
@@ -307,7 +307,7 @@ class PatternRecognition:
     @staticmethod
     def _detect_triangles(
         high: pd.Series, low: pd.Series, close: pd.Series
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Detect triangle patterns (ascending, descending, symmetrical)."""
         patterns = []
         window = 30
@@ -369,7 +369,7 @@ class StrategyBuilder:
             "set_take_profit": self._set_take_profit_action,
         }
 
-    def create_strategy(self, name: str, description: str, rules: List[Dict[str, Any]]) -> str:
+    def create_strategy(self, name: str, description: str, rules: list[dict[str, Any]]) -> str:
         """Create a new trading strategy."""
         strategy_id = f"strategy_{len(self.strategies) + 1}"
 
@@ -424,12 +424,12 @@ class StrategyBuilder:
 
         return bullish_divergence | bearish_divergence
 
-    def _pattern_condition(self, pattern_data: Dict[str, Any]) -> pd.Series:
+    def _pattern_condition(self, pattern_data: dict[str, Any]) -> pd.Series:
         """Check for specific patterns."""
         # This would be implemented based on pattern recognition results
         return pd.Series([False] * len(pattern_data.get("data", [])))
 
-    def _buy_action(self, signal_data: Dict[str, Any]) -> TradingSignal:
+    def _buy_action(self, signal_data: dict[str, Any]) -> TradingSignal:
         """Generate buy signal."""
         return TradingSignal(
             symbol=signal_data["symbol"],
@@ -441,7 +441,7 @@ class StrategyBuilder:
             indicators=signal_data.get("indicators", {}),
         )
 
-    def _sell_action(self, signal_data: Dict[str, Any]) -> TradingSignal:
+    def _sell_action(self, signal_data: dict[str, Any]) -> TradingSignal:
         """Generate sell signal."""
         return TradingSignal(
             symbol=signal_data["symbol"],
@@ -453,7 +453,7 @@ class StrategyBuilder:
             indicators=signal_data.get("indicators", {}),
         )
 
-    def _set_stop_loss_action(self, signal_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _set_stop_loss_action(self, signal_data: dict[str, Any]) -> dict[str, Any]:
         """Set stop loss level."""
         return {
             "action": "set_stop_loss",
@@ -461,7 +461,7 @@ class StrategyBuilder:
             "type": "stop_loss",
         }
 
-    def _set_take_profit_action(self, signal_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _set_take_profit_action(self, signal_data: dict[str, Any]) -> dict[str, Any]:
         """Set take profit level."""
         return {
             "action": "set_take_profit",
@@ -471,7 +471,7 @@ class StrategyBuilder:
 
     async def execute_strategy(
         self, strategy_id: str, market_data: pd.DataFrame
-    ) -> List[TradingSignal]:
+    ) -> list[TradingSignal]:
         """Execute a strategy on market data."""
         if strategy_id not in self.strategies:
             raise ValueError(f"Strategy {strategy_id} not found")
@@ -494,7 +494,7 @@ class StrategyBuilder:
 
         return signals
 
-    async def _evaluate_rule(self, rule: Dict[str, Any], market_data: pd.DataFrame) -> bool:
+    async def _evaluate_rule(self, rule: dict[str, Any], market_data: pd.DataFrame) -> bool:
         """Evaluate a rule's conditions."""
         conditions = rule.get("conditions", [])
 
@@ -522,8 +522,8 @@ class StrategyBuilder:
         return True
 
     async def _execute_rule_actions(
-        self, rule: Dict[str, Any], market_data: pd.DataFrame
-    ) -> List[TradingSignal]:
+        self, rule: dict[str, Any], market_data: pd.DataFrame
+    ) -> list[TradingSignal]:
         """Execute rule actions."""
         actions = rule.get("actions", [])
         signals = []
@@ -661,7 +661,7 @@ class PredictiveAnalytics:
 
         # Feature importance
         if hasattr(model, "feature_importances_"):
-            feature_importance = dict(zip(features.columns, model.feature_importances_))
+            feature_importance = dict(zip(features.columns, model.feature_importances_, strict=False))
         else:
             feature_importance = {}
 
@@ -687,7 +687,7 @@ class PredictiveAnalytics:
 
         return ml_model
 
-    def predict(self, model_name: str, features: pd.DataFrame) -> Tuple[np.ndarray, float]:
+    def predict(self, model_name: str, features: pd.DataFrame) -> tuple[np.ndarray, float]:
         """Make predictions using a trained model."""
         if model_name not in self.models:
             raise ValueError(f"Model {model_name} not found")
@@ -706,7 +706,7 @@ class PredictiveAnalytics:
 
         return prediction, confidence
 
-    def get_feature_importance(self, model_name: str) -> Dict[str, float]:
+    def get_feature_importance(self, model_name: str) -> dict[str, float]:
         """Get feature importance for a model."""
         return self.feature_importance.get(model_name, {})
 

@@ -6,7 +6,7 @@ All endpoints return live data, no stubs or placeholders.
 
 import logging
 import time
-from typing import Any, Dict
+from typing import Any
 
 import httpx
 from fastapi import APIRouter, HTTPException
@@ -49,12 +49,13 @@ router = APIRouter(tags=["dashboard-missing"])
 
 
 @router.get("/dashboard/metrics")
-async def get_dashboard_metrics() -> Dict[str, Any]:
+async def get_dashboard_metrics() -> dict[str, Any]:
     """Get comprehensive dashboard metrics with live data"""
     try:
         import psutil
-        from backend.services.strategy_service import StrategyService
+
         from backend.services.portfolio_service import PortfolioService
+        from backend.services.strategy_service import StrategyService
 
         # Get live market data
         async with httpx.AsyncClient() as client:
@@ -93,11 +94,11 @@ async def get_dashboard_metrics() -> Dict[str, Any]:
                 raise HTTPException(status_code=500, detail="Failed to fetch market data")
     except Exception as e:
         logger.error(f"Error in dashboard metrics: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/dashboard/strategies")
-async def get_strategies_summary() -> Dict[str, Any]:
+async def get_strategies_summary() -> dict[str, Any]:
     """Get summary of top-performing AI strategies with live data"""
     try:
         from backend.services.strategy_service import StrategyService
@@ -112,11 +113,11 @@ async def get_strategies_summary() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in strategies summary: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/dashboard/logs")
-async def get_recent_logs() -> Dict[str, Any]:
+async def get_recent_logs() -> dict[str, Any]:
     """Get recent system logs with live data"""
     try:
         from backend.services.logging_service import LoggingService
@@ -131,11 +132,11 @@ async def get_recent_logs() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in recent logs: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/dashboard/ping")
-async def ping_dashboard() -> Dict[str, Any]:
+async def ping_dashboard() -> dict[str, Any]:
     """Lightweight ping check for dashboard API health"""
     try:
         from backend.services.health_check_service import HealthCheckService
@@ -151,11 +152,11 @@ async def ping_dashboard() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in dashboard ping: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/backtest/results")
-async def get_backtest_results_endpoint() -> Dict[str, Any]:
+async def get_backtest_results_endpoint() -> dict[str, Any]:
     """Get backtest results with live data"""
     try:
         from backend.services.backtest_service import BacktestService
@@ -169,15 +170,15 @@ async def get_backtest_results_endpoint() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in backtest results: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/autobuy/config")
-async def get_autobuy_config_endpoint() -> Dict[str, Any]:
+async def get_autobuy_config_endpoint() -> dict[str, Any]:
     """Get autobuy configuration with live data"""
     try:
-        import sys
         import os
+        import sys
         sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
         from backend.services.autobuy_service import AutobuyService
 
@@ -190,11 +191,11 @@ async def get_autobuy_config_endpoint() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in autobuy config: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/autobuy/status")
-async def get_autobuy_status_endpoint() -> Dict[str, Any]:
+async def get_autobuy_status_endpoint() -> dict[str, Any]:
     """Get autobuy status with live data"""
     try:
         return {
@@ -212,15 +213,15 @@ async def get_autobuy_status_endpoint() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in autobuy status: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/autobuy/stats")
-async def get_autobuy_stats_endpoint() -> Dict[str, Any]:
+async def get_autobuy_stats_endpoint() -> dict[str, Any]:
     """Get autobuy statistics with live data"""
     try:
-        import sys
         import os
+        import sys
         sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
         from backend.services.autobuy_service import AutobuyService
 
@@ -229,15 +230,15 @@ async def get_autobuy_stats_endpoint() -> Dict[str, Any]:
         return {"data": stats, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in autobuy stats: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/autobuy/trades")
-async def get_autobuy_trades_endpoint() -> Dict[str, Any]:
+async def get_autobuy_trades_endpoint() -> dict[str, Any]:
     """Get autobuy trades with live data"""
     try:
-        import sys
         import os
+        import sys
         sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
         from backend.services.autobuy_service import AutobuyService
 
@@ -246,15 +247,15 @@ async def get_autobuy_trades_endpoint() -> Dict[str, Any]:
         return {"data": trades, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in autobuy trades: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/autobuy/signals")
-async def get_autobuy_signals_endpoint() -> Dict[str, Any]:
+async def get_autobuy_signals_endpoint() -> dict[str, Any]:
     """Get autobuy signals with live data"""
     try:
-        import sys
         import os
+        import sys
         sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
         from backend.services.autobuy_service import AutobuyService
 
@@ -263,15 +264,15 @@ async def get_autobuy_signals_endpoint() -> Dict[str, Any]:
         return {"data": signals, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in autobuy signals: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/autobuy/ai-status")
-async def get_autobuy_ai_status_endpoint() -> Dict[str, Any]:
+async def get_autobuy_ai_status_endpoint() -> dict[str, Any]:
     """Get autobuy AI integration status"""
     try:
-        import sys
         import os
+        import sys
         sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
         from backend.services.autobuy_service import AutobuyService
 
@@ -280,11 +281,11 @@ async def get_autobuy_ai_status_endpoint() -> Dict[str, Any]:
         return {"data": ai_status, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in autobuy AI status: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/portfolio/overview")
-async def get_portfolio_overview() -> Dict[str, Any]:
+async def get_portfolio_overview() -> dict[str, Any]:
     """Get portfolio overview with live data"""
     try:
         from backend.services.portfolio_service import PortfolioService
@@ -294,11 +295,11 @@ async def get_portfolio_overview() -> Dict[str, Any]:
         return {"data": portfolio_data, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in portfolio overview: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/portfolio/live")
-async def get_portfolio_live() -> Dict[str, Any]:
+async def get_portfolio_live() -> dict[str, Any]:
     """Get live portfolio data"""
     try:
         from backend.services.portfolio_service import PortfolioService
@@ -308,11 +309,11 @@ async def get_portfolio_live() -> Dict[str, Any]:
         return {"data": live_data, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in portfolio live: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/market/live")
-async def get_market_live() -> Dict[str, Any]:
+async def get_market_live() -> dict[str, Any]:
     """Get live market data"""
     try:
         from backend.services.market_data_service import MarketDataService
@@ -322,11 +323,11 @@ async def get_market_live() -> Dict[str, Any]:
         return {"data": {"markets": markets}, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in market live: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/system/status")
-async def get_system_status() -> Dict[str, Any]:
+async def get_system_status() -> dict[str, Any]:
     """Get system status"""
     try:
         from backend.services.system_monitor_service import SystemMonitorService
@@ -336,11 +337,11 @@ async def get_system_status() -> Dict[str, Any]:
         return {"data": system_data, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in system status: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/trading/signals")
-async def get_trading_signals() -> Dict[str, Any]:
+async def get_trading_signals() -> dict[str, Any]:
     """Get trading signals"""
     try:
         from backend.services.signal_service import SignalService
@@ -350,11 +351,11 @@ async def get_trading_signals() -> Dict[str, Any]:
         return {"data": {"signals": signals}, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in trading signals: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/dashboard/performance")
-async def get_dashboard_performance() -> Dict[str, Any]:
+async def get_dashboard_performance() -> dict[str, Any]:
     """Get dashboard performance data"""
     try:
         from backend.services.performance_analytics_service import PerformanceAnalyticsService
@@ -364,11 +365,11 @@ async def get_dashboard_performance() -> Dict[str, Any]:
         return {"data": performance_data, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in dashboard performance: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/alerts/recent")
-async def get_recent_alerts() -> Dict[str, Any]:
+async def get_recent_alerts() -> dict[str, Any]:
     """Get recent alerts"""
     try:
         from backend.services.alert_service import AlertService
@@ -378,17 +379,18 @@ async def get_recent_alerts() -> Dict[str, Any]:
         return {"data": alerts, "timestamp": time.time(), "live_data": True}
     except Exception as e:
         logger.error(f"Error in recent alerts: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/whale/alerts")
-async def get_whale_alerts() -> Dict[str, Any]:
+async def get_whale_alerts() -> dict[str, Any]:
     """Get whale alerts with live data"""
     try:
         from backend.services.whale_alert_service import WhaleAlertService
 
         whale_alert_service = WhaleAlertService()
-        alerts = await whale_alert_service.get_alerts()
+        # get_alerts is synchronous; do not await
+        alerts = whale_alert_service.get_alerts()
         return {
             "alerts": alerts,
             "total_alerts": len(alerts) if alerts else 0,
@@ -397,11 +399,11 @@ async def get_whale_alerts() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in whale alerts: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/orders")
-async def get_orders() -> Dict[str, Any]:
+async def get_orders() -> dict[str, Any]:
     """Get orders with live data"""
     try:
         from backend.services.order_service import OrderService
@@ -416,11 +418,11 @@ async def get_orders() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in orders: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/signals")
-async def get_signals() -> Dict[str, Any]:
+async def get_signals() -> dict[str, Any]:
     """Get trading signals with live data"""
     try:
         from backend.services.signal_service import SignalService
@@ -435,7 +437,7 @@ async def get_signals() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Error in signals: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 

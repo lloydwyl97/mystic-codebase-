@@ -1,8 +1,9 @@
 import logging
 import os
 import sys
-from flask import Flask, request, jsonify
+
 from dotenv import load_dotenv
+from flask import Flask, jsonify, request
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -12,10 +13,11 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
 # Import AI modules
 try:
-    from ai_strategy_generator import AIStrategyGenerator
+    from ai_auto_retrain import AutoRetrainService
     from ai_genetic_algorithm import GeneticAlgorithmEngine
     from ai_model_versioning import ModelVersioningService
-    from ai_auto_retrain import AutoRetrainService
+
+    from ai_strategy_generator import AIStrategyGenerator
 except ImportError as e:
     logger.error(f"Error importing AI modules: {e}")
     sys.exit(1)

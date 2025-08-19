@@ -19,7 +19,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass
@@ -39,7 +39,7 @@ class CodeQualityChecker:
 
     def __init__(self):
         self.project_root = Path(__file__).parent.parent
-        self.results: List[QualityResult] = []
+        self.results: list[QualityResult] = []
         self.start_time = time.time()
 
         # Directories to check
@@ -70,7 +70,7 @@ class CodeQualityChecker:
         print("=" * 60)
 
     def run_command(
-        self, cmd: List[str], capture_output: bool = True
+        self, cmd: list[str], capture_output: bool = True
     ) -> subprocess.CompletedProcess:
         """Run a command and return the result"""
         try:
@@ -218,7 +218,7 @@ class CodeQualityChecker:
 
         # Parse bandit results
         try:
-            with open("bandit-report.json", "r") as f:
+            with open("bandit-report.json") as f:
                 bandit_data = json.load(f)
                 error_count = len(
                     [
@@ -346,7 +346,7 @@ class CodeQualityChecker:
             duration=duration,
         )
 
-    def run_all_checks(self) -> List[QualityResult]:
+    def run_all_checks(self) -> list[QualityResult]:
         """Run all quality checks"""
         checks = [
             self.check_black,
@@ -379,7 +379,7 @@ class CodeQualityChecker:
 
         return self.results
 
-    def generate_report(self) -> Dict[str, Any]:
+    def generate_report(self) -> dict[str, Any]:
         """Generate comprehensive quality report"""
         total_time = time.time() - self.start_time
 
@@ -425,7 +425,7 @@ class CodeQualityChecker:
 
         return report
 
-    def print_summary(self, report: Dict[str, Any]):
+    def print_summary(self, report: dict[str, Any]):
         """Print quality check summary"""
         print("\n" + "=" * 60)
         print("ðŸ“Š CODE QUALITY SUMMARY")
@@ -449,7 +449,7 @@ class CodeQualityChecker:
             if result["warning_count"] > 0:
                 print(f"    Warnings: {result['warning_count']}")
 
-    def save_report(self, report: Dict[str, Any], filename: str = "quality-report.json"):
+    def save_report(self, report: dict[str, Any], filename: str = "quality-report.json"):
         """Save quality report to file"""
         try:
             with open(filename, "w") as f:

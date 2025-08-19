@@ -6,7 +6,7 @@ Integrates with the main trading system for token evaluation and risk assessment
 """
 
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def evaluate_tokenomics(
     emission_rate: float,
-    unlock_schedule: List[float],
+    unlock_schedule: list[float],
     supply_cap: float,
     current_supply: float,
 ) -> float:
@@ -71,11 +71,11 @@ def evaluate_tokenomics(
 def analyze_token_metrics(
     token_symbol: str,
     emission_rate: float,
-    unlock_schedule: List[float],
+    unlock_schedule: list[float],
     supply_cap: float,
     current_supply: float,
-    market_cap: Optional[float] = None,
-) -> Dict[str, Any]:
+    market_cap: float | None = None,
+) -> dict[str, Any]:
     """
     Comprehensive tokenomics analysis.
 
@@ -145,7 +145,7 @@ def analyze_token_metrics(
         }
 
 
-def compare_tokenomics(tokens: List[Dict[str, Any]]) -> Dict[str, Any]:
+def compare_tokenomics(tokens: list[dict[str, Any]]) -> dict[str, Any]:
     """
     Compare tokenomics across multiple tokens.
 

@@ -5,11 +5,12 @@ Analyzes market data for cosmic resonance patterns and generates anomaly flags.
 
 import logging
 import math
-import numpy as np
-from typing import Dict, List, Any
-from datetime import datetime, timezone
-import sys
 import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
+
+import numpy as np
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -49,7 +50,7 @@ class CosmicPatternRecognizer:
 
         logger.info("âœ… CosmicPatternRecognizer initialized")
 
-    def _get_market_data(self, symbol: str, hours: int = 168) -> List[Dict[str, Any]]:
+    def _get_market_data(self, symbol: str, hours: int = 168) -> list[dict[str, Any]]:
         """Get recent market data from cache"""
         try:
             # Get price history from cache
@@ -85,7 +86,7 @@ class CosmicPatternRecognizer:
             logger.error(f"Failed to get market data for {symbol}: {e}")
             return []
 
-    def _calculate_volatility(self, prices: List[float], window: int = 24) -> List[float]:
+    def _calculate_volatility(self, prices: list[float], window: int = 24) -> list[float]:
         """Calculate rolling volatility"""
         try:
             if len(prices) < window:
@@ -108,7 +109,7 @@ class CosmicPatternRecognizer:
             logger.error(f"Failed to calculate volatility: {e}")
             return []
 
-    def _detect_micro_cycles(self, timestamps: List[datetime], prices: List[float]) -> Dict[str, Any]:
+    def _detect_micro_cycles(self, timestamps: list[datetime], prices: list[float]) -> dict[str, Any]:
         """Detect micro-cycles in price data"""
         try:
             if len(prices) < 50:
@@ -161,7 +162,7 @@ class CosmicPatternRecognizer:
             logger.error(f"Failed to detect micro-cycles: {e}")
             return {"cycles": [], "dominant_period": None}
 
-    def _calculate_lunar_correlation(self, timestamps: List[datetime], prices: List[float]) -> float:
+    def _calculate_lunar_correlation(self, timestamps: list[datetime], prices: list[float]) -> float:
         """Calculate correlation with lunar cycle"""
         try:
             if len(timestamps) < 30:
@@ -193,7 +194,7 @@ class CosmicPatternRecognizer:
             logger.error(f"Failed to calculate lunar correlation: {e}")
             return 0.0
 
-    def _analyze_high_frequency_oscillations(self, timestamps: List[datetime], prices: List[float]) -> Dict[str, Any]:
+    def _analyze_high_frequency_oscillations(self, timestamps: list[datetime], prices: list[float]) -> dict[str, Any]:
         """Analyze high-frequency oscillations in price data"""
         try:
             if len(prices) < 20:
@@ -230,9 +231,9 @@ class CosmicPatternRecognizer:
             logger.error(f"Failed to analyze high-frequency oscillations: {e}")
             return {"oscillation_strength": 0.0, "dominant_frequency": None}
 
-    def _calculate_cosmic_resonance_index(self, micro_cycles: Dict[str, Any],
+    def _calculate_cosmic_resonance_index(self, micro_cycles: dict[str, Any],
                                         lunar_correlation: float,
-                                        oscillation_analysis: Dict[str, Any]) -> float:
+                                        oscillation_analysis: dict[str, Any]) -> float:
         """Calculate Cosmic Resonance Index (CRI)"""
         try:
             cri_components = []
@@ -280,7 +281,7 @@ class CosmicPatternRecognizer:
             logger.error(f"Failed to determine anomaly flag: {e}")
             return "NORMAL"
 
-    def analyze_pattern(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def analyze_pattern(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Analyze cosmic patterns for a symbol"""
         try:
             logger.info(f"ðŸ”® Analyzing cosmic patterns for {symbol} on {exchange}")
@@ -364,7 +365,7 @@ class CosmicPatternRecognizer:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_latest_pattern(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def get_latest_pattern(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get the latest cosmic pattern analysis"""
         try:
             # Get recent cosmic analysis from cache
@@ -393,7 +394,7 @@ class CosmicPatternRecognizer:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_pattern_history(self, symbol: str, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_pattern_history(self, symbol: str, limit: int = 10) -> list[dict[str, Any]]:
         """Get cosmic pattern analysis history"""
         try:
             # Get recent cosmic analyses from cache
@@ -409,7 +410,7 @@ class CosmicPatternRecognizer:
             logger.error(f"Failed to get pattern history: {e}")
             return []
 
-    def get_cosmic_status(self) -> Dict[str, Any]:
+    def get_cosmic_status(self) -> dict[str, Any]:
         """Get current cosmic pattern recognizer status"""
         try:
             return {
@@ -448,7 +449,7 @@ class CosmicPatternRecognizer:
         except Exception as e:
             logger.error(f"Failed to update pattern stats: {e}")
 
-    def get_pattern_stats(self) -> Dict[str, Any]:
+    def get_pattern_stats(self) -> dict[str, Any]:
         """Get pattern statistics for dashboard"""
         try:
             return {

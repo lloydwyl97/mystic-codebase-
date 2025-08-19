@@ -17,6 +17,7 @@ except Exception:
 
 import streamlit as st
 
+
 def main() -> None:
 	st.write("Use 'streamlit run mystic_ui/app.py' to launch the main dashboard.")
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Tuple, Type, cast, List
+from typing import Any, cast
 
 import streamlit as st
 
@@ -18,6 +18,7 @@ except Exception:
 if _api_client is None:
     # Minimal inline HTTP client using requests; mirrors the Streamlit client behavior
     import os
+
     import requests
 
     class _InlineAPIClient:
@@ -90,18 +91,18 @@ if _api_client is None:
     api_client = _InlineAPIClient()
 else:
     api_client = _api_client
-from .schemas import Ticker, OHLCV, OrderBook, Trade, Balance, AIHeartbeat, AlertItem, Candle
+from .schemas import OHLCV, AIHeartbeat, AlertItem, Balance, Candle, OrderBook, Ticker, Trade
 
 
 @dataclass
 class FetchResult:
     data: Any
     latency_ms: int
-    cache_age_s: Optional[int]
+    cache_age_s: int | None
     status: str
 
 
-def _request(method: str, endpoint: str, payload: Optional[Dict[str, Any]] = None, page: str = "dash", name: str = "call") -> Tuple[Optional[Dict[str, Any]], int]:
+def _request(method: str, endpoint: str, payload: dict[str, Any] | None = None, page: str = "dash", name: str = "call") -> tuple[dict[str, Any] | None, int]:
     start = time.perf_counter()
     delay = 0.2
     for _ in range(3):
@@ -118,7 +119,7 @@ def _request(method: str, endpoint: str, payload: Optional[Dict[str, Any]] = Non
                     print(f"[{page}] {name} endpoint={endpoint} latency={latency}ms status=ok")
                 except Exception:
                     pass
-                return cast(Optional[Dict[str, Any]], resp), latency
+                return cast(dict[str, Any] | None, resp), latency
         except Exception:
             pass
         time.sleep(delay)
@@ -131,13 +132,13 @@ def _request(method: str, endpoint: str, payload: Optional[Dict[str, Any]] = Non
     return None, latency
 
 
-def _extract(payload: Optional[Dict[str, Any]]) -> Any:
+def _extract(payload: dict[str, Any] | None) -> Any:
     if isinstance(payload, dict) and "data" in payload:
         return payload["data"]
     return payload
 
 
-def _finalize(page: str, name: str, payload: Any, latency_ms: int, cache_age_s: Optional[int]) -> FetchResult:
+def _finalize(page: str, name: str, payload: Any, latency_ms: int, cache_age_s: int | None) -> FetchResult:
     status = "ok" if payload is not None else "fail"
     st.write(f"[{page}] {name} latency={latency_ms}ms cache={cache_age_s or 0}s status={status}")
     try:
@@ -147,7 +148,7 @@ def _finalize(page: str, name: str, payload: Any, latency_ms: int, cache_age_s: 
     return FetchResult(data=payload, latency_ms=latency_ms, cache_age_s=cache_age_s, status=status)
 
 
-def _validate(model: Type[Any], data: Any, toast_prefix: str) -> Any:
+def _validate(model: type[Any], data: Any, toast_prefix: str) -> Any:
     try:
         if data is None:
             return None
@@ -155,29 +156,29 @@ def _validate(model: Type[Any], data: Any, toast_prefix: str) -> Any:
             return model(**data)
         if model is OHLCV:
             if isinstance(data, dict) and ("data" in data or "candles" in data):
-                return model(**cast(Dict[str, Any], data))
+                return model(**cast(dict[str, Any], data))
             if isinstance(data, list):
-                return model(candles=[Candle(**c) for c in cast(List[Dict[str, Any]], data)])
+                return model(candles=[Candle(**c) for c in cast(list[dict[str, Any]], data)])
             return None
         if model is OrderBook:
-            return model(**cast(Dict[str, Any], data))
+            return model(**cast(dict[str, Any], data))
         if model is Trade:
             if isinstance(data, list):
-                ll = cast(List[Dict[str, Any]], data)
+                ll = cast(list[dict[str, Any]], data)
                 return [Trade(**t) for t in ll]
-            return Trade(**cast(Dict[str, Any], data))
+            return Trade(**cast(dict[str, Any], data))
         if model is Balance:
             if isinstance(data, list):
-                lb = cast(List[Dict[str, Any]], data)
+                lb = cast(list[dict[str, Any]], data)
                 return [Balance(**b) for b in lb]
-            return Balance(**cast(Dict[str, Any], data))
+            return Balance(**cast(dict[str, Any], data))
         if model is AIHeartbeat:
-            return model(**cast(Dict[str, Any], data))
+            return model(**cast(dict[str, Any], data))
         if model is AlertItem:
             if isinstance(data, list):
-                la = cast(List[Dict[str, Any]], data)
+                la = cast(list[dict[str, Any]], data)
                 return [AlertItem(**a) for a in la]
-            return AlertItem(**cast(Dict[str, Any], data))
+            return AlertItem(**cast(dict[str, Any], data))
         return data
     except Exception as e:
         st.toast(f"Validation error: {toast_prefix}: {e}", icon="❌")
@@ -197,11 +198,11 @@ def get_ticker(exchange: str, symbol: str) -> FetchResult:
     qsym = symbol.upper().replace("/", "-")
     payload, latency = _request("GET", f"/market/prices?symbols={qsym}", page="markets", name=f"get_ticker {exchange}:{qsym}")
     data = _extract(payload)
-    entry: Optional[Dict[str, Any]] = None
+    entry: dict[str, Any] | None = None
     if isinstance(data, dict):
-        dct: Dict[str, Any] = cast(Dict[str, Any], data)
-        prices: Dict[str, Any] = cast(Dict[str, Any], dct.get("prices", dct))
-        entry = cast(Optional[Dict[str, Any]], prices.get(qsym))
+        dct: dict[str, Any] = cast(dict[str, Any], data)
+        prices: dict[str, Any] = cast(dict[str, Any], dct.get("prices", dct))
+        entry = cast(dict[str, Any] | None, prices.get(qsym))
     v = _validate(Ticker, entry, "ticker")
     out = v.model_dump() if hasattr(v, "model_dump") else v
     return _finalize("dash", "get_ticker", out, latency, 0)
@@ -220,7 +221,7 @@ def get_ohlcv(exchange: str, symbol: str, timeframe: str) -> FetchResult:
 @st.cache_data(show_spinner=False, ttl=2)
 def get_orderbook(exchange: str, symbol: str, depth: int = 50) -> FetchResult:
     # If specific orderbook endpoint exists in backend, wire here; otherwise return empty
-    payload, latency = _request("GET", f"/live/market/overview", page="markets", name=f"get_orderbook {exchange}:{symbol}:{depth}")
+    payload, latency = _request("GET", "/live/market/overview", page="markets", name=f"get_orderbook {exchange}:{symbol}:{depth}")
     data = _extract(payload)
     return _finalize("dash", "get_orderbook", data, latency, 0)
 
@@ -232,8 +233,8 @@ def get_trades(exchange: str, symbol: str, limit: int = 100) -> FetchResult:
     data = _extract(payload)
     v = _validate(Trade, data, "trades")
     if isinstance(v, list):
-        out_list: List[Any] = []
-        items: List[Any] = cast(List[Any], v)
+        out_list: list[Any] = []
+        items: list[Any] = cast(list[Any], v)
         for t in items:
             try:
                 out_list.append(t.model_dump() if hasattr(t, "model_dump") else t)  # type: ignore[attr-defined]
@@ -251,8 +252,8 @@ def get_balances(exchange: str) -> FetchResult:
     data = _extract(payload)
     v = _validate(Balance, data, "balances")
     if isinstance(v, list):
-        out_list: List[Any] = []
-        items: List[Any] = cast(List[Any], v)
+        out_list: list[Any] = []
+        items: list[Any] = cast(list[Any], v)
         for b in items:
             try:
                 out_list.append(b.model_dump() if hasattr(b, "model_dump") else b)  # type: ignore[attr-defined]
@@ -400,7 +401,7 @@ def get_analytics_performance() -> FetchResult:
     return _finalize("dash", "get_analytics_performance", data, latency, 0)
 
 
-def compute_spread_from_price_entry(entry: Dict[str, Any]) -> Optional[float]:
+def compute_spread_from_price_entry(entry: dict[str, Any]) -> float | None:
     try:
         bid = float(entry.get("bid", 0) or 0)
         ask = float(entry.get("ask", 0) or 0)

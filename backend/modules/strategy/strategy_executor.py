@@ -7,10 +7,10 @@ Handles real-time strategy implementation and order execution.
 
 import json
 import logging
-from datetime import datetime
-from typing import Any, Dict, List, Optional
-from backend.utils.exceptions import StrategyException
 from datetime import datetime, timezone
+from typing import Any
+
+from backend.utils.exceptions import StrategyException
 
 logger = logging.getLogger(__name__)
 
@@ -22,17 +22,17 @@ class StrategyExecutor:
     """Strategy executor for live trading implementation"""
 
     def __init__(self):
-        self.active_strategies: Dict[str, Dict[str, Any]] = {}
-        self.strategy_history: List[Dict[str, Any]] = []
-        self.execution_stats: Dict[str, Dict[str, Any]] = {}
+        self.active_strategies: dict[str, dict[str, Any]] = {}
+        self.strategy_history: list[dict[str, Any]] = []
+        self.execution_stats: dict[str, dict[str, Any]] = {}
         self.is_active: bool = True
-        self.risk_limits: Dict[str, float] = {
+        self.risk_limits: dict[str, float] = {
             "max_position_size": 0.1,  # 10% of portfolio
             "max_daily_loss": 0.05,  # 5% daily loss limit
             "max_drawdown": 0.15,  # 15% max drawdown
         }
 
-    def add_strategy(self, strategy_id: str, strategy_config: Dict[str, Any]) -> Dict[str, Any]:
+    def add_strategy(self, strategy_id: str, strategy_config: dict[str, Any]) -> dict[str, Any]:
         """Add a new strategy for execution"""
         strategy = {
             "id": strategy_id,
@@ -49,7 +49,7 @@ class StrategyExecutor:
 
         return {"success": True, "strategy": strategy}
 
-    def remove_strategy(self, strategy_id: str) -> Dict[str, Any]:
+    def remove_strategy(self, strategy_id: str) -> dict[str, Any]:
         """Remove a strategy from execution"""
         if strategy_id in self.active_strategies:
             del self.active_strategies[strategy_id]
@@ -61,9 +61,9 @@ class StrategyExecutor:
     def execute_strategy(
         self,
         strategy_id: str,
-        market_data: Optional[Dict[str, Any]] = None,
-        portfolio_data: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        market_data: dict[str, Any] | None = None,
+        portfolio_data: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Execute a loaded strategy with given market and portfolio data"""
         if strategy_id not in self.active_strategies:
             raise StrategyException("Strategy not found")
@@ -87,7 +87,7 @@ class StrategyExecutor:
         self.execution_stats[strategy_id]["successful_actions"] += len(executed_actions)
         return {"status": "success", "actions": executed_actions}
 
-    def get_strategy_status(self, strategy_id: str) -> Dict[str, Any]:
+    def get_strategy_status(self, strategy_id: str) -> dict[str, Any]:
         """Get status of a specific strategy"""
         if strategy_id not in self.active_strategies:
             return {"error": "Strategy not found"}
@@ -103,7 +103,7 @@ class StrategyExecutor:
             "is_active": self.is_active,
         }
 
-    def get_all_strategies_status(self) -> Dict[str, Any]:
+    def get_all_strategies_status(self) -> dict[str, Any]:
         """Get status of all active strategies"""
         strategies_status = {}
 
@@ -119,7 +119,7 @@ class StrategyExecutor:
             "executor_active": self.is_active,
         }
 
-    def pause_strategy(self, strategy_id: str) -> Dict[str, Any]:
+    def pause_strategy(self, strategy_id: str) -> dict[str, Any]:
         """Pause a strategy execution"""
         if strategy_id not in self.active_strategies:
             return {"error": "Strategy not found"}
@@ -129,7 +129,7 @@ class StrategyExecutor:
 
         return {"success": True, "status": "paused"}
 
-    def resume_strategy(self, strategy_id: str) -> Dict[str, Any]:
+    def resume_strategy(self, strategy_id: str) -> dict[str, Any]:
         """Resume a strategy execution"""
         if strategy_id not in self.active_strategies:
             return {"error": "Strategy not found"}
@@ -139,7 +139,7 @@ class StrategyExecutor:
 
         return {"success": True, "status": "active"}
 
-    def update_risk_limits(self, new_limits: Dict[str, float]) -> Dict[str, Any]:
+    def update_risk_limits(self, new_limits: dict[str, float]) -> dict[str, Any]:
         """Update risk limits"""
         for key, value in new_limits.items():
             if key in self.risk_limits:
@@ -150,8 +150,8 @@ class StrategyExecutor:
         return {"success": True, "risk_limits": self.risk_limits}
 
     def get_execution_history(
-        self, strategy_id: Optional[str] = None, limit: int = 100
-    ) -> List[Dict[str, Any]]:
+        self, strategy_id: str | None = None, limit: int = 100
+    ) -> list[dict[str, Any]]:
         """Get execution history"""
         history = self.strategy_history
 
@@ -160,7 +160,7 @@ class StrategyExecutor:
 
         return history[-limit:] if history else []
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """Get overall performance summary"""
         total_executions = sum(
             strategy["execution_count"] for strategy in self.active_strategies.values()
@@ -191,7 +191,7 @@ class StrategyExecutor:
             "risk_limits": self.risk_limits,
         }
 
-    def _check_risk_limits(self, portfolio_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _check_risk_limits(self, portfolio_data: dict[str, Any]) -> dict[str, Any]:
         """Check if current portfolio violates risk limits"""
         try:
             # Check daily loss limit
@@ -219,8 +219,8 @@ class StrategyExecutor:
             return {"passed": False, "reason": f"Risk check error: {e}"}
 
     def _generate_signals(
-        self, strategy: Dict[str, Any], market_data: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, strategy: dict[str, Any], market_data: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Generate trading signals based on strategy and market data"""
         signals = []
 
@@ -244,8 +244,8 @@ class StrategyExecutor:
             return []
 
     def _execute_trade(
-        self, signal: Dict[str, Any], portfolio_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, signal: dict[str, Any], portfolio_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Execute a single trade based on signal"""
         try:
             symbol = signal.get("symbol", "")
@@ -286,7 +286,7 @@ class StrategyExecutor:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    def _calculate_strategy_performance(self, strategy_id: str) -> Dict[str, Any]:
+    def _calculate_strategy_performance(self, strategy_id: str) -> dict[str, Any]:
         """Calculate performance metrics for a strategy"""
         strategy_history = self.get_execution_history(strategy_id)
 
@@ -317,8 +317,8 @@ class StrategyExecutor:
         }
 
     def _generate_momentum_signals(
-        self, market_data: Dict[str, Any], config: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, market_data: dict[str, Any], config: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Generate momentum-based trading signals"""
         signals = []
 
@@ -353,8 +353,8 @@ class StrategyExecutor:
         return signals
 
     def _generate_mean_reversion_signals(
-        self, market_data: Dict[str, Any], config: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, market_data: dict[str, Any], config: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Generate mean reversion trading signals"""
         signals = []
 
@@ -390,8 +390,8 @@ class StrategyExecutor:
         return signals
 
     def _generate_breakout_signals(
-        self, market_data: Dict[str, Any], config: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, market_data: dict[str, Any], config: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Generate breakout trading signals"""
         signals = []
 
@@ -416,8 +416,8 @@ class StrategyExecutor:
         return signals
 
     def _generate_basic_signals(
-        self, market_data: Dict[str, Any], config: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, market_data: dict[str, Any], config: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Generate basic trading signals"""
         signals = []
 
@@ -451,7 +451,7 @@ class StrategyExecutor:
 
         return signals
 
-    def load_strategy(self, strategy_config: Dict[str, Any]) -> bool:
+    def load_strategy(self, strategy_config: dict[str, Any]) -> bool:
         """Load a new strategy configuration"""
         if (
             not isinstance(strategy_config, dict)
@@ -489,11 +489,11 @@ class StrategyExecutor:
             del self.execution_stats[strategy_id]
         return True
 
-    def get_strategy(self, strategy_id: str) -> Optional[Dict[str, Any]]:
+    def get_strategy(self, strategy_id: str) -> dict[str, Any] | None:
         """Get strategy configuration by ID"""
         return self.active_strategies.get(strategy_id)
 
-    def update_strategy(self, strategy_id: str, updated_config: Dict[str, Any]) -> Dict[str, Any]:
+    def update_strategy(self, strategy_id: str, updated_config: dict[str, Any]) -> dict[str, Any]:
         """Update an existing strategy configuration"""
         if strategy_id not in self.active_strategies:
             raise StrategyException("Strategy not found")
@@ -520,31 +520,27 @@ class StrategyExecutor:
             "strategy": self.active_strategies[strategy_id],
         }
 
-    def list_strategies(self) -> List[str]:
+    def list_strategies(self) -> list[str]:
         """List all loaded strategy IDs"""
         return list(self.active_strategies.keys())
 
-    def get_execution_stats(self, strategy_id: str) -> Dict[str, Any]:
+    def get_execution_stats(self, strategy_id: str) -> dict[str, Any]:
         """Get execution stats for a strategy"""
         return self.execution_stats.get(strategy_id, {})
 
-    def get_all_execution_stats(self) -> Dict[str, Dict[str, Any]]:
+    def get_all_execution_stats(self) -> dict[str, dict[str, Any]]:
         """Get execution stats for all strategies"""
         return self.execution_stats
 
     def _evaluate_conditions(
-        self, conditions: List[Dict[str, Any]], market_data: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, conditions: list[dict[str, Any]], market_data: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Evaluate trading conditions and return all matches for all symbols."""
         actions = []
         for symbol, data in market_data.items():
             rsi = data.get("rsi")
             for cond in conditions:
-                if cond["condition"] == "rsi < 30" and rsi is not None and rsi < 30:
-                    action = cond.copy()
-                    action["symbol"] = symbol
-                    actions.append(action)
-                elif cond["condition"] == "rsi > 70" and rsi is not None and rsi > 70:
+                if cond["condition"] == "rsi < 30" and rsi is not None and rsi < 30 or cond["condition"] == "rsi > 70" and rsi is not None and rsi > 70:
                     action = cond.copy()
                     action["symbol"] = symbol
                     actions.append(action)
@@ -552,7 +548,7 @@ class StrategyExecutor:
                     raise StrategyException("Invalid condition")
         return actions
 
-    def _execute_action(self, action: Dict[str, Any]) -> Dict[str, Any]:
+    def _execute_action(self, action: dict[str, Any]) -> dict[str, Any]:
         """Execute a trading action and return result with action key included."""
         if (
             not isinstance(action, dict)

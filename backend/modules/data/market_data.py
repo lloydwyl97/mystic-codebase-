@@ -9,7 +9,7 @@ import asyncio
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from backend.utils.exceptions import MarketDataException, handle_async_exception
 
@@ -29,7 +29,7 @@ class MarketData:
     timestamp: float
     exchange: str = "binance"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "symbol": self.symbol,
@@ -47,14 +47,14 @@ class MarketDataManager:
     """Manages live market data fetching and processing"""
 
     def __init__(self):
-        self.market_data: Dict[str, MarketData] = {}
-        self.last_update: Dict[str, float] = {}
+        self.market_data: dict[str, MarketData] = {}
+        self.last_update: dict[str, float] = {}
         self.update_interval = 30  # seconds
         self.supported_symbols = ["BTC", "ETH", "ADA", "DOT", "SOL", "MATIC"]
         logger.info("âœ… Live MarketDataManager initialized")
 
     @handle_async_exception("Failed to get market data for symbol", MarketDataException)
-    async def get_market_data(self, symbol: str) -> Optional[MarketData]:
+    async def get_market_data(self, symbol: str) -> MarketData | None:
         """Get live market data for a symbol"""
         try:
             # Check if data is fresh
@@ -77,13 +77,13 @@ class MarketDataManager:
             )
 
     @handle_async_exception("Failed to get all market data", MarketDataException)
-    async def get_all_market_data(self) -> Dict[str, MarketData]:
+    async def get_all_market_data(self) -> dict[str, MarketData]:
         """Get live market data for all supported symbols"""
         try:
             tasks = [self.get_market_data(symbol) for symbol in self.supported_symbols]
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
-            market_data: Dict[str, MarketData] = {}
+            market_data: dict[str, MarketData] = {}
             for i, result in enumerate(results):
                 if isinstance(result, MarketData):
                     market_data[self.supported_symbols[i]] = result
@@ -101,7 +101,7 @@ class MarketDataManager:
             )
 
     @handle_async_exception("Failed to get market summary", MarketDataException)
-    async def get_market_summary(self) -> Dict[str, Any]:
+    async def get_market_summary(self) -> dict[str, Any]:
         """Get live market summary for all symbols"""
         try:
             market_data = await self.get_all_market_data()
@@ -141,7 +141,7 @@ class MarketDataManager:
         return time.time() - self.last_update[symbol] < self.update_interval
 
     @handle_async_exception("Failed to fetch live market data", MarketDataException)
-    async def _fetch_live_market_data(self, symbol: str) -> Optional[MarketData]:
+    async def _fetch_live_market_data(self, symbol: str) -> MarketData | None:
         """Fetch live market data from exchange APIs"""
         try:
             # Try multiple live data sources
@@ -174,7 +174,7 @@ class MarketDataManager:
             )
 
     @handle_async_exception("Failed to fetch Binance live data", MarketDataException)
-    async def _fetch_binance_live_data(self, symbol: str) -> Optional[MarketData]:
+    async def _fetch_binance_live_data(self, symbol: str) -> MarketData | None:
         """Fetch live data from Binance US API"""
         try:
             # Import Binance client
@@ -208,7 +208,7 @@ class MarketDataManager:
             return None
 
     @handle_async_exception("Failed to fetch Coinbase live data", MarketDataException)
-    async def _fetch_coinbase_live_data(self, symbol: str) -> Optional[MarketData]:
+    async def _fetch_coinbase_live_data(self, symbol: str) -> MarketData | None:
         """Fetch live data from Coinbase API"""
         try:
             import aiohttp
@@ -241,7 +241,7 @@ class MarketDataManager:
             return None
 
     @handle_async_exception("Failed to fetch fallback live data", MarketDataException)
-    async def _fallback_live_data(self, symbol: str) -> Optional[MarketData]:
+    async def _fallback_live_data(self, symbol: str) -> MarketData | None:
         """Fallback method for live data when primary sources fail"""
         try:
             import aiohttp
@@ -275,7 +275,7 @@ class MarketDataManager:
             logger.error(f"Fallback live data failed for {symbol}: {e}")
             return None
 
-    def get_supported_symbols(self) -> List[str]:
+    def get_supported_symbols(self) -> list[str]:
         """Get list of supported symbols"""
         return self.supported_symbols.copy()
 
@@ -307,7 +307,7 @@ class MarketDataManager:
             logger.error(f"âŒ Error removing symbol {symbol}: {str(e)}")
             return False
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get market data statistics"""
         try:
             return {

@@ -6,7 +6,8 @@ FastAPI middleware for response sanitization.
 
 import json
 import logging
-from typing import Any, Awaitable, Callable, Dict, Union
+from collections.abc import Awaitable, Callable
+from typing import Any
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
@@ -22,7 +23,7 @@ SENSITIVE_FIELDS = ["password", "token", "secret", "key", "api_key"]
 @log_operation_performance("response_sanitizer")
 async def response_sanitizer_middleware(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
-) -> Union[Response, JSONResponse]:
+) -> Response | JSONResponse:
     """
     Middleware to sanitize response data.
     """
@@ -62,7 +63,7 @@ async def response_sanitizer_middleware(
 def _sanitize_data(data: Any) -> Any:
     """Recursively sanitize data by removing sensitive fields."""
     if isinstance(data, dict):
-        sanitized: Dict[str, Any] = {}
+        sanitized: dict[str, Any] = {}
         for key, value in data.items():
             key_str = str(key)
             if isinstance(key, str) and key_str.lower() in SENSITIVE_FIELDS:

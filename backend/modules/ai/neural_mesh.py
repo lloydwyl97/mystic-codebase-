@@ -3,12 +3,12 @@ Neural Mesh for Mystic AI Trading Platform
 Maintains a distributed shared agent learning network for parameter sharing and strategy merging.
 """
 
-import logging
 import copy
-from typing import Dict, List, Any, Optional
-from datetime import datetime, timezone
-import sys
+import logging
 import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -76,7 +76,7 @@ class NeuralMesh:
         except Exception as e:
             logger.error(f"Failed to initialize mesh state: {e}")
 
-    def _get_agent_performance(self, agent_id: str) -> Dict[str, Any]:
+    def _get_agent_performance(self, agent_id: str) -> dict[str, Any]:
         """Get agent performance from cache"""
         try:
             # Get recent agent performance signals
@@ -116,7 +116,7 @@ class NeuralMesh:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def _get_agent_parameters(self, agent_id: str) -> Dict[str, Any]:
+    def _get_agent_parameters(self, agent_id: str) -> dict[str, Any]:
         """Get agent parameters from cache"""
         try:
             # Get recent agent parameter signals
@@ -138,7 +138,7 @@ class NeuralMesh:
             logger.error(f"Failed to get agent parameters for {agent_id}: {e}")
             return copy.deepcopy(self.mesh_state["global_parameters"])
 
-    def _calculate_performance_score(self, performance: Dict[str, Any]) -> float:
+    def _calculate_performance_score(self, performance: dict[str, Any]) -> float:
         """Calculate performance score for parameter merging"""
         try:
             # Weight factors for different performance metrics
@@ -167,8 +167,8 @@ class NeuralMesh:
             logger.error(f"Failed to calculate performance score: {e}")
             return 0.0
 
-    def _merge_parameters(self, agent_parameters: Dict[str, Any],
-                         performance_score: float) -> Dict[str, Any]:
+    def _merge_parameters(self, agent_parameters: dict[str, Any],
+                         performance_score: float) -> dict[str, Any]:
         """Merge agent parameters with global parameters based on performance"""
         try:
             merged_parameters = copy.deepcopy(self.mesh_state["global_parameters"])
@@ -195,7 +195,7 @@ class NeuralMesh:
             logger.error(f"Failed to merge parameters: {e}")
             return copy.deepcopy(self.mesh_state["global_parameters"])
 
-    def _evaluate_agent_trades(self, agent_id: str) -> Dict[str, Any]:
+    def _evaluate_agent_trades(self, agent_id: str) -> dict[str, Any]:
         """Evaluate agent's trading performance"""
         try:
             # Get agent performance
@@ -237,7 +237,7 @@ class NeuralMesh:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def _update_mesh_state(self, agent_evaluations: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _update_mesh_state(self, agent_evaluations: list[dict[str, Any]]) -> dict[str, Any]:
         """Update mesh state with agent evaluations"""
         try:
             # Filter successful evaluations
@@ -294,7 +294,7 @@ class NeuralMesh:
             logger.error(f"Failed to update mesh state: {e}")
             return self.mesh_state
 
-    def update_mesh(self) -> Dict[str, Any]:
+    def update_mesh(self) -> dict[str, Any]:
         """Update the neural mesh with latest agent data"""
         try:
             logger.info("ðŸ”„ Updating neural mesh...")
@@ -338,7 +338,7 @@ class NeuralMesh:
             logger.error(f"Failed to update mesh: {e}")
             return self.mesh_state
 
-    def get_mesh_state(self) -> Dict[str, Any]:
+    def get_mesh_state(self) -> dict[str, Any]:
         """Get current mesh state"""
         try:
             return {
@@ -361,7 +361,7 @@ class NeuralMesh:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def sync_agent(self, agent_id: str) -> Dict[str, Any]:
+    def sync_agent(self, agent_id: str) -> dict[str, Any]:
         """Sync an agent with the current mesh state"""
         try:
             logger.info(f"ðŸ”„ Syncing agent {agent_id} with mesh state")
@@ -406,7 +406,7 @@ class NeuralMesh:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def register_agent(self, agent_id: str, initial_parameters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def register_agent(self, agent_id: str, initial_parameters: dict[str, Any] | None = None) -> dict[str, Any]:
         """Register a new agent with the neural mesh"""
         try:
             logger.info(f"ðŸ“ Registering agent {agent_id} with neural mesh")
@@ -443,7 +443,7 @@ class NeuralMesh:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_mesh_history(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_mesh_history(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get neural mesh update history"""
         try:
             # Get recent mesh update signals from cache
@@ -455,7 +455,7 @@ class NeuralMesh:
             logger.error(f"Failed to get mesh history: {e}")
             return []
 
-    def get_mesh_status(self) -> Dict[str, Any]:
+    def get_mesh_status(self) -> dict[str, Any]:
         """Get current neural mesh status"""
         try:
             return {

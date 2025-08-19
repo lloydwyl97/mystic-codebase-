@@ -9,7 +9,7 @@ import json
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 import redis
 from prometheus_client import (
@@ -164,7 +164,7 @@ class MetricsCollector:
         # Start time for uptime calculation
         self.start_time = time.time()
 
-    def update_signal_health_metrics(self, health_data: Dict[str, Any]):
+    def update_signal_health_metrics(self, health_data: dict[str, Any]):
         """Update signal health metrics"""
         try:
             overall_health = health_data.get("overall_health", "unknown")
@@ -200,7 +200,7 @@ class MetricsCollector:
         except Exception as e:
             logger.error(f"Error updating signal health metrics: {str(e)}")
 
-    def update_test_metrics(self, test_run: Dict[str, Any]):
+    def update_test_metrics(self, test_run: dict[str, Any]):
         """Update test metrics"""
         try:
             # Update test run counter
@@ -226,7 +226,7 @@ class MetricsCollector:
         except Exception as e:
             logger.error(f"Error updating test metrics: {str(e)}")
 
-    def update_notification_metrics(self, notification_result: Dict[str, Any]):
+    def update_notification_metrics(self, notification_result: dict[str, Any]):
         """Update notification metrics"""
         try:
             channels = notification_result.get("channels", {})
@@ -294,7 +294,7 @@ class MetricsCollector:
         except Exception as e:
             logger.error(f"Error updating system metrics: {str(e)}")
 
-    def update_trading_metrics(self, signal_data: Dict[str, Any]):
+    def update_trading_metrics(self, signal_data: dict[str, Any]):
         """Update trading performance metrics"""
         try:
             symbol = signal_data.get("symbol", "unknown")

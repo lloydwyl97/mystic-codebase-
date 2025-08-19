@@ -6,10 +6,9 @@ Built for Windows 11 Home + PowerShell + Docker.
 """
 
 import json
-import time
 import logging
 import os
-from datetime import datetime
+import time
 from datetime import datetime, timezone
 
 # Configure logging
@@ -49,7 +48,7 @@ def load_portfolio():
     """Load portfolio data from file"""
     try:
         if os.path.exists(PORTFOLIO_FILE):
-            with open(PORTFOLIO_FILE, "r") as f:
+            with open(PORTFOLIO_FILE) as f:
                 return json.load(f)
         else:
             # Create default portfolio

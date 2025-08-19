@@ -4,7 +4,7 @@ Provide thin compatibility routes used by the UI. Proxy to real services when pr
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 from uuid import uuid4
 
 from fastapi import APIRouter
@@ -30,12 +30,12 @@ class CreateOrderBody(BaseModel):
     side: str  # "BUY" | "SELL"
     qty: float
     type: str = "MARKET"
-    price: Optional[float] = None
-    clientOrderId: Optional[str] = None
+    price: float | None = None
+    clientOrderId: str | None = None
 
 
 @router.get("/balance")
-async def get_balance() -> Dict[str, Any]:
+async def get_balance() -> dict[str, Any]:
     try:
         if PortfolioService:
             try:
@@ -43,7 +43,7 @@ async def get_balance() -> Dict[str, Any]:
                 data: Any = await svc.get_portfolio_summary()  # type: ignore[func-returns-value]
                 balances: Any = []
                 if isinstance(data, dict):
-                    typed_data: Dict[str, Any] = data  # narrow type for .get
+                    typed_data: dict[str, Any] = data  # narrow type for .get
                     b: Any = typed_data.get("balances", [])
                     if isinstance(b, list):
                         balances = b
@@ -57,7 +57,7 @@ async def get_balance() -> Dict[str, Any]:
 
 
 @router.get("/positions")
-async def get_positions() -> Dict[str, Any]:
+async def get_positions() -> dict[str, Any]:
     try:
         if PortfolioService:
             try:
@@ -73,7 +73,7 @@ async def get_positions() -> Dict[str, Any]:
 
 
 @router.get("/trades")
-async def get_trades() -> Dict[str, Any]:
+async def get_trades() -> dict[str, Any]:
     try:
         # Best-effort fetch from trade history if available
         try:
@@ -93,7 +93,7 @@ async def get_trades() -> Dict[str, Any]:
 
 
 @router.get("/orders")
-async def get_orders() -> Dict[str, Any]:
+async def get_orders() -> dict[str, Any]:
     try:
         if OrderService:
             try:
@@ -109,7 +109,7 @@ async def get_orders() -> Dict[str, Any]:
 
 
 @router.post("/order")
-async def post_order(body: CreateOrderBody) -> Dict[str, Any]:
+async def post_order(body: CreateOrderBody) -> dict[str, Any]:
     try:
         order_id = body.clientOrderId or str(uuid4())
         return {

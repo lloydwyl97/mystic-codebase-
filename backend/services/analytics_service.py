@@ -5,8 +5,8 @@ Handles analytics operations and data analysis.
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict, List
+from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class AnalyticsService:
         self.analytics_data = {}
         self.reports = []
 
-    async def get_analytics(self) -> Dict[str, Any]:
+    async def get_analytics(self) -> dict[str, Any]:
         """Get analytics data with live data."""
         try:
             # Return empty analytics - should be calculated from real trading data
@@ -65,7 +65,7 @@ class AnalyticsService:
                 "error": str(e),
             }
 
-    async def get_performance_metrics(self, timeframe: str = "30d") -> Dict[str, Any]:
+    async def get_performance_metrics(self, timeframe: str = "30d") -> dict[str, Any]:
         """Get performance metrics for specified timeframe with live data."""
         try:
             # Return empty metrics - should be calculated from real trading data
@@ -99,7 +99,7 @@ class AnalyticsService:
                 "error": str(e),
             }
 
-    async def get_strategy_performance(self) -> List[Dict[str, Any]]:
+    async def get_strategy_performance(self) -> list[dict[str, Any]]:
         """Get strategy performance comparison with live data."""
         try:
             # Live strategy performance data from exchange APIs and trading history
@@ -111,7 +111,7 @@ class AnalyticsService:
             logger.error(f"Error getting strategy performance: {str(e)}")
             return []
 
-    async def get_ai_insights(self) -> List[Dict[str, Any]]:
+    async def get_ai_insights(self) -> list[dict[str, Any]]:
         """Get AI-powered trading insights with live data."""
         try:
             # Live AI insights from market data and AI models
@@ -123,7 +123,7 @@ class AnalyticsService:
             logger.error(f"Error getting AI insights: {str(e)}")
             return []
 
-    async def generate_report(self, report_type: str) -> Dict[str, Any]:
+    async def generate_report(self, report_type: str) -> dict[str, Any]:
         """Generate an analytics report."""
         try:
             report = {

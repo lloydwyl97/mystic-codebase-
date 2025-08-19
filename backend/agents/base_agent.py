@@ -5,11 +5,13 @@ Foundation for all AI trading agents
 
 import asyncio
 import json
-from abc import ABC, abstractmethod
-from datetime import datetime, timedelta
-from typing import Dict, Any, Callable, Awaitable
-import redis
 import os
+from abc import ABC, abstractmethod
+from collections.abc import Awaitable, Callable
+from datetime import datetime, timedelta
+from typing import Any
+
+import redis
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -55,7 +57,7 @@ class BaseAgent(ABC):
         self.register_handler("shutdown", self.handle_shutdown)
         self.register_handler("update_state", self.handle_state_update)
 
-    def register_handler(self, message_type: str, handler: Callable[[Dict[str, Any]], Awaitable[None]]):
+    def register_handler(self, message_type: str, handler: Callable[[dict[str, Any]], Awaitable[None]]):
         """Register a message handler"""
         self.message_handlers[message_type] = handler
 
@@ -111,7 +113,7 @@ class BaseAgent(ABC):
         finally:
             pubsub.close()
 
-    async def process_message(self, message: Dict[str, Any]):
+    async def process_message(self, message: dict[str, Any]):
         """Process incoming message"""
         try:
             message_type = message.get("type")
@@ -126,7 +128,7 @@ class BaseAgent(ABC):
             print(f"âŒ Error processing message in {self.agent_id}: {e}")
             await self.broadcast_error(f"Message processing error: {e}")
 
-    async def send_message(self, target_agent: str, message: Dict[str, Any]):
+    async def send_message(self, target_agent: str, message: dict[str, Any]):
         """Send message to another agent"""
         try:
             message.update(
@@ -142,7 +144,7 @@ class BaseAgent(ABC):
         except Exception as e:
             print(f"âŒ Error sending message to {target_agent}: {e}")
 
-    async def broadcast_message(self, message: Dict[str, Any]):
+    async def broadcast_message(self, message: dict[str, Any]):
         """Broadcast message to all agents"""
         try:
             message.update(
@@ -229,7 +231,7 @@ class BaseAgent(ABC):
                 print(f"âŒ Error in heartbeat loop for {self.agent_id}: {e}")
                 await asyncio.sleep(60)
 
-    async def handle_ping(self, message: Dict[str, Any]):
+    async def handle_ping(self, message: dict[str, Any]):
         """Handle ping message"""
         response = {
             "type": "pong",
@@ -241,7 +243,7 @@ class BaseAgent(ABC):
         if sender:
             await self.send_message(sender, response)
 
-    async def handle_status_request(self, message: Dict[str, Any]):
+    async def handle_status_request(self, message: dict[str, Any]):
         """Handle status request"""
         status = {
             "type": "status_response",
@@ -257,12 +259,12 @@ class BaseAgent(ABC):
         if sender:
             await self.send_message(sender, status)
 
-    async def handle_shutdown(self, message: Dict[str, Any]):
+    async def handle_shutdown(self, message: dict[str, Any]):
         """Handle shutdown request"""
         print(f"ðŸ›‘ Agent {self.agent_id} received shutdown request")
         await self.stop()
 
-    async def handle_state_update(self, message: Dict[str, Any]):
+    async def handle_state_update(self, message: dict[str, Any]):
         """Handle state update request"""
         new_state = message.get("state", {})
         self.state.update(new_state)
@@ -279,7 +281,7 @@ class BaseAgent(ABC):
         pass
 
     @abstractmethod
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data (to be implemented by subclasses)"""
         pass
 
@@ -288,7 +290,7 @@ class BaseAgent(ABC):
         self.health_status = status
         print(f"ðŸ¥ Agent {self.agent_id} health status: {status}")
 
-    def get_state(self) -> Dict[str, Any]:
+    def get_state(self) -> dict[str, Any]:
         """Get current agent state"""
         return {
             "agent_id": self.agent_id,
@@ -333,7 +335,7 @@ class BaseAgent(ABC):
         except Exception as e:
             print(f"âš ï¸ Memory cleanup error in {self.agent_id}: {e}")
 
-    def get_memory_usage(self) -> Dict[str, Any]:
+    def get_memory_usage(self) -> dict[str, Any]:
         """Get memory usage statistics"""
         try:
             memory_stats = {

@@ -9,17 +9,15 @@ Provides secure error handling with:
 - Error sanitization
 """
 
-import logging
-import time
-from dataclasses import dataclass
-from typing import Any, Dict, Optional
-from collections import defaultdict, deque
-import threading
 import hashlib
+import logging
+import threading
+import time
+from collections import defaultdict, deque
+from dataclasses import dataclass
+from typing import Any
 
-from backend.utils.exceptions import (
-    MysticException
-)
+from backend.utils.exceptions import MysticException
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +39,9 @@ class SecurityIncident:
     severity: str  # 'low', 'medium', 'high', 'critical'
     description: str
     timestamp: float
-    client_id: Optional[str] = None
-    endpoint: Optional[str] = None
-    error_details: Optional[Dict[str, Any]] = None
+    client_id: str | None = None
+    endpoint: str | None = None
+    error_details: dict[str, Any] | None = None
 
 
 class ErrorSanitizer:
@@ -86,7 +84,7 @@ class ErrorSanitizer:
 
         return sanitized if sanitized != message.lower() else "Internal server error"
 
-    def sanitize_dict(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def sanitize_dict(self, data: dict[str, Any]) -> dict[str, Any]:
         """Sanitize dictionary to remove sensitive information"""
         sanitized = {}
 
@@ -110,12 +108,12 @@ class SecurityIncidentDetector:
 
     def __init__(self):
         self.incidents: deque = deque(maxlen=100)
-        self.error_counts: Dict[str, int] = defaultdict(int)
-        self.client_error_counts: Dict[str, int] = defaultdict(int)
+        self.error_counts: dict[str, int] = defaultdict(int)
+        self.client_error_counts: dict[str, int] = defaultdict(int)
         self.lock = threading.Lock()
 
-    def detect_incident(self, error: Exception, client_id: Optional[str] = None,
-                       endpoint: Optional[str] = None) -> Optional[SecurityIncident]:
+    def detect_incident(self, error: Exception, client_id: str | None = None,
+                       endpoint: str | None = None) -> SecurityIncident | None:
         """Detect security incidents from errors"""
         error_type = type(error).__name__
         current_time = time.time()
@@ -135,8 +133,8 @@ class SecurityIncidentDetector:
 
             return incident
 
-    def _check_suspicious_patterns(self, error: Exception, client_id: Optional[str],
-                                 endpoint: Optional[str], timestamp: float) -> Optional[SecurityIncident]:
+    def _check_suspicious_patterns(self, error: Exception, client_id: str | None,
+                                 endpoint: str | None, timestamp: float) -> SecurityIncident | None:
         """Check for suspicious error patterns"""
         error_type = type(error).__name__
         error_message = str(error).lower()
@@ -199,7 +197,7 @@ class SecurityIncidentDetector:
         """Generate unique incident ID"""
         return hashlib.md5(f"{time.time()}".encode()).hexdigest()[:8]
 
-    def get_security_stats(self) -> Dict[str, Any]:
+    def get_security_stats(self) -> dict[str, Any]:
         """Get security incident statistics"""
         return {
             'total_incidents': len(self.incidents),
@@ -218,8 +216,8 @@ class SecureErrorHandler:
         self.error_log: deque = deque(maxlen=MAX_ERROR_LOG_SIZE)
         self.lock = threading.Lock()
 
-    def handle_error(self, error: Exception, client_id: Optional[str] = None,
-                    endpoint: Optional[str] = None, include_details: bool = False) -> Dict[str, Any]:
+    def handle_error(self, error: Exception, client_id: str | None = None,
+                    endpoint: str | None = None, include_details: bool = False) -> dict[str, Any]:
         """Handle error securely"""
         # Detect security incidents
         incident = self.incident_detector.detect_incident(error, client_id, endpoint)
@@ -237,7 +235,7 @@ class SecureErrorHandler:
         else:
             return self._handle_generic_error(error, include_details)
 
-    def _handle_mystic_exception(self, error: MysticException, include_details: bool) -> Dict[str, Any]:
+    def _handle_mystic_exception(self, error: MysticException, include_details: bool) -> dict[str, Any]:
         """Handle Mystic-specific exceptions"""
         response = {
             'error': True,
@@ -254,7 +252,7 @@ class SecureErrorHandler:
 
         return response, error.status_code
 
-    def _handle_validation_error(self, error: Exception, include_details: bool) -> Dict[str, Any]:
+    def _handle_validation_error(self, error: Exception, include_details: bool) -> dict[str, Any]:
         """Handle validation errors"""
         response = {
             'error': True,
@@ -271,7 +269,7 @@ class SecureErrorHandler:
 
         return response, 400
 
-    def _handle_connection_error(self, error: Exception, include_details: bool) -> Dict[str, Any]:
+    def _handle_connection_error(self, error: Exception, include_details: bool) -> dict[str, Any]:
         """Handle connection errors"""
         response = {
             'error': True,
@@ -288,7 +286,7 @@ class SecureErrorHandler:
 
         return response, 503
 
-    def _handle_generic_error(self, error: Exception, include_details: bool) -> Dict[str, Any]:
+    def _handle_generic_error(self, error: Exception, include_details: bool) -> dict[str, Any]:
         """Handle generic errors"""
         response = {
             'error': True,
@@ -305,8 +303,8 @@ class SecureErrorHandler:
 
         return response, 500
 
-    def _log_error(self, error: Exception, client_id: Optional[str],
-                  endpoint: Optional[str], incident: Optional[SecurityIncident]):
+    def _log_error(self, error: Exception, client_id: str | None,
+                  endpoint: str | None, incident: SecurityIncident | None):
         """Log error securely"""
         error_info = {
             'error_type': type(error).__name__,
@@ -324,7 +322,7 @@ class SecureErrorHandler:
         log_level = logging.ERROR if incident else logging.WARNING
         logger.log(log_level, f"Error handled: {error_info['error_type']} - {error_info['error_message']}")
 
-    def get_error_stats(self) -> Dict[str, Any]:
+    def get_error_stats(self) -> dict[str, Any]:
         """Get error handling statistics"""
         with self.lock:
             # Count error types

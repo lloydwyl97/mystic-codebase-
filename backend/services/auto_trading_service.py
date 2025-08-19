@@ -4,9 +4,9 @@ Handles automated trading operations and bot management
 """
 
 import logging
-from typing import Dict, Any
-from datetime import datetime, timezone
 import random
+from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class AutoTradingService:
         }
         logger.info("âœ… AutoTradingService initialized")
 
-    async def get_auto_trading_status(self) -> Dict[str, Any]:
+    async def get_auto_trading_status(self) -> dict[str, Any]:
         """Get comprehensive auto trading status"""
         return {
             "is_running": len(self.active_bots) > 0,
@@ -41,7 +41,7 @@ class AutoTradingService:
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    async def start_auto_trading(self, config: Dict[str, Any] = None) -> Dict[str, Any]:
+    async def start_auto_trading(self, config: dict[str, Any] = None) -> dict[str, Any]:
         """Start automated trading"""
         try:
             if config:
@@ -68,7 +68,7 @@ class AutoTradingService:
             logger.error(f"âŒ Error starting auto trading: {e}")
             return {"success": False, "error": str(e)}
 
-    async def stop_auto_trading(self, bot_id: str = None) -> Dict[str, Any]:
+    async def stop_auto_trading(self, bot_id: str = None) -> dict[str, Any]:
         """Stop automated trading"""
         try:
             if bot_id:
@@ -96,7 +96,7 @@ class AutoTradingService:
             logger.error(f"âŒ Error stopping auto trading: {e}")
             return {"success": False, "error": str(e)}
 
-    async def get_bot_performance(self, bot_id: str = None) -> Dict[str, Any]:
+    async def get_bot_performance(self, bot_id: str = None) -> dict[str, Any]:
         """Get performance metrics for trading bots"""
         if bot_id:
             if bot_id in self.active_bots:
@@ -123,7 +123,7 @@ class AutoTradingService:
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    async def update_trading_config(self, new_config: Dict[str, Any]) -> Dict[str, Any]:
+    async def update_trading_config(self, new_config: dict[str, Any]) -> dict[str, Any]:
         """Update trading configuration"""
         try:
             self.trading_config.update(new_config)
@@ -139,7 +139,7 @@ class AutoTradingService:
 
     async def execute_trade(
         self, symbol: str, side: str, amount: float, price: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute a trade through auto trading"""
         try:
             trade_id = f"trade_{datetime.now().timestamp()}"

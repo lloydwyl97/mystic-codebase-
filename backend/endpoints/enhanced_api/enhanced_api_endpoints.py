@@ -7,7 +7,7 @@ import asyncio
 import json
 import os
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -120,7 +120,7 @@ async def run_backtest(
     symbol: str,
     start_date: str,
     end_date: str,
-    parameters: Dict[str, Any] = {},
+    parameters: dict[str, Any] = {},
 ):
     """Run a new backtest (live)"""
     try:
@@ -192,7 +192,7 @@ def simulate_trading_strategy(data: pd.DataFrame, strategy_type: str) -> pd.Data
         return pd.DataFrame()
 
 
-def calculate_backtest_metrics(returns: pd.Series) -> Dict[str, float]:
+def calculate_backtest_metrics(returns: pd.Series) -> dict[str, float]:
     """Calculate comprehensive backtest metrics"""
     try:
         metrics = {}

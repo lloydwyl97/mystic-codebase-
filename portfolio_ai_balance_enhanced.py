@@ -1,5 +1,4 @@
 import logging
-from typing import Dict
 
 logger = logging.getLogger(__name__)
 
@@ -7,10 +6,10 @@ logger = logging.getLogger(__name__)
 class PortfolioAIBalance:
     """AI-driven portfolio balancing"""
 
-    def __init__(self, portfolio: Dict[str, float]):
+    def __init__(self, portfolio: dict[str, float]):
         self.portfolio = portfolio
 
-    def optimize_balance(self) -> Dict[str, float]:
+    def optimize_balance(self) -> dict[str, float]:
         """Optimize the portfolio balance using AI algorithms"""
         try:
             # AI optimization logic using risk-adjusted returns

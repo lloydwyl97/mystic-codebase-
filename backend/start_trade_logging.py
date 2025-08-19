@@ -13,12 +13,13 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
 
 try:
-    from db_logger import init_db, get_active_strategies
-    from alerts import test_discord_connection
-    from reward_engine import run_daily_evaluation
-    from mutator import run_evolution_cycle
-    from dashboard import app
     import uvicorn
+    from db_logger import get_active_strategies, init_db
+    from mutator import run_evolution_cycle
+    from reward_engine import run_daily_evaluation
+
+    from alerts import test_discord_connection
+    from dashboard import app
 except ImportError as e:
     print(f"âŒ Import error: {e}")
     print("Make sure all required packages are installed:")

@@ -7,7 +7,7 @@ Handles response sanitization and data cleaning.
 import json
 import logging
 import re
-from typing import Any, Dict, List, cast
+from typing import Any, cast
 
 from fastapi.responses import JSONResponse
 
@@ -28,7 +28,7 @@ class ResponseSanitizer:
         }
 
         # Fields to mask in responses
-        self.mask_fields: Dict[str, str] = {
+        self.mask_fields: dict[str, str] = {
             "email": r"(?<=.{3}).(?=.*@)",
             "phone": r"(?<=.{3}).(?=.{4}$)",
             "credit_card": r"(?<=.{4}).(?=.{4}$)",
@@ -38,7 +38,7 @@ class ResponseSanitizer:
         self.max_response_size = 1024 * 1024  # 1MB
 
         # Response format configurations
-        self.response_formats: Dict[str, Dict[str, Any]] = {
+        self.response_formats: dict[str, dict[str, Any]] = {
             "default": {
                 "success": bool,
                 "data": (dict, list),
@@ -61,14 +61,14 @@ class ResponseSanitizer:
             # Escape HTML
             value = value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         elif isinstance(value, dict):
-            value = self.sanitize_dict(cast(Dict[str, Any], value))
+            value = self.sanitize_dict(cast(dict[str, Any], value))
         elif isinstance(value, list):
-            value = self.sanitize_list(cast(List[Any], value))
+            value = self.sanitize_list(cast(list[Any], value))
         return value
 
-    def sanitize_dict(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def sanitize_dict(self, data: dict[str, Any]) -> dict[str, Any]:
         """Sanitize dictionary values"""
-        sanitized: Dict[str, Any] = {}
+        sanitized: dict[str, Any] = {}
         for key, value in data.items():
             # Remove sensitive fields
             if key.lower() in self.sensitive_fields:
@@ -83,15 +83,15 @@ class ResponseSanitizer:
             sanitized[key] = self.sanitize_value(value)
         return sanitized
 
-    def sanitize_list(self, data: List[Any]) -> List[Any]:
+    def sanitize_list(self, data: list[Any]) -> list[Any]:
         """Sanitize list values"""
         return [self.sanitize_value(item) for item in data]
 
-    def format_response(self, data: Dict[str, Any], status_code: int) -> Dict[str, Any]:
+    def format_response(self, data: dict[str, Any], status_code: int) -> dict[str, Any]:
         """Format response according to configuration"""
         if status_code >= 400:
             format_config = self.response_formats["error"]
-            formatted: Dict[str, Any] = {
+            formatted: dict[str, Any] = {
                 "success": False,
                 "error": data.get("detail", "Unknown error"),
                 "code": status_code,
@@ -121,7 +121,7 @@ class ResponseSanitizer:
 
         return formatted
 
-    def check_response_size(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def check_response_size(self, data: dict[str, Any]) -> dict[str, Any]:
         """Check if response size exceeds limit"""
         try:
             response_size = len(json.dumps(data).encode())
@@ -156,9 +156,9 @@ class ResponseSanitizer:
 
             # Sanitize data
             if isinstance(data, dict):
-                data = self.sanitize_dict(cast(Dict[str, Any], data))
+                data = self.sanitize_dict(cast(dict[str, Any], data))
             elif isinstance(data, list):
-                data = self.sanitize_list(cast(List[Any], data))
+                data = self.sanitize_list(cast(list[Any], data))
                 # Convert list to dict for format_response
                 data = {"data": data}
 

@@ -4,7 +4,7 @@ Centralized configuration for all trading-related hardcoded values
 """
 
 import os
-from typing import Dict, Any
+from typing import Any
 
 
 class TradingConfig:
@@ -127,7 +127,7 @@ class TradingConfig:
     }
 
     @classmethod
-    def get_risk_management_config(cls) -> Dict[str, Any]:
+    def get_risk_management_config(cls) -> dict[str, Any]:
         """Get default risk management configuration"""
         return {
             "max_position_size": cls.DEFAULT_MAX_POSITION_SIZE,
@@ -140,7 +140,7 @@ class TradingConfig:
         }
 
     @classmethod
-    def get_performance_config(cls) -> Dict[str, Any]:
+    def get_performance_config(cls) -> dict[str, Any]:
         """Get default performance configuration"""
         return {
             "total_trades": cls.DEFAULT_TOTAL_TRADES,
@@ -151,7 +151,7 @@ class TradingConfig:
         }
 
     @classmethod
-    def get_redis_config(cls) -> Dict[str, Any]:
+    def get_redis_config(cls) -> dict[str, Any]:
         """Get Redis configuration"""
         return {
             "host": os.getenv("REDIS_HOST", cls.DEFAULT_REDIS_HOST),
@@ -160,7 +160,7 @@ class TradingConfig:
         }
 
     @classmethod
-    def get_service_config(cls) -> Dict[str, Any]:
+    def get_service_config(cls) -> dict[str, Any]:
         """Get service configuration"""
         return {
             "default_port": int(os.getenv("SERVICE_PORT", cls.DEFAULT_SERVICE_PORT)),

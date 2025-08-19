@@ -4,11 +4,12 @@ Connects to real trading APIs for live trading operations
 """
 
 import asyncio
-import ccxt
-import os
-from typing import Dict, Any
-from datetime import datetime
 import logging
+import os
+from datetime import datetime
+from typing import Any
+
+import ccxt
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -77,7 +78,7 @@ class LiveTradingService:
         self.positions_cache = {}
         self.cache_timeout = 30  # seconds
 
-    async def get_account_balance(self) -> Dict[str, Any]:
+    async def get_account_balance(self) -> dict[str, Any]:
         """Get account balance from connected exchanges"""
         try:
             balances = {}
@@ -125,7 +126,7 @@ class LiveTradingService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_open_orders(self) -> Dict[str, Any]:
+    async def get_open_orders(self) -> dict[str, Any]:
         """Get open orders from connected exchanges"""
         try:
             orders = {}
@@ -187,7 +188,7 @@ class LiveTradingService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_trade_history(self, symbol: str = None, limit: int = 100) -> Dict[str, Any]:
+    async def get_trade_history(self, symbol: str = None, limit: int = 100) -> dict[str, Any]:
         """Get trade history from connected exchanges"""
         try:
             trades = {}
@@ -261,7 +262,7 @@ class LiveTradingService:
         side: str,
         amount: float,
         price: float = None,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Place a new order on the specified exchange"""
         try:
             if exchange.lower() == "binance" and self.binance:
@@ -331,7 +332,7 @@ class LiveTradingService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def cancel_order(self, exchange: str, order_id: str, symbol: str) -> Dict[str, Any]:
+    async def cancel_order(self, exchange: str, order_id: str, symbol: str) -> dict[str, Any]:
         """Cancel an existing order"""
         try:
             if exchange.lower() == "binance" and self.binance:
@@ -373,7 +374,7 @@ class LiveTradingService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_positions(self) -> Dict[str, Any]:
+    async def get_positions(self) -> dict[str, Any]:
         """Get current positions from connected exchanges"""
         try:
             positions = {}

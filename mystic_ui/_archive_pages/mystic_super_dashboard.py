@@ -1,29 +1,31 @@
 ﻿from __future__ import annotations
 
-from typing import Any, Dict, List, MutableMapping, Tuple, cast
+from collections.abc import MutableMapping
+from typing import Any, cast
 
-import streamlit as st
 import plotly.graph_objects as go  # type: ignore[import-not-found]
+import streamlit as st
 
 from mystic_ui._archive_pages.components.api_client import fetch_candles  # public wrapper
-from mystic_ui._archive_pages.components.common_utils import safe_number_format  # public wrapper
-from mystic_ui._archive_pages.components.common_utils import ensure_state_defaults  # public wrapper
-
+from mystic_ui._archive_pages.components.common_utils import (
+    ensure_state_defaults,  # public wrapper
+    safe_number_format,  # public wrapper
+)
 
 _st = cast(Any, st)
 
 
 @_st.cache_data(show_spinner=False, ttl=60)
-def _get_candles_cached(exchange: str, symbol: str, interval: str) -> Dict[str, Any]:
+def _get_candles_cached(exchange: str, symbol: str, interval: str) -> dict[str, Any]:
     return fetch_candles(exchange=exchange, symbol=symbol, interval=interval)
 
 
-def _to_price_series(candles: List[Dict[str, Any]]) -> Tuple[List[int], List[float], List[float], List[float], List[float]]:
-    ts: List[int] = []
-    o: List[float] = []
-    h: List[float] = []
-    l: List[float] = []
-    c: List[float] = []
+def _to_price_series(candles: list[dict[str, Any]]) -> tuple[list[int], list[float], list[float], list[float], list[float]]:
+    ts: list[int] = []
+    o: list[float] = []
+    h: list[float] = []
+    l: list[float] = []
+    c: list[float] = []
     for item in candles:
         ts.append(int(item.get("ts", 0)))
         o.append(float(item.get("o", 0)))
@@ -33,10 +35,10 @@ def _to_price_series(candles: List[Dict[str, Any]]) -> Tuple[List[int], List[flo
     return ts, o, h, l, c
 
 
-def _sma(values: List[float], length: int) -> List[float]:
+def _sma(values: list[float], length: int) -> list[float]:
     if length <= 1:
         return list(values)
-    out: List[float] = []
+    out: list[float] = []
     rolling_sum = 0.0
     for i, v in enumerate(values):
         rolling_sum += v
@@ -55,7 +57,7 @@ def render_market_section() -> None:
 
     with _st.spinner("Loading market data..."):
         res = _get_candles_cached(exchange, symbol, interval)
-    candles: List[Dict[str, Any]] = cast(List[Dict[str, Any]], res.get("candles", []))
+    candles: list[dict[str, Any]] = cast(list[dict[str, Any]], res.get("candles", []))
 
     # Empty-data handling: show info and skip charts/KPIs
     if not candles:
@@ -119,7 +121,7 @@ def render_signals_autobuy_section() -> None:
 
     with _st.spinner("Loading signal inputs..."):
         res = _get_candles_cached(exchange, symbol, interval)
-    candles: List[Dict[str, Any]] = cast(List[Dict[str, Any]], res.get("candles", []))
+    candles: list[dict[str, Any]] = cast(list[dict[str, Any]], res.get("candles", []))
 
     if not candles:
         _st.warning("No candle data for signals.")
@@ -153,7 +155,7 @@ def render_portfolio_orders_section() -> None:
 
     with _st.spinner("Loading candles for portfolio signals..."):
         res = _get_candles_cached(exchange, symbol, interval)
-    candles: List[Dict[str, Any]] = cast(List[Dict[str, Any]], res.get("candles", []))
+    candles: list[dict[str, Any]] = cast(list[dict[str, Any]], res.get("candles", []))
 
     if not candles:
         _st.warning("No candle data available.")
@@ -164,7 +166,7 @@ def render_portfolio_orders_section() -> None:
     sma_slow = _sma(closes, 30)
 
     # Detect simple crossover events as hypothetical order signals
-    events: List[Dict[str, Any]] = []
+    events: list[dict[str, Any]] = []
     for i in range(1, len(closes)):
         prev_fast = sma_fast[i - 1]
         prev_slow = sma_slow[i - 1]
@@ -190,7 +192,7 @@ def render_portfolio_orders_section() -> None:
 
     with right:
         _st.subheader("Equity Curve (Toy) — 1x on BUY, flat on SELL")
-        equity: List[float] = []
+        equity: list[float] = []
         position = 0  # 0 flat, 1 long
         cash = 1.0
         last_price = closes[0]
@@ -219,7 +221,7 @@ def render_alerts_section() -> None:
 
     with _st.spinner("Scanning candles for alert conditions..."):
         res = _get_candles_cached(exchange, symbol, interval)
-    candles: List[Dict[str, Any]] = cast(List[Dict[str, Any]], res.get("candles", []))
+    candles: list[dict[str, Any]] = cast(list[dict[str, Any]], res.get("candles", []))
 
     if not candles:
         _st.warning("No candle data available.")
@@ -227,7 +229,7 @@ def render_alerts_section() -> None:
 
     _ts, _o, _h, _l, closes = _to_price_series(candles)
 
-    alerts: List[Dict[str, Any]] = []
+    alerts: list[dict[str, Any]] = []
     for i in range(1, len(closes)):
         prev = closes[i - 1]
         cur = closes[i]

@@ -13,18 +13,18 @@ import asyncio
 import gc
 import logging
 import os
-import time
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
+from typing import Any
 
 try:
-    import torch
+    import joblib  # type: ignore[reportMissingTypeStubs]
     import numpy as np
-    from transformers import AutoTokenizer, AutoModel, pipeline
+    import torch
     from sentence_transformers import SentenceTransformer
-    import joblib
+    from transformers import AutoModel, AutoTokenizer, pipeline
 except ImportError:
     torch = None
     np = None
@@ -32,7 +32,7 @@ except ImportError:
     AutoModel = None
     pipeline = None
     SentenceTransformer = None
-    joblib = None
+    joblib = None  # type: ignore[assignment]
 
 
 logger = logging.getLogger(__name__)
@@ -64,12 +64,12 @@ class ModelCache:
 
     def __init__(self, max_size: int = 10):
         self.max_size = max_size
-        self.models: Dict[str, Any] = {}
-        self.model_info: Dict[str, ModelInfo] = {}
-        self.access_order: List[str] = []
+        self.models: dict[str, Any] = {}
+        self.model_info: dict[str, ModelInfo] = {}
+        self.access_order: list[str] = []
         self.lock = threading.Lock()
 
-    def get(self, model_name: str) -> Optional[Any]:
+    def get(self, model_name: str) -> Any | None:
         """Get model from cache"""
         with self.lock:
             if model_name in self.models:
@@ -117,7 +117,7 @@ class ModelCache:
             self.model_info.clear()
             self.access_order.clear()
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get cache statistics"""
         with self.lock:
             return {
@@ -134,7 +134,7 @@ class ModelLoader:
 
     def __init__(self):
         self.cache = ModelCache()
-        self.loading_models: Dict[str, asyncio.Future] = {}
+        self.loading_models: dict[str, asyncio.Future] = {}
         self.executor = ThreadPoolExecutor(max_workers=2)
         self.lock = threading.Lock()
 
@@ -277,7 +277,7 @@ class ModelLoader:
         except Exception:
             return 100.0  # Default estimate
 
-    async def preload_models(self, model_configs: List[Dict[str, str]]):
+    async def preload_models(self, model_configs: list[dict[str, str]]):
         """Preload models in background"""
         if not BACKGROUND_LOADING:
             return
@@ -343,7 +343,7 @@ class ModelLoader:
 
                 logger.info(f"Memory optimization: unloaded {unload_count} models")
 
-    def get_model_stats(self) -> Dict[str, Any]:
+    def get_model_stats(self) -> dict[str, Any]:
         """Get model loading statistics"""
         with self.lock:
             stats = self.cache.get_stats()

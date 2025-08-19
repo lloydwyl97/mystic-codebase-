@@ -6,11 +6,11 @@ Monitors all trading services and automatically restarts failed components.
 
 import subprocess
 import time
-import psutil
-from typing import Dict, List, Any
-from datetime import datetime
-import requests
 from datetime import datetime, timezone
+from typing import Any
+
+import psutil
+import requests
 
 
 class TradingWatchdog:
@@ -68,7 +68,7 @@ class TradingWatchdog:
             },
         }
 
-    def check_service_health(self, service_name: str) -> Dict[str, Any]:
+    def check_service_health(self, service_name: str) -> dict[str, Any]:
         """
         Check health of a specific service.
 
@@ -160,7 +160,7 @@ class TradingWatchdog:
             print(f"Error checking HTTP health: {e}")
             return False
 
-    def _check_resource_usage(self, script_name: str) -> Dict[str, float]:
+    def _check_resource_usage(self, script_name: str) -> dict[str, float]:
         """Check resource usage of a process."""
         try:
             for proc in psutil.process_iter(["pid", "name", "cmdline"]):
@@ -176,7 +176,7 @@ class TradingWatchdog:
             print(f"Error checking resource usage: {e}")
             return {"memory_mb": 0, "cpu_percent": 0, "pid": None}
 
-    def restart_service(self, service_name: str) -> Dict[str, Any]:
+    def restart_service(self, service_name: str) -> dict[str, Any]:
         """
         Restart a failed service.
 
@@ -268,11 +268,11 @@ class TradingWatchdog:
                 count += 1
         return count
 
-    def _log_restart(self, restart_result: Dict[str, Any]):
+    def _log_restart(self, restart_result: dict[str, Any]):
         """Log restart attempt."""
         self.restart_history.append(restart_result)
 
-    def monitor_all_services(self) -> Dict[str, Any]:
+    def monitor_all_services(self) -> dict[str, Any]:
         """
         Monitor health of all critical services.
 
@@ -315,7 +315,7 @@ class TradingWatchdog:
 
         return monitoring_results
 
-    def get_system_summary(self) -> Dict[str, Any]:
+    def get_system_summary(self) -> dict[str, Any]:
         """Get overall system health summary."""
         if not self.service_status:
             return {"status": "unknown", "services": 0}
@@ -342,11 +342,11 @@ class TradingWatchdog:
             "last_check": datetime.now(timezone.utc).isoformat(),
         }
 
-    def get_health_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_health_history(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get health check history."""
         return self.health_log[-limit:]
 
-    def get_restart_history(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_restart_history(self, limit: int = 50) -> list[dict[str, Any]]:
         """Get restart history."""
         return self.restart_history[-limit:]
 
@@ -381,25 +381,25 @@ class TradingWatchdog:
 
 
 # Convenience functions
-def check_service_health(service_name: str) -> Dict[str, Any]:
+def check_service_health(service_name: str) -> dict[str, Any]:
     """Check health of a specific service."""
     watchdog = TradingWatchdog()
     return watchdog.check_service_health(service_name)
 
 
-def restart_service(service_name: str) -> Dict[str, Any]:
+def restart_service(service_name: str) -> dict[str, Any]:
     """Restart a specific service."""
     watchdog = TradingWatchdog()
     return watchdog.restart_service(service_name)
 
 
-def monitor_services() -> Dict[str, Any]:
+def monitor_services() -> dict[str, Any]:
     """Monitor all services."""
     watchdog = TradingWatchdog()
     return watchdog.monitor_all_services()
 
 
-def get_system_health() -> Dict[str, Any]:
+def get_system_health() -> dict[str, Any]:
     """Get system health summary."""
     watchdog = TradingWatchdog()
     return watchdog.get_system_summary()

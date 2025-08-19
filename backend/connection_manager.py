@@ -9,11 +9,10 @@ import os
 import platform
 import subprocess
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 import pika
 import redis
-
 from auto_trading_manager import get_auto_trading_manager
 from metrics_collector import get_metrics_collector
 from notification_service import NotificationService, get_notification_service
@@ -27,7 +26,7 @@ class ConnectionManager:
 
     def __init__(self):
         # Initialize connection variables
-        self.redis_client: Optional[Any] = None
+        self.redis_client: Any | None = None
         self.rabbitmq_conn = None
         self.notification_service = None
         self.signal_manager = None
@@ -110,7 +109,7 @@ class ConnectionManager:
         # rather than silently using mock data
         return None
 
-    def _try_redis_url_connection(self, redis_url: str) -> Optional[Any]:
+    def _try_redis_url_connection(self, redis_url: str) -> Any | None:
         """Try to establish a Redis connection using Redis URL."""
         try:
             logger.debug(f"Attempting Redis URL connection to {redis_url}")
@@ -140,7 +139,7 @@ class ConnectionManager:
             logger.debug(f"Redis URL connection failed with unexpected error: {str(e)}")
             raise e
 
-    def _try_redis_connection(self, host: str, port: int, socket_timeout: int = 5) -> Optional[Any]:
+    def _try_redis_connection(self, host: str, port: int, socket_timeout: int = 5) -> Any | None:
         """Try to establish a Redis connection with given parameters."""
         try:
             # Log the connection attempt details
@@ -175,7 +174,7 @@ class ConnectionManager:
             logger.debug(f"Redis connection failed with unexpected error: {str(e)}")
             raise e
 
-    def _try_redis_connection_pool(self, host: str, port: int) -> Optional[Any]:
+    def _try_redis_connection_pool(self, host: str, port: int) -> Any | None:
         """Try to establish a Redis connection using connection pool."""
         try:
             pool = redis.ConnectionPool(
@@ -196,7 +195,7 @@ class ConnectionManager:
             logger.debug(f"Redis connection pool failed: {str(e)}")
             raise e
 
-    def _try_start_redis_service(self, host: str, port: int) -> Optional[Any]:
+    def _try_start_redis_service(self, host: str, port: int) -> Any | None:
         """Try to start Redis service on Windows and then connect."""
         if host != "redis":
             return None  # Only try to start local Redis service
@@ -278,9 +277,9 @@ class ConnectionManager:
         except Exception as e:
             raise e
 
-    def check_redis_health(self) -> Dict[str, Any]:
+    def check_redis_health(self) -> dict[str, Any]:
         """Check Redis connection health and provide diagnostics."""
-        health_info: Dict[str, Any] = {
+        health_info: dict[str, Any] = {
             "connected": False,
             "client_type": "none",
             "error": None,

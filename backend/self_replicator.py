@@ -1,5 +1,5 @@
-﻿import shutil
-import os
+﻿import os
+import shutil
 
 
 def replicate_to(path="./replica", dna="core"):

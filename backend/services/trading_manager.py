@@ -8,7 +8,7 @@ position management, and strategy execution.
 import json
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Any
 
 from backend.services.websocket_manager import websocket_manager
 
@@ -19,10 +19,10 @@ class TradingManager:
     """Manages trading business logic and operations."""
 
     def __init__(self):
-        self.active_orders: Dict[str, Dict[str, Any]] = {}
-        self.positions: Dict[str, Dict[str, Any]] = {}
+        self.active_orders: dict[str, dict[str, Any]] = {}
+        self.positions: dict[str, dict[str, Any]] = {}
 
-    def validate_order_data(self, order_data: Dict[str, Any]) -> tuple[bool, str]:
+    def validate_order_data(self, order_data: dict[str, Any]) -> tuple[bool, str]:
         """Validate order data before processing."""
         required_fields = ["symbol", "side", "quantity"]
 
@@ -52,7 +52,7 @@ class TradingManager:
         """Generate a unique order ID."""
         return f"order_{datetime.now(timezone.timezone.utc).timestamp()}"
 
-    def add_order(self, order_data: Dict[str, Any]) -> Dict[str, Any]:
+    def add_order(self, order_data: dict[str, Any]) -> dict[str, Any]:
         """Add a new order to active orders."""
         order_id = order_data.get("order_id", self.generate_order_id())
         order_data["order_id"] = order_id
@@ -62,15 +62,15 @@ class TradingManager:
         self.active_orders[order_id] = order_data
         return order_data
 
-    def remove_order(self, order_id: str) -> Optional[Dict[str, Any]]:
+    def remove_order(self, order_id: str) -> dict[str, Any] | None:
         """Remove an order from active orders."""
         return self.active_orders.pop(order_id, None)
 
-    def get_order(self, order_id: str) -> Optional[Dict[str, Any]]:
+    def get_order(self, order_id: str) -> dict[str, Any] | None:
         """Get an order by ID."""
         return self.active_orders.get(order_id)
 
-    def get_all_orders(self) -> Dict[str, Dict[str, Any]]:
+    def get_all_orders(self) -> dict[str, dict[str, Any]]:
         """Get all active orders."""
         return self.active_orders.copy()
 
@@ -84,7 +84,7 @@ class TradingManager:
             return True
         return False
 
-    def add_position(self, position_data: Dict[str, Any]) -> Dict[str, Any]:
+    def add_position(self, position_data: dict[str, Any]) -> dict[str, Any]:
         """Add a new position."""
         symbol = position_data.get("symbol")
         if not symbol:
@@ -97,7 +97,7 @@ class TradingManager:
         self.positions[position_id] = position_data
         return position_data
 
-    def update_position(self, position_id: str, updates: Dict[str, Any]) -> bool:
+    def update_position(self, position_id: str, updates: dict[str, Any]) -> bool:
         """Update an existing position."""
         if position_id in self.positions:
             self.positions[position_id].update(updates)
@@ -107,17 +107,17 @@ class TradingManager:
             return True
         return False
 
-    def get_position(self, position_id: str) -> Optional[Dict[str, Any]]:
+    def get_position(self, position_id: str) -> dict[str, Any] | None:
         """Get a position by ID."""
         return self.positions.get(position_id)
 
-    def get_all_positions(self) -> Dict[str, Dict[str, Any]]:
+    def get_all_positions(self) -> dict[str, dict[str, Any]]:
         """Get all positions."""
         return self.positions.copy()
 
     def calculate_position_pnl(
-        self, position: Dict[str, Any], current_price: float
-    ) -> Dict[str, Any]:
+        self, position: dict[str, Any], current_price: float
+    ) -> dict[str, Any]:
         """Calculate position profit/loss."""
         entry_price = position.get("entry_price", 0)
         quantity = position.get("quantity", 0)
@@ -163,7 +163,7 @@ class TradingManager:
         return result
 
     def validate_strategy_parameters(
-        self, strategy_name: str, parameters: Dict[str, Any]
+        self, strategy_name: str, parameters: dict[str, Any]
     ) -> tuple[bool, str]:
         """Validate strategy parameters."""
         if not strategy_name:
@@ -190,7 +190,7 @@ class TradingManager:
 
         return True, "Strategy parameters are valid"
 
-    def serialize_data(self) -> Dict[str, str]:
+    def serialize_data(self) -> dict[str, str]:
         """Serialize data for storage."""
         return {
             "active_orders": json.dumps(self.active_orders),

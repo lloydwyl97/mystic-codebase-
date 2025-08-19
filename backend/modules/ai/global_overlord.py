@@ -4,18 +4,18 @@ Orchestrates AI decisions from multiple agents using weighted voting and confide
 """
 
 import logging
-import random
-from typing import Dict, List, Any, Optional
-from datetime import datetime, timezone
-import sys
 import os
+import random
+import sys
+from datetime import datetime, timezone
+from typing import Any
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from backend.modules.ai.persistent_cache import PersistentCache
-from backend.modules.ai.signal_engine import SignalEngine
 from backend.modules.ai.self_replication_engine import SelfReplicationEngine
+from backend.modules.ai.signal_engine import SignalEngine
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class CosmicPatternRecognizer:
             "planetary_alignment": 0.02
         }
 
-    def get_cosmic_factors(self, symbol: str) -> Dict[str, float]:
+    def get_cosmic_factors(self, symbol: str) -> dict[str, float]:
         """Get cosmic factors that might influence trading"""
         try:
             # Mock cosmic factors (in real implementation, would fetch from cosmic APIs)
@@ -102,7 +102,7 @@ class GlobalOverlord:
 
         logger.info("âœ… GlobalOverlord initialized")
 
-    def _collect_signal_engine_signals(self, exchange: str, symbol: str) -> List[Dict[str, Any]]:
+    def _collect_signal_engine_signals(self, exchange: str, symbol: str) -> list[dict[str, Any]]:
         """Collect signals from the signal engine"""
         try:
             signals = []
@@ -133,7 +133,7 @@ class GlobalOverlord:
             logger.error(f"Failed to collect signal engine signals: {e}")
             return []
 
-    def _collect_agent_signals(self, exchange: str, symbol: str) -> List[Dict[str, Any]]:
+    def _collect_agent_signals(self, exchange: str, symbol: str) -> list[dict[str, Any]]:
         """Collect signals from self-replication agents"""
         try:
             signals = []
@@ -153,7 +153,7 @@ class GlobalOverlord:
             logger.error(f"Failed to collect agent signals: {e}")
             return []
 
-    def _generate_agent_signal(self, agent_data: Dict[str, Any], symbol: str) -> Optional[Dict[str, Any]]:
+    def _generate_agent_signal(self, agent_data: dict[str, Any], symbol: str) -> dict[str, Any] | None:
         """Generate trading signal from agent data"""
         try:
             # Mock price data for technical analysis
@@ -219,7 +219,7 @@ class GlobalOverlord:
             logger.error(f"Failed to generate agent signal: {e}")
             return None
 
-    def _calculate_rsi(self, prices: List[float], period: int = 14) -> List[float]:
+    def _calculate_rsi(self, prices: list[float], period: int = 14) -> list[float]:
         """Calculate RSI for price series"""
         try:
             if len(prices) < period + 1:
@@ -258,7 +258,7 @@ class GlobalOverlord:
             logger.error(f"Failed to calculate RSI: {e}")
             return []
 
-    def _calculate_ema(self, prices: List[float], period: int) -> List[float]:
+    def _calculate_ema(self, prices: list[float], period: int) -> list[float]:
         """Calculate EMA for price series"""
         try:
             if len(prices) < period:
@@ -282,7 +282,7 @@ class GlobalOverlord:
             logger.error(f"Failed to calculate EMA: {e}")
             return []
 
-    def _apply_weighted_voting(self, signals: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _apply_weighted_voting(self, signals: list[dict[str, Any]]) -> dict[str, Any]:
         """Apply weighted voting to determine final decision"""
         try:
             if not signals:
@@ -373,7 +373,7 @@ class GlobalOverlord:
                 "error": str(e)
             }
 
-    def decide_trade(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def decide_trade(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Make final trading decision using weighted voting"""
         try:
             logger.info(f"ðŸ¤– GlobalOverlord making decision for {symbol}")
@@ -427,7 +427,7 @@ class GlobalOverlord:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_decision_history(self, symbol: str, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_decision_history(self, symbol: str, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent overlord decisions for a symbol"""
         try:
             # Get recent signals from cache
@@ -445,7 +445,7 @@ class GlobalOverlord:
             logger.error(f"Failed to get decision history: {e}")
             return []
 
-    def get_consensus_metrics(self) -> Dict[str, Any]:
+    def get_consensus_metrics(self) -> dict[str, Any]:
         """Get consensus metrics from recent decisions"""
         try:
             # Get recent overlord decisions
@@ -499,7 +499,7 @@ class GlobalOverlord:
                 "recent_decisions": []
             }
 
-    def get_overlord_status(self) -> Dict[str, Any]:
+    def get_overlord_status(self) -> dict[str, Any]:
         """Get current overlord status and configuration"""
         try:
             return {

@@ -4,7 +4,7 @@ Provides a minimal transactions feed for the UI. Proxies real data if available.
 """
 
 import logging
-from typing import Any, Dict, List, cast
+from typing import Any, cast
 
 from fastapi import APIRouter
 
@@ -20,9 +20,9 @@ except Exception:
 
 
 @router.get("/transactions")
-async def get_transactions() -> Dict[str, Any]:
+async def get_transactions() -> dict[str, Any]:
     try:
-        items: List[Dict[str, Any]] = []
+        items: list[dict[str, Any]] = []
         if callable(get_trade_history):
             try:
                 # Some implementations may not accept "limit"; call safely
@@ -30,7 +30,7 @@ async def get_transactions() -> Dict[str, Any]:
                     history = get_trade_history(limit=200)  # type: ignore[call-arg]
                 except Exception:
                     history = get_trade_history()  # type: ignore[call-arg]
-                for t in cast(List[Dict[str, Any]], history or []):
+                for t in cast(list[dict[str, Any]], history or []):
                     items.append(
                         {
                             "timestamp": t.get("timestamp"),

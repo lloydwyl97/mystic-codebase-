@@ -8,7 +8,7 @@ Handles alert generation, delivery, and management.
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from backend.utils.exceptions import NotificationException
 
@@ -22,9 +22,9 @@ class AlertManager:
     """Alert manager for trading notifications and alerts"""
 
     def __init__(self):
-        self.alerts: Dict[str, Dict[str, Any]] = {}
-        self.alert_history: List[Dict[str, Any]] = []
-        self.alert_types: Dict[str, Dict[str, Any]] = {
+        self.alerts: dict[str, dict[str, Any]] = {}
+        self.alert_history: list[dict[str, Any]] = []
+        self.alert_types: dict[str, dict[str, Any]] = {
             "price_alert": {
                 "description": "Price-based alerts",
                 "fields": ["symbol", "condition", "threshold"],
@@ -43,7 +43,7 @@ class AlertManager:
             },
         }
         self.is_active: bool = True
-        self.notification_channels: List[str] = [
+        self.notification_channels: list[str] = [
             "email",
             "webhook",
             "database",
@@ -52,12 +52,12 @@ class AlertManager:
     def create_alert(
         self,
         alert_type: str,
-        symbol: Optional[str] = None,
-        condition: Optional[str] = None,
-        threshold: Optional[float] = None,
-        message: Optional[str] = None,
+        symbol: str | None = None,
+        condition: str | None = None,
+        threshold: float | None = None,
+        message: str | None = None,
         expires_at: Any = None,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create a new alert"""
         if alert_type not in self.alert_types:
             raise NotificationException(f"Invalid alert type: {alert_type}")
@@ -93,11 +93,11 @@ class AlertManager:
         logger.info(f"Alert created: {alert_type} - {message}")
         return alert
 
-    def get_alert(self, alert_id: str) -> Optional[Dict[str, Any]]:
+    def get_alert(self, alert_id: str) -> dict[str, Any] | None:
         """Get alert by ID"""
         return self.alerts.get(alert_id)
 
-    def update_alert(self, alert_id: str, updates: Dict[str, Any]) -> bool:
+    def update_alert(self, alert_id: str, updates: dict[str, Any]) -> bool:
         """Update an alert"""
         if alert_id not in self.alerts:
             return False
@@ -122,8 +122,8 @@ class AlertManager:
         return False
 
     def list_alerts(
-        self, alert_type: Optional[str] = None, symbol: Optional[str] = None
-    ) -> List[str]:
+        self, alert_type: str | None = None, symbol: str | None = None
+    ) -> list[str]:
         """List alert IDs with optional filtering"""
         alert_ids = list(self.alerts.keys())
 
@@ -151,9 +151,9 @@ class AlertManager:
             return True
         return False
 
-    def check_price_alerts(self, market_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def check_price_alerts(self, market_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Check price-based alerts"""
-        triggered_alerts: List[Dict[str, Any]] = []
+        triggered_alerts: list[dict[str, Any]] = []
         for alert_id, alert in self.alerts.items():
             if not alert["active"] or alert["type"] != "price_alert":
                 continue
@@ -164,9 +164,7 @@ class AlertManager:
             threshold = float(alert["threshold"])
             condition = alert["condition"]
             triggered = False
-            if ">" in condition and price > threshold:
-                triggered = True
-            elif "<" in condition and price < threshold:
+            if ">" in condition and price > threshold or "<" in condition and price < threshold:
                 triggered = True
             if triggered and not alert["triggered"]:
                 alert["triggered"] = True
@@ -176,9 +174,9 @@ class AlertManager:
                 triggered_alerts.append(alert_copy)
         return triggered_alerts
 
-    def check_volume_alerts(self, market_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def check_volume_alerts(self, market_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Check volume-based alerts"""
-        triggered_alerts: List[Dict[str, Any]] = []
+        triggered_alerts: list[dict[str, Any]] = []
         for alert_id, alert in self.alerts.items():
             if not alert["active"] or alert["type"] != "volume_alert":
                 continue
@@ -189,9 +187,7 @@ class AlertManager:
             threshold = float(alert["threshold"])
             condition = alert["condition"]
             triggered = False
-            if ">" in condition and volume > threshold:
-                triggered = True
-            elif "<" in condition and volume < threshold:
+            if ">" in condition and volume > threshold or "<" in condition and volume < threshold:
                 triggered = True
             if triggered and not alert["triggered"]:
                 alert["triggered"] = True
@@ -201,14 +197,14 @@ class AlertManager:
                 triggered_alerts.append(alert_copy)
         return triggered_alerts
 
-    def check_all_alerts(self, market_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def check_all_alerts(self, market_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Check all alerts"""
-        triggered_alerts: List[Dict[str, Any]] = []
+        triggered_alerts: list[dict[str, Any]] = []
         triggered_alerts.extend(self.check_price_alerts(market_data))
         triggered_alerts.extend(self.check_volume_alerts(market_data))
         return triggered_alerts
 
-    def get_alert_statistics(self) -> Dict[str, Any]:
+    def get_alert_statistics(self) -> dict[str, Any]:
         """Get alert statistics"""
         total_alerts = len(self.alerts)
         active_alerts = len([a for a in self.alerts.values() if a["active"]])
@@ -258,8 +254,8 @@ class AlertManager:
         return len(expired_alerts)
 
     def get_alerts(
-        self, status: Optional[str] = None, alert_type: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+        self, status: str | None = None, alert_type: str | None = None
+    ) -> list[dict[str, Any]]:
         """Get alerts with optional filtering (legacy method)"""
         filtered_alerts = list(self.alerts.values())
 
@@ -274,7 +270,7 @@ class AlertManager:
 
         return filtered_alerts
 
-    def acknowledge_alert(self, alert_id: str) -> Dict[str, Any]:
+    def acknowledge_alert(self, alert_id: str) -> dict[str, Any]:
         """Acknowledge an alert (legacy method)"""
         if alert_id in self.alerts:
             self.alerts[alert_id]["acknowledged"] = True
@@ -284,7 +280,7 @@ class AlertManager:
 
         return {"success": False, "error": "Alert not found"}
 
-    def resolve_alert(self, alert_id: str, resolution_notes: str = "") -> Dict[str, Any]:
+    def resolve_alert(self, alert_id: str, resolution_notes: str = "") -> dict[str, Any]:
         """Resolve an alert (legacy method)"""
         if alert_id in self.alerts:
             self.alerts[alert_id]["status"] = "resolved"
@@ -295,7 +291,7 @@ class AlertManager:
 
         return {"success": False, "error": "Alert not found"}
 
-    def add_alert_rule(self, rule_name: str, rule_config: Dict[str, Any]) -> Dict[str, Any]:
+    def add_alert_rule(self, rule_name: str, rule_config: dict[str, Any]) -> dict[str, Any]:
         """Add a new alert rule (legacy method)"""
         rule = {
             "name": rule_name,
@@ -310,7 +306,7 @@ class AlertManager:
 
         return {"success": True, "rule": rule}
 
-    def remove_alert_rule(self, rule_name: str) -> Dict[str, Any]:
+    def remove_alert_rule(self, rule_name: str) -> dict[str, Any]:
         """Remove an alert rule (legacy method)"""
         self.alert_rules = getattr(self, "alert_rules", {})
         if rule_name in self.alert_rules:
@@ -320,11 +316,11 @@ class AlertManager:
 
         return {"success": False, "error": "Rule not found"}
 
-    def check_alert_conditions(self, market_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def check_alert_conditions(self, market_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Check market data against alert rules and generate alerts (legacy method)"""
         return self.check_all_alerts(market_data)
 
-    def clear_old_alerts(self, days: int = 30) -> Dict[str, Any]:
+    def clear_old_alerts(self, days: int = 30) -> dict[str, Any]:
         """Clear alerts older than specified days (legacy method)"""
         cleared_count = self.cleanup_expired_alerts(days)
         return {
@@ -333,7 +329,7 @@ class AlertManager:
             "remaining_count": len(self.alerts),
         }
 
-    def export_alerts(self, format_type: str = "json") -> Dict[str, Any]:
+    def export_alerts(self, format_type: str = "json") -> dict[str, Any]:
         """Export alerts (legacy method)"""
         if format_type == "json":
             return {
@@ -343,7 +339,7 @@ class AlertManager:
             }
         return {"success": False, "error": "Unsupported format"}
 
-    def import_alerts(self, alerts_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def import_alerts(self, alerts_data: list[dict[str, Any]]) -> dict[str, Any]:
         """Import alerts (legacy method)"""
         imported_count = 0
         for alert_data in alerts_data:
@@ -360,7 +356,7 @@ class AlertManager:
             "total_alerts": len(self.alerts),
         }
 
-    def get_alert_by_id(self, alert_id: str) -> Optional[Dict[str, Any]]:
+    def get_alert_by_id(self, alert_id: str) -> dict[str, Any] | None:
         """Get alert by ID (legacy method)"""
         return self.get_alert(alert_id)
 

@@ -6,18 +6,22 @@ Advanced neural network-based strategy generation and signal optimization
 import asyncio
 import json
 import os
-import redis
+from datetime import datetime, timedelta
+from typing import Any
+
+import joblib  # type: ignore[reportMissingTypeStubs]
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, Tuple
+import redis
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import accuracy_score
-import joblib
 from dotenv import load_dotenv
+from numpy.typing import NDArray
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import MinMaxScaler
+
+from utils.redis_helpers import to_str
 
 # Load environment variables
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -135,7 +139,7 @@ class AIStrategyGenerator:
         while self.running:
             try:
                 # Check for strategy generation requests
-                request = self.redis_client.lpop("ai_strategy_queue")
+                request = to_str(self.redis_client.lpop("ai_strategy_queue"))
 
                 if request:
                     request_data = json.loads(request)
@@ -150,7 +154,7 @@ class AIStrategyGenerator:
                 print(f"❌ Error in strategy generation: {e}")
                 await asyncio.sleep(600)
 
-    async def process_strategy_request(self, request_data: Dict[str, Any]):
+    async def process_strategy_request(self, request_data: dict[str, Any]):
         """Process individual strategy generation request"""
         try:
             strategy_type = request_data.get("type", "lstm")
@@ -197,8 +201,8 @@ class AIStrategyGenerator:
         self,
         strategy_type: str,
         symbol: str,
-        parameters: Dict[str, Any] = None,
-    ) -> Optional[Dict[str, Any]]:
+        parameters: dict[str, Any] | None = None,
+    ) -> dict[str, Any] | None:
         """Create an AI strategy"""
         try:
             # Get historical data
@@ -298,7 +302,7 @@ class AIStrategyGenerator:
             print(f"Error getting historical data: {e}")
             return pd.DataFrame()
 
-    def prepare_features(self, data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
+    def prepare_features(self, data: pd.DataFrame) -> tuple[NDArray[Any], NDArray[Any]]:
         """Prepare features for model training"""
         try:
             # Calculate technical indicators
@@ -357,9 +361,9 @@ class AIStrategyGenerator:
     async def train_model(
         self,
         strategy_type: str,
-        features: np.ndarray,
-        parameters: Dict[str, Any] = None,
-    ) -> Tuple[Optional[nn.Module], Optional[MinMaxScaler]]:
+        features: NDArray[Any],
+        parameters: dict[str, Any] | None = None,
+    ) -> tuple[nn.Module | None, MinMaxScaler | None]:
         """Train the AI model"""
         try:
             if len(features) == 0:
@@ -453,8 +457,8 @@ class AIStrategyGenerator:
             return None, None
 
     def create_sequences(
-        self, X: np.ndarray, y: np.ndarray, sequence_length: int
-    ) -> Tuple[np.ndarray, np.ndarray]:
+        self, X: NDArray[Any], y: NDArray[Any], sequence_length: int
+    ) -> tuple[NDArray[Any], NDArray[Any]]:
         """Create sequences for time series prediction"""
         try:
             X_sequences, y_sequences = [], []
@@ -470,8 +474,8 @@ class AIStrategyGenerator:
             return np.array([]), np.array([])
 
     def generate_strategy_config(
-        self, strategy_type: str, parameters: Dict[str, Any] = None
-    ) -> Dict[str, Any]:
+        self, strategy_type: str, parameters: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Generate strategy configuration"""
         config = {
             "model_type": strategy_type,
@@ -490,7 +494,7 @@ class AIStrategyGenerator:
         return config
 
     async def save_model(
-        self, model: nn.Module, scaler: MinMaxScaler, strategy: Dict[str, Any]
+        self, model: nn.Module, scaler: MinMaxScaler, strategy: dict[str, Any]
     ):
         """Save model and scaler"""
         try:
@@ -530,7 +534,7 @@ class AIStrategyGenerator:
             print(f"Error checking strategy generation: {e}")
             return False
 
-    async def store_strategy(self, strategy: Dict[str, Any]):
+    async def store_strategy(self, strategy: dict[str, Any]):
         """Store strategy in Redis"""
         try:
             self.redis_client.set(
@@ -549,7 +553,7 @@ class AIStrategyGenerator:
         except Exception as e:
             print(f"Error storing strategy: {e}")
 
-    async def publish_strategy(self, strategy: Dict[str, Any]):
+    async def publish_strategy(self, strategy: dict[str, Any]):
         """Publish strategy to Redis channels"""
         try:
             self.redis_client.publish("ai_strategies", json.dumps(strategy))

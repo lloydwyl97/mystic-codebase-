@@ -7,7 +7,7 @@ Generates cosmic and mystical trading insights
 import logging
 import random
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger("ai_mystic")
 
@@ -23,7 +23,7 @@ class AIMystic:
         return mystic_oracle()
 
 
-def mystic_oracle() -> Dict[str, Any]:
+def mystic_oracle() -> dict[str, Any]:
     """Generate mystical market insights"""
     try:
         return {

@@ -6,7 +6,7 @@ Generates ranked trading signals based on multiple factors
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 from .persistent_cache import get_persistent_cache
 
@@ -24,7 +24,7 @@ class AISignals:
         return signal_scorer()
 
 
-def signal_scorer() -> List[str]:
+def signal_scorer() -> list[str]:
     """Score and rank trading opportunities"""
     try:
         cache = get_persistent_cache()
@@ -92,7 +92,7 @@ def signal_scorer() -> List[str]:
         return []
 
 
-def risk_adjusted_signals() -> List[Dict[str, Any]]:
+def risk_adjusted_signals() -> list[dict[str, Any]]:
     """Generate risk-adjusted trading signals"""
     try:
         cache = get_persistent_cache()
@@ -151,7 +151,7 @@ def risk_adjusted_signals() -> List[Dict[str, Any]]:
         return []
 
 
-def technical_signals() -> List[Dict[str, Any]]:
+def technical_signals() -> list[dict[str, Any]]:
     """Generate technical analysis signals"""
     try:
         cache = get_persistent_cache()
@@ -231,7 +231,7 @@ def technical_signals() -> List[Dict[str, Any]]:
         return []
 
 
-def market_strength_signals() -> Dict[str, Any]:
+def market_strength_signals() -> dict[str, Any]:
     """Analyze overall market strength"""
     try:
         cache = get_persistent_cache()
@@ -321,7 +321,7 @@ def market_strength_signals() -> Dict[str, Any]:
         }
 
 
-def trend_analysis() -> Dict[str, Any]:
+def trend_analysis() -> dict[str, Any]:
     """Analyze market trends"""
     try:
         cache = get_persistent_cache()
@@ -398,7 +398,7 @@ def trend_analysis() -> Dict[str, Any]:
         }
 
 
-def mystic_oracle() -> Dict[str, Any]:
+def mystic_oracle() -> dict[str, Any]:
     """Mystic Oracle - Advanced market predictions"""
     try:
         cache = get_persistent_cache()
@@ -478,7 +478,7 @@ def mystic_oracle() -> Dict[str, Any]:
         }
 
 
-def get_trading_status() -> Dict[str, Any]:
+def get_trading_status() -> dict[str, Any]:
     """Get current trading system status"""
     try:
         cache = get_persistent_cache()
@@ -525,7 +525,7 @@ def get_trading_status() -> Dict[str, Any]:
         }
 
 
-def get_trade_summary() -> Dict[str, Any]:
+def get_trade_summary() -> dict[str, Any]:
     """Get trading performance summary"""
     try:
         # Simulate trading performance based on signal quality

@@ -16,8 +16,7 @@ import logging
 import time
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Any, Dict
-import threading
+from typing import Any
 
 try:
     import redis
@@ -72,7 +71,7 @@ class CacheMetrics:
         total = self.hits + self.misses
         return self.hits / total if total > 0 else 0.0
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get comprehensive cache statistics"""
         uptime = time.time() - self.start_time
         return {
@@ -404,7 +403,7 @@ class RedisCacheManager:
         except Exception as e:
             logger.error(f"Performance optimization error: {e}")
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """Get comprehensive cache statistics"""
         stats = self.metrics.get_stats()
         stats.update({

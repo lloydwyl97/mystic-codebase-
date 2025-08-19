@@ -6,17 +6,16 @@ Provides missing risk management endpoints that return live data:
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
-
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
 @router.get("/api/risk/status")
-async def get_risk_status() -> Dict[str, Any]:
+async def get_risk_status() -> dict[str, Any]:
     """
     Get risk management status with live data
 

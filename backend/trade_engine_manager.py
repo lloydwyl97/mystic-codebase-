@@ -8,9 +8,9 @@ import asyncio
 import json
 import logging
 from dataclasses import asdict, dataclass
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 from .services.websocket_manager import websocket_manager
 
@@ -37,7 +37,7 @@ class CoinState:
     last_price: float
     last_volume: float
     rsi: float
-    macd: Dict[str, float]
+    macd: dict[str, float]
     mystic_alignment_score: float
     is_active_buy_signal: bool
     is_active_sell_signal: bool
@@ -55,9 +55,9 @@ class TradeDecision:
     price: float
     reason: str
     signal_strength: SignalStrength
-    tier1_signals: Dict[str, Any]
-    tier2_signals: Dict[str, Any]
-    tier3_signals: Dict[str, Any]
+    tier1_signals: dict[str, Any]
+    tier2_signals: dict[str, Any]
+    tier3_signals: dict[str, Any]
     timestamp: str
 
 
@@ -67,7 +67,7 @@ class TradeEngineManager:
     def __init__(self, redis_client: Any):
         self.redis_client = redis_client
         self.trade_engine = TradeEngine(redis_client)
-        self._performance_metrics: Dict[str, Union[int, float, str]] = {
+        self._performance_metrics: dict[str, int | float | str] = {
             "total_decisions": 0,
             "buy_decisions": 0,
             "sell_decisions": 0,
@@ -77,7 +77,7 @@ class TradeEngineManager:
             "last_update": datetime.now(timezone.utc).isoformat(),
         }
 
-    async def start_engine(self) -> Dict[str, Any]:
+    async def start_engine(self) -> dict[str, Any]:
         """Start the trade engine"""
         try:
             if self.trade_engine.is_running:
@@ -105,7 +105,7 @@ class TradeEngineManager:
             logger.error(f"Error starting trade engine: {str(e)}")
             raise
 
-    async def stop_engine(self) -> Dict[str, Any]:
+    async def stop_engine(self) -> dict[str, Any]:
         """Stop the trade engine"""
         try:
             if not self.trade_engine.is_running:
@@ -130,7 +130,7 @@ class TradeEngineManager:
             logger.error(f"Error stopping trade engine: {str(e)}")
             raise
 
-    async def get_engine_status(self) -> Dict[str, Any]:
+    async def get_engine_status(self) -> dict[str, Any]:
         """Get trade engine status"""
         try:
             engine_status = self.trade_engine.get_status()
@@ -145,7 +145,7 @@ class TradeEngineManager:
             logger.error(f"Error getting engine status: {str(e)}")
             raise
 
-    async def get_trade_decisions(self) -> Dict[str, Any]:
+    async def get_trade_decisions(self) -> dict[str, Any]:
         """Get current trade decisions"""
         try:
             decisions = await self.trade_engine.get_trade_decisions()
@@ -160,7 +160,7 @@ class TradeEngineManager:
             logger.error(f"Error getting trade decisions: {str(e)}")
             raise
 
-    async def get_coin_states(self) -> Dict[str, Any]:
+    async def get_coin_states(self) -> dict[str, Any]:
         """Get all coin states"""
         try:
             coin_states = await self.trade_engine.get_all_coin_states()
@@ -193,7 +193,7 @@ class TradeEngineManager:
             logger.error(f"Error getting coin states: {str(e)}")
             raise
 
-    async def get_signal_analysis(self, symbol: str) -> Dict[str, Any]:
+    async def get_signal_analysis(self, symbol: str) -> dict[str, Any]:
         """Get detailed signal analysis for a specific coin"""
         try:
             # Get all tier signals
@@ -256,7 +256,7 @@ class TradeEngineManager:
             logger.error(f"Error getting signal analysis for {symbol}: {str(e)}")
             raise
 
-    async def update_performance_metrics(self, decisions: List[TradeDecision]):
+    async def update_performance_metrics(self, decisions: list[TradeDecision]):
         """Update performance metrics based on new decisions"""
         try:
             self._performance_metrics["total_decisions"] = int(
@@ -328,7 +328,7 @@ class TradeEngineManager:
         except Exception as e:
             logger.error(f"Error updating performance metrics: {str(e)}")
 
-    async def get_performance_report(self) -> Dict[str, Any]:
+    async def get_performance_report(self) -> dict[str, Any]:
         """Get comprehensive performance report"""
         try:
             engine_status = self.trade_engine.get_status()
@@ -398,12 +398,12 @@ class TradeEngineManager:
             logger.error(f"Error getting performance report: {str(e)}")
             raise
 
-    async def optimize_engine_config(self) -> Dict[str, Any]:
+    async def optimize_engine_config(self) -> dict[str, Any]:
         """Optimize engine configuration based on performance"""
         try:
             performance = self._performance_metrics
 
-            optimizations: Dict[str, Any] = {
+            optimizations: dict[str, Any] = {
                 "config_changes": [],
                 "recommendations": [],
                 "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -474,7 +474,7 @@ class TradeEngine:
         }
 
         # Coin state tracking
-        self.coin_states: Dict[str, CoinState] = {}
+        self.coin_states: dict[str, CoinState] = {}
 
         # Trading thresholds
         self.thresholds = {
@@ -488,7 +488,7 @@ class TradeEngine:
 
         logger.info("Trade Engine initialized")
 
-    async def get_tier1_signals(self) -> Dict[str, Any]:
+    async def get_tier1_signals(self) -> dict[str, Any]:
         """Get Tier 1 signals from cache"""
         try:
             tier1_data = self.redis_client.get("tier1_signals")
@@ -499,7 +499,7 @@ class TradeEngine:
             logger.error(f"Error getting Tier 1 signals: {e}")
             return {}
 
-    async def get_tier2_signals(self) -> Dict[str, Any]:
+    async def get_tier2_signals(self) -> dict[str, Any]:
         """Get Tier 2 signals from cache"""
         try:
             tier2_data = self.redis_client.get("tier2_indicators")
@@ -510,7 +510,7 @@ class TradeEngine:
             logger.error(f"Error getting Tier 2 signals: {e}")
             return {}
 
-    async def get_tier3_signals(self) -> Dict[str, Any]:
+    async def get_tier3_signals(self) -> dict[str, Any]:
         """Get Tier 3 signals from cache"""
         try:
             tier3_data = self.redis_client.get("cosmic_signals")
@@ -523,9 +523,9 @@ class TradeEngine:
 
     def calculate_signal_strength(
         self,
-        tier1: Dict[str, Any],
-        tier2: Dict[str, Any],
-        tier3: Dict[str, Any],
+        tier1: dict[str, Any],
+        tier2: dict[str, Any],
+        tier3: dict[str, Any],
     ) -> SignalStrength:
         """Calculate overall signal strength from all tiers"""
         try:
@@ -590,13 +590,13 @@ class TradeEngine:
 
     def calculate_confidence(
         self,
-        tier1: Dict[str, Any],
-        tier2: Dict[str, Any],
-        tier3: Dict[str, Any],
+        tier1: dict[str, Any],
+        tier2: dict[str, Any],
+        tier3: dict[str, Any],
     ) -> float:
         """Calculate trading confidence from all tiers"""
         try:
-            confidence_factors: List[float] = []
+            confidence_factors: list[float] = []
 
             # Price stability (Tier 1)
             if "price" in tier1:
@@ -643,13 +643,13 @@ class TradeEngine:
     def determine_trade_action(
         self,
         symbol: str,
-        tier1: Dict[str, Any],
-        tier2: Dict[str, Any],
-        tier3: Dict[str, Any],
-    ) -> Tuple[TradeAction, str]:
+        tier1: dict[str, Any],
+        tier2: dict[str, Any],
+        tier3: dict[str, Any],
+    ) -> tuple[TradeAction, str]:
         """Determine trading action based on all signal tiers"""
         try:
-            reasons: List[str] = []
+            reasons: list[str] = []
             buy_signals = 0
             sell_signals = 0
 
@@ -707,9 +707,9 @@ class TradeEngine:
     async def update_coin_state(
         self,
         symbol: str,
-        tier1: Dict[str, Any],
-        tier2: Dict[str, Any],
-        tier3: Dict[str, Any],
+        tier1: dict[str, Any],
+        tier2: dict[str, Any],
+        tier3: dict[str, Any],
     ):
         """Update coin state with latest signals"""
         try:
@@ -750,10 +750,10 @@ class TradeEngine:
         except Exception as e:
             logger.error(f"Error updating coin state for {symbol}: {e}")
 
-    async def generate_trade_decisions(self) -> List[TradeDecision]:
+    async def generate_trade_decisions(self) -> list[TradeDecision]:
         """Generate trade decisions for all coins"""
         try:
-            decisions: List[TradeDecision] = []
+            decisions: list[TradeDecision] = []
 
             # Get all signals
             tier1_signals = await self.get_tier1_signals()
@@ -804,7 +804,7 @@ class TradeEngine:
             logger.error(f"Error generating trade decisions: {e}")
             return []
 
-    async def _cache_trade_decisions(self, decisions: List[TradeDecision]):
+    async def _cache_trade_decisions(self, decisions: list[TradeDecision]):
         """Cache trade decisions in Redis"""
         try:
             decisions_data = [asdict(decision) for decision in decisions]
@@ -857,7 +857,7 @@ class TradeEngine:
 
         logger.info("Trade engine stopped")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get engine status"""
         return {
             "is_running": self.is_running,
@@ -867,15 +867,15 @@ class TradeEngine:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-    async def get_coin_state(self, symbol: str) -> Optional[CoinState]:
+    async def get_coin_state(self, symbol: str) -> CoinState | None:
         """Get state for a specific coin"""
         return self.coin_states.get(symbol)
 
-    async def get_all_coin_states(self) -> Dict[str, CoinState]:
+    async def get_all_coin_states(self) -> dict[str, CoinState]:
         """Get all coin states"""
         return self.coin_states.copy()
 
-    async def get_trade_decisions(self) -> List[Dict[str, Any]]:
+    async def get_trade_decisions(self) -> list[dict[str, Any]]:
         """Get cached trade decisions"""
         try:
             decisions_data = self.redis_client.get("trade_decisions")

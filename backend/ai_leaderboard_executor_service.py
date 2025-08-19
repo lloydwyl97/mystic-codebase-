@@ -6,16 +6,17 @@ Port 8005 - Standalone AI leaderboard execution service
 
 import asyncio
 import json
-import time
+import logging
 import os
 import sys
-import logging
+import time
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any
+
+import redis
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-import redis
 
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -85,7 +86,8 @@ class AILeaderboardExecutorService:
         while self.running:
             try:
                 # Check for leaderboard requests
-                request = self.redis_client.lpop("ai_leaderboard_queue")
+                from utils.redis_helpers import to_str
+                request = to_str(self.redis_client.lpop("ai_leaderboard_queue"))
 
                 if request:
                     request_data = json.loads(request)
@@ -98,7 +100,7 @@ class AILeaderboardExecutorService:
                 logger.error(f"âŒ Error in leaderboard monitor loop: {e}")
                 await asyncio.sleep(60)
 
-    async def process_leaderboard_request(self, request_data: Dict[str, Any]):
+    async def process_leaderboard_request(self, request_data: dict[str, Any]):
         """Process a leaderboard request"""
         try:
             strategy_id = request_data.get("strategy_id", "unknown")
@@ -156,7 +158,7 @@ class AILeaderboardExecutorService:
 
     async def execute_leaderboard_analysis(
         self, strategy_id: str, symbol: str, timeframe: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute leaderboard analysis"""
         try:
             logger.info(f"ðŸ† Executing leaderboard analysis for {strategy_id}")
@@ -187,7 +189,7 @@ class AILeaderboardExecutorService:
             logger.error(f"âŒ Error executing leaderboard analysis: {e}")
             raise
 
-    async def get_leaderboard_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+    async def get_leaderboard_history(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get leaderboard history"""
         try:
             # Return recent leaderboard executions
@@ -196,7 +198,7 @@ class AILeaderboardExecutorService:
             logger.error(f"âŒ Error getting leaderboard history: {e}")
             return []
 
-    async def get_strategy_leaderboard(self, strategy_id: str) -> List[Dict[str, Any]]:
+    async def get_strategy_leaderboard(self, strategy_id: str) -> list[dict[str, Any]]:
         """Get leaderboard for a specific strategy"""
         try:
             leaderboards = []
@@ -209,7 +211,7 @@ class AILeaderboardExecutorService:
             logger.error(f"âŒ Error getting strategy leaderboard: {e}")
             return []
 
-    async def get_current_leaderboard(self) -> Dict[str, Any]:
+    async def get_current_leaderboard(self) -> dict[str, Any]:
         """Get current leaderboard status"""
         try:
             # Get current leaderboard from executor
@@ -361,7 +363,8 @@ async def process_leaderboard_queue():
     try:
         processed = 0
         while True:
-            request = leaderboard_service.redis_client.lpop("ai_leaderboard_queue")
+            from utils.redis_helpers import to_str
+            request = to_str(leaderboard_service.redis_client.lpop("ai_leaderboard_queue"))
             if not request:
                 break
 

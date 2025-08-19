@@ -6,7 +6,6 @@ Sends real-time alerts to Discord and Telegram
 
 import logging
 import os
-from typing import Optional
 
 import aiohttp
 
@@ -93,7 +92,7 @@ async def send_trade_alert(
     action: str,
     price: float,
     amount: float,
-    pnl: Optional[float] = None,
+    pnl: float | None = None,
 ):
     """Send formatted trade alert"""
     try:

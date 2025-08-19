@@ -7,13 +7,14 @@ lunar cycles, sunspot activity, and Schumann resonance
 import asyncio
 import json
 import logging
-import numpy as np
-from datetime import datetime, timedelta
-from typing import Dict, Any, List
+import math
 import os
 import sys
+from datetime import datetime, timedelta
+from typing import Any
+
 import ephem
-import math
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -211,7 +212,7 @@ class CosmicPatternRecognizer(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_cosmic_data(self, data: Dict[str, Any]):
+    async def process_cosmic_data(self, data: dict[str, Any]):
         """Process incoming cosmic data"""
         try:
             data_type = data.get("type")
@@ -224,7 +225,7 @@ class CosmicPatternRecognizer(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing cosmic data: {e}")
 
-    async def process_market_correlation(self, market_data: Dict[str, Any]):
+    async def process_market_correlation(self, market_data: dict[str, Any]):
         """Process market data for cosmic correlation"""
         try:
             symbol = market_data.get("symbol")
@@ -244,7 +245,7 @@ class CosmicPatternRecognizer(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing market correlation: {e}")
 
-    async def process_cosmic_update(self, cosmic_data: Dict[str, Any]):
+    async def process_cosmic_update(self, cosmic_data: dict[str, Any]):
         """Process cosmic data update"""
         try:
             data_type = cosmic_data.get("data_type")
@@ -394,7 +395,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error calculating sunspot number: {e}")
             return 50
 
-    def calculate_solar_flares(self, cycle_position: float) -> Dict[str, int]:
+    def calculate_solar_flares(self, cycle_position: float) -> dict[str, int]:
         """Calculate solar flare activity"""
         try:
             # Simplified solar flare model
@@ -525,8 +526,8 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error analyzing cosmic patterns: {e}")
 
     async def analyze_archetypal_patterns(
-        self, lunar_data: Dict, solar_data: Dict, schumann_data: Dict
-    ) -> Dict[str, Any]:
+        self, lunar_data: dict, solar_data: dict, schumann_data: dict
+    ) -> dict[str, Any]:
         """Analyze archetypal patterns in cosmic data"""
         try:
             patterns = {}
@@ -556,8 +557,8 @@ class CosmicPatternRecognizer(BaseAgent):
             return {}
 
     async def analyze_hero_journey_pattern(
-        self, lunar_data: Dict, solar_data: Dict
-    ) -> Dict[str, Any]:
+        self, lunar_data: dict, solar_data: dict
+    ) -> dict[str, Any]:
         """Analyze hero journey pattern"""
         try:
             lunar_phase = lunar_data.get("phase", "unknown")
@@ -590,8 +591,8 @@ class CosmicPatternRecognizer(BaseAgent):
             return {"phase": "unknown", "confidence": 0.0}
 
     async def analyze_death_rebirth_pattern(
-        self, lunar_data: Dict, solar_data: Dict
-    ) -> Dict[str, Any]:
+        self, lunar_data: dict, solar_data: dict
+    ) -> dict[str, Any]:
         """Analyze death rebirth pattern"""
         try:
             lunar_phase = lunar_data.get("phase", "unknown")
@@ -624,8 +625,8 @@ class CosmicPatternRecognizer(BaseAgent):
             return {"phase": "unknown", "confidence": 0.0}
 
     async def analyze_golden_ratio_pattern(
-        self, lunar_data: Dict, schumann_data: Dict
-    ) -> Dict[str, Any]:
+        self, lunar_data: dict, schumann_data: dict
+    ) -> dict[str, Any]:
         """Analyze golden ratio pattern"""
         try:
             lunar_illumination = lunar_data.get("illumination", 0.5)
@@ -661,8 +662,8 @@ class CosmicPatternRecognizer(BaseAgent):
             return {"confidence": 0.0}
 
     async def analyze_sacred_geometry_pattern(
-        self, lunar_data: Dict, solar_data: Dict, schumann_data: Dict
-    ) -> Dict[str, Any]:
+        self, lunar_data: dict, solar_data: dict, schumann_data: dict
+    ) -> dict[str, Any]:
         """Analyze sacred geometry pattern"""
         try:
             lunar_phase = lunar_data.get("phase", "unknown")
@@ -717,8 +718,8 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error finding pattern correlations: {e}")
 
     async def analyze_pattern_correlations(
-        self, market_keys: List, cosmic_keys: List
-    ) -> Dict[str, Any]:
+        self, market_keys: list, cosmic_keys: list
+    ) -> dict[str, Any]:
         """Analyze correlations between patterns and market data"""
         try:
             correlations = {
@@ -793,8 +794,8 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error updating pattern triggers: {e}")
 
     async def check_trigger_conditions(
-        self, lunar_data: Dict, solar_data: Dict, schumann_data: Dict
-    ) -> List[Dict[str, Any]]:
+        self, lunar_data: dict, solar_data: dict, schumann_data: dict
+    ) -> list[dict[str, Any]]:
         """Check for trigger conditions"""
         try:
             triggers = []
@@ -883,8 +884,8 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error cleaning up old data: {e}")
 
     async def calculate_cosmic_correlations(
-        self, symbol: str, price_data: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, symbol: str, price_data: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Calculate cosmic correlations for a symbol"""
         try:
             correlations = {
@@ -915,7 +916,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error calculating cosmic correlations: {e}")
             return {"symbol": symbol, "overall_correlation": 0.0}
 
-    async def handle_analyze_cosmic_patterns(self, message: Dict[str, Any]):
+    async def handle_analyze_cosmic_patterns(self, message: dict[str, Any]):
         """Handle cosmic pattern analysis request"""
         try:
             pattern_type = message.get("pattern_type", "all")
@@ -944,8 +945,8 @@ class CosmicPatternRecognizer(BaseAgent):
             await self.broadcast_error(f"Cosmic pattern analysis error: {e}")
 
     async def analyze_patterns_by_type(
-        self, pattern_type: str, symbols: List[str]
-    ) -> Dict[str, Any]:
+        self, pattern_type: str, symbols: list[str]
+    ) -> dict[str, Any]:
         """Analyze patterns by type and symbols"""
         try:
             analysis_result = {}
@@ -968,7 +969,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error analyzing patterns by type: {e}")
             return {}
 
-    async def analyze_lunar_patterns(self, symbols: List[str]) -> Dict[str, Any]:
+    async def analyze_lunar_patterns(self, symbols: list[str]) -> dict[str, Any]:
         """Analyze lunar patterns for symbols"""
         try:
             lunar_analysis = {}
@@ -998,7 +999,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error analyzing lunar patterns: {e}")
             return {}
 
-    async def analyze_solar_patterns(self, symbols: List[str]) -> Dict[str, Any]:
+    async def analyze_solar_patterns(self, symbols: list[str]) -> dict[str, Any]:
         """Analyze solar patterns for symbols"""
         try:
             solar_analysis = {}
@@ -1030,7 +1031,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error analyzing solar patterns: {e}")
             return {}
 
-    async def analyze_schumann_patterns(self, symbols: List[str]) -> Dict[str, Any]:
+    async def analyze_schumann_patterns(self, symbols: list[str]) -> dict[str, Any]:
         """Analyze Schumann patterns for symbols"""
         try:
             schumann_analysis = {}
@@ -1062,7 +1063,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error analyzing Schumann patterns: {e}")
             return {}
 
-    async def handle_get_lunar_correlation(self, message: Dict[str, Any]):
+    async def handle_get_lunar_correlation(self, message: dict[str, Any]):
         """Handle lunar correlation request"""
         try:
             symbol = message.get("symbol", "BTC")
@@ -1088,7 +1089,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error handling lunar correlation request: {e}")
             await self.broadcast_error(f"Lunar correlation error: {e}")
 
-    async def get_lunar_correlation(self, symbol: str) -> Dict[str, Any]:
+    async def get_lunar_correlation(self, symbol: str) -> dict[str, Any]:
         """Get lunar correlation for symbol"""
         try:
             correlation_key = f"cosmic_correlation:{symbol}"
@@ -1109,7 +1110,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error getting lunar correlation: {e}")
             return {"correlation": 0.0, "current_phase": "unknown"}
 
-    async def handle_get_solar_correlation(self, message: Dict[str, Any]):
+    async def handle_get_solar_correlation(self, message: dict[str, Any]):
         """Handle solar correlation request"""
         try:
             symbol = message.get("symbol", "BTC")
@@ -1135,7 +1136,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error handling solar correlation request: {e}")
             await self.broadcast_error(f"Solar correlation error: {e}")
 
-    async def get_solar_correlation(self, symbol: str) -> Dict[str, Any]:
+    async def get_solar_correlation(self, symbol: str) -> dict[str, Any]:
         """Get solar correlation for symbol"""
         try:
             correlation_key = f"cosmic_correlation:{symbol}"
@@ -1158,7 +1159,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error getting solar correlation: {e}")
             return {"correlation": 0.0, "activity_level": "unknown"}
 
-    async def handle_get_schumann_correlation(self, message: Dict[str, Any]):
+    async def handle_get_schumann_correlation(self, message: dict[str, Any]):
         """Handle Schumann correlation request"""
         try:
             symbol = message.get("symbol", "BTC")
@@ -1184,7 +1185,7 @@ class CosmicPatternRecognizer(BaseAgent):
             print(f"âŒ Error handling Schumann correlation request: {e}")
             await self.broadcast_error(f"Schumann correlation error: {e}")
 
-    async def get_schumann_correlation(self, symbol: str) -> Dict[str, Any]:
+    async def get_schumann_correlation(self, symbol: str) -> dict[str, Any]:
         """Get Schumann correlation for symbol"""
         try:
             correlation_key = f"cosmic_correlation:{symbol}"

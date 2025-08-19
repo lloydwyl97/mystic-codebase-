@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List
-
-
-EXCHANGE_TOP4: Dict[str, List[str]] = {
+EXCHANGE_TOP4: dict[str, list[str]] = {
     "coinbase": ["BTC-USD", "ETH-USD", "ADA-USD", "SOL-USD"],
     "binanceus": ["BTC-USD", "ETH-USD", "ADA-USD", "SOL-USD"],
     "kraken": ["BTC-USD", "ETH-USD", "ADA-USD", "SOL-USD"],

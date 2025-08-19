@@ -6,7 +6,7 @@ Provides centralized notification management for the platform.
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 from backend.services.notification_manager import notification_manager
 
@@ -24,8 +24,8 @@ class NotificationService:
         title: str,
         message: str,
         level: str = "info",
-        channels: List[str] = ["in_app"],
-    ) -> Dict[str, Any]:
+        channels: list[str] = ["in_app"],
+    ) -> dict[str, Any]:
         """Send a notification through specified channels"""
         try:
             # Validate notification data
@@ -80,14 +80,15 @@ class NotificationService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def get_notifications(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_notifications(self, limit: int = 50) -> list[dict[str, Any]]:
         """Get recent notifications"""
         try:
             # Get from Redis
-            notifications_data = self.redis_client.lrange("recent_notifications", 0, limit - 1)
+            from utils.redis_helpers import to_str_list
+            notifications_data = to_str_list(self.redis_client.lrange("recent_notifications", 0, limit - 1))
 
             # Parse JSON
-            notifications: List[Dict[str, Any]] = []
+            notifications: list[dict[str, Any]] = []
             for notification_data in notifications_data:
                 notification = notification_manager.parse_notification_from_storage(
                     notification_data
@@ -104,10 +105,11 @@ class NotificationService:
         """Mark a notification as read"""
         try:
             # Get from Redis
-            notifications_data = self.redis_client.lrange("recent_notifications", 0, -1)
+            from utils.redis_helpers import to_str_list
+            notifications_data = to_str_list(self.redis_client.lrange("recent_notifications", 0, -1))
 
             # Parse and update notifications
-            notifications: List[Dict[str, Any]] = []
+            notifications: list[dict[str, Any]] = []
             for notification_data in notifications_data:
                 notification = notification_manager.parse_notification_from_storage(
                     notification_data
@@ -149,7 +151,7 @@ class NotificationService:
             logger.error(f"Error clearing notifications: {str(e)}")
             return 0
 
-    async def get_notification_summary(self) -> Dict[str, Any]:
+    async def get_notification_summary(self) -> dict[str, Any]:
         """Get notification summary statistics"""
         try:
             notifications = await self.get_notifications(limit=1000)  # Get all notifications
@@ -164,7 +166,7 @@ class NotificationService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def get_alerts(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_alerts(self, limit: int = 50) -> list[dict[str, Any]]:
         """Get alerts (high-priority notifications)"""
         try:
             # Get all notifications
@@ -200,7 +202,7 @@ class NotificationService:
 
     async def create_alert(
         self, title: str, message: str, level: str = "warning"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create a new alert"""
         try:
             # Create alert notification

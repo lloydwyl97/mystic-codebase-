@@ -5,19 +5,19 @@ Contains performance metrics, strategy analysis, and market analytics endpoints.
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict, Optional, Union
 import time
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 
-# Import real services
-from backend.services.redis_service import get_redis_service
-
 # import backend.services as services
 from backend.services.analytics_service import analytics_service
-from backend.services.order_service import order_service
 from backend.services.live_market_data import live_market_data_service
+from backend.services.order_service import order_service
+
+# Import real services
+from backend.services.redis_service import get_redis_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ def get_redis_client():
 
 
 @router.get("/api/analytics/performance")
-async def get_analytics_performance() -> Dict[str, Any]:
+async def get_analytics_performance() -> dict[str, Any]:
     """Get performance analytics with live data"""
     try:
         # Get live market data for performance analysis
@@ -87,10 +87,10 @@ async def get_analytics_performance() -> Dict[str, Any]:
 async def get_trade_history(
     limit: int = 100,
     offset: int = 0,
-    symbol: Optional[str] = None,
-    strategy: Optional[str] = None,
+    symbol: str | None = None,
+    strategy: str | None = None,
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get detailed trade history"""
     try:
         # Get real trade history from order service
@@ -106,7 +106,7 @@ async def get_trade_history(
 @router.get("/api/analytics/strategies")
 async def get_strategy_performance(
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get strategy performance comparison"""
     try:
         # Get real strategy performance from analytics service
@@ -121,7 +121,7 @@ async def get_strategy_performance(
 
 
 @router.get("/ai/insights")
-async def get_ai_insights_endpoint() -> Dict[str, Any]:
+async def get_ai_insights_endpoint() -> dict[str, Any]:
     """Get AI insights for dashboard"""
     try:
         # Get live market data for insights
@@ -175,7 +175,7 @@ async def get_ai_insights_endpoint() -> Dict[str, Any]:
 @router.get("/api/analytics/ai-insights")
 async def get_ai_insights(
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get AI-powered trading insights"""
     try:
         # Get real AI insights from analytics service
@@ -252,8 +252,8 @@ async def get_market_analysis(symbol: str = "BTC/USDT"):
 
 @router.post("/ml/train")
 async def train_ml_model(
-    model_data: Dict[str, Any],
-) -> Dict[str, Union[str, Any]]:
+    model_data: dict[str, Any],
+) -> dict[str, str | Any]:
     """Train a new machine learning model"""
     try:
         model_name = model_data.get("name", "default_model")
@@ -278,7 +278,7 @@ async def train_ml_model(
 
 
 @router.post("/ml/predict")
-async def make_prediction(prediction_data: Dict[str, Any]):
+async def make_prediction(prediction_data: dict[str, Any]):
     """Make predictions using trained models"""
     try:
         prediction_data.get("model", "default_model")
@@ -306,7 +306,7 @@ async def make_prediction(prediction_data: Dict[str, Any]):
 
 
 @router.get("/patterns/{symbol}")
-async def get_patterns(symbol: str) -> Dict[str, Union[str, Any]]:
+async def get_patterns(symbol: str) -> dict[str, str | Any]:
     """Get technical patterns for a symbol"""
     try:
         # Get real pattern recognition using analytics service
@@ -326,7 +326,7 @@ async def get_patterns(symbol: str) -> Dict[str, Union[str, Any]]:
 
 
 @router.get("/analytics/metrics")
-async def get_analytics_metrics() -> Dict[str, Any]:
+async def get_analytics_metrics() -> dict[str, Any]:
     """Get analytics metrics for dashboard"""
     try:
         # Get live market data
@@ -364,7 +364,7 @@ async def get_analytics_metrics() -> Dict[str, Any]:
 
 
 @router.get("/analytics/overview")
-async def get_analytics_overview() -> Dict[str, Any]:
+async def get_analytics_overview() -> dict[str, Any]:
     """Get analytics overview with live data"""
     try:
         # Get live market data for analytics
@@ -397,7 +397,7 @@ async def get_analytics_overview() -> Dict[str, Any]:
 
 
 @router.get("/api/analytics/risk")
-async def get_analytics_risk() -> Dict[str, Any]:
+async def get_analytics_risk() -> dict[str, Any]:
     """Get risk analytics with live data"""
     try:
         # Get live market data for risk analysis
@@ -448,7 +448,7 @@ async def get_analytics_risk() -> Dict[str, Any]:
 
 
 @router.get("/api/analytics/trends")
-async def get_analytics_trends() -> Dict[str, Any]:
+async def get_analytics_trends() -> dict[str, Any]:
     """Get market trends analytics with live data"""
     try:
         # Get live market data for trend analysis
@@ -506,7 +506,7 @@ async def get_analytics_trends() -> Dict[str, Any]:
 
 
 @router.get("/api/analytics/returns")
-async def get_analytics_returns() -> Dict[str, Any]:
+async def get_analytics_returns() -> dict[str, Any]:
     """Get returns analytics with live data"""
     try:
         # Get live market data for returns analysis
@@ -550,7 +550,7 @@ async def get_analytics_returns() -> Dict[str, Any]:
 
 
 @router.get("/api/analytics/volatility")
-async def get_analytics_volatility() -> Dict[str, Any]:
+async def get_analytics_volatility() -> dict[str, Any]:
     """Get volatility analytics with live data"""
     try:
         # Get live market data for volatility analysis
@@ -601,7 +601,7 @@ async def get_analytics_volatility() -> Dict[str, Any]:
 
 
 @router.get("/api/analytics/correlation")
-async def get_analytics_correlation() -> Dict[str, Any]:
+async def get_analytics_correlation() -> dict[str, Any]:
     """Get correlation analytics with live data"""
     try:
         # Get live market data for correlation analysis
@@ -661,7 +661,7 @@ async def get_analytics_correlation() -> Dict[str, Any]:
 
 
 @router.get("/api/analytics/market-cap")
-async def get_analytics_market_cap() -> Dict[str, Any]:
+async def get_analytics_market_cap() -> dict[str, Any]:
     """Get market cap analytics with live data"""
     try:
         # Get live market data for market cap analysis

@@ -5,7 +5,7 @@ FastAPI middleware for request validation.
 """
 
 import logging
-from typing import Awaitable, Callable, Union
+from collections.abc import Awaitable, Callable
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
@@ -23,7 +23,7 @@ ALLOWED_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"]
 @log_operation_performance("request_validator")
 async def request_validator_middleware(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
-) -> Union[Response, JSONResponse]:
+) -> Response | JSONResponse:
     """
     Middleware to validate incoming requests.
     """

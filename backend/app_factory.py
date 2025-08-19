@@ -1,7 +1,8 @@
-﻿from fastapi import FastAPI, APIRouter
-from fastapi.middleware.cors import CORSMiddleware
-from importlib import import_module
+﻿from importlib import import_module
 from pathlib import Path
+
+from fastapi import APIRouter, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 BASE_PKG = "backend"
 PKG_DIR = Path(__file__).resolve().parent

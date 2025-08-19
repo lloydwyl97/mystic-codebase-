@@ -4,11 +4,11 @@ Monitors cached trades and current prices to execute automated sell orders.
 """
 
 import logging
-import uuid
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime, timezone
-import sys
 import os
+import sys
+import uuid
+from datetime import datetime, timezone
+from typing import Any
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -26,7 +26,7 @@ class AutoExecutionService:
         self.simulation_mode = True  # Default to simulation mode
 
     def execute_sell_order(self, exchange: str, symbol: str, quantity: float,
-                          price: float, order_type: str = "market") -> Dict[str, Any]:
+                          price: float, order_type: str = "market") -> dict[str, Any]:
         """Execute a sell order (simulated or real)"""
         try:
             order_id = str(uuid.uuid4())
@@ -96,7 +96,7 @@ class AutoSellService:
 
         logger.info("âœ… AutoSellService initialized")
 
-    def get_open_buy_positions(self, symbol: Optional[str] = None) -> List[Dict[str, Any]]:
+    def get_open_buy_positions(self, symbol: str | None = None) -> list[dict[str, Any]]:
         """Get open buy positions from trade journal"""
         try:
             # Get all buy trades
@@ -139,7 +139,7 @@ class AutoSellService:
             return []
 
     def check_sell_conditions(self, symbol: str, avg_buy_price: float,
-                            current_price: float) -> Tuple[bool, Dict[str, Any]]:
+                            current_price: float) -> tuple[bool, dict[str, Any]]:
         """Check if sell conditions are met for a position"""
         try:
             # Calculate profit/loss percentage
@@ -193,7 +193,7 @@ class AutoSellService:
             return False, {"error": str(e)}
 
     def execute_autosell(self, exchange: str, symbol: str, quantity: float,
-                        avg_buy_price: float) -> Dict[str, Any]:
+                        avg_buy_price: float) -> dict[str, Any]:
         """Execute an automated sell order for a position"""
         try:
             # Check if sell order already active
@@ -247,7 +247,7 @@ class AutoSellService:
             logger.error(f"âŒ Failed to execute autosell for {symbol}: {e}")
             return {"success": False, "error": str(e)}
 
-    def execute_all_autosells(self) -> Dict[str, Any]:
+    def execute_all_autosells(self) -> dict[str, Any]:
         """Execute autosell for all open positions"""
         try:
             logger.info("ðŸ”„ Starting autosell execution for all positions...")
@@ -315,7 +315,7 @@ class AutoSellService:
             logger.error(f"âŒ Failed to execute all autosells: {e}")
             return {"success": False, "error": str(e)}
 
-    def get_open_orders(self) -> List[Dict[str, Any]]:
+    def get_open_orders(self) -> list[dict[str, Any]]:
         """Get all open autosell orders"""
         try:
             return [
@@ -335,7 +335,7 @@ class AutoSellService:
             logger.error(f"âŒ Failed to get open orders: {e}")
             return []
 
-    def get_trailing_stops(self) -> List[Dict[str, Any]]:
+    def get_trailing_stops(self) -> list[dict[str, Any]]:
         """Get all active trailing stops"""
         try:
             return [
@@ -354,7 +354,7 @@ class AutoSellService:
             logger.error(f"âŒ Failed to get trailing stops: {e}")
             return []
 
-    def get_service_status(self) -> Dict[str, Any]:
+    def get_service_status(self) -> dict[str, Any]:
         """Get current service status and statistics"""
         try:
             # Get cache stats

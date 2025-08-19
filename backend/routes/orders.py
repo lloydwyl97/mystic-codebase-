@@ -5,16 +5,16 @@ Contains order placement, management, advanced orders, and cancellation endpoint
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict, Optional, Union
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 
-# Import real services
-from backend.services.redis_service import get_redis_service
-
 # import backend.services as services
 from backend.services.order_service import order_service
+
+# Import real services
+from backend.services.redis_service import get_redis_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -36,8 +36,8 @@ def get_redis_client():
 
 @router.get("/api/orders")
 async def get_orders(
-    status: Optional[str] = None,
-    symbol: Optional[str] = None,
+    status: str | None = None,
+    symbol: str | None = None,
     limit: int = 100,
     offset: int = 0,
     redis_client: Any = Depends(lambda: get_redis_client()),
@@ -56,7 +56,7 @@ async def get_orders(
 
 @router.post("/api/orders")
 async def create_order(
-    order_data: Dict[str, Any],
+    order_data: dict[str, Any],
     redis_client: Any = Depends(lambda: get_redis_client()),
 ):
     """Create a new order"""
@@ -113,7 +113,7 @@ async def cancel_order(order_id: str):
 
 
 @router.post("/orders/advanced")
-async def place_advanced_order(order_data: Dict[str, Any]):
+async def place_advanced_order(order_data: dict[str, Any]):
     """Place an advanced order (OCO, bracket, etc.)"""
     try:
         order_type = order_data.get("type", "market")
@@ -161,8 +161,8 @@ async def get_risk_parameters():
 
 @router.post("/risk/parameters")
 async def update_risk_parameters(
-    risk_data: Dict[str, Any],
-) -> Dict[str, Union[str, Any]]:
+    risk_data: dict[str, Any],
+) -> dict[str, str | Any]:
     """Update risk management parameters"""
     try:
         # Validate risk parameters
@@ -188,8 +188,8 @@ async def update_risk_parameters(
 
 @router.post("/risk/position-size")
 async def calculate_position_size(
-    data: Dict[str, Any],
-) -> Dict[str, Union[str, Any]]:
+    data: dict[str, Any],
+) -> dict[str, str | Any]:
     """Calculate optimal position size based on risk parameters"""
     try:
         data.get("portfolio_value", 10000)

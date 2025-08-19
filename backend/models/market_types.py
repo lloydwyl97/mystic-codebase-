@@ -1,7 +1,7 @@
 ﻿from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Literal, Optional, Tuple, Dict, Any
+from typing import Any, Literal
 
 
 @dataclass
@@ -9,8 +9,8 @@ class Ticker:
     exchange: str
     symbol: str
     price: float
-    bid: Optional[float]
-    ask: Optional[float]
+    bid: float | None
+    ask: float | None
     ts: int
 
 
@@ -18,8 +18,8 @@ class Ticker:
 class OrderBook:
     exchange: str
     symbol: str
-    bids: List[Tuple[float, float]]
-    asks: List[Tuple[float, float]]
+    bids: list[tuple[float, float]]
+    asks: list[tuple[float, float]]
     ts: int
 
 
@@ -53,10 +53,10 @@ class OrderResult:
     qty: float
     type: Literal["market", "limit"]
     status: Literal["submitted", "filled", "rejected", "error"]
-    id: Optional[str]
-    fill_price: Optional[float]
+    id: str | None
+    fill_price: float | None
     ts: int
-    raw: Dict[str, Any]
+    raw: dict[str, Any]
 
 
 

@@ -9,14 +9,15 @@ Provides comprehensive performance monitoring with:
 - Custom business metrics
 """
 
-import time
-import psutil
-import threading
+import json
 import logging
-from typing import Any, Dict, List, Optional
+import threading
+import time
 from collections import defaultdict, deque
 from dataclasses import dataclass
-import json
+from typing import Any
+
+import psutil
 
 try:
     import redis
@@ -81,7 +82,7 @@ class MetricsCollector:
         self.system_metrics: deque = deque(maxlen=1440)  # 24 hours at 1-minute intervals
         self.application_metrics: deque = deque(maxlen=1440)
         self.database_metrics: deque = deque(maxlen=1440)
-        self.custom_metrics: Dict[str, deque] = defaultdict(lambda: deque(maxlen=1440))
+        self.custom_metrics: dict[str, deque] = defaultdict(lambda: deque(maxlen=1440))
         self.redis_client = None
         self.lock = threading.Lock()
 
@@ -155,7 +156,7 @@ class MetricsCollector:
             return SystemMetrics(0, 0, 0, 0, 0, 0, 0, 0, time.time())
 
     def collect_application_metrics(self, request_count: int = 0,
-                                  response_times: List[float] = None,
+                                  response_times: list[float] = None,
                                   error_count: int = 0,
                                   active_connections: int = 0) -> ApplicationMetrics:
         """Collect application performance metrics"""
@@ -205,7 +206,7 @@ class MetricsCollector:
             return ApplicationMetrics(0, 0.0, 0.0, 0.0, 0.0, 0, time.time())
 
     def collect_database_metrics(self, query_count: int = 0,
-                               query_times: List[float] = None,
+                               query_times: list[float] = None,
                                slow_query_count: int = 0,
                                connection_count: int = 0,
                                cache_hit_rate: float = 0.0) -> DatabaseMetrics:
@@ -252,7 +253,7 @@ class MetricsCollector:
             return DatabaseMetrics(0, 0.0, 0.0, 0, 0, 0.0, time.time())
 
     def add_custom_metric(self, metric_name: str, value: float,
-                         metadata: Optional[Dict[str, Any]] = None):
+                         metadata: dict[str, Any] | None = None):
         """Add custom metric"""
         try:
             metric_data = {
@@ -278,7 +279,7 @@ class MetricsCollector:
         except Exception as e:
             logger.error(f"Error adding custom metric: {e}")
 
-    def get_metrics_summary(self) -> Dict[str, Any]:
+    def get_metrics_summary(self) -> dict[str, Any]:
         """Get comprehensive metrics summary"""
         with self.lock:
             # System metrics summary
@@ -335,7 +336,7 @@ class MetricsCollector:
                 'timestamp': time.time()
             }
 
-    def get_metrics_history(self, metric_type: str, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_metrics_history(self, metric_type: str, hours: int = 24) -> list[dict[str, Any]]:
         """Get metrics history for specified type and time range"""
         cutoff_time = time.time() - (hours * 3600)
 

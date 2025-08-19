@@ -6,10 +6,11 @@ Handles live trading data processing and streaming
 import asyncio
 import json
 import os
-import redis
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any
+
 import aiohttp
+import redis
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -130,7 +131,7 @@ class RealTimeProcessor:
                 print(f"âŒ Error in risk alert processing: {e}")
                 await asyncio.sleep(120)
 
-    async def fetch_live_market_data(self) -> Dict[str, Any]:
+    async def fetch_live_market_data(self) -> dict[str, Any]:
         """Fetch live market data from multiple sources"""
         try:
             market_data = {}
@@ -154,7 +155,7 @@ class RealTimeProcessor:
             print(f"Error fetching market data: {e}")
             return {}
 
-    async def fetch_binance_data(self) -> Dict[str, Any]:
+    async def fetch_binance_data(self) -> dict[str, Any]:
         """Fetch data from Binance US"""
         try:
             symbols = ["BTCUSDT", "ETHUSDT", "ADAUSDT", "SOLUSDT", "DOTUSDT"]
@@ -179,7 +180,7 @@ class RealTimeProcessor:
             print(f"Error fetching Binance data: {e}")
             return {}
 
-    async def fetch_coinbase_data(self) -> Dict[str, Any]:
+    async def fetch_coinbase_data(self) -> dict[str, Any]:
         """Fetch data from Coinbase"""
         try:
             symbols = ["BTC-USD", "ETH-USD", "ADA-USD", "SOL-USD", "DOT-USD"]
@@ -203,7 +204,7 @@ class RealTimeProcessor:
             print(f"Error fetching Coinbase data: {e}")
             return {}
 
-    async def generate_trade_signals(self) -> List[Dict[str, Any]]:
+    async def generate_trade_signals(self) -> list[dict[str, Any]]:
         """Generate trade signals based on market data"""
         try:
             signals = []
@@ -248,7 +249,7 @@ class RealTimeProcessor:
             print(f"Error generating trade signals: {e}")
             return []
 
-    async def calculate_portfolio_metrics(self) -> Dict[str, Any]:
+    async def calculate_portfolio_metrics(self) -> dict[str, Any]:
         """Calculate portfolio metrics"""
         try:
             # Simulate portfolio calculation
@@ -267,7 +268,7 @@ class RealTimeProcessor:
             print(f"Error calculating portfolio metrics: {e}")
             return {}
 
-    async def calculate_risk_metrics(self) -> Dict[str, Any]:
+    async def calculate_risk_metrics(self) -> dict[str, Any]:
         """Calculate risk metrics"""
         try:
             risk_data = {
@@ -285,7 +286,7 @@ class RealTimeProcessor:
             print(f"Error calculating risk metrics: {e}")
             return {}
 
-    async def check_risk_alerts(self, risk_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def check_risk_alerts(self, risk_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Check for risk alerts"""
         try:
             alerts = []
@@ -320,56 +321,56 @@ class RealTimeProcessor:
             print(f"Error checking risk alerts: {e}")
             return []
 
-    async def store_market_data(self, data: Dict[str, Any]):
+    async def store_market_data(self, data: dict[str, Any]):
         """Store market data in Redis"""
         try:
             self.redis_client.set("market_data", json.dumps(data), ex=300)  # 5 minutes TTL
         except Exception as e:
             print(f"Error storing market data: {e}")
 
-    async def store_trade_signals(self, signals: List[Dict[str, Any]]):
+    async def store_trade_signals(self, signals: list[dict[str, Any]]):
         """Store trade signals in Redis"""
         try:
             self.redis_client.set("trade_signals", json.dumps(signals), ex=600)  # 10 minutes TTL
         except Exception as e:
             print(f"Error storing trade signals: {e}")
 
-    async def store_portfolio_data(self, data: Dict[str, Any]):
+    async def store_portfolio_data(self, data: dict[str, Any]):
         """Store portfolio data in Redis"""
         try:
             self.redis_client.set("portfolio_data", json.dumps(data), ex=1800)  # 30 minutes TTL
         except Exception as e:
             print(f"Error storing portfolio data: {e}")
 
-    async def store_risk_alerts(self, alerts: List[Dict[str, Any]]):
+    async def store_risk_alerts(self, alerts: list[dict[str, Any]]):
         """Store risk alerts in Redis"""
         try:
             self.redis_client.set("risk_alerts", json.dumps(alerts), ex=3600)  # 1 hour TTL
         except Exception as e:
             print(f"Error storing risk alerts: {e}")
 
-    async def publish_market_updates(self, data: Dict[str, Any]):
+    async def publish_market_updates(self, data: dict[str, Any]):
         """Publish market updates to Redis channels"""
         try:
             self.redis_client.publish("market_updates", json.dumps(data))
         except Exception as e:
             print(f"Error publishing market updates: {e}")
 
-    async def publish_trade_signals(self, signals: List[Dict[str, Any]]):
+    async def publish_trade_signals(self, signals: list[dict[str, Any]]):
         """Publish trade signals to Redis channels"""
         try:
             self.redis_client.publish("trade_signals", json.dumps(signals))
         except Exception as e:
             print(f"Error publishing trade signals: {e}")
 
-    async def publish_portfolio_updates(self, data: Dict[str, Any]):
+    async def publish_portfolio_updates(self, data: dict[str, Any]):
         """Publish portfolio updates to Redis channels"""
         try:
             self.redis_client.publish("portfolio_updates", json.dumps(data))
         except Exception as e:
             print(f"Error publishing portfolio updates: {e}")
 
-    async def publish_risk_alerts(self, alerts: List[Dict[str, Any]]):
+    async def publish_risk_alerts(self, alerts: list[dict[str, Any]]):
         """Publish risk alerts to Redis channels"""
         try:
             self.redis_client.publish("risk_alerts", json.dumps(alerts))

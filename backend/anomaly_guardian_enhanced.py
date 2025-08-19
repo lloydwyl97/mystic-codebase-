@@ -1,12 +1,11 @@
-﻿import pandas as pd
+﻿import sqlite3
 import time
+from datetime import datetime, timezone
+
+import pandas as pd
 import requests
-from datetime import datetime
-from typing import Dict, List
-import sqlite3
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
-from datetime import datetime, timezone
 
 # Enhanced configuration
 ANOMALY_DB = "./data/anomaly_detection.db"
@@ -75,7 +74,7 @@ class AnomalyDatabase:
         conn.commit()
         conn.close()
 
-    def save_price_anomaly(self, data: Dict):
+    def save_price_anomaly(self, data: dict):
         """Save price anomaly to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -101,7 +100,7 @@ class AnomalyDatabase:
         conn.commit()
         conn.close()
 
-    def save_volume_anomaly(self, data: Dict):
+    def save_volume_anomaly(self, data: dict):
         """Save volume anomaly to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -125,7 +124,7 @@ class AnomalyDatabase:
         conn.commit()
         conn.close()
 
-    def save_pattern_anomaly(self, data: Dict):
+    def save_pattern_anomaly(self, data: dict):
         """Save pattern anomaly to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -239,7 +238,7 @@ def calculate_technical_indicators(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def detect_price_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
+def detect_price_anomalies(df: pd.DataFrame, symbol: str) -> list[dict]:
     """Detect price anomalies using machine learning"""
     anomalies = []
 
@@ -295,7 +294,7 @@ def detect_price_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
     return anomalies
 
 
-def detect_volume_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
+def detect_volume_anomalies(df: pd.DataFrame, symbol: str) -> list[dict]:
     """Detect volume anomalies"""
     anomalies = []
 
@@ -326,7 +325,7 @@ def detect_volume_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
     return anomalies
 
 
-def detect_pattern_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
+def detect_pattern_anomalies(df: pd.DataFrame, symbol: str) -> list[dict]:
     """Detect chart pattern anomalies"""
     anomalies = []
 

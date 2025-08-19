@@ -6,17 +6,18 @@ Contains signal generation, health monitoring, and metrics endpoints.
 
 import logging
 import time
-from datetime import timezone, datetime
-from typing import Any, Dict
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
+
+from backend.services.live_market_data import live_market_data_service
 
 # Import real services
 from backend.services.redis_service import get_redis_service
 
 # import backend.services as services
 from backend.services.signal_service import signal_service
-from backend.services.live_market_data import live_market_data_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -69,7 +70,7 @@ async def get_signal(signal_id: str):
 
 
 @router.post("/signals")
-async def create_signal(signal_data: Dict[str, Any]):
+async def create_signal(signal_data: dict[str, Any]):
     """Create a new trading signal"""
     try:
         # Create real signal using signal service
@@ -86,7 +87,7 @@ async def create_signal(signal_data: Dict[str, Any]):
 
 
 @router.get("/health")
-async def signals_health_check() -> Dict[str, Any]:
+async def signals_health_check() -> dict[str, Any]:
     """Health check for signals system (robust, always returns JSON)"""
     try:
         # You can add more dynamic checks here if needed
@@ -133,7 +134,7 @@ async def get_signal_metrics():
 
 
 @router.get("/signals/overview")
-async def get_signals_overview() -> Dict[str, Any]:
+async def get_signals_overview() -> dict[str, Any]:
     """Get signals overview with live data"""
     try:
         # Get live market data for signal analysis
@@ -196,7 +197,7 @@ async def get_signals_overview() -> Dict[str, Any]:
 
 
 @router.get("/signals/live")
-async def get_live_signals() -> Dict[str, Any]:
+async def get_live_signals() -> dict[str, Any]:
     """Get live trading signals"""
     try:
         # Get real live signals from signal service
@@ -213,7 +214,7 @@ async def get_live_signals() -> Dict[str, Any]:
 
 
 @router.get("/signals/test")
-async def test_signals() -> Dict[str, Any]:
+async def test_signals() -> dict[str, Any]:
     """Test endpoint for signals"""
     return {
         "message": "Signals test endpoint working",
@@ -223,7 +224,7 @@ async def test_signals() -> Dict[str, Any]:
 
 
 @router.get("/signals/active")
-async def get_active_signals() -> Dict[str, Any]:
+async def get_active_signals() -> dict[str, Any]:
     """Get currently active trading signals"""
     try:
         # Get live market data for active signals
@@ -306,7 +307,7 @@ async def get_active_signals() -> Dict[str, Any]:
 
 
 @router.get("/signals/history")
-async def get_signals_history() -> Dict[str, Any]:
+async def get_signals_history() -> dict[str, Any]:
     """Get historical signals and their performance"""
     try:
         # Simulate historical signals (in real implementation, this would come from database)
@@ -381,7 +382,7 @@ async def get_signals_history() -> Dict[str, Any]:
 
 
 @router.get("/signals/performance")
-async def get_signals_performance() -> Dict[str, Any]:
+async def get_signals_performance() -> dict[str, Any]:
     """Get signals performance metrics"""
     try:
         # Get historical signals for performance analysis
@@ -452,7 +453,7 @@ async def get_signals_performance() -> Dict[str, Any]:
 
 
 @router.post("/signals/generate")
-async def generate_signals() -> Dict[str, Any]:
+async def generate_signals() -> dict[str, Any]:
     """Generate new trading signals based on current market conditions"""
     try:
         # Get live market data for signal generation
@@ -558,7 +559,7 @@ async def generate_signals() -> Dict[str, Any]:
 
 
 @router.post("/signals/validate")
-async def validate_signals() -> Dict[str, Any]:
+async def validate_signals() -> dict[str, Any]:
     """Validate existing signals against current market conditions"""
     try:
         # Get current market data
@@ -637,7 +638,7 @@ async def validate_signals() -> Dict[str, Any]:
 
 
 @router.get("/signals/alerts")
-async def get_signal_alerts() -> Dict[str, Any]:
+async def get_signal_alerts() -> dict[str, Any]:
     """Get signal alerts and notifications"""
     try:
         # Get active signals for alerts

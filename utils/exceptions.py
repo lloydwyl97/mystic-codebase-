@@ -1,6 +1,7 @@
-from typing import Type, Callable, Any, Awaitable, Optional, Dict
 import logging
+from collections.abc import Awaitable, Callable
 from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +16,8 @@ class MysticException(Exception):
         self,
         message: str,
         error_code: ErrorCode = ErrorCode.UNKNOWN_ERROR,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         self.message = message
         self.error_code = error_code
@@ -24,7 +25,7 @@ class MysticException(Exception):
         self.original_exception = original_exception
         super().__init__(self.message)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "error": True,
             "error_code": self.error_code.value,
@@ -74,8 +75,8 @@ class AnalyticsException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.AI_MODEL_ERROR, details, original_exception)
 
@@ -86,8 +87,8 @@ class MetricsException(MysticException):
     def __init__(
         self,
         message: str,
-        details: Optional[Dict[str, Any]] = None,
-        original_exception: Optional[Exception] = None,
+        details: dict[str, Any] | None = None,
+        original_exception: Exception | None = None,
     ):
         super().__init__(message, ErrorCode.AI_MODEL_ERROR, details, original_exception)
 
@@ -100,7 +101,7 @@ class RateLimitException(Exception):
 
 def handle_async_exception(
     error_message: str,
-    exception_class: Type[Exception] = Exception,
+    exception_class: type[Exception] = Exception,
     reraise: bool = True,
     default_return: Any = None,
 ) -> Callable[[Callable[..., Awaitable[Any]]], Callable[..., Awaitable[Any]]]:
@@ -125,7 +126,7 @@ def handle_async_exception(
 
 def handle_exception(
     error_message: str,
-    exception_class: Type[Exception] = Exception,
+    exception_class: type[Exception] = Exception,
     reraise: bool = True,
     default_return: Any = None,
 ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
@@ -146,7 +147,7 @@ def handle_exception(
     return decorator
 
 
-def _get_status_code_for_error_code(error_code):
+def _get_status_code_for_error_code(error_code: int | ErrorCode) -> int:
     """Map error codes to HTTP status codes for error handling."""
     # Default mapping, can be extended as needed
     code_map = {
@@ -161,6 +162,6 @@ def _get_status_code_for_error_code(error_code):
         429: 429,  # Too Many Requests
         500: 500,  # Internal Server Error
     }
-    if hasattr(error_code, "value"):
-        error_code = error_code.value
-    return code_map.get(error_code, 500)
+    if isinstance(error_code, ErrorCode):
+        return code_map.get(error_code.value, 500)
+    return code_map.get(int(error_code), 500)

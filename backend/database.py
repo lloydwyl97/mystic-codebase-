@@ -6,8 +6,9 @@ Provides database connection and management with standardized error handling.
 
 import logging
 import sqlite3
+from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Any, Optional, Generator
+from typing import Any
 
 try:
     import redis
@@ -36,7 +37,7 @@ REDIS_PASSWORD = None
 
 
 # Global Redis client instance
-_redis_client: Optional[Any] = None
+_redis_client: Any | None = None
 
 
 class DatabaseManager:
@@ -44,7 +45,7 @@ class DatabaseManager:
 
     def __init__(self, db_path: str = DATABASE_PATH):
         self.db_path = db_path
-        self.connection: Optional[sqlite3.Connection] = None
+        self.connection: sqlite3.Connection | None = None
         self.is_connected = False
 
     def connect(self) -> None:
@@ -109,16 +110,16 @@ class DatabaseManager:
 
     def __exit__(
         self,
-        exc_type: Optional[type],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[Any],
+        exc_type: type | None,
+        exc_val: BaseException | None,
+        exc_tb: Any | None,
     ) -> None:
         """Context manager exit"""
         self.disconnect()
 
 
 # Global database manager instance
-_db_manager: Optional[DatabaseManager] = None
+_db_manager: DatabaseManager | None = None
 
 
 def get_db() -> DatabaseManager:

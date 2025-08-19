@@ -8,8 +8,8 @@ import json
 import logging
 import random
 import time
-from datetime import timezone, datetime
-from typing import Any, Dict, List
+from datetime import datetime, timezone
+from typing import Any
 
 from notification_service import get_notification_service
 
@@ -120,7 +120,7 @@ class SignalManager:
             "futures_trading": {"enabled": True, "min_confidence": 0.7},
         }
 
-    async def activate_all_signals(self) -> Dict[str, Any]:
+    async def activate_all_signals(self) -> dict[str, Any]:
         """Activate all trading signals"""
         try:
             logger.info("Activating all trading signals...")
@@ -165,7 +165,7 @@ class SignalManager:
             logger.error(f"Error activating signals: {str(e)}")
             raise
 
-    async def get_signal_status(self) -> Dict[str, Any]:
+    async def get_signal_status(self) -> dict[str, Any]:
         """Get current status of all signals"""
         try:
             # Get from Redis
@@ -188,7 +188,7 @@ class SignalManager:
             logger.error(f"Error getting signal status: {str(e)}")
             raise
 
-    async def generate_live_signal(self, symbol: str) -> Dict[str, Any]:
+    async def generate_live_signal(self, symbol: str) -> dict[str, Any]:
         """Generate live trading signal for a symbol"""
         try:
             # Check if signals are active
@@ -254,7 +254,7 @@ class SignalManager:
             }
 
             # Generate strategy recommendations
-            strategies: List[Dict[str, Any]] = []
+            strategies: list[dict[str, Any]] = []
             for strategy, config in self.trading_strategies.items():
                 if config["enabled"]:
                     confidence = random.uniform(0.4, 0.9)
@@ -307,13 +307,13 @@ class SignalManager:
             logger.error(f"Error generating live signal: {str(e)}")
             raise
 
-    async def start_auto_trading(self) -> Dict[str, Any]:
+    async def start_auto_trading(self) -> dict[str, Any]:
         """Start automated trading"""
         try:
             logger.info("Starting automated trading...")
 
             # Define auto_trade_config with proper typing
-            auto_trade_config: Dict[str, Any] = {
+            auto_trade_config: dict[str, Any] = {
                 "enabled": True,
                 "start_time": datetime.now(timezone.utc).isoformat(),
                 "strategies": list(self.trading_strategies.keys()),
@@ -352,7 +352,7 @@ class SignalManager:
             logger.error(f"Error starting auto-trading: {str(e)}")
             raise
 
-    async def stop_auto_trading(self) -> Dict[str, Any]:
+    async def stop_auto_trading(self) -> dict[str, Any]:
         """Stop automated trading"""
         try:
             logger.info("Stopping automated trading...")
@@ -361,7 +361,7 @@ class SignalManager:
             config_data = self.redis_client.get("auto_trade_config")
 
             # Define auto_trade_config with proper typing
-            auto_trade_config: Dict[str, Any] = {}
+            auto_trade_config: dict[str, Any] = {}
 
             if config_data:
                 auto_trade_config = json.loads(config_data)
@@ -408,13 +408,13 @@ class SignalManager:
             logger.error(f"Error stopping auto-trading: {str(e)}")
             raise
 
-    async def get_auto_trade_status(self) -> Dict[str, Any]:
+    async def get_auto_trade_status(self) -> dict[str, Any]:
         """Get auto-trading status"""
         try:
             config_data = self.redis_client.get("auto_trade_config")
 
             # Define config with proper typing
-            config: Dict[str, Any] = {}
+            config: dict[str, Any] = {}
 
             if config_data:
                 config = json.loads(config_data)
@@ -434,7 +434,7 @@ class SignalManager:
             logger.error(f"Error getting auto-trade status: {str(e)}")
             raise
 
-    async def self_heal_signals(self) -> Dict[str, Any]:
+    async def self_heal_signals(self) -> dict[str, Any]:
         """Self-heal all signals and auto-trading if they are down"""
         try:
             logger.info("Starting signal self-healing process...")
@@ -444,7 +444,7 @@ class SignalManager:
             signals = status.get("signals", {})
             auto_trading = status.get("auto_trading", {})
 
-            healing_actions: List[str] = []
+            healing_actions: list[str] = []
             needs_healing = False
 
             # Check signals
@@ -517,7 +517,7 @@ class SignalManager:
 
             raise
 
-    async def check_signal_health(self) -> Dict[str, Any]:
+    async def check_signal_health(self) -> dict[str, Any]:
         """Check the health of all signals and auto-trading"""
         try:
             status = await self.get_signal_status()
@@ -580,7 +580,7 @@ class SignalManager:
             logger.error(f"Error checking signal health: {str(e)}")
             raise
 
-    async def _check_health_changes(self, current_health: Dict[str, Any]):
+    async def _check_health_changes(self, current_health: dict[str, Any]):
         """Check for health state changes and send appropriate notifications"""
         if self.previous_health_state is None:
             # First check, just log the initial state

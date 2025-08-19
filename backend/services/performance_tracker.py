@@ -7,7 +7,7 @@ import logging
 import statistics
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from backend.services.websocket_manager import websocket_manager
 
@@ -50,8 +50,8 @@ class PerformanceMetrics:
     ml_accuracy: float
     sentiment_accuracy: float
     enhanced_score_accuracy: float
-    best_performing_hours: List[int]
-    best_performing_symbols: List[str]
+    best_performing_hours: list[int]
+    best_performing_symbols: list[str]
     risk_adjusted_return: float
     timestamp: datetime
 
@@ -60,14 +60,14 @@ class AdvancedPerformanceTracker:
     """Advanced performance tracking and analysis"""
 
     def __init__(self):
-        self.trades: List[TradeResult] = []
-        self.ml_predictions: List[Dict[str, Any]] = []
-        self.sentiment_predictions: List[Dict[str, Any]] = []
-        self.performance_history: List[PerformanceMetrics] = []
+        self.trades: list[TradeResult] = []
+        self.ml_predictions: list[dict[str, Any]] = []
+        self.sentiment_predictions: list[dict[str, Any]] = []
+        self.performance_history: list[PerformanceMetrics] = []
         self.min_trades_for_analysis = 10
-        self.hourly_performance: Dict[int, Dict[str, Any]] = {}
-        self.symbol_performance: Dict[str, Dict[str, Any]] = {}
-        self.enhanced_scores: List[Dict[str, Any]] = []
+        self.hourly_performance: dict[int, dict[str, Any]] = {}
+        self.symbol_performance: dict[str, dict[str, Any]] = {}
+        self.enhanced_scores: list[dict[str, Any]] = []
 
     async def record_trade_result(self, trade_result: TradeResult):
         """Record a completed trade result"""
@@ -96,11 +96,11 @@ class AdvancedPerformanceTracker:
             f"Trade recorded: {trade_result.symbol} - P&L: {trade_result.profit_percentage:.2f}%"
         )
 
-    async def record_ml_prediction(self, prediction: Dict[str, Any]):
+    async def record_ml_prediction(self, prediction: dict[str, Any]):
         """Record ML prediction for accuracy tracking"""
         self.ml_predictions.append(prediction)
 
-    async def record_sentiment_prediction(self, prediction: Dict[str, Any]):
+    async def record_sentiment_prediction(self, prediction: dict[str, Any]):
         """Record sentiment prediction for accuracy tracking"""
         self.sentiment_predictions.append(prediction)
 
@@ -192,7 +192,7 @@ class AdvancedPerformanceTracker:
         # Log performance improvements
         await self._log_performance_insights(metrics)
 
-    def _calculate_sharpe_ratio(self, returns: List[float]) -> float:
+    def _calculate_sharpe_ratio(self, returns: list[float]) -> float:
         """Calculate Sharpe ratio"""
         if not returns:
             return 0
@@ -206,7 +206,7 @@ class AdvancedPerformanceTracker:
         # Assuming risk-free rate of 0 for simplicity
         return mean_return / std_return
 
-    def _calculate_max_drawdown(self, returns: List[float]) -> float:
+    def _calculate_max_drawdown(self, returns: list[float]) -> float:
         """Calculate maximum drawdown"""
         if not returns:
             return 0
@@ -224,7 +224,7 @@ class AdvancedPerformanceTracker:
 
         return max_dd * 100  # Convert to percentage
 
-    def _calculate_risk_adjusted_return(self, returns: List[float]) -> float:
+    def _calculate_risk_adjusted_return(self, returns: list[float]) -> float:
         """Calculate risk-adjusted return"""
         if not returns:
             return 0
@@ -294,12 +294,12 @@ class AdvancedPerformanceTracker:
 
         return correct_predictions / total_predictions if total_predictions > 0 else 0
 
-    def _find_best_performing_hours(self) -> List[int]:
+    def _find_best_performing_hours(self) -> list[int]:
         """Find best performing trading hours"""
         if not self.trades:
             return []
 
-        hourly_performance: Dict[int, List[float]] = {}
+        hourly_performance: dict[int, list[float]] = {}
 
         for trade in self.trades:
             hour = trade.timestamp.hour
@@ -308,7 +308,7 @@ class AdvancedPerformanceTracker:
             hourly_performance[hour].append(trade.profit_percentage)
 
         # Calculate average performance per hour
-        avg_performance: Dict[int, float] = {}
+        avg_performance: dict[int, float] = {}
         for hour, profits in hourly_performance.items():
             avg_performance[hour] = statistics.mean(profits)
 
@@ -316,12 +316,12 @@ class AdvancedPerformanceTracker:
         sorted_hours = sorted(avg_performance.items(), key=lambda x: x[1], reverse=True)
         return [hour for hour, _ in sorted_hours[:3]]
 
-    def _find_best_performing_symbols(self) -> List[str]:
+    def _find_best_performing_symbols(self) -> list[str]:
         """Find best performing symbols"""
         if not self.trades:
             return []
 
-        symbol_performance: Dict[str, List[float]] = {}
+        symbol_performance: dict[str, list[float]] = {}
 
         for trade in self.trades:
             symbol = trade.symbol
@@ -330,7 +330,7 @@ class AdvancedPerformanceTracker:
             symbol_performance[symbol].append(trade.profit_percentage)
 
         # Calculate average performance per symbol
-        avg_performance: Dict[str, float] = {}
+        avg_performance: dict[str, float] = {}
         for symbol, profits in symbol_performance.items():
             avg_performance[symbol] = statistics.mean(profits)
 
@@ -362,13 +362,13 @@ class AdvancedPerformanceTracker:
         if metrics.sentiment_accuracy < 0.5:
             logger.warning("âš ï¸ Sentiment accuracy below 50% - Review sentiment sources")
 
-    def get_current_performance(self) -> Optional[PerformanceMetrics]:
+    def get_current_performance(self) -> PerformanceMetrics | None:
         """Get current performance metrics"""
         if self.performance_history:
             return self.performance_history[-1]
         return None
 
-    def get_performance_trend(self, days: int = 30) -> Dict[str, Any]:
+    def get_performance_trend(self, days: int = 30) -> dict[str, Any]:
         """Get performance trend over specified days"""
         cutoff_date = datetime.now() - timedelta(days=days)
         recent_trades = [t for t in self.trades if t.timestamp > cutoff_date]

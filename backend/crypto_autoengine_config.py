@@ -6,7 +6,7 @@ Central configuration for 20 coins (10 Coinbase + 10 Binance US)
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, TypedDict, Union
+from typing import Any, TypedDict
 
 
 @dataclass
@@ -82,7 +82,7 @@ class RSICache(TypedDict):
 class MACDCache(TypedDict):
     """Type definition for MACD cache"""
 
-    value: Dict[str, float]  # Contains 'macd', 'signal', 'histogram'
+    value: dict[str, float]  # Contains 'macd', 'signal', 'histogram'
     timestamp: float
 
 
@@ -103,7 +103,7 @@ class StrategySignalCache(TypedDict):
 class CosmicDataCache(TypedDict):
     """Type definition for cosmic data cache"""
 
-    data: Dict[str, Any]
+    data: dict[str, Any]
     timestamp: float
 
 
@@ -116,29 +116,20 @@ class TradeCooldownCache(TypedDict):
 class CryptoAutoEngineConfig:
     """Complete CRYPTO AUTOENGINE configuration"""
 
-    coinbase_coins: List[CoinConfig]
-    binance_coins: List[CoinConfig]
-    all_coins: List[CoinConfig]
+    coinbase_coins: list[CoinConfig]
+    binance_coins: list[CoinConfig]
+    all_coins: list[CoinConfig]
     fetcher_config: FetcherConfig
     strategy_config: StrategyConfig
     api_config: APIConfig
-    cache_structure: Dict[
+    cache_structure: dict[
         str,
-        Dict[
+        dict[
             str,
-            Union[
-                PriceCache,
-                VolumeCache,
-                RSICache,
-                MACDCache,
-                LastUpdatedCache,
-                StrategySignalCache,
-                CosmicDataCache,
-                TradeCooldownCache,
-            ],
+            PriceCache | VolumeCache | RSICache | MACDCache | LastUpdatedCache | StrategySignalCache | CosmicDataCache | TradeCooldownCache,
         ],
     ]
-    throttling_rules: Dict[str, Dict[str, Union[int, float]]]
+    throttling_rules: dict[str, dict[str, int | float]]
 
     def __init__(self):
         # 1. COIN CONFIGURATION - 20 COINS PER EXCHANGE (USER'S SPECIFIED COINS)
@@ -184,20 +175,11 @@ class CryptoAutoEngineConfig:
         self.api_config = APIConfig()
 
         # 5. CACHE STRUCTURE
-        self.cache_structure: Dict[
+        self.cache_structure: dict[
             str,
-            Dict[
+            dict[
                 str,
-                Union[
-                    PriceCache,
-                    VolumeCache,
-                    RSICache,
-                    MACDCache,
-                    LastUpdatedCache,
-                    StrategySignalCache,
-                    CosmicDataCache,
-                    TradeCooldownCache,
-                ],
+                PriceCache | VolumeCache | RSICache | MACDCache | LastUpdatedCache | StrategySignalCache | CosmicDataCache | TradeCooldownCache,
             ],
         ] = {
             "price": {},  # Dict[str, PriceCache]
@@ -211,7 +193,7 @@ class CryptoAutoEngineConfig:
         }
 
         # 6. THROTTLING RULES
-        self.throttling_rules: Dict[str, Dict[str, Union[int, float]]] = {
+        self.throttling_rules: dict[str, dict[str, int | float]] = {
             "price": {
                 "min_interval": 10,  # seconds
                 "max_calls_per_minute": 60,
@@ -233,14 +215,14 @@ class CryptoAutoEngineConfig:
             },  # seconds
         }
 
-    def get_coin_by_symbol(self, symbol: str) -> Optional[CoinConfig]:
+    def get_coin_by_symbol(self, symbol: str) -> CoinConfig | None:
         """Get coin configuration by symbol"""
         for coin in self.all_coins:
             if coin.symbol == symbol:
                 return coin
         return None
 
-    def get_coins_by_exchange(self, exchange: str) -> List[CoinConfig]:
+    def get_coins_by_exchange(self, exchange: str) -> list[CoinConfig]:
         """Get all coins for a specific exchange"""
         if exchange == "coinbase":
             return self.coinbase_coins
@@ -248,7 +230,7 @@ class CryptoAutoEngineConfig:
             return self.binance_coins
         return []
 
-    def get_original_coins_by_exchange(self, exchange: str) -> List[CoinConfig]:
+    def get_original_coins_by_exchange(self, exchange: str) -> list[CoinConfig]:
         """Get original 10 coins for a specific exchange"""
         if exchange == "coinbase":
             return self.coinbase_coins
@@ -256,7 +238,7 @@ class CryptoAutoEngineConfig:
             return self.binance_coins
         return []
 
-    def get_additional_coins_by_exchange(self, exchange: str) -> List[CoinConfig]:
+    def get_additional_coins_by_exchange(self, exchange: str) -> list[CoinConfig]:
         """Get additional 10 coins for a specific exchange"""
         if exchange == "coinbase":
             return self.coinbase_coins
@@ -264,23 +246,23 @@ class CryptoAutoEngineConfig:
             return self.binance_coins
         return []
 
-    def get_all_symbols(self) -> List[str]:
+    def get_all_symbols(self) -> list[str]:
         """Get all coin symbols"""
         return [coin.symbol for coin in self.all_coins]
 
-    def get_enabled_coins(self) -> List[CoinConfig]:
+    def get_enabled_coins(self) -> list[CoinConfig]:
         """Get all enabled coins"""
         return [coin for coin in self.all_coins if coin.enabled]
 
-    def get_enabled_symbols(self) -> List[str]:
+    def get_enabled_symbols(self) -> list[str]:
         """Get all enabled coin symbols"""
         return [coin.symbol for coin in self.all_coins if coin.enabled]
 
-    def get_coinbase_symbols(self) -> List[str]:
+    def get_coinbase_symbols(self) -> list[str]:
         """Get all Coinbase symbols"""
         return [coin.symbol for coin in self.coinbase_coins]
 
-    def get_binance_symbols(self) -> List[str]:
+    def get_binance_symbols(self) -> list[str]:
         """Get all Binance symbols"""
         return [coin.symbol for coin in self.binance_coins]
 
@@ -298,27 +280,27 @@ def get_config() -> CryptoAutoEngineConfig:
     return config
 
 
-def get_coin_config(symbol: str) -> Optional[CoinConfig]:
+def get_coin_config(symbol: str) -> CoinConfig | None:
     """Get coin configuration by symbol"""
     return config.get_coin_by_symbol(symbol)
 
 
-def get_all_symbols() -> List[str]:
+def get_all_symbols() -> list[str]:
     """Get all coin symbols"""
     return config.get_all_symbols()
 
 
-def get_enabled_symbols() -> List[str]:
+def get_enabled_symbols() -> list[str]:
     """Get all enabled coin symbols"""
     return config.get_enabled_symbols()
 
 
-def get_coinbase_symbols() -> List[str]:
+def get_coinbase_symbols() -> list[str]:
     """Get all Coinbase symbols"""
     return config.get_coinbase_symbols()
 
 
-def get_binance_symbols() -> List[str]:
+def get_binance_symbols() -> list[str]:
     """Get all Binance symbols"""
     return config.get_binance_symbols()
 

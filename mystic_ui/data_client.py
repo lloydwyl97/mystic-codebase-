@@ -1,5 +1,7 @@
 ﻿import os
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from collections.abc import Sequence
+from typing import Any
+
 import requests
 
 API = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:8000").rstrip("/")
@@ -14,15 +16,15 @@ def _to_int(x: Any, default: int) -> int:
 # Note: direct requests.get is used in _first_ok to carry metadata; _req kept for compatibility if needed
 # Note: direct requests.get is used in _first_ok to carry metadata
 
-def _first_ok(candidates: Sequence[Tuple[str, Optional[Dict[str, Any]]]]) -> Optional[Any]:
+def _first_ok(candidates: Sequence[tuple[str, dict[str, Any] | None]]) -> Any | None:
     """
     Try each (path, params) until one returns HTTP 200.
     - On success: return parsed JSON payload
     - On failure: return minimal metadata dict: {"__meta__": {"route": url, "status": code|None, "error": str|None}}
     """
-    last_status: Optional[int] = None
-    last_route: Optional[str] = None
-    last_error: Optional[str] = None
+    last_status: int | None = None
+    last_route: str | None = None
+    last_error: str | None = None
     for path, params in candidates:
         url = f"{API}/{path.lstrip('/')}"
         try:
@@ -48,14 +50,14 @@ def _norm_symbol(sym: str, ex: str) -> str:
         s = s[:-3] + "USDT"                          # BTCUSD -> BTCUSDT
     return s
 
-def _norm_symbols(symbols: Optional[Sequence[str]], ex: str) -> List[str]:
+def _norm_symbols(symbols: Sequence[str] | None, ex: str) -> list[str]:
     return [] if not symbols else [_norm_symbol(str(x), ex) for x in symbols]
 
 # ----------------- argument parsers -----------------
 def _parse_exchange(default: str = "binanceus") -> str:
     return (os.getenv("DISPLAY_EXCHANGE") or default).lower()
 
-def _parse_ohlcv_args(*args: Any, **kwargs: Any) -> Tuple[str, str, str, int]:
+def _parse_ohlcv_args(*args: Any, **kwargs: Any) -> tuple[str, str, str, int]:
     """
     Accepts:
       (symbol)
@@ -88,7 +90,7 @@ def _parse_ohlcv_args(*args: Any, **kwargs: Any) -> Tuple[str, str, str, int]:
     symbol_str = _norm_symbol(str(symbol), ex_str)
     return ex_str, symbol_str, str(timeframe), int(limit)
 
-def _parse_trades_args(*args: Any, **kwargs: Any) -> Tuple[str, str, int]:
+def _parse_trades_args(*args: Any, **kwargs: Any) -> tuple[str, str, int]:
     """
     Accepts:
       (symbol)
@@ -121,7 +123,7 @@ def _parse_trades_args(*args: Any, **kwargs: Any) -> Tuple[str, str, int]:
     return ex_str, symbol_str, int(limit)
 
 # ----------------- API wrappers with fallbacks -----------------
-def get_health_check() -> Optional[Any]:
+def get_health_check() -> Any | None:
     return _first_ok([
         ("/system/health-check", None),
         ("/system/health", None),
@@ -129,14 +131,14 @@ def get_health_check() -> Optional[Any]:
         ("/health-check", None),
     ])
 
-def get_autobuy_status() -> Optional[Any]:
+def get_autobuy_status() -> Any | None:
     return _first_ok([
         ("/autobuy/status", None),
         ("/ai/autobuy/status", None),
         ("/autobuy/health", None),
     ])
 
-def get_prices(symbols: Sequence[str], exchange: Optional[str] = None) -> Optional[Any]:
+def get_prices(symbols: Sequence[str], exchange: str | None = None) -> Any | None:
     ex = (exchange or _parse_exchange()).lower()
     syms = _norm_symbols(symbols, ex)
     if not syms:
@@ -148,7 +150,7 @@ def get_prices(symbols: Sequence[str], exchange: Optional[str] = None) -> Option
         ("/prices", p),
     ])
 
-def get_ohlcv(*args: Any, **kwargs: Any) -> Optional[Any]:
+def get_ohlcv(*args: Any, **kwargs: Any) -> Any | None:
     ex, symbol, timeframe, limit = _parse_ohlcv_args(*args, **kwargs)
     # common param aliases
     p1 = {"symbol": symbol, "timeframe": timeframe, "limit": limit, "exchange": ex}
@@ -168,7 +170,7 @@ def get_ohlcv(*args: Any, **kwargs: Any) -> Optional[Any]:
         ("/live/market/historical", p1),
     ])
 
-def get_trades(*args: Any, **kwargs: Any) -> Optional[Any]:
+def get_trades(*args: Any, **kwargs: Any) -> Any | None:
     ex, symbol, limit = _parse_trades_args(*args, **kwargs)
     p = {"symbol": symbol, "limit": limit, "exchange": ex}
 
@@ -187,14 +189,14 @@ def get_trades(*args: Any, **kwargs: Any) -> Optional[Any]:
 
 
 # ----------------- alerts and ai heartbeat -----------------
-def get_ai_heartbeat() -> Optional[Any]:
+def get_ai_heartbeat() -> Any | None:
     return _first_ok([
         ("/ai/heartbeat", None),
         ("/api/ai/heartbeat", None),
     ])
 
 
-def get_alerts(limit: int = 100) -> Optional[Any]:
+def get_alerts(limit: int = 100) -> Any | None:
     """
     Fetch recent alerts/notifications from available backends.
     Tries multiple canonical paths and shapes.
@@ -210,14 +212,14 @@ def get_alerts(limit: int = 100) -> Optional[Any]:
 
 
 # ----------------- features and system health -----------------
-def get_features() -> Optional[Any]:
+def get_features() -> Any | None:
     return _first_ok([
         ("/features", None),
         ("/api/features", None),
     ])
 
 
-def get_system_health_basic() -> Optional[Any]:
+def get_system_health_basic() -> Any | None:
     """
     Lightweight server health ping suitable for liveness checks.
     """
@@ -227,7 +229,7 @@ def get_system_health_basic() -> Optional[Any]:
     ])
 
 
-def get_system_health_detailed() -> Optional[Any]:
+def get_system_health_detailed() -> Any | None:
     """
     Detailed system health including services and resources.
     """

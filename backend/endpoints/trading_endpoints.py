@@ -5,7 +5,7 @@ Handles all trading-related API endpoints including signals, orders, and portfol
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -29,7 +29,7 @@ class OrderRequest(BaseModel):
     side: str
     quantity: float
     order_type: str
-    price: Optional[float] = None
+    price: float | None = None
     model_config = {"protected_namespaces": ("settings_",)}
 
 
@@ -51,7 +51,7 @@ router = APIRouter()
 
 
 @router.post("/signal")
-async def create_trading_signal(signal: TradingSignal) -> Dict[str, Any]:
+async def create_trading_signal(signal: TradingSignal) -> dict[str, Any]:
     """Create a new trading signal"""
     try:
         if signal_manager and hasattr(signal_manager, "create_signal"):
@@ -65,7 +65,7 @@ async def create_trading_signal(signal: TradingSignal) -> Dict[str, Any]:
 
 
 @router.get("/signals")
-async def get_trading_signals() -> Dict[str, Any]:
+async def get_trading_signals() -> dict[str, Any]:
     """Get all trading signals"""
     try:
         if signal_manager and hasattr(signal_manager, "get_signals"):
@@ -80,7 +80,7 @@ async def get_trading_signals() -> Dict[str, Any]:
 
 
 @router.post("/order")
-async def place_order(order: OrderRequest) -> Dict[str, Any]:
+async def place_order(order: OrderRequest) -> dict[str, Any]:
     """Place a new trading order"""
     try:
         if trade_engine and hasattr(trade_engine, "place_order"):
@@ -94,7 +94,7 @@ async def place_order(order: OrderRequest) -> Dict[str, Any]:
 
 
 @router.get("/orders")
-async def get_orders() -> Dict[str, Any]:
+async def get_orders() -> dict[str, Any]:
     """Get all trading orders"""
     try:
         if trade_engine and hasattr(trade_engine, "get_orders"):
@@ -123,7 +123,7 @@ async def get_portfolio_overview() -> Any:
 
 
 @router.get("/portfolio/positions")
-async def get_portfolio_positions() -> Dict[str, Any]:
+async def get_portfolio_positions() -> dict[str, Any]:
     """Get portfolio positions"""
     try:
         if portfolio_service and hasattr(portfolio_service, "get_positions"):

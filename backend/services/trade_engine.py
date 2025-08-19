@@ -4,19 +4,19 @@ Handles trade execution and management
 """
 
 import logging
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class TradeEngine:
     def __init__(self):
-        self.active_trades: List[Dict[str, Any]] = []
-        self.trade_history: List[Dict[str, Any]] = []
+        self.active_trades: list[dict[str, Any]] = []
+        self.trade_history: list[dict[str, Any]] = []
         self.is_running = False
 
-    async def execute_trade(self, trade_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def execute_trade(self, trade_data: dict[str, Any]) -> dict[str, Any]:
         """Execute a trade"""
         try:
             trade_id = f"trade_{len(self.trade_history) + 1}"
@@ -42,17 +42,17 @@ class TradeEngine:
             logger.error(f"Error executing trade: {e}")
             return {"status": "error", "message": str(e)}
 
-    async def get_trade_history(self, symbol: Optional[str] = None) -> List[Dict[str, Any]]:
+    async def get_trade_history(self, symbol: str | None = None) -> list[dict[str, Any]]:
         """Get trade history"""
         if symbol:
             return [trade for trade in self.trade_history if trade.get("symbol") == symbol]
         return self.trade_history
 
-    async def get_active_trades(self) -> List[Dict[str, Any]]:
+    async def get_active_trades(self) -> list[dict[str, Any]]:
         """Get active trades"""
         return [trade for trade in self.trade_history if trade.get("status") == "pending"]
 
-    async def cancel_trade(self, trade_id: str) -> Dict[str, Any]:
+    async def cancel_trade(self, trade_id: str) -> dict[str, Any]:
         """Cancel a trade"""
         try:
             for trade in self.trade_history:

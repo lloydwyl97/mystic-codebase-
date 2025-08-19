@@ -1,6 +1,6 @@
 ﻿import os
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional
+from typing import Any
 
 import jwt
 from fastapi import HTTPException, WebSocket, status
@@ -21,7 +21,7 @@ class AuthenticationException(Exception):
     pass
 
 
-def create_access_token(data: Dict[str, Any]) -> str:
+def create_access_token(data: dict[str, Any]) -> str:
     """Create a new JWT access token"""
     to_encode = data.copy()
     expire = datetime.now(timezone.timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -31,7 +31,7 @@ def create_access_token(data: Dict[str, Any]) -> str:
     return encoded_jwt
 
 
-def verify_token(token: str) -> Dict[str, Any]:
+def verify_token(token: str) -> dict[str, Any]:
     """Verify a JWT token and return the payload"""
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
@@ -47,7 +47,7 @@ def verify_token(token: str) -> Dict[str, Any]:
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get the current user from the JWT token"""
     token = credentials.credentials
     return verify_token(token)
@@ -55,7 +55,7 @@ async def get_current_user(
 
 async def verify_websocket_token(
     websocket: WebSocket,
-) -> Optional[Dict[str, Any]]:
+) -> dict[str, Any] | None:
     """Verify the token from WebSocket connection"""
     try:
         # Get token from query parameters
@@ -72,11 +72,12 @@ async def verify_websocket_token(
         return None
 
 
-async def authenticate_user(username: str, password: str) -> Dict[str, Any]:
+async def authenticate_user(username: str, password: str) -> dict[str, Any]:
     """Authenticate a user with username and password"""
     try:
         # Real implementation using database authentication
         from database import get_user_by_credentials
+
         from backend.utils.password_utils import verify_password
 
         user = await get_user_by_credentials(username)
@@ -89,11 +90,12 @@ async def authenticate_user(username: str, password: str) -> Dict[str, Any]:
         raise AuthenticationException(f"Authentication failed: {str(e)}")
 
 
-async def register_user(username: str, password: str, email: str) -> Dict[str, Any]:
+async def register_user(username: str, password: str, email: str) -> dict[str, Any]:
     """Register a new user"""
     try:
         # Real implementation using database registration
         from database import create_user, get_user_by_credentials
+
         from backend.utils.password_utils import hash_password
 
         # Check if user already exists

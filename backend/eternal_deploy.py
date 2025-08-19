@@ -1,9 +1,9 @@
 ﻿from cosmic_terraformer import expand_to_node
+from final_codex import eternal_constitution
+from holographic_projection import broadcast_hologram
 from memory_persistence import save_agent_memory
 from self_replicator import replicate_to
 from simulation_override import detect_simulation, override_simulation
-from holographic_projection import broadcast_hologram
-from final_codex import eternal_constitution
 
 # Launch full replication and broadcast
 expand_to_node("sol_cluster", "ignition", energy=99)

@@ -7,12 +7,13 @@ Manages strategy execution and signal generation.
 
 import logging
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Use absolute imports
 from crypto_autoengine_config import get_config
-from backend.services.websocket_manager import websocket_manager
 from shared_cache import CoinCache, SharedCache
+
+from backend.services.websocket_manager import websocket_manager
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ class StrategySystemManager:
     def __init__(self, cache: SharedCache):
         self.cache = cache
         self.config = get_config()
-        self._strategy_controllers: Dict[str, "StrategyController"] = {}
+        self._strategy_controllers: dict[str, StrategyController] = {}
 
     def get_strategy_controller(self, symbol: str) -> "StrategyController":
         """Get or create strategy controller for a symbol"""
@@ -50,9 +51,9 @@ class StrategySystemManager:
             self._strategy_controllers[symbol] = StrategyController(symbol, self.cache)
         return self._strategy_controllers[symbol]
 
-    def run_all_strategies(self) -> Dict[str, Any]:
+    def run_all_strategies(self) -> dict[str, Any]:
         """Run all strategies for all configured coins"""
-        results: Dict[str, Any] = {}
+        results: dict[str, Any] = {}
         symbols = self.config.get_all_symbols()
 
         for symbol in symbols:
@@ -72,7 +73,7 @@ class StrategySystemManager:
             "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
         }
 
-    def run_coin_strategies(self, symbol: str) -> Optional[Dict[str, Any]]:
+    def run_coin_strategies(self, symbol: str) -> dict[str, Any] | None:
         """Run strategies for a specific coin"""
         try:
             controller = self.get_strategy_controller(symbol)
@@ -81,7 +82,7 @@ class StrategySystemManager:
             logger.error(f"Error running strategies for {symbol}: {e}")
             return None
 
-    def get_strategy_status(self) -> Dict[str, Any]:
+    def get_strategy_status(self) -> dict[str, Any]:
         """Get status of all strategy controllers"""
         status = {
             "total_controllers": len(self._strategy_controllers),
@@ -91,7 +92,7 @@ class StrategySystemManager:
         }
         return status
 
-    def clear_strategy_cache(self, symbol: Optional[str] = None):
+    def clear_strategy_cache(self, symbol: str | None = None):
         """Clear strategy cache for specific symbol or all"""
         if symbol:
             if symbol in self._strategy_controllers:
@@ -99,9 +100,9 @@ class StrategySystemManager:
         else:
             self._strategy_controllers.clear()
 
-    def get_strategy_performance(self) -> Dict[str, Any]:
+    def get_strategy_performance(self) -> dict[str, Any]:
         """Get performance metrics for all strategies"""
-        performance: Dict[str, Any] = {
+        performance: dict[str, Any] = {
             "total_signals_generated": 0,
             "buy_signals": 0,
             "sell_signals": 0,
@@ -163,7 +164,7 @@ class StrategyController:
         self.config = get_config()
         self.coin_config = self.config.get_coin_by_symbol(symbol)
 
-    def run_all_strategies(self) -> Dict[str, Any]:
+    def run_all_strategies(self) -> dict[str, Any]:
         """Run all 65+ strategies for this coin"""
         if not self.coin_config:
             return {}
@@ -172,7 +173,7 @@ class StrategyController:
         if not coin_data:
             return {}
 
-        signals: List[StrategySignal] = []
+        signals: list[StrategySignal] = []
 
         # Price-based strategies (1-20)
         signals.extend(self._price_based_strategies(coin_data))
@@ -201,9 +202,9 @@ class StrategyController:
             "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
         }
 
-    def _price_based_strategies(self, coin_data: CoinCache) -> List[StrategySignal]:
+    def _price_based_strategies(self, coin_data: CoinCache) -> list[StrategySignal]:
         """Price-based strategies (1-20)"""
-        signals: List[StrategySignal] = []
+        signals: list[StrategySignal] = []
         price = coin_data.price
         history = coin_data.price_history
 
@@ -321,9 +322,9 @@ class StrategyController:
 
         return signals
 
-    def _volume_based_strategies(self, coin_data: CoinCache) -> List[StrategySignal]:
+    def _volume_based_strategies(self, coin_data: CoinCache) -> list[StrategySignal]:
         """Volume-based strategies (21-35)"""
-        signals: List[StrategySignal] = []
+        signals: list[StrategySignal] = []
         volume = coin_data.volume_24h
         history = coin_data.price_history
 
@@ -374,9 +375,9 @@ class StrategyController:
 
         return signals
 
-    def _technical_indicator_strategies(self, coin_data: CoinCache) -> List[StrategySignal]:
+    def _technical_indicator_strategies(self, coin_data: CoinCache) -> list[StrategySignal]:
         """Technical indicator strategies (36-50)"""
-        signals: List[StrategySignal] = []
+        signals: list[StrategySignal] = []
         history = coin_data.price_history
 
         if history is None or len(history) < 20:
@@ -426,9 +427,9 @@ class StrategyController:
 
         return signals
 
-    def _momentum_strategies(self, coin_data: CoinCache) -> List[StrategySignal]:
+    def _momentum_strategies(self, coin_data: CoinCache) -> list[StrategySignal]:
         """Momentum strategies (51-60)"""
-        signals: List[StrategySignal] = []
+        signals: list[StrategySignal] = []
         history = coin_data.price_history
 
         if history is None or len(history) < 20:
@@ -463,9 +464,9 @@ class StrategyController:
 
         return signals
 
-    def _volatility_strategies(self, coin_data: CoinCache) -> List[StrategySignal]:
+    def _volatility_strategies(self, coin_data: CoinCache) -> list[StrategySignal]:
         """Volatility strategies (61-65)"""
-        signals: List[StrategySignal] = []
+        signals: list[StrategySignal] = []
         history = coin_data.price_history
 
         if history is None or len(history) < 20:
@@ -491,9 +492,9 @@ class StrategyController:
 
         return signals
 
-    def _cosmic_strategies(self, coin_data: CoinCache) -> List[StrategySignal]:
+    def _cosmic_strategies(self, coin_data: CoinCache) -> list[StrategySignal]:
         """Cosmic/mystic strategies (66+)"""
-        signals: List[StrategySignal] = []
+        signals: list[StrategySignal] = []
 
         # Strategy 66: Mystic Alignment
         current_hour = time.localtime().tm_hour
@@ -510,7 +511,7 @@ class StrategyController:
 
         return signals
 
-    def _calculate_rsi(self, prices: List[float], period: int = 14) -> float:
+    def _calculate_rsi(self, prices: list[float], period: int = 14) -> float:
         """Calculate RSI"""
         if not prices or len(prices) < period + 1:
             return 50.0
@@ -529,7 +530,7 @@ class StrategyController:
         rsi = 100 - (100 / (1 + rs))
         return rsi
 
-    def _calculate_macd(self, prices: List[float]) -> Dict[str, float]:
+    def _calculate_macd(self, prices: list[float]) -> dict[str, float]:
         """Calculate MACD"""
         if len(prices) < 26:
             return {"macd": 0, "signal": 0, "histogram": 0}
@@ -544,7 +545,7 @@ class StrategyController:
 
         return {"macd": macd, "signal": signal, "histogram": histogram}
 
-    def _calculate_ema(self, prices: List[float], period: int) -> float:
+    def _calculate_ema(self, prices: list[float], period: int) -> float:
         """Calculate EMA"""
         if len(prices) < period:
             return prices[-1] if prices else 0
@@ -557,7 +558,7 @@ class StrategyController:
 
         return ema
 
-    def _calculate_volatility(self, prices: List[float]) -> float:
+    def _calculate_volatility(self, prices: list[float]) -> float:
         """Calculate price volatility"""
         if len(prices) < 2:
             return 0.0
@@ -569,7 +570,7 @@ class StrategyController:
 
         return volatility
 
-    def _aggregate_signals(self, signals: List[StrategySignal]) -> Dict[str, Any]:
+    def _aggregate_signals(self, signals: list[StrategySignal]) -> dict[str, Any]:
         """Aggregate all signals into final recommendation"""
         if not signals:
             return {
@@ -622,7 +623,7 @@ class StrategyController:
             },
         }
 
-    def _signal_to_dict(self, signal: StrategySignal) -> Dict[str, Any]:
+    def _signal_to_dict(self, signal: StrategySignal) -> dict[str, Any]:
         """Convert signal to dictionary"""
         return {
             "name": signal.name,

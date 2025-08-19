@@ -5,13 +5,14 @@ Uses GPT-4 to explain trading decisions and provide insights.
 Built for Windows 11 Home + PowerShell + Docker.
 """
 
-import openai
-import os
 import json
-import time
 import logging
-from typing import Dict, Any, List
+import os
+import time
 from datetime import datetime, timezone
+from typing import Any
+
+import openai
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -30,7 +31,7 @@ os.makedirs("./logs", exist_ok=True)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-def load_trade_log() -> List[Dict[str, Any]]:
+def load_trade_log() -> list[dict[str, Any]]:
     """Load trade log from file."""
     try:
         if not os.path.exists(LOG_FILE):
@@ -38,7 +39,7 @@ def load_trade_log() -> List[Dict[str, Any]]:
             return []
 
         trades = []
-        with open(LOG_FILE, "r") as f:
+        with open(LOG_FILE) as f:
             for line in f:
                 if line.strip():
                     trades.append(json.loads(line))
@@ -50,14 +51,14 @@ def load_trade_log() -> List[Dict[str, Any]]:
         return []
 
 
-def load_explanations() -> Dict[str, str]:
+def load_explanations() -> dict[str, str]:
     """Load existing explanations."""
     try:
         if not os.path.exists(EXPLANATION_FILE):
             return {}
 
         explanations = {}
-        with open(EXPLANATION_FILE, "r") as f:
+        with open(EXPLANATION_FILE) as f:
             for line in f:
                 if line.strip():
                     data = json.loads(line)
@@ -107,7 +108,7 @@ def create_ping_file(explanations_generated: int, total_trades: int) -> None:
         print(f"Ping file error: {e}")
 
 
-def explain_trade(trade: Dict[str, Any]) -> str:
+def explain_trade(trade: dict[str, Any]) -> str:
     """Generate AI explanation for a trade"""
     try:
         api_key = os.getenv("OPENAI_API_KEY")
@@ -142,7 +143,7 @@ def process_trade_log():
 
         # Read existing trades
         trades = []
-        with open(LOG_FILE, "r") as f:
+        with open(LOG_FILE) as f:
             for line in f:
                 if line.strip():
                     try:

@@ -6,11 +6,12 @@ Handles AI strategy generation, analysis, and optimization
 import asyncio
 import json
 import logging
-import numpy as np
-from datetime import datetime
-from typing import Dict, Any, List, Optional
 import os
 import sys
+from datetime import datetime
+from typing import Any
+
+import numpy as np
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -111,7 +112,8 @@ class StrategyAgent(BaseAgent):
     async def load_active_strategies(self):
         """Load active strategies from Redis"""
         try:
-            active_strategies = self.redis_client.lrange("ai_strategies", 0, -1)
+            from utils.redis_helpers import to_str_list
+            active_strategies = to_str_list(self.redis_client.lrange("ai_strategies", 0, -1))
 
             for strategy_id in active_strategies:
                 strategy_data = self.redis_client.get(f"ai_strategy:{strategy_id}")
@@ -155,7 +157,7 @@ class StrategyAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process incoming market data"""
         try:
             symbol = market_data.get("symbol")
@@ -171,7 +173,7 @@ class StrategyAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing market data: {e}")
 
-    async def handle_generate_strategy(self, message: Dict[str, Any]):
+    async def handle_generate_strategy(self, message: dict[str, Any]):
         """Handle strategy generation request"""
         try:
             symbol = message.get("symbol", "BTCUSDT")
@@ -204,7 +206,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error generating strategy: {e}")
             await self.broadcast_error(f"Strategy generation error: {e}")
 
-    async def handle_analyze_strategy(self, message: Dict[str, Any]):
+    async def handle_analyze_strategy(self, message: dict[str, Any]):
         """Handle strategy analysis request"""
         try:
             strategy_id = message.get("strategy_id")
@@ -230,7 +232,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error analyzing strategy: {e}")
             await self.broadcast_error(f"Strategy analysis error: {e}")
 
-    async def handle_optimize_strategy(self, message: Dict[str, Any]):
+    async def handle_optimize_strategy(self, message: dict[str, Any]):
         """Handle strategy optimization request"""
         try:
             strategy_id = message.get("strategy_id")
@@ -257,7 +259,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error optimizing strategy: {e}")
             await self.broadcast_error(f"Strategy optimization error: {e}")
 
-    async def handle_performance_update(self, message: Dict[str, Any]):
+    async def handle_performance_update(self, message: dict[str, Any]):
         """Handle performance update"""
         try:
             strategy_id = message.get("strategy_id")
@@ -272,7 +274,7 @@ class StrategyAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling performance update: {e}")
 
-    async def handle_market_data(self, message: Dict[str, Any]):
+    async def handle_market_data(self, message: dict[str, Any]):
         """Handle market data message"""
         try:
             market_data = message.get("market_data", {})
@@ -289,8 +291,8 @@ class StrategyAgent(BaseAgent):
             await self.broadcast_error(f"Market data handling error: {e}")
 
     async def generate_strategy(
-        self, symbol: str, strategy_type: str, parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, symbol: str, strategy_type: str, parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Generate a new AI strategy"""
         try:
             # Use strategy generator to create new strategy
@@ -317,13 +319,13 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error generating strategy: {e}")
             raise
 
-    async def analyze_strategy(self, strategy_id: str) -> Dict[str, Any]:
+    async def analyze_strategy(self, strategy_id: str) -> dict[str, Any]:
         """Analyze strategy performance"""
         try:
             # Get strategy data
             strategy_data = self.redis_client.get(f"ai_strategy:{strategy_id}")
             if not strategy_data:
-                from backend.utils.exceptions import StrategyException, ErrorCode
+                from backend.utils.exceptions import ErrorCode, StrategyException
                 raise StrategyException(
                     message=f"Strategy {strategy_id} not found",
                     error_code=ErrorCode.VALIDATION_ERROR,
@@ -356,7 +358,7 @@ class StrategyAgent(BaseAgent):
             # Get strategy data
             strategy_data = self.redis_client.get(f"ai_strategy:{strategy_id}")
             if not strategy_data:
-                from backend.utils.exceptions import StrategyException, ErrorCode
+                from backend.utils.exceptions import ErrorCode, StrategyException
                 raise StrategyException(
                     message=f"Strategy {strategy_id} not found",
                     error_code=ErrorCode.VALIDATION_ERROR,
@@ -452,7 +454,7 @@ class StrategyAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating strategy metrics: {e}")
 
-    async def calculate_risk_metrics(self, strategy: Dict[str, Any]) -> Dict[str, Any]:
+    async def calculate_risk_metrics(self, strategy: dict[str, Any]) -> dict[str, Any]:
         """Calculate risk metrics for strategy"""
         try:
             performance = strategy.get("performance", {})
@@ -472,7 +474,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error calculating risk metrics: {e}")
             return {}
 
-    def calculate_risk_score(self, performance: Dict[str, Any]) -> float:
+    def calculate_risk_score(self, performance: dict[str, Any]) -> float:
         """Calculate overall risk score"""
         try:
             # Simple risk score calculation
@@ -489,7 +491,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error calculating risk score: {e}")
             return 50.0
 
-    async def assess_optimization_potential(self, strategy: Dict[str, Any]) -> Dict[str, Any]:
+    async def assess_optimization_potential(self, strategy: dict[str, Any]) -> dict[str, Any]:
         """Assess optimization potential"""
         try:
             performance = strategy.get("performance", {})
@@ -515,7 +517,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error assessing optimization potential: {e}")
             return {}
 
-    def assess_parameter_tuning(self, performance: Dict[str, Any]) -> float:
+    def assess_parameter_tuning(self, performance: dict[str, Any]) -> float:
         """Assess parameter tuning potential (0-100)"""
         accuracy = performance.get("accuracy", 0)
         if accuracy < 0.7:
@@ -525,17 +527,17 @@ class StrategyAgent(BaseAgent):
         else:
             return 20  # Low potential
 
-    def assess_feature_engineering(self, performance: Dict[str, Any]) -> float:
+    def assess_feature_engineering(self, performance: dict[str, Any]) -> float:
         """Assess feature engineering potential (0-100)"""
         # Simple assessment based on performance
         return 60  # Medium potential
 
-    def assess_model_architecture(self, performance: Dict[str, Any]) -> float:
+    def assess_model_architecture(self, performance: dict[str, Any]) -> float:
         """Assess model architecture potential (0-100)"""
         # Simple assessment based on performance
         return 40  # Low-medium potential
 
-    async def analyze_market_conditions(self, strategy: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_market_conditions(self, strategy: dict[str, Any]) -> dict[str, Any]:
         """Analyze current market conditions for strategy"""
         try:
             symbol = strategy.get("symbol", "BTCUSDT")
@@ -561,7 +563,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error analyzing market conditions: {e}")
             return {}
 
-    def calculate_market_volatility(self, market_data: Dict[str, Any]) -> float:
+    def calculate_market_volatility(self, market_data: dict[str, Any]) -> float:
         """Calculate market volatility"""
         try:
             # Simple volatility calculation
@@ -570,7 +572,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error calculating market volatility: {e}")
             return 0.0
 
-    def analyze_market_trend(self, market_data: Dict[str, Any]) -> str:
+    def analyze_market_trend(self, market_data: dict[str, Any]) -> str:
         """Analyze market trend"""
         try:
             # Simple trend analysis
@@ -579,7 +581,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error analyzing market trend: {e}")
             return "neutral"
 
-    def analyze_market_volume(self, market_data: Dict[str, Any]) -> str:
+    def analyze_market_volume(self, market_data: dict[str, Any]) -> str:
         """Analyze market volume"""
         try:
             # Simple volume analysis
@@ -589,7 +591,7 @@ class StrategyAgent(BaseAgent):
             return "normal"
 
     def assess_market_suitability(
-        self, strategy: Dict[str, Any], market_data: Dict[str, Any]
+        self, strategy: dict[str, Any], market_data: dict[str, Any]
     ) -> float:
         """Assess how suitable current market conditions are for strategy"""
         try:
@@ -599,7 +601,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error assessing market suitability: {e}")
             return 0.5
 
-    async def generate_recommendations(self, strategy: Dict[str, Any]) -> List[str]:
+    async def generate_recommendations(self, strategy: dict[str, Any]) -> list[str]:
         """Generate recommendations for strategy improvement"""
         try:
             recommendations = []
@@ -624,7 +626,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error generating recommendations: {e}")
             return ["Unable to generate recommendations"]
 
-    async def is_performance_degrading(self, performance: Dict[str, Any]) -> bool:
+    async def is_performance_degrading(self, performance: dict[str, Any]) -> bool:
         """Check if strategy performance is degrading"""
         try:
             accuracy = performance.get("accuracy", 0)
@@ -637,7 +639,7 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error checking performance degradation: {e}")
             return False
 
-    async def should_optimize(self, strategy: Dict[str, Any]) -> bool:
+    async def should_optimize(self, strategy: dict[str, Any]) -> bool:
         """Check if strategy should be optimized"""
         try:
             performance = strategy.get("performance", {})
@@ -669,7 +671,7 @@ class StrategyAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error triggering retrain: {e}")
 
-    async def check_strategy_signals(self, market_data: Dict[str, Any]):
+    async def check_strategy_signals(self, market_data: dict[str, Any]):
         """Check for trading signals from strategies"""
         try:
             symbol = market_data.get("symbol")
@@ -695,8 +697,8 @@ class StrategyAgent(BaseAgent):
             print(f"âŒ Error checking strategy signals: {e}")
 
     async def generate_signal(
-        self, strategy: Dict[str, Any], market_data: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+        self, strategy: dict[str, Any], market_data: dict[str, Any]
+    ) -> dict[str, Any] | None:
         """Generate trading signal from strategy"""
         try:
             # Simple signal generation (placeholder)

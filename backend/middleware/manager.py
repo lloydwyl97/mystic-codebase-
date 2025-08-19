@@ -5,7 +5,7 @@ Provides centralized middleware registration and configuration.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 from fastapi import FastAPI
 
@@ -24,7 +24,7 @@ class MiddlewareManager:
     """Manages middleware registration and configuration"""
 
     def __init__(self):
-        self.middleware_configs: Dict[str, Dict[str, Any]] = {
+        self.middleware_configs: dict[str, dict[str, Any]] = {
             "rate_limiter": {"enabled": True, "config": {}},
             "request_logger": {"enabled": True, "config": {}},
             "security_headers": {"enabled": True, "config": {}},
@@ -38,7 +38,7 @@ class MiddlewareManager:
         self,
         middleware_name: str,
         enabled: bool = True,
-        config: Optional[Dict[str, Any]] = None,
+        config: dict[str, Any] | None = None,
     ) -> None:
         """Configure a specific middleware"""
         if middleware_name in self.middleware_configs:

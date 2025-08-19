@@ -6,7 +6,7 @@ All endpoints return live data - no stubs or placeholders
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, TYPE_CHECKING, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
 from fastapi import APIRouter, HTTPException
 
@@ -17,32 +17,30 @@ except ImportError as e:
     logging.warning(f"AI signals not fully available: {e}")
 
 if TYPE_CHECKING:
-    from backend.services.ai_strategy_service import AIStrategyService as _AIStrategyService  # type: ignore[unused-ignore]
-    from backend.services.ai_prediction_service import AIPredictionService as _AIPredictionService  # type: ignore[unused-ignore]
-    from backend.services.ai_signal_service import AISignalService as _AISignalService  # type: ignore[unused-ignore]
+    pass  # type: ignore[unused-ignore]
 
 @runtime_checkable
 class _AIStrategyLike(Protocol):
-    async def get_all_strategies(self) -> Dict[str, Any]: ...
-    async def get_strategy_performance(self) -> Dict[str, Any]: ...
-    async def get_system_status(self) -> Dict[str, Any]: ...
-    async def get_performance_metrics(self) -> Dict[str, Any]: ...
-    async def get_model_status(self) -> Dict[str, Any]: ...
-    async def get_models(self) -> Dict[str, Any]: ...
-    async def get_model_configurations(self) -> Dict[str, Any]: ...
-    async def get_training_status(self) -> Dict[str, Any]: ...
-    async def get_training_metrics(self) -> Dict[str, Any]: ...
-    async def start_retraining(self) -> Dict[str, Any]: ...
-    async def update_strategy(self, strategy_id: str, config: Dict[str, Any]) -> Dict[str, Any]: ...
+    async def get_all_strategies(self) -> dict[str, Any]: ...
+    async def get_strategy_performance(self) -> dict[str, Any]: ...
+    async def get_system_status(self) -> dict[str, Any]: ...
+    async def get_performance_metrics(self) -> dict[str, Any]: ...
+    async def get_model_status(self) -> dict[str, Any]: ...
+    async def get_models(self) -> dict[str, Any]: ...
+    async def get_model_configurations(self) -> dict[str, Any]: ...
+    async def get_training_status(self) -> dict[str, Any]: ...
+    async def get_training_metrics(self) -> dict[str, Any]: ...
+    async def start_retraining(self) -> dict[str, Any]: ...
+    async def update_strategy(self, strategy_id: str, config: dict[str, Any]) -> dict[str, Any]: ...
 
 @runtime_checkable
 class _AIPredictionLike(Protocol):
-    async def get_predictions(self) -> Dict[str, Any]: ...
-    async def get_prediction_accuracy(self) -> Dict[str, Any]: ...
+    async def get_predictions(self) -> dict[str, Any]: ...
+    async def get_prediction_accuracy(self) -> dict[str, Any]: ...
 
 @runtime_checkable
 class _AISignalLike(Protocol):
-    async def get_signals(self) -> Dict[str, Any]: ...
+    async def get_signals(self) -> dict[str, Any]: ...
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -72,7 +70,8 @@ except Exception as e:
 # Fallback: try importing the root-level services package by adding project root to sys.path
 if _RealAIStrategyService is None or _RealAIPredictionService is None or _RealAISignalService is None:
     try:
-        import os, sys
+        import os
+        import sys
         # backend/endpoints/ai -> up 3 levels to project root
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
         if project_root not in sys.path:
@@ -80,7 +79,9 @@ if _RealAIStrategyService is None or _RealAIPredictionService is None or _RealAI
         if _RealAIStrategyService is None:
             from backend.services.ai_strategy_service import AIStrategyService as _RealAIStrategyService  # type: ignore
         if _RealAIPredictionService is None:
-            from backend.services.ai_prediction_service import AIPredictionService as _RealAIPredictionService  # type: ignore
+            from backend.services.ai_prediction_service import (
+                AIPredictionService as _RealAIPredictionService,  # type: ignore
+            )
         if _RealAISignalService is None:
             from backend.services.ai_signal_service import AISignalService as _RealAISignalService  # type: ignore
     except Exception:
@@ -109,10 +110,9 @@ All endpoints return live data - no stubs or placeholders
 """
 
 import logging
-from datetime import datetime, timezone
-from typing import Any, Dict, TYPE_CHECKING, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 # Import real services
 try:
@@ -121,32 +121,30 @@ except ImportError as e:
     logging.warning(f"AI signals not fully available: {e}")
 
 if TYPE_CHECKING:
-    from backend.services.ai_strategy_service import AIStrategyService as _AIStrategyService  # type: ignore[unused-ignore]
-    from backend.services.ai_prediction_service import AIPredictionService as _AIPredictionService  # type: ignore[unused-ignore]
-    from backend.services.ai_signal_service import AISignalService as _AISignalService  # type: ignore[unused-ignore]
+    pass  # type: ignore[unused-ignore]
 
 @runtime_checkable
 class _AIStrategyLike(Protocol):
-    async def get_all_strategies(self) -> Dict[str, Any]: ...
-    async def get_strategy_performance(self) -> Dict[str, Any]: ...
-    async def get_system_status(self) -> Dict[str, Any]: ...
-    async def get_performance_metrics(self) -> Dict[str, Any]: ...
-    async def get_model_status(self) -> Dict[str, Any]: ...
-    async def get_models(self) -> Dict[str, Any]: ...
-    async def get_model_configurations(self) -> Dict[str, Any]: ...
-    async def get_training_status(self) -> Dict[str, Any]: ...
-    async def get_training_metrics(self) -> Dict[str, Any]: ...
-    async def start_retraining(self) -> Dict[str, Any]: ...
-    async def update_strategy(self, strategy_id: str, config: Dict[str, Any]) -> Dict[str, Any]: ...
+    async def get_all_strategies(self) -> dict[str, Any]: ...
+    async def get_strategy_performance(self) -> dict[str, Any]: ...
+    async def get_system_status(self) -> dict[str, Any]: ...
+    async def get_performance_metrics(self) -> dict[str, Any]: ...
+    async def get_model_status(self) -> dict[str, Any]: ...
+    async def get_models(self) -> dict[str, Any]: ...
+    async def get_model_configurations(self) -> dict[str, Any]: ...
+    async def get_training_status(self) -> dict[str, Any]: ...
+    async def get_training_metrics(self) -> dict[str, Any]: ...
+    async def start_retraining(self) -> dict[str, Any]: ...
+    async def update_strategy(self, strategy_id: str, config: dict[str, Any]) -> dict[str, Any]: ...
 
 @runtime_checkable
 class _AIPredictionLike(Protocol):
-    async def get_predictions(self) -> Dict[str, Any]: ...
-    async def get_prediction_accuracy(self) -> Dict[str, Any]: ...
+    async def get_predictions(self) -> dict[str, Any]: ...
+    async def get_prediction_accuracy(self) -> dict[str, Any]: ...
 
 @runtime_checkable
 class _AISignalLike(Protocol):
-    async def get_signals(self) -> Dict[str, Any]: ...
+    async def get_signals(self) -> dict[str, Any]: ...
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -173,7 +171,7 @@ except Exception as e:
 
 
 @router.get("/ai/strategies")
-async def get_ai_strategies() -> Dict[str, Any]:
+async def get_ai_strategies() -> dict[str, Any]:
     """Get all AI strategies and their performance"""
     try:
         # Get real AI strategies
@@ -209,7 +207,7 @@ async def get_ai_strategies() -> Dict[str, Any]:
 
 
 @router.get("/ai/predictions")
-async def get_ai_predictions() -> Dict[str, Any]:
+async def get_ai_predictions() -> dict[str, Any]:
     """Get AI predictions and forecasts"""
     try:
         # Get real AI predictions
@@ -245,7 +243,7 @@ async def get_ai_predictions() -> Dict[str, Any]:
 
 
 @router.get("/ai/signals")
-async def get_ai_signals() -> Dict[str, Any]:
+async def get_ai_signals() -> dict[str, Any]:
     """Get AI trading signals"""
     try:
         # Get real AI signals
@@ -258,7 +256,7 @@ async def get_ai_signals() -> Dict[str, Any]:
             signals = {"error": "AI signals unavailable"}
 
         # Get signal quality metrics
-        signal_quality: Dict[str, Any] = {}
+        signal_quality: dict[str, Any] = {}
         try:
             # signal_scorer is a function; derive minimal metrics safely
             scored = signal_scorer() if callable(signal_scorer) else []
@@ -268,7 +266,7 @@ async def get_ai_signals() -> Dict[str, Any]:
             signal_quality = {"error": "Signal quality unavailable"}
 
         # Get technical signals
-        technical_signals_data: Dict[str, Any] = {}
+        technical_signals_data: dict[str, Any] = {}
         try:
             # technical_signals is a function; return its data under a key
             tech = technical_signals() if callable(technical_signals) else []
@@ -293,7 +291,7 @@ async def get_ai_signals() -> Dict[str, Any]:
 
 
 @router.get("/ai/status")
-async def get_ai_status() -> Dict[str, Any]:
+async def get_ai_status() -> dict[str, Any]:
     """Get AI system status and health"""
     try:
         # Get real AI system status
@@ -339,7 +337,7 @@ async def get_ai_status() -> Dict[str, Any]:
 
 
 @router.get("/ai/models")
-async def get_ai_models() -> Dict[str, Any]:
+async def get_ai_models() -> dict[str, Any]:
     """Get AI models and their configurations"""
     try:
         # Get real AI models
@@ -375,7 +373,7 @@ async def get_ai_models() -> Dict[str, Any]:
 
 
 @router.get("/ai/training")
-async def get_ai_training_status() -> Dict[str, Any]:
+async def get_ai_training_status() -> dict[str, Any]:
     """Get AI training status and progress"""
     try:
         # Get real training status
@@ -411,7 +409,7 @@ async def get_ai_training_status() -> Dict[str, Any]:
 
 
 @router.post("/ai/retrain")
-async def retrain_ai_models() -> Dict[str, Any]:
+async def retrain_ai_models() -> dict[str, Any]:
     """Trigger AI model retraining"""
     try:
         # Start real AI retraining
@@ -438,7 +436,7 @@ async def retrain_ai_models() -> Dict[str, Any]:
 
 
 @router.post("/ai/update-strategy")
-async def update_ai_strategy(strategy_id: str, config: Dict[str, Any]) -> Dict[str, Any]:
+async def update_ai_strategy(strategy_id: str, config: dict[str, Any]) -> dict[str, Any]:
     """Update AI strategy configuration"""
     try:
         # Update real AI strategy

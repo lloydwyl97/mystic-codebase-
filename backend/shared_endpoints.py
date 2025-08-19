@@ -6,28 +6,29 @@ to eliminate code duplication while maintaining compatibility with both entry po
 """
 
 import asyncio
-import logging
-import time
-from typing import Any, Dict, List, Optional, Union
 import inspect
-from datetime import datetime
+import logging
 import re
+import time
+from datetime import datetime
+from typing import Any
 
 from fastapi import (
     APIRouter,
     HTTPException,
     Request,
+    Response,
     WebSocket,
     WebSocketDisconnect,
-    Response,
 )
 from fastapi.responses import JSONResponse
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import BaseModel, Field
-from backend.modules.trading.order_manager import OrderManager, Order
-from backend.modules.ai.analytics_engine import AnalyticsEngine
-from backend.utils.exceptions import RateLimitException, TradingException
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
 from backend.middleware.rate_limiter import rate_limit
+from backend.modules.ai.analytics_engine import AnalyticsEngine
+from backend.modules.trading.order_manager import Order, OrderManager
+from backend.utils.exceptions import RateLimitException, TradingException
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +36,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # Global instances for test patching
-_order_manager_instance: Optional[OrderManager] = None
-_analytics_engine_instance: Optional[AnalyticsEngine] = None
+_order_manager_instance: OrderManager | None = None
+_analytics_engine_instance: AnalyticsEngine | None = None
 
 # Import new aioredis-based rate limiter
 default_rate_limit = 60  # requests per minute
@@ -66,7 +67,7 @@ def get_analytics_engine() -> AnalyticsEngine:
 def create_portfolio_overview_endpoint(prefix: str = "/api"):
     """Create portfolio overview endpoint with specified prefix"""
 
-    async def get_portfolio_overview() -> Dict[str, Any]:
+    async def get_portfolio_overview() -> dict[str, Any]:
         """Get portfolio overview and performance"""
         try:
             # Get real portfolio data from AI services
@@ -112,7 +113,7 @@ def create_portfolio_overview_endpoint(prefix: str = "/api"):
 def create_portfolio_positions_endpoint(prefix: str = "/api"):
     """Create portfolio positions endpoint with specified prefix"""
 
-    async def get_portfolio_positions() -> Dict[str, Any]:
+    async def get_portfolio_positions() -> dict[str, Any]:
         """Get portfolio positions"""
         try:
             # Get real portfolio positions from AI services
@@ -170,7 +171,7 @@ def create_portfolio_positions_endpoint(prefix: str = "/api"):
 def create_portfolio_analysis_endpoint(prefix: str = "/api"):
     """Create portfolio analysis endpoint with specified prefix"""
 
-    async def get_portfolio_analysis() -> Dict[str, Union[str, Any]]:
+    async def get_portfolio_analysis() -> dict[str, str | Any]:
         """Get comprehensive portfolio analysis"""
         try:
             # Get real portfolio analysis from AI services
@@ -219,11 +220,11 @@ def create_orders_endpoint(prefix: str = "/api"):
     """Create orders endpoint with specified prefix"""
 
     async def get_orders(
-        status: Optional[str] = None,
-        symbol: Optional[str] = None,
+        status: str | None = None,
+        symbol: str | None = None,
         limit: int = 100,
         offset: int = 0,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get orders with optional filtering"""
         try:
             # Get real orders from trading services
@@ -311,7 +312,7 @@ def create_orders_endpoint(prefix: str = "/api"):
 def create_create_order_endpoint(prefix: str = "/api"):
     """Create order creation endpoint with specified prefix"""
 
-    async def create_order(order_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_order(order_data: dict[str, Any]) -> dict[str, Any]:
         """Create a new order"""
         try:
             order_manager = get_order_manager()
@@ -334,8 +335,8 @@ def create_advanced_order_endpoint(prefix: str = "/api"):
     """Create advanced order endpoint with specified prefix"""
 
     async def place_advanced_order(
-        order_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        order_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Place advanced order with complex parameters"""
         try:
             order_manager = get_order_manager()
@@ -356,7 +357,7 @@ def create_advanced_order_endpoint(prefix: str = "/api"):
 def create_exchanges_endpoint(prefix: str = "/api"):
     """Create exchanges endpoint with specified prefix"""
 
-    async def get_exchanges() -> Dict[str, Union[List[str], int, str]]:
+    async def get_exchanges() -> dict[str, list[str] | int | str]:
         """Get available exchanges"""
         try:
             # Get real exchange status from services
@@ -399,7 +400,7 @@ def create_exchange_account_endpoint(prefix: str = "/api"):
 
     async def get_exchange_account(
         exchange_name: str,
-    ) -> Dict[str, Union[str, Any]]:
+    ) -> dict[str, str | Any]:
         """Get exchange account information"""
         try:
             # Get real account data from exchanges
@@ -466,8 +467,8 @@ def create_exchange_orders_endpoint(prefix: str = "/api"):
     """Create exchange orders endpoint with specified prefix"""
 
     async def get_exchange_orders(
-        exchange_name: str, symbol: Optional[str] = None
-    ) -> Dict[str, Union[str, Any, int]]:
+        exchange_name: str, symbol: str | None = None
+    ) -> dict[str, str | Any | int]:
         """Get orders from specific exchange"""
         try:
             order_manager = get_order_manager()
@@ -488,8 +489,8 @@ def create_place_exchange_order_endpoint(prefix: str = "/api"):
     """Create place exchange order endpoint with specified prefix"""
 
     async def place_exchange_order(
-        exchange_name: str, order_data: Dict[str, Any]
-    ) -> Dict[str, Union[str, Any]]:
+        exchange_name: str, order_data: dict[str, Any]
+    ) -> dict[str, str | Any]:
         """Place order on specific exchange"""
         try:
             order_manager = get_order_manager()
@@ -505,7 +506,7 @@ def create_place_exchange_order_endpoint(prefix: str = "/api"):
 def create_multi_exchange_market_data_endpoint(prefix: str = "/api"):
     """Create multi-exchange market data endpoint with specified prefix"""
 
-    async def get_multi_exchange_market_data(symbol: str) -> Dict[str, Any]:
+    async def get_multi_exchange_market_data(symbol: str) -> dict[str, Any]:
         """Get market data from multiple exchanges"""
         try:
             # Validate symbol format: only uppercase letters, 2-10 chars
@@ -582,7 +583,7 @@ def create_multi_exchange_market_data_endpoint(prefix: str = "/api"):
 def create_risk_parameters_endpoint(prefix: str = "/api"):
     """Create risk parameters endpoint with specified prefix"""
 
-    async def get_risk_parameters() -> Dict[str, Any]:
+    async def get_risk_parameters() -> dict[str, Any]:
         """Get current risk parameters"""
         try:
             from backend.services.risk_management import get_risk_service
@@ -601,8 +602,8 @@ def create_update_risk_parameters_endpoint(prefix: str = "/api"):
     """Create update risk parameters endpoint with specified prefix"""
 
     async def update_risk_parameters(
-        risk_data: Dict[str, Any],
-    ) -> Dict[str, Union[str, Any]]:
+        risk_data: dict[str, Any],
+    ) -> dict[str, str | Any]:
         """Update risk parameters"""
         try:
             from backend.services.risk_management import get_risk_service
@@ -621,8 +622,8 @@ def create_position_size_endpoint(prefix: str = "/api"):
     """Create position size endpoint with specified prefix"""
 
     async def calculate_position_size(
-        data: Dict[str, Any],
-    ) -> Dict[str, Union[str, Any]]:
+        data: dict[str, Any],
+    ) -> dict[str, str | Any]:
         """Calculate position size based on risk parameters"""
         try:
             from backend.services.risk_management import get_risk_service
@@ -645,18 +646,18 @@ def create_position_size_endpoint(prefix: str = "/api"):
 def create_strategies_endpoint(prefix: str = "/api"):
     """Create strategies endpoint with specified prefix"""
 
-    async def get_strategies() -> Dict[str, Union[int, str, List[Dict[str, Any]]]]:
+    async def get_strategies() -> dict[str, int | str | list[dict[str, Any]]]:
         """Get available trading strategies"""
         try:
             # import backend.ai as ai services for real strategy data
-            from backend.modules.ai.ai_signals import (
-                signal_scorer,
-                risk_adjusted_signals,
-                technical_signals,
-                market_strength_signals,
-            )
             from backend.ai.auto_trade import get_trading_status
             from backend.ai.trade_tracker import get_trade_summary
+            from backend.modules.ai.ai_signals import (
+                market_strength_signals,
+                risk_adjusted_signals,
+                signal_scorer,
+                technical_signals,
+            )
 
             # Get real strategy performance from AI services
             scored_signals = signal_scorer()
@@ -766,7 +767,7 @@ def create_strategies_endpoint(prefix: str = "/api"):
 def create_create_strategy_endpoint(prefix: str = "/api"):
     """Create strategy creation endpoint with specified prefix"""
 
-    async def create_strategy(strategy_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_strategy(strategy_data: dict[str, Any]) -> dict[str, Any]:
         """Create a new trading strategy"""
         try:
             from backend.services.ai_strategies import get_ai_strategy_service
@@ -784,7 +785,7 @@ def create_create_strategy_endpoint(prefix: str = "/api"):
 def create_execute_strategy_endpoint(prefix: str = "/api"):
     """Create strategy execution endpoint with specified prefix"""
 
-    async def execute_strategy(strategy_id: str, market_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def execute_strategy(strategy_id: str, market_data: dict[str, Any]) -> dict[str, Any]:
         """Execute a trading strategy"""
         try:
             from backend.services.ai_strategies import get_ai_strategy_service
@@ -808,8 +809,8 @@ def create_ml_train_endpoint(prefix: str = "/api"):
     """Create ML training endpoint with specified prefix"""
 
     async def train_ml_model(
-        model_data: Dict[str, Any],
-    ) -> Dict[str, Union[str, Any]]:
+        model_data: dict[str, Any],
+    ) -> dict[str, str | Any]:
         """Train ML model"""
         try:
             from backend.services.ml_service import get_ml_service
@@ -832,8 +833,8 @@ def create_ml_predict_endpoint(prefix: str = "/api"):
     """Create ML prediction endpoint with specified prefix"""
 
     async def make_prediction(
-        prediction_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        prediction_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Make prediction using ML model"""
         try:
             from backend.services.ml_service import get_ml_service
@@ -856,7 +857,7 @@ def create_ml_predict_endpoint(prefix: str = "/api"):
 def create_patterns_endpoint(prefix: str = "/api"):
     """Create patterns endpoint with specified prefix"""
 
-    async def get_patterns(symbol: str) -> Dict[str, Union[str, Any]]:
+    async def get_patterns(symbol: str) -> dict[str, str | Any]:
         """Get trading patterns for a symbol"""
         try:
             from backend.services.pattern_service import get_pattern_service
@@ -881,7 +882,7 @@ def create_social_traders_endpoint(prefix: str = "/api"):
 
     async def get_traders(
         limit: int = 50, offset: int = 0
-    ) -> Dict[str, Union[int, str, List[Dict[str, Any]]]]:
+    ) -> dict[str, int | str | list[dict[str, Any]]]:
         """Get social traders"""
         try:
             from backend.services.social_trading import get_social_trading_service
@@ -903,7 +904,7 @@ def create_social_traders_endpoint(prefix: str = "/api"):
 def create_follow_trader_endpoint(prefix: str = "/api"):
     """Create follow trader endpoint with specified prefix"""
 
-    async def follow_trader(trader_id: str, follower_data: Dict[str, str]) -> Dict[str, Any]:
+    async def follow_trader(trader_id: str, follower_data: dict[str, str]) -> dict[str, Any]:
         """Follow a trader"""
         try:
             from backend.services.social_trading import get_social_trading_service
@@ -922,8 +923,8 @@ def create_copy_trade_endpoint(prefix: str = "/api"):
     """Create copy trade endpoint with specified prefix"""
 
     async def create_copy_trade_config(
-        copy_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        copy_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Create copy trade configuration"""
         try:
             from backend.services.social_trading import get_social_trading_service
@@ -943,7 +944,7 @@ def create_social_signals_endpoint(prefix: str = "/api"):
 
     async def get_trade_signals(
         limit: int = 50, offset: int = 0
-    ) -> Dict[str, Union[int, str, List[Dict[str, Any]]]]:
+    ) -> dict[str, int | str | list[dict[str, Any]]]:
         """Get social trading signals"""
         try:
             from backend.services.social_trading import get_social_trading_service
@@ -965,7 +966,7 @@ def create_social_signals_endpoint(prefix: str = "/api"):
 def create_social_leaderboard_endpoint(prefix: str = "/api"):
     """Create social leaderboard endpoint with specified prefix"""
 
-    async def get_social_leaderboard(period: str = "all_time", limit: int = 100) -> Dict[str, Any]:
+    async def get_social_leaderboard(period: str = "all_time", limit: int = 100) -> dict[str, Any]:
         """Get social trading leaderboard"""
         try:
             from backend.services.social_trading import get_social_trading_service
@@ -983,7 +984,7 @@ def create_social_leaderboard_endpoint(prefix: str = "/api"):
 def create_achievements_endpoint(prefix: str = "/api"):
     """Create achievements endpoint with specified prefix"""
 
-    async def get_user_achievements(user_id: str) -> Dict[str, Any]:
+    async def get_user_achievements(user_id: str) -> dict[str, Any]:
         """Get user achievements"""
         try:
             from backend.services.achievements import get_achievements_service
@@ -1007,8 +1008,8 @@ def create_push_subscription_endpoint(prefix: str = "/api"):
     """Create push subscription endpoint with specified prefix"""
 
     async def subscribe_to_push_notifications(
-        subscription_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        subscription_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Subscribe to push notifications"""
         try:
             from backend.services.notifications import get_notification_service
@@ -1027,8 +1028,8 @@ def create_background_sync_endpoint(prefix: str = "/api"):
     """Create background sync endpoint with specified prefix"""
 
     async def register_background_sync_api(
-        sync_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        sync_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Register background sync"""
         try:
             from backend.services.sync_service import get_sync_service
@@ -1046,7 +1047,7 @@ def create_background_sync_endpoint(prefix: str = "/api"):
 def create_offline_data_endpoint(prefix: str = "/api"):
     """Create offline data endpoint with specified prefix"""
 
-    async def get_offline_data_api() -> Dict[str, Any]:
+    async def get_offline_data_api() -> dict[str, Any]:
         """Get offline data for mobile app"""
         try:
             from backend.services.offline_data import get_offline_data_service
@@ -1070,7 +1071,7 @@ def create_health_endpoint(prefix: str = "/api"):
     """Create health endpoint with rate limiting"""
 
     @rate_limit(max_requests=default_rate_limit, window_seconds=60)
-    async def health_check(request: Request) -> Dict[str, str]:
+    async def health_check(request: Request) -> dict[str, str]:
         return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
     return health_check
@@ -1080,7 +1081,7 @@ def create_version_endpoint(prefix: str = "/api"):
     """Create version endpoint with rate limiting"""
 
     @rate_limit(max_requests=default_rate_limit, window_seconds=60)
-    async def version(request: Request) -> Dict[str, str]:
+    async def version(request: Request) -> dict[str, str]:
         return {"version": "1.0.0", "timestamp": datetime.now().isoformat()}
 
     return version
@@ -1089,7 +1090,7 @@ def create_version_endpoint(prefix: str = "/api"):
 def create_comprehensive_health_endpoint(prefix: str = "/api"):
     """Create comprehensive health endpoint with specified prefix"""
 
-    async def comprehensive_health_check() -> Dict[str, Any]:
+    async def comprehensive_health_check() -> dict[str, Any]:
         """Comprehensive health check"""
         return {
             "status": "healthy",
@@ -1108,7 +1109,7 @@ def create_comprehensive_health_endpoint(prefix: str = "/api"):
 def create_features_endpoint(prefix: str = "/api"):
     """Create features endpoint with specified prefix"""
 
-    async def get_available_features() -> Dict[str, Any]:
+    async def get_available_features() -> dict[str, Any]:
         """Get available features"""
         return {
             "features": [
@@ -1133,7 +1134,7 @@ def create_features_endpoint(prefix: str = "/api"):
 def create_live_data_status_endpoint(prefix: str = "/api"):
     """Create live data status endpoint with specified prefix"""
 
-    async def get_live_data_status() -> Dict[str, Any]:
+    async def get_live_data_status() -> dict[str, Any]:
         """Get live data status"""
         try:
             return {
@@ -1157,7 +1158,7 @@ def create_live_data_status_endpoint(prefix: str = "/api"):
 def create_login_endpoint(prefix: str = "/api"):
     """Create login endpoint with specified prefix"""
 
-    async def login(credentials: Dict[str, str]) -> Dict[str, Any]:
+    async def login(credentials: dict[str, str]) -> dict[str, Any]:
         """User login"""
         try:
             from backend.services.auth_service import get_auth_service
@@ -1177,7 +1178,7 @@ def create_login_endpoint(prefix: str = "/api"):
 def create_logout_endpoint(prefix: str = "/api"):
     """Create logout endpoint with specified prefix"""
 
-    async def logout() -> Dict[str, Any]:
+    async def logout() -> dict[str, Any]:
         """User logout"""
         try:
             from backend.services.auth_service import get_auth_service
@@ -1195,7 +1196,7 @@ def create_logout_endpoint(prefix: str = "/api"):
 def create_refresh_token_endpoint(prefix: str = "/api"):
     """Create refresh token endpoint with specified prefix"""
 
-    async def refresh_token() -> Dict[str, Any]:
+    async def refresh_token() -> dict[str, Any]:
         """Refresh authentication token"""
         try:
             from backend.services.auth_service import get_auth_service
@@ -1218,7 +1219,7 @@ def create_refresh_token_endpoint(prefix: str = "/api"):
 def create_market_data_endpoint(prefix: str = "/api"):
     """Create market data endpoint with specified prefix"""
 
-    async def get_market_data(symbol: str) -> Dict[str, Any]:
+    async def get_market_data(symbol: str) -> dict[str, Any]:
         """Get market data for a specific symbol"""
         try:
             # Validate symbol format: only uppercase letters, 2-10 chars
@@ -1290,7 +1291,7 @@ def create_market_data_endpoint(prefix: str = "/api"):
 def create_all_market_data_endpoint(prefix: str = "/api"):
     """Create all market data endpoint with specified prefix"""
 
-    async def get_all_market_data() -> Dict[str, Any]:
+    async def get_all_market_data() -> dict[str, Any]:
         try:
             # Get real market data from persistent cache
             from backend.modules.ai.persistent_cache import get_persistent_cache
@@ -1347,7 +1348,7 @@ def create_all_market_data_endpoint(prefix: str = "/api"):
 def create_market_summary_endpoint(prefix: str = "/api"):
     """Create market summary endpoint with specified prefix"""
 
-    async def get_market_summary() -> Dict[str, Any]:
+    async def get_market_summary() -> dict[str, Any]:
         try:
             # Get real market summary from persistent cache
             from backend.modules.ai.persistent_cache import get_persistent_cache
@@ -1431,7 +1432,7 @@ def create_market_summary_endpoint(prefix: str = "/api"):
 def create_trading_status_endpoint(prefix: str = "/api"):
     """Create trading status endpoint with specified prefix"""
 
-    async def get_trading_status() -> Dict[str, Any]:
+    async def get_trading_status() -> dict[str, Any]:
         """Get trading status"""
         try:
             # Use global instance for test patching
@@ -1491,7 +1492,7 @@ def create_trading_orders_endpoint(prefix: str = "/api"):
 
     async def create_trading_order(
         response: Response, order: TradingOrder, request: Request
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create a trading order"""
         try:
             # Payload size check (1MB limit)
@@ -1557,7 +1558,7 @@ def create_trading_orders_endpoint(prefix: str = "/api"):
 def create_get_order_endpoint(prefix: str = "/api"):
     """Create get order endpoint with specified prefix"""
 
-    async def get_order(order_id: str) -> Dict[str, Any]:
+    async def get_order(order_id: str) -> dict[str, Any]:
         """Get order by ID"""
         try:
             order_manager = get_order_manager()
@@ -1588,7 +1589,7 @@ def create_get_order_endpoint(prefix: str = "/api"):
 def create_ai_status_endpoint(prefix: str = "/api"):
     """Create AI status endpoint with specified prefix"""
 
-    async def get_ai_status() -> Dict[str, Any]:
+    async def get_ai_status() -> dict[str, Any]:
         """Get AI status"""
         try:
             from backend.services.ai_service import get_ai_service
@@ -1606,7 +1607,7 @@ def create_ai_status_endpoint(prefix: str = "/api"):
 def create_ai_predictions_endpoint(prefix: str = "/api"):
     """Create AI predictions endpoint with specified prefix"""
 
-    async def get_ai_predictions() -> Dict[str, Any]:
+    async def get_ai_predictions() -> dict[str, Any]:
         from backend.utils.exceptions import AIException
 
         try:
@@ -1633,7 +1634,7 @@ def create_ai_predictions_endpoint(prefix: str = "/api"):
 def create_analytics_performance_endpoint(prefix: str = "/api"):
     """Create analytics performance endpoint with specified prefix"""
 
-    async def get_analytics_performance() -> Dict[str, Any]:
+    async def get_analytics_performance() -> dict[str, Any]:
         """Get analytics performance metrics"""
         try:
             # Use global instance for test patching
@@ -1663,8 +1664,8 @@ def create_analytics_history_endpoint(prefix: str = "/api"):
     """Create analytics history endpoint with specified prefix"""
 
     async def get_analytics_history(
-        start_date: Optional[str] = None, end_date: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+        start_date: str | None = None, end_date: str | None = None
+    ) -> list[dict[str, Any]]:
         """Get trading history"""
         try:
             # Validate date format if provided
@@ -1716,8 +1717,8 @@ def create_auth_register_endpoint(prefix: str = "/api"):
     """Create auth register endpoint with specified prefix"""
 
     async def register_user(
-        registration_data: Dict[str, str],
-    ) -> Dict[str, Any]:
+        registration_data: dict[str, str],
+    ) -> dict[str, Any]:
         """Register a new user"""
         try:
             from auth import register_user as auth_register_user
@@ -2127,7 +2128,7 @@ def custom_404_handler(request: Request, exc: StarletteHTTPException):
 def create_error_logging_endpoint(prefix: str = "/api"):
     """Create error logging endpoint with specified prefix"""
 
-    async def log_error(error_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def log_error(error_data: dict[str, Any]) -> dict[str, Any]:
         """Log error from frontend"""
         try:
             # Log error to file and database

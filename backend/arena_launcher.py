@@ -1,11 +1,11 @@
-﻿import os
-import json
-import time
-import redis
-from typing import Dict, List
-import docker
-from concurrent.futures import ThreadPoolExecutor
+﻿import json
 import logging
+import os
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+import docker
+import redis
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -24,8 +24,8 @@ class StrategyArena:
         strategy_name: str,
         capital: float,
         timeframe: str = "1h",
-        symbols: List[str] = None,
-    ) -> Dict:
+        symbols: list[str] = None,
+    ) -> dict:
         """Create individual strategy configuration"""
         if symbols is None:
             symbols = ["BTC/USDT", "ETH/USDT", "BNB/USDT"]
@@ -44,7 +44,7 @@ class StrategyArena:
 
         return config
 
-    def launch_strategy_container(self, strategy_name: str, config: Dict) -> str:
+    def launch_strategy_container(self, strategy_name: str, config: dict) -> str:
         """Launch individual Docker container for strategy"""
         try:
             # Create strategy directory
@@ -104,7 +104,7 @@ class StrategyArena:
             logger.error(f"Failed to launch strategy {strategy_name}: {e}")
             return None
 
-    def generate_strategy_army(self, base_capital: float = 1000.0) -> List[Dict]:
+    def generate_strategy_army(self, base_capital: float = 1000.0) -> list[dict]:
         """Generate 100+ diverse strategies"""
         strategies = []
 
@@ -238,7 +238,7 @@ class StrategyArena:
         logger.info(f"ðŸŽ¯ Arena launched with {len(self.active_containers)} active strategies")
         return len(self.active_containers)
 
-    def get_leaderboard(self, limit: int = 20) -> List[Dict]:
+    def get_leaderboard(self, limit: int = 20) -> list[dict]:
         """Get current strategy leaderboard"""
         try:
             leaderboard_data = self.redis_client.hgetall(self.leaderboard_key)

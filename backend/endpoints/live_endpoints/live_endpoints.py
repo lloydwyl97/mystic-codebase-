@@ -1,5 +1,4 @@
-﻿# -*- coding: utf-8 -*-
-"""
+﻿"""
 Live Endpoints Module - All Live Data, No Mock Data
 
 This module provides all endpoints with live data from real APIs.

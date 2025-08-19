@@ -1,16 +1,17 @@
+import asyncio
+import os
+import time
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from prometheus_client import (
-    Counter,
-    Histogram,
-    Gauge,
-    generate_latest,
     CONTENT_TYPE_LATEST,
+    Counter,
+    Gauge,
+    Histogram,
+    generate_latest,
 )
-import time
-import os
-import asyncio
 
 app = FastAPI(
     title="Mystic 5G Slice Manager",

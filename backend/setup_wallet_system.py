@@ -6,7 +6,6 @@ Initializes database tables and sample data for the real-time wallet panel
 
 import json
 import sqlite3
-from datetime import datetime
 from datetime import datetime, timezone
 
 

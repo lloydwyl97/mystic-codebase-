@@ -1,5 +1,6 @@
-﻿import openai
-import os
+﻿import os
+
+import openai
 
 
 def generate_strategy_code(prompt):

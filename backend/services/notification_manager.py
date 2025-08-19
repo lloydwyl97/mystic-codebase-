@@ -8,7 +8,7 @@ formatting, and channel management.
 import json
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class NotificationManager:
         self.notification_levels = ["info", "warning", "error", "critical"]
 
     def validate_notification_data(
-        self, title: str, message: str, level: str, channels: List[str]
+        self, title: str, message: str, level: str, channels: list[str]
     ) -> tuple[bool, str]:
         """Validate notification data before processing."""
         # Validate title
@@ -57,8 +57,8 @@ class NotificationManager:
         return f"notification_{datetime.now(timezone.timezone.utc).timestamp()}"
 
     def create_notification_object(
-        self, title: str, message: str, level: str, channels: List[str]
-    ) -> Dict[str, Any]:
+        self, title: str, message: str, level: str, channels: list[str]
+    ) -> dict[str, Any]:
         """Create a notification object with proper formatting."""
         valid_channels = [c for c in channels if c in self.notification_channels]
 
@@ -72,11 +72,11 @@ class NotificationManager:
             "read": False,
         }
 
-    def format_notification_for_storage(self, notification: Dict[str, Any]) -> str:
+    def format_notification_for_storage(self, notification: dict[str, Any]) -> str:
         """Format notification for Redis storage."""
         return json.dumps(notification)
 
-    def parse_notification_from_storage(self, notification_data: str) -> Optional[Dict[str, Any]]:
+    def parse_notification_from_storage(self, notification_data: str) -> dict[str, Any] | None:
         """Parse notification from Redis storage."""
         try:
             return json.loads(notification_data)
@@ -84,7 +84,7 @@ class NotificationManager:
             logger.error(f"Error parsing notification data: {str(e)}")
             return None
 
-    def get_notification_summary(self, notifications: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def get_notification_summary(self, notifications: list[dict[str, Any]]) -> dict[str, Any]:
         """Get summary statistics for notifications."""
         total_count = len(notifications)
         unread_count = sum(1 for n in notifications if not n.get("read", False))
@@ -103,11 +103,11 @@ class NotificationManager:
 
     def filter_notifications(
         self,
-        notifications: List[Dict[str, Any]],
-        level: Optional[str] = None,
-        read_status: Optional[bool] = None,
-        limit: Optional[int] = None,
-    ) -> List[Dict[str, Any]]:
+        notifications: list[dict[str, Any]],
+        level: str | None = None,
+        read_status: bool | None = None,
+        limit: int | None = None,
+    ) -> list[dict[str, Any]]:
         """Filter notifications based on criteria."""
         filtered = notifications
 
@@ -126,10 +126,10 @@ class NotificationManager:
         return filtered
 
     def mark_notification_read(
-        self, notifications: List[Dict[str, Any]], notification_id: str
-    ) -> tuple[bool, List[Dict[str, Any]]]:
+        self, notifications: list[dict[str, Any]], notification_id: str
+    ) -> tuple[bool, list[dict[str, Any]]]:
         """Mark a notification as read and return updated list."""
-        updated_notifications: List[Dict[str, Any]] = []
+        updated_notifications: list[dict[str, Any]] = []
         found = False
 
         for notification in notifications:
@@ -142,8 +142,8 @@ class NotificationManager:
         return found, updated_notifications
 
     def cleanup_old_notifications(
-        self, notifications: List[Dict[str, Any]], max_age_hours: int = 24
-    ) -> List[Dict[str, Any]]:
+        self, notifications: list[dict[str, Any]], max_age_hours: int = 24
+    ) -> list[dict[str, Any]]:
         """Remove notifications older than specified age."""
         cutoff_time = datetime.now(timezone.timezone.utc).timestamp() - (max_age_hours * 3600)
 

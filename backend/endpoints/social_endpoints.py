@@ -5,7 +5,7 @@ Handles all social trading-related API endpoints including leaders and feed.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -25,7 +25,7 @@ router = APIRouter()
 
 
 @router.get("/leaders")
-async def get_social_leaders() -> Dict[str, Any]:
+async def get_social_leaders() -> dict[str, Any]:
     """Get social trading leaders"""
     try:
         if social_trading_manager and hasattr(social_trading_manager, "get_leaders"):
@@ -40,7 +40,7 @@ async def get_social_leaders() -> Dict[str, Any]:
 
 
 @router.get("/feed")
-async def get_social_feed() -> Dict[str, Any]:
+async def get_social_feed() -> dict[str, Any]:
     """Get social trading feed"""
     try:
         if social_trading_manager and hasattr(social_trading_manager, "get_social_feed"):

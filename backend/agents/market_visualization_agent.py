@@ -4,19 +4,20 @@ Handles market visualization and chart generation for trading analysis
 """
 
 import asyncio
+import base64
+import io
 import json
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
 import os
 import sys
-import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+from typing import Any
+
 import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
 from PIL import Image
-import io
-import base64
 
 # Make all imports live (F401):
 _ = np.array([0])
@@ -184,7 +185,7 @@ class MarketVisualizationAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for chart generation"""
         try:
             symbol = market_data.get("symbol")
@@ -281,7 +282,7 @@ class MarketVisualizationAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error generating charts for {symbol}: {e}")
 
-    async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_symbol_market_data(self, symbol: str) -> list[dict[str, Any]]:
         """Get market data for a symbol"""
         try:
             # Get from cache first
@@ -312,8 +313,8 @@ class MarketVisualizationAgent(BaseAgent):
             return []
 
     async def generate_chart_type(
-        self, symbol: str, market_data: List[Dict[str, Any]], chart_type: str
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, market_data: list[dict[str, Any]], chart_type: str
+    ) -> dict[str, Any] | None:
         """Generate a specific chart type"""
         try:
             if chart_type == "candlestick":
@@ -334,8 +335,8 @@ class MarketVisualizationAgent(BaseAgent):
             return None
 
     async def generate_candlestick_chart(
-        self, symbol: str, market_data: List[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, market_data: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
         """Generate candlestick chart"""
         try:
             # Convert to DataFrame
@@ -390,8 +391,8 @@ class MarketVisualizationAgent(BaseAgent):
             return None
 
     async def generate_line_chart(
-        self, symbol: str, market_data: List[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, market_data: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
         """Generate line chart"""
         try:
             # Convert to DataFrame
@@ -434,8 +435,8 @@ class MarketVisualizationAgent(BaseAgent):
             return None
 
     async def generate_volume_chart(
-        self, symbol: str, market_data: List[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, market_data: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
         """Generate volume chart"""
         try:
             # Convert to DataFrame
@@ -478,8 +479,8 @@ class MarketVisualizationAgent(BaseAgent):
             return None
 
     async def generate_heatmap_chart(
-        self, symbol: str, market_data: List[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, market_data: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
         """Generate heatmap chart"""
         try:
             # Convert to DataFrame
@@ -531,8 +532,8 @@ class MarketVisualizationAgent(BaseAgent):
             return None
 
     async def generate_correlation_chart(
-        self, symbol: str, market_data: List[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, symbol: str, market_data: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
         """Generate correlation chart"""
         try:
             # Convert to DataFrame
@@ -596,7 +597,7 @@ class MarketVisualizationAgent(BaseAgent):
             print(f"âŒ Error converting figure to base64: {e}")
             return ""
 
-    async def broadcast_chart_generation(self, symbol: str, charts: Dict[str, Any]):
+    async def broadcast_chart_generation(self, symbol: str, charts: dict[str, Any]):
         """Broadcast chart generation to other agents"""
         try:
             chart_update = {
@@ -616,7 +617,7 @@ class MarketVisualizationAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting chart generation: {e}")
 
-    async def handle_generate_chart(self, message: Dict[str, Any]):
+    async def handle_generate_chart(self, message: dict[str, Any]):
         """Handle manual chart generation request"""
         try:
             symbol = message.get("symbol")
@@ -663,7 +664,7 @@ class MarketVisualizationAgent(BaseAgent):
             print(f"âŒ Error handling chart generation request: {e}")
             await self.broadcast_error(f"Chart generation error: {e}")
 
-    async def handle_get_visual_analysis(self, message: Dict[str, Any]):
+    async def handle_get_visual_analysis(self, message: dict[str, Any]):
         """Handle visual analysis request"""
         try:
             symbol = message.get("symbol")

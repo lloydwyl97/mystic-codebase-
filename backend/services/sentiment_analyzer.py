@@ -7,7 +7,7 @@ import asyncio
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class AdvancedSentimentAnalyzer:
     """Advanced sentiment analysis for crypto markets"""
 
     def __init__(self):
-        self.sentiment_cache: Dict[str, SentimentScore] = {}
+        self.sentiment_cache: dict[str, SentimentScore] = {}
         self.cache_duration = timedelta(minutes=5)
         self.api_keys = {
             "twitter": None,
@@ -244,7 +244,7 @@ class AdvancedSentimentAnalyzer:
             logger.error(f"Error in whale sentiment analysis: {e}")
             return 0.0
 
-    def get_sentiment_summary(self, symbol: str) -> Dict[str, Any]:
+    def get_sentiment_summary(self, symbol: str) -> dict[str, Any]:
         """Get sentiment analysis summary"""
         cache_key = f"{symbol}_{datetime.now().strftime('%Y%m%d_%H')}"
         if cache_key in self.sentiment_cache:

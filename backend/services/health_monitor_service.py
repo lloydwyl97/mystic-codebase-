@@ -3,12 +3,13 @@ Health Monitor Service
 Handles system health monitoring and diagnostics
 """
 
-import logging
-import psutil
 import asyncio
-from typing import Dict, Any, List
-from datetime import datetime, timezone
+import logging
 import platform
+from datetime import datetime, timezone
+from typing import Any
+
+import psutil
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class HealthMonitorService:
         self.last_check = None
         logger.info("âœ… HealthMonitorService initialized")
 
-    async def get_system_health(self) -> Dict[str, Any]:
+    async def get_system_health(self) -> dict[str, Any]:
         """Get comprehensive system health status"""
         try:
             # Get system metrics
@@ -71,7 +72,7 @@ class HealthMonitorService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def check_service_health(self, service_name: str) -> Dict[str, Any]:
+    async def check_service_health(self, service_name: str) -> dict[str, Any]:
         """Check health of a specific service"""
         try:
             # Simulate service health check
@@ -97,7 +98,7 @@ class HealthMonitorService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def get_all_services_health(self) -> Dict[str, Any]:
+    async def get_all_services_health(self) -> dict[str, Any]:
         """Get health status of all services"""
         try:
             services = [
@@ -127,7 +128,7 @@ class HealthMonitorService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def self_heal(self) -> Dict[str, Any]:
+    async def self_heal(self) -> dict[str, Any]:
         """Perform self-healing operations"""
         try:
             healing_actions = []
@@ -153,7 +154,7 @@ class HealthMonitorService:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def get_health_alerts(self) -> List[Dict[str, Any]]:
+    async def get_health_alerts(self) -> list[dict[str, Any]]:
         """Get current health alerts"""
         alerts = []
 

@@ -1,7 +1,8 @@
 import streamlit as st
+
 from mystic_ui import api_client
-from mystic_ui.top10_resolver import resolve_top10
 from mystic_ui import ui_common as ui
+from mystic_ui.top10_resolver import resolve_top10
 
 # set_page_config is centralized in mystic_ui/app.py
 st.title("Mystic Super Dashboard BinanceUS")

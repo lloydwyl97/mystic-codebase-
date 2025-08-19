@@ -6,19 +6,20 @@ Contains portfolio views, positions, and summary endpoints.
 
 import logging
 import time
-from datetime import timezone, datetime
-from typing import Any, Dict, Union
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 
-# Import real services
-from backend.services.redis_service import get_redis_service
-
-# import backend.services as services
-from backend.services.portfolio_service import portfolio_service
 from backend.config import settings
 from backend.services.binance_trading import get_binance_trading_service
 from backend.services.coinbase_trading import get_coinbase_trading_service
+
+# import backend.services as services
+from backend.services.portfolio_service import portfolio_service
+
+# Import real services
+from backend.services.redis_service import get_redis_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -211,7 +212,7 @@ async def get_portfolio(portfolio_id: str):
 
 
 @router.get("/portfolio/analysis")
-async def get_portfolio_analysis() -> Dict[str, Union[str, Any]]:
+async def get_portfolio_analysis() -> dict[str, str | Any]:
     """Get comprehensive portfolio analysis"""
     try:
         # Get live portfolio data
@@ -245,7 +246,7 @@ async def get_portfolio_analysis() -> Dict[str, Union[str, Any]]:
 
 
 @router.get("/api/portfolio/balance")
-async def get_portfolio_balance() -> Dict[str, Any]:
+async def get_portfolio_balance() -> dict[str, Any]:
     """Get portfolio balance with live data"""
     try:
         # Get live balance from exchanges
@@ -317,7 +318,7 @@ async def get_portfolio_balance() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio/history")
-async def get_portfolio_history() -> Dict[str, Any]:
+async def get_portfolio_history() -> dict[str, Any]:
     """Get portfolio history and performance"""
     try:
         # Get live trading history from exchanges
@@ -387,7 +388,7 @@ async def get_portfolio_history() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio/performance")
-async def get_portfolio_performance() -> Dict[str, Any]:
+async def get_portfolio_performance() -> dict[str, Any]:
     """Get portfolio performance metrics"""
     try:
         # Calculate performance metrics from live data
@@ -411,7 +412,7 @@ async def get_portfolio_performance() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio/detailed")
-async def get_portfolio_detailed() -> Dict[str, Any]:
+async def get_portfolio_detailed() -> dict[str, Any]:
     """Get detailed portfolio information"""
     try:
         # Get comprehensive portfolio data
@@ -434,7 +435,7 @@ async def get_portfolio_detailed() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio/allocation")
-async def get_portfolio_allocation() -> Dict[str, Any]:
+async def get_portfolio_allocation() -> dict[str, Any]:
     """Get portfolio allocation breakdown"""
     try:
         # Get live allocation data
@@ -469,7 +470,7 @@ async def get_portfolio_allocation() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio/transactions")
-async def get_portfolio_transactions() -> Dict[str, Any]:
+async def get_portfolio_transactions() -> dict[str, Any]:
     """Get portfolio transaction history"""
     try:
         # Get live transaction data from exchanges

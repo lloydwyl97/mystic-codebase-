@@ -4,13 +4,14 @@ Environment Verification Script
 Checks all critical components before launch
 """
 
+import logging
 import os
 import sys
-import requests
-import psutil
-import logging
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Any
+
+import psutil
+import requests
 
 # Configure logging
 logging.basicConfig(
@@ -25,7 +26,7 @@ logging.basicConfig(
 
 class EnvironmentVerifier:
     def __init__(self):
-        self.checks: Dict[str, Any] = {
+        self.checks: dict[str, Any] = {
             "system": self.check_system,
             "network": self.check_network,
             "database": self.check_database,
@@ -35,9 +36,9 @@ class EnvironmentVerifier:
             "backend": self.check_backend,
             "security": self.check_security,
         }
-        self.results: Dict[str, Dict[str, Any]] = {}
+        self.results: dict[str, dict[str, Any]] = {}
 
-    def check_system(self) -> Dict[str, Any]:
+    def check_system(self) -> dict[str, Any]:
         """Check system resources"""
         try:
             cpu_percent = psutil.cpu_percent(interval=1)
@@ -57,7 +58,7 @@ class EnvironmentVerifier:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    def check_network(self) -> Dict[str, Any]:
+    def check_network(self) -> dict[str, Any]:
         """Check network connectivity"""
         try:
             # Test external connectivity
@@ -69,7 +70,7 @@ class EnvironmentVerifier:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    def check_database(self) -> Dict[str, Any]:
+    def check_database(self) -> dict[str, Any]:
         """Check database connection"""
         try:
             # Add your database check logic here
@@ -77,7 +78,7 @@ class EnvironmentVerifier:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    def check_api(self) -> Dict[str, Any]:
+    def check_api(self) -> dict[str, Any]:
         """Check API endpoints"""
         try:
             endpoints = [
@@ -98,7 +99,7 @@ class EnvironmentVerifier:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    def check_websocket(self) -> Dict[str, Any]:
+    def check_websocket(self) -> dict[str, Any]:
         """Check WebSocket connection"""
         try:
             # Add your WebSocket check logic here
@@ -106,7 +107,7 @@ class EnvironmentVerifier:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    def check_frontend(self) -> Dict[str, Any]:
+    def check_frontend(self) -> dict[str, Any]:
         """Check frontend build"""
         try:
             frontend_dir = "frontend/dist"
@@ -125,7 +126,7 @@ class EnvironmentVerifier:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    def check_backend(self) -> Dict[str, Any]:
+    def check_backend(self) -> dict[str, Any]:
         """Check backend services"""
         try:
             # Add your backend check logic here
@@ -133,7 +134,7 @@ class EnvironmentVerifier:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    def check_security(self) -> Dict[str, Any]:
+    def check_security(self) -> dict[str, Any]:
         """Check security configurations"""
         try:
             required_env_vars = [
@@ -156,7 +157,7 @@ class EnvironmentVerifier:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    def run_all_checks(self) -> Dict[str, Any]:
+    def run_all_checks(self) -> dict[str, Any]:
         """Run all verification checks"""
         logging.info("Starting environment verification...")
 
@@ -169,7 +170,7 @@ class EnvironmentVerifier:
 
     def generate_report(self) -> str:
         """Generate verification report"""
-        report: List[str] = []
+        report: list[str] = []
         report.append("=" * 50)
         report.append("Environment Verification Report")
         report.append("=" * 50)

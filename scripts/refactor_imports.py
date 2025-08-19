@@ -1,4 +1,6 @@
-import os, re, sys, pathlib
+import os
+import pathlib
+import re
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 

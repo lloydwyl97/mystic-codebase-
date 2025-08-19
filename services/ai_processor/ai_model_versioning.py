@@ -4,16 +4,19 @@ Advanced model versioning, tracking, and management system
 """
 
 import asyncio
+import hashlib
 import json
 import os
-import redis
 import shutil
-import hashlib
-from datetime import datetime
-from typing import Dict, Any, List, Optional
 import sqlite3
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, cast
+
+import redis
 from dotenv import load_dotenv
+
+from utils.redis_helpers import to_str_list
 
 # Load environment variables
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -27,18 +30,18 @@ class ModelVersion:
     model_name: str
     model_type: str
     file_path: str
-    metadata: Dict[str, Any]
-    performance_metrics: Dict[str, Any]
+    metadata: dict[str, Any]
+    performance_metrics: dict[str, Any]
     created_at: str
     created_by: str
     status: str = "ACTIVE"
-    parent_version: Optional[str] = None
-    tags: List[str] = field(default_factory=list)
+    parent_version: str | None = None
+    tags: list[str] = field(default_factory=list)
     description: str = ""
     file_hash: str = ""
     file_size: int = 0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "version_id": self.version_id,
@@ -58,7 +61,7 @@ class ModelVersion:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ModelVersion":
+    def from_dict(cls, data: dict[str, Any]) -> "ModelVersion":
         """Create from dictionary"""
         return cls(**data)
 
@@ -160,7 +163,8 @@ class ModelVersioningService:
         while self.running:
             try:
                 # Check for new models in Redis
-                new_model = self.redis_client.lpop("new_models_queue")
+                new_model_raw = self.redis_client.lpop("new_models_queue")
+                new_model = cast(str | None, new_model_raw if isinstance(new_model_raw, str) else None)
 
                 if new_model:
                     model_data = json.loads(new_model)
@@ -178,7 +182,7 @@ class ModelVersioningService:
                 print(f"❌ Error in model monitoring: {e}")
                 await asyncio.sleep(60)
 
-    async def version_model(self, model_data: Dict[str, Any]):
+    async def version_model(self, model_data: dict[str, Any]):
         """Create a new version of a model"""
         try:
             model_name = model_data.get("name", "Unknown")
@@ -319,7 +323,7 @@ class ModelVersioningService:
             all_versions = []
 
             # Get all version IDs
-            version_ids = self.redis_client.lrange("model_versions", 0, -1)
+            version_ids = to_str_list(self.redis_client.lrange("model_versions", 0, -1))
 
             for version_id in version_ids:
                 version_data = self.redis_client.get(f"model_version:{version_id}")
@@ -362,7 +366,7 @@ class ModelVersioningService:
         """Check for model updates and create new versions"""
         try:
             # Get active models
-            active_models = self.redis_client.lrange("ai_strategies", 0, -1)
+            active_models = to_str_list(self.redis_client.lrange("ai_strategies", 0, -1))
 
             for model_id in active_models:
                 model_data = self.redis_client.get(f"ai_strategy:{model_id}")
@@ -376,7 +380,7 @@ class ModelVersioningService:
         except Exception as e:
             print(f"Error checking model updates: {e}")
 
-    async def should_version_model(self, model: Dict[str, Any]) -> bool:
+    async def should_version_model(self, model: dict[str, Any]) -> bool:
         """Check if model should be versioned"""
         try:
             model_path = model.get("model_path", "")
@@ -408,7 +412,7 @@ class ModelVersioningService:
             return False
 
     def has_significant_improvement(
-        self, current: Dict[str, Any], previous: Dict[str, Any]
+        self, current: dict[str, Any], previous: dict[str, Any]
     ) -> bool:
         """Check if performance has improved significantly"""
         try:
@@ -479,7 +483,7 @@ class ModelVersioningService:
         except Exception as e:
             print(f"Error cleaning up old versions: {e}")
 
-    async def get_model_versions(self, model_name: str = None) -> List[ModelVersion]:
+    async def get_model_versions(self, model_name: str | None = None) -> list[ModelVersion]:
         """Get model versions"""
         try:
             conn = sqlite3.connect(self.db_path)
@@ -532,7 +536,7 @@ class ModelVersioningService:
             print(f"Error getting model versions: {e}")
             return []
 
-    async def get_model_lineage(self, version_id: str) -> List[Dict[str, Any]]:
+    async def get_model_lineage(self, version_id: str) -> list[dict[str, Any]]:
         """Get model lineage"""
         try:
             conn = sqlite3.connect(self.db_path)
@@ -573,7 +577,7 @@ class ModelVersioningService:
 
     async def deploy_model(
         self, version_id: str, environment: str = "production"
-    ) -> str:
+    ) -> str | None:
         """Deploy a model version"""
         try:
             # Get model version
@@ -627,7 +631,7 @@ class ModelVersioningService:
 
     async def compare_versions(
         self, version1_id: str, version2_id: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Compare two model versions"""
         try:
             versions = await self.get_model_versions()

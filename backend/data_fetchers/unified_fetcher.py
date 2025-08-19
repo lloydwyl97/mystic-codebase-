@@ -4,14 +4,15 @@ Fetches live prices from multiple exchanges with rate limiting and stores in per
 """
 
 import asyncio
-import aiohttp
 import json
-import time
 import logging
-from typing import Dict, Any, Optional
-from pathlib import Path
-import sys
 import os
+import sys
+import time
+from pathlib import Path
+from typing import Any
+
+import aiohttp
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -32,14 +33,14 @@ class UnifiedFetcher:
             'kraken_us': {'requests': 1, 'window': 1},   # 1 req/sec
             'coingecko': {'requests': 50, 'window': 60}  # 50 req/min
         }
-        self.last_request = {exchange: 0 for exchange in self.rate_limits.keys()}
+        self.last_request = dict.fromkeys(self.rate_limits.keys(), 0)
         self._load_config()
 
     def _load_config(self):
         """Load symbols configuration"""
         try:
             config_path = Path(__file__).parent.parent / 'config' / 'symbols_config.json'
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 self.config = json.load(f)
             logger.info("âœ… Loaded symbols configuration")
         except Exception as e:
@@ -62,7 +63,7 @@ class UnifiedFetcher:
         self.last_request[exchange] = time.time()
 
     async def _make_request(self, session: aiohttp.ClientSession, url: str,
-                          headers: Optional[Dict] = None, timeout: int = 10) -> Optional[Dict]:
+                          headers: dict | None = None, timeout: int = 10) -> dict | None:
         """Make HTTP request with retry logic"""
         for attempt in range(3):
             try:
@@ -90,7 +91,7 @@ class UnifiedFetcher:
 
         return None
 
-    async def fetch_coinbase_prices(self, session: aiohttp.ClientSession) -> Dict[str, float]:
+    async def fetch_coinbase_prices(self, session: aiohttp.ClientSession) -> dict[str, float]:
         """Fetch prices from Coinbase US"""
         prices = {}
         symbols = self.config['exchanges']['coinbase_us']['symbols']
@@ -109,7 +110,7 @@ class UnifiedFetcher:
 
         return prices
 
-    async def fetch_binance_prices(self, session: aiohttp.ClientSession) -> Dict[str, float]:
+    async def fetch_binance_prices(self, session: aiohttp.ClientSession) -> dict[str, float]:
         """Fetch prices from Binance US"""
         prices = {}
         symbols = self.config['exchanges']['binance_us']['symbols']
@@ -127,7 +128,7 @@ class UnifiedFetcher:
 
         return prices
 
-    async def fetch_kraken_prices(self, session: aiohttp.ClientSession) -> Dict[str, float]:
+    async def fetch_kraken_prices(self, session: aiohttp.ClientSession) -> dict[str, float]:
         """Fetch prices from Kraken US"""
         prices = {}
         symbols = self.config['exchanges']['kraken_us']['symbols']
@@ -147,7 +148,7 @@ class UnifiedFetcher:
 
         return prices
 
-    async def fetch_coingecko_prices(self, session: aiohttp.ClientSession) -> Dict[str, float]:
+    async def fetch_coingecko_prices(self, session: aiohttp.ClientSession) -> dict[str, float]:
         """Fetch prices from CoinGecko"""
         prices = {}
         symbols = self.config['exchanges']['coingecko']['symbols']
@@ -185,7 +186,7 @@ class UnifiedFetcher:
 
         return prices
 
-    async def fetch_all_exchanges(self) -> Dict[str, Dict[str, float]]:
+    async def fetch_all_exchanges(self) -> dict[str, dict[str, float]]:
         """Fetch prices from all exchanges"""
         async with aiohttp.ClientSession() as session:
             tasks = [
@@ -200,7 +201,7 @@ class UnifiedFetcher:
             exchanges = ['coinbase_us', 'binance_us', 'kraken_us', 'coingecko']
             all_prices = {}
 
-            for exchange, result in zip(exchanges, results):
+            for exchange, result in zip(exchanges, results, strict=False):
                 if isinstance(result, Exception):
                     logger.error(f"âŒ {exchange} fetch failed: {result}")
                     all_prices[exchange] = {}
@@ -210,7 +211,7 @@ class UnifiedFetcher:
 
             return all_prices
 
-    def aggregate_prices(self, all_prices: Dict[str, Dict[str, float]]) -> Dict[str, float]:
+    def aggregate_prices(self, all_prices: dict[str, dict[str, float]]) -> dict[str, float]:
         """Aggregate prices from multiple exchanges using weighted average"""
         aggregated = {}
         symbol_mapping = self.config['symbol_mapping']
@@ -231,13 +232,13 @@ class UnifiedFetcher:
             if prices:
                 # Calculate weighted average
                 total_weight = sum(weights)
-                weighted_price = sum(p * w for p, w in zip(prices, weights)) / total_weight
+                weighted_price = sum(p * w for p, w in zip(prices, weights, strict=False)) / total_weight
                 aggregated[base_symbol] = weighted_price
                 logger.info(f"Aggregated {base_symbol}: ${weighted_price:.2f} from {len(prices)} exchanges")
 
         return aggregated
 
-    async def run_all(self) -> Dict[str, Any]:
+    async def run_all(self) -> dict[str, Any]:
         """Run the complete unified fetching process"""
         try:
             logger.info("ðŸš€ Starting unified data fetch from all exchanges...")
@@ -286,12 +287,12 @@ class UnifiedFetcher:
 unified_fetcher = UnifiedFetcher()
 
 
-async def run_all() -> Dict[str, Any]:
+async def run_all() -> dict[str, Any]:
     """Run the unified fetcher (async wrapper)"""
     return await unified_fetcher.run_all()
 
 
-def run_all_sync() -> Dict[str, Any]:
+def run_all_sync() -> dict[str, Any]:
     """Run the unified fetcher (synchronous wrapper)"""
     return asyncio.run(run_all())
 

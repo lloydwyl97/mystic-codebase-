@@ -4,22 +4,21 @@ import re
 import sys
 from glob import glob
 from importlib.metadata import distributions
-from typing import Dict, List, Set
 
 
-def list_requirement_files(root: str) -> List[str]:
-    files: Set[str] = set(glob(os.path.join(root, "**", "*requirements*.txt"), recursive=True))
+def list_requirement_files(root: str) -> list[str]:
+    files: set[str] = set(glob(os.path.join(root, "**", "*requirements*.txt"), recursive=True))
     req_txt = os.path.join(root, "requirements.txt")
     if os.path.exists(req_txt):
         files.add(req_txt)
     return sorted(files)
 
 
-def parse_requirements(file_path: str) -> List[str]:
-    packages: Set[str] = set()
+def parse_requirements(file_path: str) -> list[str]:
+    packages: set[str] = set()
     name_re = re.compile(r"^[A-Za-z0-9_.-]+")
     try:
-        with open(file_path, "r", encoding="utf-8", errors="ignore") as fh:
+        with open(file_path, encoding="utf-8", errors="ignore") as fh:
             for raw in fh:
                 line = raw.strip()
                 if not line or line.startswith("#"):
@@ -42,8 +41,8 @@ def parse_requirements(file_path: str) -> List[str]:
     return sorted(packages)
 
 
-def list_installed() -> Set[str]:
-    out: Set[str] = set()
+def list_installed() -> set[str]:
+    out: set[str] = set()
     for d in distributions():
         try:
             name = (d.metadata.get("Name") or "").strip()
@@ -59,14 +58,14 @@ def main() -> None:
     files = list_requirement_files(root)
     installed = list_installed()
 
-    report: Dict[str, object] = {
+    report: dict[str, object] = {
         "installed_count": len(installed),
         "files": {},
         "summary": {"total_files": 0, "unique_required": 0, "unique_missing": 0},
     }
 
-    all_required: Set[str] = set()
-    all_missing: Set[str] = set()
+    all_required: set[str] = set()
+    all_missing: set[str] = set()
 
     for f in files:
         pkgs = parse_requirements(f)

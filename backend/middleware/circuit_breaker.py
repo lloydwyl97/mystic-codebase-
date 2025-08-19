@@ -1,7 +1,7 @@
 ﻿import logging
 import time
 from collections import defaultdict
-from typing import Awaitable, Callable, Dict, Union
+from collections.abc import Awaitable, Callable
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
@@ -11,7 +11,7 @@ from enhanced_logging import log_operation_performance
 logger = logging.getLogger(__name__)
 
 # Circuit breaker state
-circuit_states: Dict[str, Dict[str, Union[int, float, bool]]] = defaultdict(
+circuit_states: dict[str, dict[str, int | float | bool]] = defaultdict(
     lambda: {"failures": 0, "last_failure": 0.0, "is_open": False}
 )
 FAILURE_THRESHOLD = 5
@@ -21,7 +21,7 @@ RESET_TIMEOUT = 60  # seconds
 @log_operation_performance("circuit_breaker")
 async def circuit_breaker_middleware(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
-) -> Union[Response, JSONResponse]:
+) -> Response | JSONResponse:
     """
     Middleware to implement circuit breaker pattern.
     """

@@ -9,13 +9,13 @@ Provides comprehensive health monitoring with:
 - Custom health checks
 """
 
-import time
 import asyncio
-import threading
 import logging
-from typing import Any, Dict, List, Optional
+import threading
+import time
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 try:
     import redis
@@ -50,15 +50,15 @@ class HealthCheckResult:
     message: str
     timestamp: float
     response_time: float
-    details: Optional[Dict[str, Any]] = None
+    details: dict[str, Any] | None = None
 
 
 class HealthChecker:
     """Comprehensive health checker"""
 
     def __init__(self):
-        self.health_results: Dict[str, List[HealthCheckResult]] = {}
-        self.failure_counts: Dict[str, int] = {}
+        self.health_results: dict[str, list[HealthCheckResult]] = {}
+        self.failure_counts: dict[str, int] = {}
         self.redis_client = None
         self.lock = threading.Lock()
 
@@ -322,7 +322,7 @@ class HealthChecker:
                 response_time=time.time() - start_time
             )
 
-    async def run_all_health_checks(self) -> Dict[str, HealthCheckResult]:
+    async def run_all_health_checks(self) -> dict[str, HealthCheckResult]:
         """Run all health checks"""
         checks = [
             self.check_system_health(),
@@ -368,7 +368,7 @@ class HealthChecker:
             else:
                 self.failure_counts[result.component] = 0
 
-    def get_health_summary(self) -> Dict[str, Any]:
+    def get_health_summary(self) -> dict[str, Any]:
         """Get comprehensive health summary"""
         with self.lock:
             summary = {
@@ -409,7 +409,7 @@ class HealthChecker:
 
             return summary
 
-    def get_component_history(self, component: str, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_component_history(self, component: str, hours: int = 24) -> list[dict[str, Any]]:
         """Get health check history for a component"""
         cutoff_time = time.time() - (hours * 3600)
 

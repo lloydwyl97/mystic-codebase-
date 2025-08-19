@@ -1,14 +1,13 @@
-﻿import os
-import openai
-import time
-import json
-import requests
+﻿import ast
 import hashlib
+import json
+import os
 import random
-from datetime import datetime
-from typing import Dict, Optional
-import ast
+import time
 from datetime import datetime, timezone
+
+import openai
+import requests
 
 STRATEGY_DIR = "./generated_modules"
 INTERVAL_HOURS = 3
@@ -77,7 +76,7 @@ def bollinger_strategy(df):
 }
 
 
-def get_live_market_data() -> Dict[str, float]:
+def get_live_market_data() -> dict[str, float]:
     """Get live market data for context"""
     try:
         # Binance API for live prices
@@ -132,7 +131,7 @@ def generate_strategy_hash(code: str) -> str:
     return hashlib.md5(code.encode()).hexdigest()[:8]
 
 
-def save_strategy_version(code: str, filename: str, metadata: Dict) -> None:
+def save_strategy_version(code: str, filename: str, metadata: dict) -> None:
     """Save strategy with version control"""
     # Save the strategy file
     filepath = os.path.join(STRATEGY_DIR, filename)
@@ -149,7 +148,7 @@ def save_strategy_version(code: str, filename: str, metadata: Dict) -> None:
         json.dump(metadata, f, indent=2)
 
 
-def run_basic_backtest(filename: str) -> Dict:
+def run_basic_backtest(filename: str) -> dict:
     """Run real backtest on generated strategy using live historical data"""
     try:
         import pandas as pd
@@ -177,7 +176,7 @@ def run_basic_backtest(filename: str) -> Dict:
         buy_signals = trades[trades == 1].index
         sell_signals = trades[trades == -1].index
         profit = 0
-        for buy, sell in zip(buy_signals, sell_signals):
+        for buy, sell in zip(buy_signals, sell_signals, strict=False):
             profit += df["close"][sell] - df["close"][buy]
         winrate = len(buy_signals) / max(len(trades), 1)
         return {
@@ -192,7 +191,7 @@ def run_basic_backtest(filename: str) -> Dict:
         return {"error": str(e)}
 
 
-def generate_prompt(template: Optional[str] = None) -> str:
+def generate_prompt(template: str | None = None) -> str:
     """Generate enhanced prompt with market context"""
     market_data = get_live_market_data()
     market_context = ""

@@ -8,9 +8,9 @@ import asyncio
 import random
 import time
 from dataclasses import dataclass
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, TypedDict
 
 import aiohttp  # type: ignore
 
@@ -26,7 +26,7 @@ class RateLimitConfig(TypedDict):
     requests_per_minute: int
     requests_per_coin: int
     interval_per_coin: int
-    last_request_time: Dict[str, float]
+    last_request_time: dict[str, float]
     request_count: int
     reset_time: float
 
@@ -73,7 +73,7 @@ class BinanceBot:
     def __init__(self):
         self.status = BotStatus.STOPPED
         self.is_running = False
-        self.session: Optional[Any] = None
+        self.session: Any | None = None
 
         # Binance US specific configuration
         self.binance_base_url = "https://api.binance.us/api/v3"
@@ -99,9 +99,9 @@ class BinanceBot:
         }
 
         # Data storage
-        self.market_data: Dict[str, CoinData] = {}
-        self.trade_history: List[Dict[str, Any]] = []
-        self.signals: List[TradeSignal] = []
+        self.market_data: dict[str, CoinData] = {}
+        self.trade_history: list[dict[str, Any]] = []
+        self.signals: list[TradeSignal] = []
 
         # Statistics tracking
         self.stats: StatsConfig = {
@@ -174,7 +174,7 @@ class BinanceBot:
         self.rate_limit["last_request_time"][coin] = current_time
         self.rate_limit["request_count"] += 1
 
-    async def fetch_coin_data(self, coin: str) -> Optional[CoinData]:
+    async def fetch_coin_data(self, coin: str) -> CoinData | None:
         """Fetch data for a single coin from Binance US"""
         if not self.session:
             logger.error("No HTTP session available")
@@ -193,7 +193,7 @@ class BinanceBot:
             # Make request
             async with self.session.get(url, params=params) as response:
                 if response.status == 200:
-                    data: Dict[str, Any] = await response.json()
+                    data: dict[str, Any] = await response.json()
 
                     # Update rate limit
                     await self.update_rate_limit(coin)
@@ -254,9 +254,9 @@ class BinanceBot:
             f"Binance US market data update completed. Updated {len(self.market_data)} coins"
         )
 
-    def generate_signals(self) -> List[TradeSignal]:
+    def generate_signals(self) -> list[TradeSignal]:
         """Generate trading signals based on market data using a real algorithm (SMA crossover)"""
-        signals: List[TradeSignal] = []
+        signals: list[TradeSignal] = []
 
         for coin, data in self.market_data.items():
             try:
@@ -373,7 +373,7 @@ class BinanceBot:
         finally:
             await self.close()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get current bot status"""
         return {
             "status": self.status.value,

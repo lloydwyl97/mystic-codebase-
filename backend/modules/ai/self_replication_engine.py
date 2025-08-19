@@ -3,14 +3,15 @@ Self-Replication Engine for Mystic AI Trading Platform
 Evolves trading strategies using genetic algorithms and agent performance optimization.
 """
 
-import logging
-import random
-import numpy as np
 import copy
-from typing import Dict, List, Any, Optional
-from datetime import datetime, timezone
-import sys
+import logging
 import os
+import random
+import sys
+from datetime import datetime, timezone
+from typing import Any
+
+import numpy as np
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class TradingAgent:
-    def __init__(self, agent_id: str, parameters: Dict[str, Any]):
+    def __init__(self, agent_id: str, parameters: dict[str, Any]):
         """Initialize a trading agent with specific parameters"""
         self.agent_id = agent_id
         self.parameters = parameters
@@ -39,7 +40,7 @@ class TradingAgent:
         self.generation = 0
         self.parent_id = None
 
-    def mutate_parameters(self, mutation_rate: float = 0.1) -> Dict[str, Any]:
+    def mutate_parameters(self, mutation_rate: float = 0.1) -> dict[str, Any]:
         """Mutate agent parameters slightly"""
         mutated = copy.deepcopy(self.parameters)
 
@@ -89,7 +90,7 @@ class TradingAgent:
             logger.error(f"Failed to calculate fitness for agent {self.agent_id}: {e}")
             return 0.0
 
-    def update_performance(self, trade_result: Dict[str, Any]):
+    def update_performance(self, trade_result: dict[str, Any]):
         """Update agent performance with trade result"""
         try:
             pnl = trade_result.get("pnl", 0.0)
@@ -129,7 +130,7 @@ class TradingAgent:
 class SelfReplicationEngine:
     def __init__(self):
         """Initialize the self-replication engine"""
-        self.agents: Dict[str, TradingAgent] = {}
+        self.agents: dict[str, TradingAgent] = {}
         self.generation_size = 20
         self.elite_size = 4
         self.crossover_rate = 0.7
@@ -170,7 +171,7 @@ class SelfReplicationEngine:
         except Exception as e:
             logger.error(f"Failed to initialize population: {e}")
 
-    def _select_parents(self) -> List[TradingAgent]:
+    def _select_parents(self) -> list[TradingAgent]:
         """Select parents for breeding using tournament selection"""
         try:
             tournament_size = 3
@@ -190,7 +191,7 @@ class SelfReplicationEngine:
             logger.error(f"Failed to select parents: {e}")
             return []
 
-    def _crossover_parameters(self, parent1: TradingAgent, parent2: TradingAgent) -> Dict[str, Any]:
+    def _crossover_parameters(self, parent1: TradingAgent, parent2: TradingAgent) -> dict[str, Any]:
         """Perform crossover between two parent agents"""
         try:
             child_params = {}
@@ -273,7 +274,7 @@ class SelfReplicationEngine:
         except Exception as e:
             logger.error(f"Failed to evolve generation: {e}")
 
-    def _mutate_parameters(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
+    def _mutate_parameters(self, parameters: dict[str, Any]) -> dict[str, Any]:
         """Mutate parameters with random noise"""
         try:
             mutated = copy.deepcopy(parameters)
@@ -304,7 +305,7 @@ class SelfReplicationEngine:
             logger.error(f"Failed to mutate parameters: {e}")
             return parameters
 
-    def _evaluate_agent(self, agent: TradingAgent, symbol: str) -> Dict[str, Any]:
+    def _evaluate_agent(self, agent: TradingAgent, symbol: str) -> dict[str, Any]:
         """Evaluate an agent's performance on historical data"""
         try:
             # Get price history from cache
@@ -377,7 +378,7 @@ class SelfReplicationEngine:
                 "error": str(e)
             }
 
-    def _generate_agent_signal(self, agent: TradingAgent, price_history: List[Dict]) -> str:
+    def _generate_agent_signal(self, agent: TradingAgent, price_history: list[dict]) -> str:
         """Generate trading signal using agent parameters"""
         try:
             if len(price_history) < 30:
@@ -431,7 +432,7 @@ class SelfReplicationEngine:
             logger.error(f"Failed to generate signal for agent {agent.agent_id}: {e}")
             return "HOLD"
 
-    def _calculate_rsi(self, prices: List[float], period: int = 14) -> List[float]:
+    def _calculate_rsi(self, prices: list[float], period: int = 14) -> list[float]:
         """Calculate RSI values"""
         try:
             if len(prices) < period + 1:
@@ -477,7 +478,7 @@ class SelfReplicationEngine:
             logger.error(f"Failed to calculate RSI: {e}")
             return []
 
-    def _calculate_ema(self, prices: List[float], period: int) -> List[float]:
+    def _calculate_ema(self, prices: list[float], period: int) -> list[float]:
         """Calculate EMA values"""
         try:
             if len(prices) < period:
@@ -501,7 +502,7 @@ class SelfReplicationEngine:
             logger.error(f"Failed to calculate EMA: {e}")
             return []
 
-    def train_agents(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def train_agents(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Train agents on historical data"""
         try:
             evaluations = []
@@ -536,7 +537,7 @@ class SelfReplicationEngine:
             logger.error(f"Failed to train agents: {e}")
             return {"success": False, "error": str(e)}
 
-    def get_best_agent(self) -> Optional[Dict[str, Any]]:
+    def get_best_agent(self) -> dict[str, Any] | None:
         """Get the best performing agent"""
         try:
             if not self.agents:
@@ -557,7 +558,7 @@ class SelfReplicationEngine:
             logger.error(f"Failed to get best agent: {e}")
             return None
 
-    def get_agent_population(self) -> Dict[str, Any]:
+    def get_agent_population(self) -> dict[str, Any]:
         """Get current agent population statistics"""
         try:
             if not self.agents:
@@ -606,7 +607,7 @@ class SelfReplicationEngine:
         except Exception as e:
             logger.error(f"Failed to update replication stats: {e}")
 
-    def get_replication_stats(self) -> Dict[str, Any]:
+    def get_replication_stats(self) -> dict[str, Any]:
         """Get replication statistics for dashboard"""
         try:
             return {

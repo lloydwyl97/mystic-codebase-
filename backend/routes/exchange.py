@@ -5,7 +5,7 @@ Contains exchange integration endpoints for Binance, Coinbase, and other exchang
 """
 
 import logging
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException
 

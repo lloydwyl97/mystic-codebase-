@@ -1,5 +1,6 @@
 import os
-from typing import Iterable
+from collections.abc import Iterable
+
 import requests
 
 BASE = os.environ.get("MYSTIC_BACKEND", "http://127.0.0.1:9000").rstrip("/")

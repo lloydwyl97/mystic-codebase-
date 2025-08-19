@@ -8,7 +8,8 @@ import asyncio
 import logging
 import os
 import sys
-from typing import Callable, Optional, cast
+from collections.abc import Callable
+from typing import cast
 
 import redis
 from fastapi import FastAPI
@@ -54,7 +55,7 @@ class CryptoAutoEngine:
         )
 
         self.config = get_config()
-        self.redis_client: Optional[redis.Redis] = None
+        self.redis_client: redis.Redis | None = None
 
         # Setup CORS
         self.app.add_middleware(

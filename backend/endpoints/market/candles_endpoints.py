@@ -4,7 +4,7 @@ Provides OHLCV data in a normalized format for UI consumption.
 """
 
 import logging
-from typing import Any, List, TypedDict, cast
+from typing import Any, TypedDict, cast
 
 import aiohttp
 from fastapi import APIRouter, Response
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/api/market", tags=["market"])
 logger = logging.getLogger(__name__)
 
 
-async def _fetch_binanceus_klines(symbol: str, interval: str, limit: int) -> List[List[Any]]:
+async def _fetch_binanceus_klines(symbol: str, interval: str, limit: int) -> list[list[Any]]:
     url = "https://api.binance.us/api/v3/klines"
     params = {"symbol": symbol.upper(), "interval": interval, "limit": min(max(limit, 1), 1000)}
     try:
@@ -23,7 +23,7 @@ async def _fetch_binanceus_klines(symbol: str, interval: str, limit: int) -> Lis
                 if resp.status == 200:
                     data: Any = await resp.json()
                     if isinstance(data, list):
-                        return cast(List[List[Any]], data)  # Raw klines arrays
+                        return cast(list[list[Any]], data)  # Raw klines arrays
                 else:
                     body = await resp.text()
                     logger.warning(f"BinanceUS klines HTTP {resp.status}: {body}")
@@ -41,8 +41,8 @@ class Candle(TypedDict):
     volume: float
 
 
-def _map_klines_to_ohlcv(items: List[List[Any]]) -> List[Candle]:
-    out: List[Candle] = []
+def _map_klines_to_ohlcv(items: list[list[Any]]) -> list[Candle]:
+    out: list[Candle] = []
     for k in items:
         try:
             # Binance klines schema: [ openTime, open, high, low, close, volume, closeTime, ... ]
@@ -63,7 +63,7 @@ def _map_klines_to_ohlcv(items: List[List[Any]]) -> List[Candle]:
 
 
 @router.get("/candles")
-async def get_candles(symbol: str, response: Response, interval: str = "1h", limit: int = 200) -> List[Candle]:
+async def get_candles(symbol: str, response: Response, interval: str = "1h", limit: int = 200) -> list[Candle]:
     """Return normalized OHLCV list for a symbol.
 
     Always returns 200 with a list (possibly empty) to avoid UI errors.

@@ -12,11 +12,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from starlette.middleware.base import BaseHTTPMiddleware
 
-# Import custom aioredis-based middleware
-from .middleware.rate_limiter import rate_limit_middleware
-
 # Import error handlers
 from .error_handlers import register_error_handlers
+
+# Import custom aioredis-based middleware
+from .middleware.rate_limiter import rate_limit_middleware
 
 # Get logger
 logger = logging.getLogger(__name__)

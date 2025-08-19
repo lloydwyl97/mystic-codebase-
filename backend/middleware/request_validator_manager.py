@@ -7,7 +7,7 @@ Handles request validation and field checking.
 import json
 import logging
 import re
-from typing import Any, Dict, Optional, Set
+from typing import Any
 
 from fastapi import HTTPException, Request
 
@@ -22,14 +22,14 @@ class RequestValidator:
         self.max_request_size = 1024 * 1024
 
         # Allowed content types
-        self.allowed_content_types: Set[str] = {
+        self.allowed_content_types: set[str] = {
             "application/json",
             "application/x-www-form-urlencoded",
             "multipart/form-data",
         }
 
         # Path-specific validations
-        self.path_validations: Dict[str, Dict[str, Any]] = {
+        self.path_validations: dict[str, dict[str, Any]] = {
             "/api/auth/login": {
                 "methods": {"POST"},
                 "required_fields": {"username", "password"},
@@ -48,7 +48,7 @@ class RequestValidator:
         }
 
         # Field validation patterns
-        self.field_patterns: Dict[str, str] = {
+        self.field_patterns: dict[str, str] = {
             "username": r"^[a-zA-Z0-9_-]{3,32}$",
             "password": r"^.{8,}$",
             "email": r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
@@ -70,14 +70,14 @@ class RequestValidator:
     def validate_method(self, request: Request, path: str) -> None:
         """Validate request method"""
         if path in self.path_validations:
-            allowed_methods: Set[str] = self.path_validations[path]["methods"]
+            allowed_methods: set[str] = self.path_validations[path]["methods"]
             if request.method not in allowed_methods:
                 raise HTTPException(
                     status_code=405,
                     detail=f"Method {request.method} not allowed",
                 )
 
-    async def validate_json_body(self, request: Request, path: str) -> Optional[Dict[str, Any]]:
+    async def validate_json_body(self, request: Request, path: str) -> dict[str, Any] | None:
         """Validate JSON request body"""
         try:
             body = await request.json()
@@ -88,8 +88,8 @@ class RequestValidator:
             validation = self.path_validations[path]
 
             # Check required fields
-            required_fields: Set[str] = validation["required_fields"]
-            missing_fields: Set[str] = required_fields - set(body.keys())
+            required_fields: set[str] = validation["required_fields"]
+            missing_fields: set[str] = required_fields - set(body.keys())
             if missing_fields:
                 raise HTTPException(
                     status_code=400,

@@ -6,23 +6,24 @@ for resonance-aligned decision making
 
 import asyncio
 import json
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
 import os
 import sys
-from scipy import signal
-from scipy.fft import fft, fftfreq
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
 import threading
 import time
+from datetime import datetime, timedelta
+from typing import Any, Optional
+
+import numpy as np
+import pandas as pd
+from scipy import signal
+from scipy.fft import fft, fftfreq
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 # Make all imports live (F401):
 _ = pd.DataFrame()
 _ = Optional[str]
-_ = Tuple[int, int]
+_ = tuple[int, int]
 _ = signal.windows.hann(10)
 _ = StandardScaler()
 _ = PCA()
@@ -337,7 +338,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_brainwave_data(self, data: Dict[str, Any]):
+    async def process_brainwave_data(self, data: dict[str, Any]):
         """Process incoming brainwave data"""
         try:
             data_type = data.get("type")
@@ -350,7 +351,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing brainwave data: {e}")
 
-    async def process_brainwave_signals(self, brainwave_data: Dict[str, Any]):
+    async def process_brainwave_signals(self, brainwave_data: dict[str, Any]):
         """Process brainwave signals"""
         try:
             # Extract brainwave data
@@ -378,7 +379,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing brainwave signals: {e}")
 
-    async def process_biofeedback_signals(self, biofeedback_data: Dict[str, Any]):
+    async def process_biofeedback_signals(self, biofeedback_data: dict[str, Any]):
         """Process biofeedback signals"""
         try:
             # Extract biofeedback data
@@ -405,7 +406,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing biofeedback signals: {e}")
 
-    async def analyze_brainwave_bands(self, eeg_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_brainwave_bands(self, eeg_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze brainwave frequency bands"""
         try:
             band_analysis = {}
@@ -472,8 +473,8 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error monitoring brainwave activity: {e}")
 
     async def analyze_current_brainwave_state(
-        self, profiles: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, profiles: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Analyze current brainwave state"""
         try:
             # Get average band analysis across profiles
@@ -505,7 +506,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error analyzing current brainwave state: {e}")
             return {"resonance_quality": 0.0}
 
-    def calculate_resonance_quality(self, band_powers: Dict[str, float]) -> float:
+    def calculate_resonance_quality(self, band_powers: dict[str, float]) -> float:
         """Calculate resonance quality from band powers"""
         try:
             # Calculate total power
@@ -570,7 +571,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating system parameters: {e}")
 
-    async def broadcast_parameter_updates(self, parameters: Dict[str, float]):
+    async def broadcast_parameter_updates(self, parameters: dict[str, float]):
         """Broadcast parameter updates to other agents"""
         try:
             parameter_update = {
@@ -613,7 +614,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error checking resonance states: {e}")
 
-    async def perform_synchronization(self, brainwave_state: Dict[str, Any]):
+    async def perform_synchronization(self, brainwave_state: dict[str, Any]):
         """Perform neuro-synchronization"""
         try:
             print(
@@ -670,8 +671,8 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error processing biofeedback: {e}")
 
     async def analyze_biofeedback_patterns(
-        self, biofeedback_data: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, biofeedback_data: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Analyze biofeedback patterns"""
         try:
             analysis = {
@@ -723,7 +724,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error analyzing biofeedback patterns: {e}")
             return {}
 
-    async def update_parameters_from_biofeedback(self, biofeedback_analysis: Dict[str, Any]):
+    async def update_parameters_from_biofeedback(self, biofeedback_analysis: dict[str, Any]):
         """Update parameters based on biofeedback analysis"""
         try:
             stress_level = biofeedback_analysis.get("stress_level", 0.5)
@@ -794,7 +795,7 @@ class NeuroSynchronizationEngine(BaseAgent):
         except Exception as e:
             print(f"âŒ Error cleaning up old data: {e}")
 
-    async def handle_sync_brainwaves(self, message: Dict[str, Any]):
+    async def handle_sync_brainwaves(self, message: dict[str, Any]):
         """Handle manual brainwave synchronization request"""
         try:
             target_band = message.get("target_band", "alpha")
@@ -822,7 +823,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error handling brainwave sync request: {e}")
             await self.broadcast_error(f"Brainwave sync error: {e}")
 
-    async def perform_targeted_sync(self, target_band: str, duration: int) -> Dict[str, Any]:
+    async def perform_targeted_sync(self, target_band: str, duration: int) -> dict[str, Any]:
         """Perform targeted brainwave synchronization"""
         try:
             # Get target frequency
@@ -854,7 +855,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error performing targeted sync: {e}")
             return {"error": str(e)}
 
-    async def handle_set_resonance_preset(self, message: Dict[str, Any]):
+    async def handle_set_resonance_preset(self, message: dict[str, Any]):
         """Handle resonance preset setting request"""
         try:
             preset_name = message.get("preset_name", "meditation")
@@ -884,7 +885,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error handling resonance preset request: {e}")
             await self.broadcast_error(f"Resonance preset error: {e}")
 
-    async def apply_resonance_preset(self, preset: Dict[str, Any]) -> Dict[str, Any]:
+    async def apply_resonance_preset(self, preset: dict[str, Any]) -> dict[str, Any]:
         """Apply resonance preset"""
         try:
             target_bands = preset.get("target_bands", ["alpha"])
@@ -908,7 +909,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error applying resonance preset: {e}")
             return {"error": str(e)}
 
-    async def handle_get_biofeedback(self, message: Dict[str, Any]):
+    async def handle_get_biofeedback(self, message: dict[str, Any]):
         """Handle biofeedback data request"""
         try:
             data_type = message.get("data_type", "all")
@@ -936,7 +937,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error handling biofeedback request: {e}")
             await self.broadcast_error(f"Biofeedback request error: {e}")
 
-    async def get_biofeedback_data(self, data_type: str, timeframe: str) -> Dict[str, Any]:
+    async def get_biofeedback_data(self, data_type: str, timeframe: str) -> dict[str, Any]:
         """Get biofeedback data"""
         try:
             # Calculate cutoff time
@@ -967,7 +968,7 @@ class NeuroSynchronizationEngine(BaseAgent):
             print(f"âŒ Error getting biofeedback data: {e}")
             return {}
 
-    async def handle_update_parameters(self, message: Dict[str, Any]):
+    async def handle_update_parameters(self, message: dict[str, Any]):
         """Handle parameter update request"""
         try:
             parameters = message.get("parameters", {})

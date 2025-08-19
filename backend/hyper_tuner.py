@@ -5,16 +5,15 @@ Auto-tunes strategy parameters to maximize profit, win rate, and Sharpe ratio.
 Built for Windows 11 Home + PowerShell + Docker.
 """
 
+import logging
 import random
 import time
-import logging
-from typing import Dict, Any, List
-from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
+from typing import Any
 
 # Import your existing modules
 from strat_versions import save_strategy_version
-from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +28,7 @@ class HyperparameterTuner:
         self.best_configs = []
         self.optimization_history = []
 
-    def generate_random_config(self, strategy_type: str = "rsi_ema_breakout") -> Dict[str, Any]:
+    def generate_random_config(self, strategy_type: str = "rsi_ema_breakout") -> dict[str, Any]:
         """
         Generate random configuration for different strategy types.
 
@@ -78,8 +77,8 @@ class HyperparameterTuner:
             }
 
     def mutate_config(
-        self, base_config: Dict[str, Any], mutation_rate: float = 0.3
-    ) -> Dict[str, Any]:
+        self, base_config: dict[str, Any], mutation_rate: float = 0.3
+    ) -> dict[str, Any]:
         """
         Create a mutated version of an existing configuration.
 
@@ -109,7 +108,7 @@ class HyperparameterTuner:
 
         return mutated
 
-    def crossover_configs(self, config1: Dict[str, Any], config2: Dict[str, Any]) -> Dict[str, Any]:
+    def crossover_configs(self, config1: dict[str, Any], config2: dict[str, Any]) -> dict[str, Any]:
         """
         Create a new configuration by combining two parent configurations.
 
@@ -122,7 +121,7 @@ class HyperparameterTuner:
         """
         child = {}
 
-        for key in config1.keys():
+        for key in config1:
             if key in config2:
                 if random.random() < 0.5:
                     child[key] = config1[key]
@@ -142,8 +141,8 @@ class HyperparameterTuner:
         return child
 
     def evaluate_config(
-        self, config: Dict[str, Any], strategy_type: str = "rsi_ema_breakout"
-    ) -> Dict[str, Any]:
+        self, config: dict[str, Any], strategy_type: str = "rsi_ema_breakout"
+    ) -> dict[str, Any]:
         """
         Evaluate a configuration using backtesting or live performance.
 
@@ -207,7 +206,7 @@ class HyperparameterTuner:
         strategy_type: str = "rsi_ema_breakout",
         rounds: int = 100,
         save_best: bool = True,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """
         Run random search optimization.
 
@@ -273,7 +272,7 @@ class HyperparameterTuner:
         generations: int = 10,
         mutation_rate: float = 0.3,
         save_best: bool = True,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """
         Run genetic algorithm optimization.
 
@@ -359,7 +358,7 @@ class HyperparameterTuner:
         strategy_type: str = "rsi_ema_breakout",
         rounds: int = 50,
         save_best: bool = True,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """
         Run Bayesian optimization (simplified version).
 
@@ -429,7 +428,7 @@ class HyperparameterTuner:
         strategy_type: str = "rsi_ema_breakout",
         method: str = "genetic",
         **kwargs,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Main optimization method that runs the specified algorithm.
 
@@ -470,19 +469,19 @@ class HyperparameterTuner:
 
 
 # Convenience functions
-def optimize_rsi_ema_breakout(method: str = "genetic", rounds: int = 50) -> Dict[str, Any]:
+def optimize_rsi_ema_breakout(method: str = "genetic", rounds: int = 50) -> dict[str, Any]:
     """Optimize RSI + EMA + Breakout strategy"""
     tuner = HyperparameterTuner()
     return tuner.optimize_strategy("rsi_ema_breakout", method, rounds=rounds)
 
 
-def optimize_bollinger_bands(method: str = "genetic", rounds: int = 50) -> Dict[str, Any]:
+def optimize_bollinger_bands(method: str = "genetic", rounds: int = 50) -> dict[str, Any]:
     """Optimize Bollinger Bands strategy"""
     tuner = HyperparameterTuner()
     return tuner.optimize_strategy("bollinger_bands", method, rounds=rounds)
 
 
-def optimize_macd_crossover(method: str = "genetic", rounds: int = 50) -> Dict[str, Any]:
+def optimize_macd_crossover(method: str = "genetic", rounds: int = 50) -> dict[str, Any]:
     """Optimize MACD Crossover strategy"""
     tuner = HyperparameterTuner()
     return tuner.optimize_strategy("macd_crossover", method, rounds=rounds)

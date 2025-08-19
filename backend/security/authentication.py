@@ -10,16 +10,17 @@ Provides secure authentication with:
 """
 
 import hashlib
-import jwt
-import time
-import secrets
-import logging
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List, Optional
-from collections import defaultdict
-import threading
 import json
+import logging
+import secrets
+import threading
+import time
+from collections import defaultdict
 from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+from typing import Any
+
+import jwt
 
 try:
     import redis
@@ -33,7 +34,6 @@ from backend.config import settings
 logger = logging.getLogger(__name__)
 
 # Get settings instance
-from backend.config import settings
 
 # Authentication configuration
 JWT_SECRET_KEY = settings.security.secret_key
@@ -51,8 +51,8 @@ class User:
     user_id: str
     username: str
     email: str
-    roles: List[str]
-    permissions: List[str]
+    roles: list[str]
+    permissions: list[str]
     is_active: bool = True
     created_at: float = 0.0
     last_login: float = 0.0
@@ -64,7 +64,7 @@ class APIToken:
     token_id: str
     user_id: str
     token_hash: str
-    permissions: List[str]
+    permissions: list[str]
     is_active: bool = True
     created_at: float = 0.0
     last_used: float = 0.0
@@ -80,8 +80,8 @@ class TokenManager:
         self.blacklisted_tokens: set[str] = set()
         self.lock = threading.Lock()
 
-    def generate_jwt_token(self, user_id: str, roles: List[str],
-                          permissions: List[str]) -> str:
+    def generate_jwt_token(self, user_id: str, roles: list[str],
+                          permissions: list[str]) -> str:
         """Generate JWT token for user"""
         payload = {
             'user_id': user_id,
@@ -93,7 +93,7 @@ class TokenManager:
 
         return jwt.encode(payload, self.secret_key, algorithm=self.algorithm)
 
-    def verify_jwt_token(self, token: str) -> Optional[Dict[str, Any]]:
+    def verify_jwt_token(self, token: str) -> dict[str, Any] | None:
         """Verify JWT token and return payload"""
         try:
             # Check if token is blacklisted
@@ -136,7 +136,7 @@ class RoleBasedAccessControl:
     """Role-based access control system"""
 
     def __init__(self):
-        self.roles_permissions: Dict[str, List[str]] = {
+        self.roles_permissions: dict[str, list[str]] = {
             'admin': [
                 'read:all', 'write:all', 'delete:all', 'admin:all',
                 'trading:all', 'analytics:all', 'system:all'
@@ -157,7 +157,7 @@ class RoleBasedAccessControl:
             ]
         }
 
-        self.resource_permissions: Dict[str, List[str]] = {
+        self.resource_permissions: dict[str, list[str]] = {
             '/api/market-data': ['read:market_data'],
             '/api/trading': ['write:trading'],
             '/api/portfolio': ['read:portfolio', 'write:portfolio'],
@@ -166,8 +166,8 @@ class RoleBasedAccessControl:
             '/api/system': ['system:all']
         }
 
-    def check_permission(self, user_permissions: List[str],
-                        required_permissions: List[str]) -> bool:
+    def check_permission(self, user_permissions: list[str],
+                        required_permissions: list[str]) -> bool:
         """Check if user has required permissions"""
         if not user_permissions or not required_permissions:
             return False
@@ -175,7 +175,7 @@ class RoleBasedAccessControl:
         # Check if user has any of the required permissions
         return any(perm in user_permissions for perm in required_permissions)
 
-    def get_user_permissions(self, roles: List[str]) -> List[str]:
+    def get_user_permissions(self, roles: list[str]) -> list[str]:
         """Get permissions for user roles"""
         permissions = []
         for role in roles:
@@ -183,11 +183,11 @@ class RoleBasedAccessControl:
                 permissions.extend(self.roles_permissions[role])
         return list(set(permissions))
 
-    def get_resource_permissions(self, resource: str) -> List[str]:
+    def get_resource_permissions(self, resource: str) -> list[str]:
         """Get required permissions for a resource"""
         return self.resource_permissions.get(resource, [])
 
-    def add_role_permissions(self, role: str, permissions: List[str]):
+    def add_role_permissions(self, role: str, permissions: list[str]):
         """Add permissions to a role"""
         if role not in self.roles_permissions:
             self.roles_permissions[role] = []
@@ -232,17 +232,17 @@ class AuthenticationManager:
 
         default_users = {
             'admin': {
-                'password_hash': hashlib.sha256('admin123'.encode()).hexdigest(),
+                'password_hash': hashlib.sha256(b'admin123').hexdigest(),
                 'roles': ['admin'],
                 'permissions': self.rbac.get_user_permissions(['admin'])
             },
             'trader': {
-                'password_hash': hashlib.sha256('trader123'.encode()).hexdigest(),
+                'password_hash': hashlib.sha256(b'trader123').hexdigest(),
                 'roles': ['trader'],
                 'permissions': self.rbac.get_user_permissions(['trader'])
             },
             'analyst': {
-                'password_hash': hashlib.sha256('analyst123'.encode()).hexdigest(),
+                'password_hash': hashlib.sha256(b'analyst123').hexdigest(),
                 'roles': ['analyst'],
                 'permissions': self.rbac.get_user_permissions(['analyst'])
             }
@@ -255,7 +255,7 @@ class AuthenticationManager:
                 logger.info(f"âœ… Created default user: {username}")
 
     def authenticate_user(self, username: str, password: str,
-                         client_ip: Optional[str] = None) -> Optional[Dict[str, Any]]:
+                         client_ip: str | None = None) -> dict[str, Any] | None:
         """Authenticate user with username and password"""
         try:
             # Check if account is locked
@@ -323,7 +323,7 @@ class AuthenticationManager:
             logger.error(f"Authentication error: {e}")
             return None
 
-    def authenticate_api_key(self, api_key: str) -> Optional[Dict[str, Any]]:
+    def authenticate_api_key(self, api_key: str) -> dict[str, Any] | None:
         """Authenticate user with API key"""
         try:
             if not self.redis_client:
@@ -352,7 +352,7 @@ class AuthenticationManager:
             logger.error(f"API key authentication error: {e}")
             return None
 
-    def verify_token(self, token: str) -> Optional[Dict[str, Any]]:
+    def verify_token(self, token: str) -> dict[str, Any] | None:
         """Verify JWT token and return user data"""
         try:
             payload = self.token_manager.verify_jwt_token(token)
@@ -375,12 +375,12 @@ class AuthenticationManager:
             logger.error(f"Token verification error: {e}")
             return None
 
-    def check_access(self, user_permissions: List[str], resource: str) -> bool:
+    def check_access(self, user_permissions: list[str], resource: str) -> bool:
         """Check if user has access to resource"""
         required_permissions = self.rbac.get_resource_permissions(resource)
         return self.rbac.check_permission(user_permissions, required_permissions)
 
-    def create_api_key(self, user_id: str, permissions: List[str]) -> str:
+    def create_api_key(self, user_id: str, permissions: list[str]) -> str:
         """Create new API key for user"""
         try:
             api_key = self.token_manager.generate_api_key()
@@ -439,7 +439,7 @@ class AuthenticationManager:
         self.failed_attempts[username] = 0
         return False
 
-    def _record_failed_login(self, username: str, client_ip: Optional[str]):
+    def _record_failed_login(self, username: str, client_ip: str | None):
         """Record failed login attempt"""
         self.failed_attempts[username] += 1
 
@@ -449,7 +449,7 @@ class AuthenticationManager:
 
         logger.warning(f"Failed login attempt for user: {username} from IP: {client_ip}")
 
-    def _create_session(self, token: str, session_data: Dict[str, Any]):
+    def _create_session(self, token: str, session_data: dict[str, Any]):
         """Create user session"""
         try:
             if self.redis_client:
@@ -459,7 +459,7 @@ class AuthenticationManager:
         except Exception as e:
             logger.error(f"Session creation error: {e}")
 
-    def _get_session(self, token: str) -> Optional[Dict[str, Any]]:
+    def _get_session(self, token: str) -> dict[str, Any] | None:
         """Get user session data"""
         try:
             if self.redis_client:
@@ -485,11 +485,11 @@ class AuthenticationManager:
         except Exception as e:
             logger.error(f"Session removal error: {e}")
 
-    def _log_authentication_success(self, user_id: str, client_ip: Optional[str]):
+    def _log_authentication_success(self, user_id: str, client_ip: str | None):
         """Log successful authentication"""
         logger.info(f"Successful authentication for user: {user_id} from IP: {client_ip}")
 
-    def get_auth_stats(self) -> Dict[str, Any]:
+    def get_auth_stats(self) -> dict[str, Any]:
         """Get authentication statistics"""
         return {
             'failed_attempts': dict(self.failed_attempts),

@@ -6,7 +6,7 @@ Detects hidden patterns and breakouts using quantum computing principles
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 
@@ -32,14 +32,14 @@ class QuantumPatternAnalyzer:
     """Quantum-inspired pattern recognition for crypto markets"""
 
     def __init__(self):
-        self.pattern_history: Dict[str, Any] = {}
-        self.quantum_states: Dict[str, Any] = {}
+        self.pattern_history: dict[str, Any] = {}
+        self.quantum_states: dict[str, Any] = {}
         self.breakout_threshold = 0.75
         self.superposition_threshold = 0.6
         self.entanglement_threshold = 0.5
 
     async def analyze_quantum_patterns(
-        self, symbol: str, price_data: List[float], volume_data: List[float]
+        self, symbol: str, price_data: list[float], volume_data: list[float]
     ) -> QuantumPatternSignal:
         """Analyze quantum-inspired patterns"""
         try:
@@ -92,8 +92,8 @@ class QuantumPatternAnalyzer:
             return self._create_fallback_signal()
 
     def _extract_quantum_features(
-        self, price_data: List[float], volume_data: List[float]
-    ) -> Dict[str, float]:
+        self, price_data: list[float], volume_data: list[float]
+    ) -> dict[str, float]:
         """Extract quantum-inspired features"""
         try:
             # Convert to numpy arrays
@@ -159,7 +159,7 @@ class QuantumPatternAnalyzer:
             logger.error(f"Error calculating interference pattern: {e}")
             return 0.5
 
-    def _detect_quantum_patterns(self, features: Dict[str, float]) -> tuple[bool, str]:
+    def _detect_quantum_patterns(self, features: dict[str, float]) -> tuple[bool, str]:
         """Detect quantum-inspired patterns"""
         try:
             # Pattern detection logic
@@ -194,7 +194,7 @@ class QuantumPatternAnalyzer:
             logger.error(f"Error detecting quantum patterns: {e}")
             return False, "error"
 
-    def _calculate_superposition_score(self, price_data: List[float]) -> float:
+    def _calculate_superposition_score(self, price_data: list[float]) -> float:
         """Calculate quantum superposition score"""
         try:
             prices = np.array(price_data)
@@ -220,7 +220,7 @@ class QuantumPatternAnalyzer:
             return 0.5
 
     def _calculate_entanglement_factor(
-        self, price_data: List[float], volume_data: List[float]
+        self, price_data: list[float], volume_data: list[float]
     ) -> float:
         """Calculate quantum entanglement factor"""
         try:
@@ -244,7 +244,7 @@ class QuantumPatternAnalyzer:
             logger.error(f"Error calculating entanglement factor: {e}")
             return 0.5
 
-    def _calculate_quantum_advantage(self, features: Dict[str, float]) -> float:
+    def _calculate_quantum_advantage(self, features: dict[str, float]) -> float:
         """Calculate quantum advantage score"""
         try:
             # Combine all quantum features
@@ -352,7 +352,7 @@ class QuantumPatternAnalyzer:
             timestamp=datetime.now(),
         )
 
-    def get_quantum_summary(self, symbol: str) -> Dict[str, Any]:
+    def get_quantum_summary(self, symbol: str) -> dict[str, Any]:
         """Get quantum analysis summary"""
         return {
             "symbol": symbol,

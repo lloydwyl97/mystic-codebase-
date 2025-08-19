@@ -8,13 +8,13 @@ import asyncio
 import json
 import logging
 import time
-from datetime import timezone, datetime
-from typing import Dict, List
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 try:
     from app_config import slowapi_limiter
+
     from backend.services.websocket_manager import get_websocket_manager
 except ImportError:
     from backend.services.websocket_manager import get_websocket_manager
@@ -34,7 +34,7 @@ router = APIRouter()
 notification_service = get_notification_service(None)
 
 # Simple in-memory store for WebSocket connection rate limiting
-ws_connection_tracker: Dict[str, List[float]] = {}
+ws_connection_tracker: dict[str, list[float]] = {}
 last_cleanup_time = time.time()
 
 
@@ -74,7 +74,7 @@ async def websocket_endpoint(websocket: WebSocket):
         current_time = time.time()
         if client_ip in ws_connection_tracker:
             # Check if connections are too frequent (max 5 connections per minute)
-            connections: List[float] = [
+            connections: list[float] = [
                 t for t in ws_connection_tracker[client_ip] if current_time - t < 60
             ]
             if len(connections) >= 5:
@@ -99,7 +99,7 @@ async def websocket_endpoint(websocket: WebSocket):
         await manager.connect(websocket)
         try:
             # Track message rate for this connection
-            message_times: List[float] = []
+            message_times: list[float] = []
 
             while True:
                 # Wait for client message (ping)

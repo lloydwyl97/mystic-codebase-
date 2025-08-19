@@ -10,19 +10,21 @@ import asyncio
 import logging
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any
+
+from ai_model_versioning import get_ai_model_versioning
+
+# Import new AI and experimental systems
+from ai_training_pipeline import get_ai_training_pipeline
 
 # Use absolute imports
 from crypto_autoengine_config import get_config
-from backend.services.mystic_signal_engine import mystic_signal_engine
+from experimental_integration import get_experimental_integration
 from shared_cache import SharedCache
 from strategy_system import StrategyManager
 from websocket_manager import websocket_manager
 
-# Import new AI and experimental systems
-from ai_training_pipeline import get_ai_training_pipeline
-from ai_model_versioning import get_ai_model_versioning
-from experimental_integration import get_experimental_integration
+from backend.services.mystic_signal_engine import mystic_signal_engine
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +39,7 @@ class TradeOrder:
         amount: float,
         price: float,
         confidence: float,
-        mystic_factors: Optional[Dict[str, Any]] = None,
+        mystic_factors: dict[str, Any] | None = None,
     ):
         self.symbol = symbol
         self.side = side  # 'buy' or 'sell'
@@ -47,9 +49,9 @@ class TradeOrder:
         self.mystic_factors = mystic_factors or {}
         self.timestamp = datetime.now(timezone.timezone.utc).isoformat()
         self.status = "pending"  # 'pending', 'executed', 'failed', 'cancelled'
-        self.order_id: Optional[str] = None
-        self.execution_price: Optional[float] = None
-        self.execution_time: Optional[str] = None
+        self.order_id: str | None = None
+        self.execution_price: float | None = None
+        self.execution_time: str | None = None
 
 
 class AutobuySystem:
@@ -61,9 +63,9 @@ class AutobuySystem:
         self.config = get_config()
 
         # Trade tracking
-        self.pending_orders: Dict[str, TradeOrder] = {}
-        self.executed_orders: List[TradeOrder] = []
-        self.failed_orders: List[TradeOrder] = []
+        self.pending_orders: dict[str, TradeOrder] = {}
+        self.executed_orders: list[TradeOrder] = []
+        self.failed_orders: list[TradeOrder] = []
 
         # Performance tracking
         self.total_trades = 0
@@ -77,7 +79,7 @@ class AutobuySystem:
 
         # Mystic signal tracking
         self.last_mystic_signal = None
-        self.mystic_signal_cache: Dict[str, tuple[Any, float]] = {}
+        self.mystic_signal_cache: dict[str, tuple[Any, float]] = {}
         self.mystic_signal_ttl = 60  # 1 minute cache
 
         # Initialize AI and experimental systems
@@ -273,7 +275,7 @@ class AutobuySystem:
             except Exception as e:
                 logger.error(f"âŒ Error updating AI training data: {e}")
 
-    async def _get_mystic_signal(self) -> Optional[Any]:
+    async def _get_mystic_signal(self) -> Any | None:
         """Get current mystic signal with caching"""
         current_time = time.time()
 
@@ -305,9 +307,9 @@ class AutobuySystem:
     async def _process_coin_signals(
         self,
         symbol: str,
-        strategy_result: Dict[str, Any],
-        mystic_signal: Optional[Any],
-        experimental_influence: Optional[Dict[str, Any]],
+        strategy_result: dict[str, Any],
+        mystic_signal: Any | None,
+        experimental_influence: dict[str, Any] | None,
     ):
         """Process signals for a specific coin with mystic integration"""
         aggregated = strategy_result.get("aggregated", {})
@@ -375,8 +377,8 @@ class AutobuySystem:
         strategy_decision: str,
         strategy_confidence: float,
         strategy_strength: float,
-        mystic_signal: Optional[Any],
-    ) -> tuple[str, float, Dict[str, Any]]:
+        mystic_signal: Any | None,
+    ) -> tuple[str, float, dict[str, Any]]:
         """Integrate mystic signals with strategy signals for final decision"""
         if not mystic_signal:
             return strategy_decision, strategy_confidence, {}
@@ -426,9 +428,9 @@ class AutobuySystem:
         self,
         strategy_decision: str,
         strategy_confidence: float,
-        mystic_factors: Dict[str, Any],
-        experimental_influence: Dict[str, Any],
-    ) -> tuple[str, float, Dict[str, Any]]:
+        mystic_factors: dict[str, Any],
+        experimental_influence: dict[str, Any],
+    ) -> tuple[str, float, dict[str, Any]]:
         """Integrate experimental influence into decision making"""
         if not experimental_influence:
             return strategy_decision, strategy_confidence, mystic_factors
@@ -504,7 +506,7 @@ class AutobuySystem:
         symbol: str,
         price: float,
         confidence: float,
-        mystic_factors: Dict[str, Any],
+        mystic_factors: dict[str, Any],
     ) -> float:
         """Calculate trade amount based on confidence, coin config, and mystic factors"""
         coin_config = self.config.get_coin_by_symbol(symbol)
@@ -672,8 +674,8 @@ class AutobuySystem:
                 }
 
                 # Generate signature
-                import hmac
                 import hashlib
+                import hmac
                 from urllib.parse import urlencode
 
                 query_string = urlencode(params)
@@ -708,14 +710,14 @@ class AutobuySystem:
             logger.error(f"Error executing real trade for {order.symbol}: {e}")
             return False
 
-    def _find_corresponding_buy_order(self, symbol: str) -> Optional[TradeOrder]:
+    def _find_corresponding_buy_order(self, symbol: str) -> TradeOrder | None:
         """Find the most recent buy order for a symbol"""
         for order in reversed(self.executed_orders):
             if order.symbol == symbol and order.side == "buy":
                 return order
         return None
 
-    def get_trading_stats(self) -> Dict[str, Any]:
+    def get_trading_stats(self) -> dict[str, Any]:
         """Get comprehensive trading statistics including AI and experimental data"""
         try:
             stats = {
@@ -756,9 +758,9 @@ class AutobuySystem:
             logger.error(f"âŒ Error getting trading stats: {e}")
             return {"error": str(e)}
 
-    def get_recent_orders(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_recent_orders(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent trade orders"""
-        recent_orders: List[Dict[str, Any]] = []
+        recent_orders: list[dict[str, Any]] = []
 
         # Add pending orders
         for order in self.pending_orders.values():
@@ -816,9 +818,9 @@ class AutobuySystem:
 
     async def _update_ai_training_data(
         self,
-        strategy_results: Dict[str, Any],
-        mystic_signal: Optional[Any],
-        experimental_influence: Optional[Dict[str, Any]],
+        strategy_results: dict[str, Any],
+        mystic_signal: Any | None,
+        experimental_influence: dict[str, Any] | None,
     ):
         """Update AI training data with current trading results"""
         try:
@@ -946,7 +948,7 @@ class AutobuyManager:
             self.task = None
             logger.info("Autobuy manager stopped")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get autobuy system status"""
         return {
             "is_running": self.autobuy_system.is_running,
@@ -954,7 +956,7 @@ class AutobuyManager:
             "trading_stats": self.autobuy_system.get_trading_stats(),
         }
 
-    def get_recent_orders(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_recent_orders(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent trade orders"""
         return self.autobuy_system.get_recent_orders(limit)
 

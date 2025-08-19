@@ -3,12 +3,12 @@ Multiversal Liquidity Engine for Mystic AI Trading Platform
 Analyzes cross-exchange liquidity and identifies arbitrage opportunities.
 """
 
-import logging
 import asyncio
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime, timezone
-import sys
+import logging
 import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -98,7 +98,7 @@ class MultiversalLiquidityEngine:
         except Exception as e:
             logger.error(f"Failed to initialize exchanges: {e}")
 
-    def _get_mock_orderbook(self, symbol: str, exchange: str) -> Dict[str, Any]:
+    def _get_mock_orderbook(self, symbol: str, exchange: str) -> dict[str, Any]:
         """Generate mock orderbook data for testing"""
         try:
             import random
@@ -156,7 +156,7 @@ class MultiversalLiquidityEngine:
             logger.error(f"Failed to generate mock orderbook: {e}")
             return {}
 
-    async def _fetch_orderbook(self, exchange_id: str, symbol: str) -> Optional[Dict[str, Any]]:
+    async def _fetch_orderbook(self, exchange_id: str, symbol: str) -> dict[str, Any] | None:
         """Fetch order book from exchange"""
         try:
             if not CCXT_AVAILABLE:
@@ -176,7 +176,7 @@ class MultiversalLiquidityEngine:
             logger.error(f"Failed to fetch orderbook for {symbol} on {exchange_id}: {e}")
             return None
 
-    def _calculate_best_prices(self, orderbook: Dict[str, Any]) -> Tuple[float, float]:
+    def _calculate_best_prices(self, orderbook: dict[str, Any]) -> tuple[float, float]:
         """Calculate best bid and ask prices from orderbook"""
         try:
             bids = orderbook.get('bids', [])
@@ -197,7 +197,7 @@ class MultiversalLiquidityEngine:
             logger.error(f"Failed to calculate best prices: {e}")
             return 0.0, 0.0
 
-    def _calculate_volume_capacity(self, orderbook: Dict[str, Any], target_volume_usd: float) -> Dict[str, float]:
+    def _calculate_volume_capacity(self, orderbook: dict[str, Any], target_volume_usd: float) -> dict[str, float]:
         """Calculate maximum volume that can be traded at current prices"""
         try:
             bids = orderbook.get('bids', [])
@@ -260,7 +260,7 @@ class MultiversalLiquidityEngine:
             logger.error(f"Failed to calculate volume capacity: {e}")
             return {"capacity": 0.0, "bid_price": 0.0, "ask_price": 0.0}
 
-    def _detect_arbitrage_opportunities(self, orderbooks: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _detect_arbitrage_opportunities(self, orderbooks: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
         """Detect arbitrage opportunities across exchanges"""
         try:
             opportunities = []
@@ -358,7 +358,7 @@ class MultiversalLiquidityEngine:
             logger.error(f"Failed to detect arbitrage opportunities: {e}")
             return []
 
-    async def _fetch_all_orderbooks(self) -> Dict[str, Dict[str, Any]]:
+    async def _fetch_all_orderbooks(self) -> dict[str, dict[str, Any]]:
         """Fetch order books from all exchanges for all symbols"""
         try:
             all_orderbooks = {}
@@ -387,7 +387,7 @@ class MultiversalLiquidityEngine:
             logger.error(f"Failed to fetch all orderbooks: {e}")
             return {}
 
-    async def find_arbitrage_opportunities(self) -> List[Dict[str, Any]]:
+    async def find_arbitrage_opportunities(self) -> list[dict[str, Any]]:
         """Find arbitrage opportunities across all exchanges"""
         try:
             logger.info("ðŸ” Searching for arbitrage opportunities...")
@@ -422,7 +422,7 @@ class MultiversalLiquidityEngine:
             logger.error(f"Failed to find arbitrage opportunities: {e}")
             return []
 
-    def best_liquidity_path(self, symbol: str) -> Dict[str, Any]:
+    def best_liquidity_path(self, symbol: str) -> dict[str, Any]:
         """Find the best liquidity path for a specific symbol"""
         try:
             # Get recent arbitrage signals for this symbol
@@ -470,7 +470,7 @@ class MultiversalLiquidityEngine:
                 "error": str(e)
             }
 
-    def get_routing_map(self) -> Dict[str, Any]:
+    def get_routing_map(self) -> dict[str, Any]:
         """Get current routing map for liquidity optimization"""
         try:
             # Get recent arbitrage opportunities from cache
@@ -538,7 +538,7 @@ class MultiversalLiquidityEngine:
                 "liquidity_scores": {}
             }
 
-    def get_liquidity_status(self) -> Dict[str, Any]:
+    def get_liquidity_status(self) -> dict[str, Any]:
         """Get current liquidity engine status"""
         try:
             return {

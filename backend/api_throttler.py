@@ -14,12 +14,14 @@ import logging
 import threading
 import time
 from collections import defaultdict, deque
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable, Deque, Dict, List, Optional
+from typing import Any
+
+from trading_config import trading_config
 
 from backend.utils.exceptions import RateLimitException, handle_exception
-from trading_config import trading_config
 
 logger = logging.getLogger(__name__)
 
@@ -91,13 +93,13 @@ class AdaptiveThrottler:
         }
 
         # Per-endpoint throttling
-        self.endpoint_limits: Dict[str, ThrottleConfig] = defaultdict(
+        self.endpoint_limits: dict[str, ThrottleConfig] = defaultdict(
             lambda: self.configs[self.throttle_level]
         )
 
         # Request tracking
-        self.request_history: Dict[str, Deque[float]] = defaultdict(lambda: deque(maxlen=trading_config.DEFAULT_REQUEST_TIMEOUT * 200))
-        self.request_metrics: List[RequestMetrics] = []
+        self.request_history: dict[str, deque[float]] = defaultdict(lambda: deque(maxlen=trading_config.DEFAULT_REQUEST_TIMEOUT * 200))
+        self.request_metrics: list[RequestMetrics] = []
         self.metrics_lock = threading.Lock()
 
         # Performance monitoring
@@ -153,7 +155,7 @@ class AdaptiveThrottler:
         self,
         endpoint: str,
         method: str = "GET",
-        func: Optional[Callable[..., Any]] = None,
+        func: Callable[..., Any] | None = None,
         *args,
         **kwargs,
     ) -> Any:
@@ -305,7 +307,7 @@ class AdaptiveThrottler:
                 f"throttle_rate={throttle_rate:.2f}"
             )
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get comprehensive performance statistics"""
         with self.metrics_lock:
             stats = self.performance_stats.copy()

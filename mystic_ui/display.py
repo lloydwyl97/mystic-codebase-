@@ -1,19 +1,22 @@
 from __future__ import annotations
-from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
+
+from collections.abc import Mapping, Sequence
+from typing import Any
+
 import pandas as pd
 import streamlit as st
 
 
-def render_kpis(items: Sequence[Tuple[str, Any, Optional[str]]]) -> None:
+def render_kpis(items: Sequence[tuple[str, Any, str | None]]) -> None:
 	cols = st.columns(len(items))
-	for col, (label, value, help_text) in zip(cols, items):
+	for col, (label, value, help_text) in zip(cols, items, strict=False):
 		try:
 			col.metric(label, value if value is not None else "-")
 		except Exception:
 			col.metric(label, "-")
 
 
-def to_table_rows(data: Any) -> List[Dict[str, Any]]:
+def to_table_rows(data: Any) -> list[dict[str, Any]]:
 	"""Best-effort: turn various API responses into list[dict] rows.
 	- list[dict] -> itself
 	- dict with 'data' list -> that list
@@ -31,7 +34,7 @@ def to_table_rows(data: Any) -> List[Dict[str, Any]]:
 	return []
 
 
-def render_table(data: Any, *, max_rows: int = 200, caption: Optional[str] = None) -> None:
+def render_table(data: Any, *, max_rows: int = 200, caption: str | None = None) -> None:
 	rows = to_table_rows(data)
 	if not rows:
 		st.info("No data available")
@@ -51,7 +54,7 @@ def try_get(d: Mapping[str, Any], *keys: str, default: Any = None) -> Any:
 	return default
 
 
-def render_line_series(series: Mapping[str, Any], *, x_key: str, y_key: str, title: Optional[str] = None) -> None:
+def render_line_series(series: Mapping[str, Any], *, x_key: str, y_key: str, title: str | None = None) -> None:
 	try:
 		df = pd.DataFrame(series)
 		if x_key in df.columns and y_key in df.columns:

@@ -5,8 +5,8 @@ Contains leaderboards, copy trading, and trader management endpoints.
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -83,7 +83,7 @@ async def get_social_trader(trader_id: str):
 
 
 @router.post("/api/social/copy-trade")
-async def start_copy_trading(copy_data: Dict[str, Any]):
+async def start_copy_trading(copy_data: dict[str, Any]):
     """Start copying a trader's trades"""
     try:
         # Start real copy trading using social trading service
@@ -100,7 +100,7 @@ async def start_copy_trading(copy_data: Dict[str, Any]):
 
 
 @router.post("/api/social/stop-copy-trade")
-async def stop_copy_trading(copy_data: Dict[str, Any]):
+async def stop_copy_trading(copy_data: dict[str, Any]):
     """Stop copying a trader's trades"""
     try:
         # Stop real copy trading using social trading service

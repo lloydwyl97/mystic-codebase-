@@ -4,9 +4,9 @@ Handles notifications and alerts
 """
 
 import logging
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +29,9 @@ class NotificationService:
         title: str,
         message: str,
         notification_type: str = "info",
-        user_id: Optional[str] = None,
-        data: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        user_id: str | None = None,
+        data: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Create a new notification"""
         try:
             notification_id = str(uuid.uuid4())
@@ -57,10 +57,10 @@ class NotificationService:
 
     async def get_notifications(
         self,
-        user_id: Optional[str] = None,
+        user_id: str | None = None,
         limit: int = 50,
         unread_only: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get notifications for a user"""
         try:
             notifications = list(self.notifications.values())
@@ -89,7 +89,7 @@ class NotificationService:
             logger.error(f"âŒ Error getting notifications: {e}")
             return {"error": str(e)}
 
-    async def mark_notification_read(self, notification_id: str) -> Dict[str, Any]:
+    async def mark_notification_read(self, notification_id: str) -> dict[str, Any]:
         """Mark a notification as read"""
         try:
             if notification_id in self.notifications:
@@ -105,7 +105,7 @@ class NotificationService:
             logger.error(f"âŒ Error marking notification as read: {e}")
             return {"success": False, "error": str(e)}
 
-    async def mark_all_notifications_read(self, user_id: Optional[str] = None) -> Dict[str, Any]:
+    async def mark_all_notifications_read(self, user_id: str | None = None) -> dict[str, Any]:
         """Mark all notifications as read for a user"""
         try:
             count = 0
@@ -122,7 +122,7 @@ class NotificationService:
             logger.error(f"âŒ Error marking all notifications as read: {e}")
             return {"success": False, "error": str(e)}
 
-    async def delete_notification(self, notification_id: str) -> Dict[str, Any]:
+    async def delete_notification(self, notification_id: str) -> dict[str, Any]:
         """Delete a notification"""
         try:
             if notification_id in self.notifications:
@@ -135,7 +135,7 @@ class NotificationService:
             logger.error(f"âŒ Error deleting notification: {e}")
             return {"success": False, "error": str(e)}
 
-    async def clear_all_notifications(self, user_id: Optional[str] = None) -> Dict[str, Any]:
+    async def clear_all_notifications(self, user_id: str | None = None) -> dict[str, Any]:
         """Clear all notifications for a user"""
         try:
             count = 0
@@ -161,8 +161,8 @@ class NotificationService:
         action: str,
         price: float,
         amount: float,
-        user_id: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        user_id: str | None = None,
+    ) -> dict[str, Any]:
         """Create a trade alert notification"""
         title = f"Trade Executed: {action.upper()} {symbol}"
         message = f"Executed {action} order for {amount} {symbol} at ${price:,.2f}"
@@ -186,8 +186,8 @@ class NotificationService:
         current_price: float,
         target_price: float,
         condition: str,
-        user_id: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        user_id: str | None = None,
+    ) -> dict[str, Any]:
         """Create a price alert notification"""
         title = f"Price Alert: {symbol}"
         message = (
@@ -212,8 +212,8 @@ class NotificationService:
         title: str,
         message: str,
         severity: str = "info",
-        user_id: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        user_id: str | None = None,
+    ) -> dict[str, Any]:
         """Create a system alert notification"""
         return await self.create_notification(
             title=title,
@@ -223,7 +223,7 @@ class NotificationService:
             data={"severity": severity},
         )
 
-    async def get_notification_settings(self, user_id: Optional[str] = None) -> Dict[str, Any]:
+    async def get_notification_settings(self, user_id: str | None = None) -> dict[str, Any]:
         """Get notification settings"""
         return {
             "settings": self.alert_settings,
@@ -232,8 +232,8 @@ class NotificationService:
         }
 
     async def update_notification_settings(
-        self, settings: Dict[str, Any], user_id: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, settings: dict[str, Any], user_id: str | None = None
+    ) -> dict[str, Any]:
         """Update notification settings"""
         try:
             self.alert_settings.update(settings)
@@ -247,7 +247,7 @@ class NotificationService:
             logger.error(f"âŒ Error updating notification settings: {e}")
             return {"success": False, "error": str(e)}
 
-    async def get_notification_stats(self) -> Dict[str, Any]:
+    async def get_notification_stats(self) -> dict[str, Any]:
         """Get notification statistics"""
         try:
             total_notifications = len(self.notifications)

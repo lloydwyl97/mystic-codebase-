@@ -5,15 +5,16 @@ Port 8002 - Standalone AI strategy generation service
 """
 
 import json
+import logging
 import os
 import sys
-import logging
 from datetime import datetime
-from typing import Dict, Any, List, Optional
-import uvicorn
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-from fastapi.responses import JSONResponse
+from typing import Any
+
 import redis
+import uvicorn
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -76,8 +77,8 @@ class AIStrategyGeneratorService:
         self,
         strategy_type: str,
         symbol: str,
-        parameters: Dict[str, Any] = None,
-    ) -> Optional[Dict[str, Any]]:
+        parameters: dict[str, Any] = None,
+    ) -> dict[str, Any] | None:
         """Generate a new AI strategy"""
         try:
             logger.info(f"ðŸŽ¯ Generating {strategy_type} strategy for {symbol}")
@@ -104,7 +105,7 @@ class AIStrategyGeneratorService:
             logger.error(f"âŒ Error generating strategy: {e}")
             raise
 
-    async def get_strategy_status(self, strategy_id: str) -> Optional[Dict[str, Any]]:
+    async def get_strategy_status(self, strategy_id: str) -> dict[str, Any] | None:
         """Get strategy status"""
         try:
             strategy_data = self.redis_client.get(f"strategy:{strategy_id}")
@@ -115,7 +116,7 @@ class AIStrategyGeneratorService:
             logger.error(f"âŒ Error getting strategy status: {e}")
             return None
 
-    async def list_strategies(self) -> List[Dict[str, Any]]:
+    async def list_strategies(self) -> list[dict[str, Any]]:
         """List all generated strategies"""
         try:
             strategies = []
@@ -186,7 +187,7 @@ async def service_status():
 async def generate_strategy(
     strategy_type: str,
     symbol: str,
-    parameters: Dict[str, Any] = None,
+    parameters: dict[str, Any] = None,
     background_tasks: BackgroundTasks = None,
 ):
     """Generate a new AI strategy"""
@@ -258,7 +259,8 @@ async def process_strategy_queue():
         # Process queue
         processed = 0
         while True:
-            request = strategy_service.redis_client.lpop("ai_strategy_queue")
+            from utils.redis_helpers import to_str
+            request = to_str(strategy_service.redis_client.lpop("ai_strategy_queue"))
             if not request:
                 break
 

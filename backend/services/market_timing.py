@@ -6,7 +6,7 @@ Analyzes optimal entry/exit times based on market cycles and patterns
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -32,12 +32,12 @@ class AdvancedMarketTiming:
     """Advanced market timing analysis"""
 
     def __init__(self):
-        self.historical_patterns: Dict[str, Any] = {}
-        self.volatility_regimes: Dict[str, Any] = {}
-        self.market_phases: Dict[str, Any] = {}
+        self.historical_patterns: dict[str, Any] = {}
+        self.volatility_regimes: dict[str, Any] = {}
+        self.market_phases: dict[str, Any] = {}
         self.optimal_hours = [9, 10, 14, 15, 16]  # Best trading hours
         self.optimal_days = [1, 2, 3, 4]  # Monday-Thursday
-        self.lunar_cycle_data: Dict[str, Any] = {}
+        self.lunar_cycle_data: dict[str, Any] = {}
 
     async def analyze_market_timing(
         self, symbol: str, current_price: float, volume: float
@@ -219,7 +219,7 @@ class AdvancedMarketTiming:
         else:
             return "Hold - Neutral timing conditions"
 
-    def get_timing_summary(self, symbol: str) -> Dict[str, Any]:
+    def get_timing_summary(self, symbol: str) -> dict[str, Any]:
         """Get market timing summary"""
         return {
             "symbol": symbol,

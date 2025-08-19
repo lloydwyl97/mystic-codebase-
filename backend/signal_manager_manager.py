@@ -8,8 +8,8 @@ import json
 import logging
 import random
 import time
-from datetime import timezone, datetime
-from typing import Any, Dict, List
+from datetime import datetime, timezone
+from typing import Any
 
 from notification_service import get_notification_service
 
@@ -25,45 +25,45 @@ class SignalManagerManager:
         self._health_check_interval = 30  # seconds
         self._last_health_check = 0
 
-    async def activate_all_signals(self) -> Dict[str, Any]:
+    async def activate_all_signals(self) -> dict[str, Any]:
         """Activate all trading signals"""
         return await self.signal_manager.activate_all_signals()
 
-    async def get_signal_status(self) -> Dict[str, Any]:
+    async def get_signal_status(self) -> dict[str, Any]:
         """Get current status of all signals"""
         return await self.signal_manager.get_signal_status()
 
-    async def generate_live_signal(self, symbol: str) -> Dict[str, Any]:
+    async def generate_live_signal(self, symbol: str) -> dict[str, Any]:
         """Generate live trading signal for a symbol"""
         return await self.signal_manager.generate_live_signal(symbol)
 
-    async def start_auto_trading(self) -> Dict[str, Any]:
+    async def start_auto_trading(self) -> dict[str, Any]:
         """Start auto-trading"""
         return await self.signal_manager.start_auto_trading()
 
-    async def stop_auto_trading(self) -> Dict[str, Any]:
+    async def stop_auto_trading(self) -> dict[str, Any]:
         """Stop auto-trading"""
         return await self.signal_manager.stop_auto_trading()
 
-    async def get_auto_trade_status(self) -> Dict[str, Any]:
+    async def get_auto_trade_status(self) -> dict[str, Any]:
         """Get auto-trading status"""
         return await self.signal_manager.get_auto_trade_status()
 
-    async def self_heal_signals(self) -> Dict[str, Any]:
+    async def self_heal_signals(self) -> dict[str, Any]:
         """Self-heal signals"""
         return await self.signal_manager.self_heal_signals()
 
-    async def check_signal_health(self) -> Dict[str, Any]:
+    async def check_signal_health(self) -> dict[str, Any]:
         """Check signal health"""
         return await self.signal_manager.check_signal_health()
 
-    async def get_signal_performance_metrics(self) -> Dict[str, Any]:
+    async def get_signal_performance_metrics(self) -> dict[str, Any]:
         """Get performance metrics for all signals"""
         try:
             signal_status = await self.get_signal_status()
             signals = signal_status.get("signals", {})
 
-            metrics: Dict[str, Any] = {
+            metrics: dict[str, Any] = {
                 "total_signals": len(signals),
                 "active_signals": 0,
                 "inactive_signals": 0,
@@ -116,13 +116,13 @@ class SignalManagerManager:
             logger.error(f"Error getting signal performance metrics: {str(e)}")
             raise
 
-    async def get_trading_strategy_metrics(self) -> Dict[str, Any]:
+    async def get_trading_strategy_metrics(self) -> dict[str, Any]:
         """Get metrics for trading strategies"""
         try:
             signal_status = await self.get_signal_status()
             strategies = signal_status.get("strategies", {})
 
-            metrics: Dict[str, Any] = {
+            metrics: dict[str, Any] = {
                 "total_strategies": len(strategies),
                 "enabled_strategies": 0,
                 "disabled_strategies": 0,
@@ -176,7 +176,7 @@ class SignalManagerManager:
         }
         return descriptions.get(strategy_name, "Unknown strategy")
 
-    async def get_system_health_summary(self) -> Dict[str, Any]:
+    async def get_system_health_summary(self) -> dict[str, Any]:
         """Get comprehensive system health summary"""
         try:
             health_data = await self.check_signal_health()
@@ -203,12 +203,12 @@ class SignalManagerManager:
 
     def _generate_health_recommendations(
         self,
-        health_data: Dict[str, Any],
-        performance_metrics: Dict[str, Any],
-        strategy_metrics: Dict[str, Any],
-    ) -> List[str]:
+        health_data: dict[str, Any],
+        performance_metrics: dict[str, Any],
+        strategy_metrics: dict[str, Any],
+    ) -> list[str]:
         """Generate health recommendations based on current state"""
-        recommendations: List[str] = []
+        recommendations: list[str] = []
 
         # Check signal health
         overall_health = health_data.get("overall_health", "unknown")
@@ -248,13 +248,13 @@ class SignalManagerManager:
 
         return recommendations
 
-    async def optimize_signal_performance(self) -> Dict[str, Any]:
+    async def optimize_signal_performance(self) -> dict[str, Any]:
         """Optimize signal performance based on current metrics"""
         try:
             performance_metrics = await self.get_signal_performance_metrics()
             strategy_metrics = await self.get_trading_strategy_metrics()
 
-            optimizations: Dict[str, Any] = {
+            optimizations: dict[str, Any] = {
                 "signal_optimizations": [],
                 "strategy_optimizations": [],
                 "performance_improvements": [],
@@ -406,7 +406,7 @@ class SignalManager:
             "futures_trading": {"enabled": True, "min_confidence": 0.7},
         }
 
-    async def activate_all_signals(self) -> Dict[str, Any]:
+    async def activate_all_signals(self) -> dict[str, Any]:
         """Activate all trading signals"""
         try:
             logger.info("Activating all trading signals...")
@@ -451,7 +451,7 @@ class SignalManager:
             logger.error(f"Error activating signals: {str(e)}")
             raise
 
-    async def get_signal_status(self) -> Dict[str, Any]:
+    async def get_signal_status(self) -> dict[str, Any]:
         """Get current status of all signals"""
         try:
             # Get from Redis
@@ -474,7 +474,7 @@ class SignalManager:
             logger.error(f"Error getting signal status: {str(e)}")
             raise
 
-    async def generate_live_signal(self, symbol: str) -> Dict[str, Any]:
+    async def generate_live_signal(self, symbol: str) -> dict[str, Any]:
         """Generate live trading signal for a symbol"""
         try:
             # Check if signals are active
@@ -505,7 +505,7 @@ class SignalManager:
             logger.error(f"Error generating live signal: {str(e)}")
             raise
 
-    async def start_auto_trading(self) -> Dict[str, Any]:
+    async def start_auto_trading(self) -> dict[str, Any]:
         """Start auto-trading"""
         try:
             logger.info("Starting auto-trading...")
@@ -551,7 +551,7 @@ class SignalManager:
             logger.error(f"Error starting auto-trading: {str(e)}")
             raise
 
-    async def stop_auto_trading(self) -> Dict[str, Any]:
+    async def stop_auto_trading(self) -> dict[str, Any]:
         """Stop auto-trading"""
         try:
             logger.info("Stopping auto-trading...")
@@ -589,7 +589,7 @@ class SignalManager:
             logger.error(f"Error stopping auto-trading: {str(e)}")
             raise
 
-    async def get_auto_trade_status(self) -> Dict[str, Any]:
+    async def get_auto_trade_status(self) -> dict[str, Any]:
         """Get auto-trading status"""
         try:
             auto_trade_data = self.redis_client.get("auto_trading_enabled")
@@ -604,13 +604,13 @@ class SignalManager:
             logger.error(f"Error getting auto-trade status: {str(e)}")
             raise
 
-    async def self_heal_signals(self) -> Dict[str, Any]:
+    async def self_heal_signals(self) -> dict[str, Any]:
         """Self-heal signals"""
         try:
             logger.info("Starting signal self-healing...")
 
-            healed_signals: List[str] = []
-            failed_signals: List[Dict[str, str]] = []
+            healed_signals: list[str] = []
+            failed_signals: list[dict[str, str]] = []
 
             # Check each signal type
             for signal_type, config in self.signal_types.items():
@@ -655,7 +655,7 @@ class SignalManager:
             logger.error(f"Error during self-healing: {str(e)}")
             raise
 
-    async def check_signal_health(self) -> Dict[str, Any]:
+    async def check_signal_health(self) -> dict[str, Any]:
         """Check signal health"""
         try:
             current_time = time.time()
@@ -730,7 +730,7 @@ class SignalManager:
             logger.error(f"Error checking signal health: {str(e)}")
             raise
 
-    async def _check_health_changes(self, current_health: Dict[str, Any]):
+    async def _check_health_changes(self, current_health: dict[str, Any]):
         """Check for health state changes and notify"""
         if self.previous_health_state is None:
             self.previous_health_state = current_health

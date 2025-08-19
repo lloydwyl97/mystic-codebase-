@@ -7,7 +7,7 @@ Contains common endpoint patterns and utilities.
 
 import logging
 import time
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # Simple in-memory rate limiter
 RATE_LIMIT = 60  # requests per minute
-rate_limit_cache: Dict[str, int] = {}
+rate_limit_cache: dict[str, int] = {}
 
 
 def rate_limiter(request: Request) -> None:
@@ -34,7 +34,7 @@ def rate_limiter(request: Request) -> None:
 def create_health_endpoint(prefix: str = "/api"):
     """Create health check endpoint"""
 
-    async def health_check() -> Dict[str, str]:
+    async def health_check() -> dict[str, str]:
         """Health check endpoint"""
         return {"status": "healthy", "service": "mystic-backend"}
 
@@ -44,7 +44,7 @@ def create_health_endpoint(prefix: str = "/api"):
 def create_version_endpoint(prefix: str = "/api"):
     """Create version endpoint"""
 
-    async def version() -> Dict[str, str]:
+    async def version() -> dict[str, str]:
         """Get application version"""
         return {"version": "1.0.0", "service": "mystic-backend"}
 
@@ -54,7 +54,7 @@ def create_version_endpoint(prefix: str = "/api"):
 def create_comprehensive_health_endpoint(prefix: str = "/api"):
     """Create comprehensive health check endpoint"""
 
-    async def comprehensive_health_check() -> Dict[str, Any]:
+    async def comprehensive_health_check() -> dict[str, Any]:
         """Comprehensive health check with detailed status"""
         try:
             return {
@@ -95,7 +95,7 @@ def create_error_handler():
 def create_data_mode_endpoint(prefix: str = "/api"):
     """Create data mode toggle endpoint"""
 
-    async def toggle_data_mode(mode: str) -> Dict[str, Any]:
+    async def toggle_data_mode(mode: str) -> dict[str, Any]:
         """Toggle data mode (live/simulation)"""
         try:
             # Real implementation using data service
@@ -119,7 +119,7 @@ def create_data_mode_endpoint(prefix: str = "/api"):
 def create_data_status_endpoint(prefix: str = "/api"):
     """Create data status endpoint"""
 
-    async def get_data_status() -> Dict[str, Any]:
+    async def get_data_status() -> dict[str, Any]:
         """Get data status"""
         try:
             # Real implementation using data service

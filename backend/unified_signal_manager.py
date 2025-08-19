@@ -8,8 +8,8 @@ import asyncio
 import json
 import logging
 from dataclasses import asdict, dataclass
-from datetime import timezone, datetime
-from typing import Any, Dict, List, Optional
+from datetime import datetime, timezone
+from typing import Any
 
 # Fix import paths to use proper relative imports
 try:
@@ -21,8 +21,9 @@ except ImportError:
     # Fallback to absolute imports if relative imports fail
     from cosmic_fetcher import CosmicFetcher
     from indicators import IndicatorsFetcher
-    from price_fetcher import PriceFetcher
     from trade_engine import TradeEngine
+
+    from price_fetcher import PriceFetcher
 
 logger = logging.getLogger(__name__)
 
@@ -30,10 +31,10 @@ logger = logging.getLogger(__name__)
 @dataclass
 class UnifiedSignal:
     symbol: str
-    tier1_data: Dict[str, Any]
-    tier2_data: Dict[str, Any]
-    tier3_data: Dict[str, Any]
-    trade_decision: Dict[str, Any]
+    tier1_data: dict[str, Any]
+    tier2_data: dict[str, Any]
+    tier3_data: dict[str, Any]
+    trade_decision: dict[str, Any]
     timestamp: str
 
 
@@ -61,7 +62,7 @@ class UnifiedSignalManager:
         self.tasks = []
 
         # Performance tracking
-        self.stats: Dict[str, Any] = {
+        self.stats: dict[str, Any] = {
             "start_time": None,
             "last_sync": None,
             "tier1_updates": 0,
@@ -134,7 +135,7 @@ class UnifiedSignalManager:
             trade_decisions = await self.trade_engine.generate_trade_decisions()
 
             # Create unified signals
-            unified_signals: Dict[str, Any] = {}
+            unified_signals: dict[str, Any] = {}
 
             # Process each symbol
             for symbol in tier1_signals.get("prices", {}):
@@ -172,7 +173,7 @@ class UnifiedSignalManager:
         except Exception as e:
             logger.error(f"Error synchronizing tiers: {e}")
 
-    async def _cache_unified_signals(self, signals: Dict[str, Any]):
+    async def _cache_unified_signals(self, signals: dict[str, Any]):
         """Cache unified signals"""
         try:
             self.redis_client.setex(
@@ -284,7 +285,7 @@ class UnifiedSignalManager:
 
         logger.info("All components stopped")
 
-    async def get_unified_signals(self, symbol: Optional[str] = None) -> Dict[str, Any]:
+    async def get_unified_signals(self, symbol: str | None = None) -> dict[str, Any]:
         """Get unified signals for all symbols or a specific symbol"""
         try:
             signals_data = self.redis_client.get("unified_signals")
@@ -302,7 +303,7 @@ class UnifiedSignalManager:
             logger.error(f"Error getting unified signals: {e}")
             return {}
 
-    async def get_signal_summary(self) -> Dict[str, Any]:
+    async def get_signal_summary(self) -> dict[str, Any]:
         """Get summary of all signal tiers"""
         try:
             summary = {
@@ -338,11 +339,11 @@ class UnifiedSignalManager:
             logger.error(f"Error getting signal summary: {e}")
             return {}
 
-    async def get_active_signals(self) -> List[Dict[str, Any]]:
+    async def get_active_signals(self) -> list[dict[str, Any]]:
         """Get all active trading signals"""
         try:
             decisions = await self.trade_engine.get_trade_decisions()
-            active_signals: List[Dict[str, Any]] = []
+            active_signals: list[dict[str, Any]] = []
 
             for decision in decisions:
                 if (
@@ -371,7 +372,7 @@ class UnifiedSignalManager:
             await self.stop_all_components()
             logger.info("Unified Signal Manager stopped")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get overall status of the unified signal manager"""
         return {
             "manager_status": "running" if self.is_running else "stopped",

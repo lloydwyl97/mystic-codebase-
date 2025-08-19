@@ -17,15 +17,16 @@ import time
 from collections import defaultdict, deque
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 try:
     import redis
 except ImportError:
     redis = None
 
-from backend.utils.exceptions import DatabaseException
 from trading_config import trading_config
+
+from backend.utils.exceptions import DatabaseException
 
 logger = logging.getLogger(__name__)
 
@@ -135,16 +136,16 @@ class QueryCache:
 
     def __init__(self, ttl: int = CACHE_TTL):
         self.ttl = ttl
-        self.cache: Dict[str, Tuple[Any, float]] = {}
+        self.cache: dict[str, tuple[Any, float]] = {}
         self.lock = threading.Lock()
         self.stats = {"hits": 0, "misses": 0, "evictions": 0}
 
-    def _get_cache_key(self, query: str, params: Optional[Tuple] = None) -> str:
+    def _get_cache_key(self, query: str, params: tuple | None = None) -> str:
         """Generate cache key for query"""
         key_data = f"{query}:{params}"
         return hashlib.md5(key_data.encode()).hexdigest()
 
-    def get(self, query: str, params: Optional[Tuple] = None) -> Optional[Any]:
+    def get(self, query: str, params: tuple | None = None) -> Any | None:
         """Get cached result"""
         key = self._get_cache_key(query, params)
         with self.lock:
@@ -160,7 +161,7 @@ class QueryCache:
             self.stats["misses"] += 1
             return None
 
-    def set(self, query: str, result: Any, params: Optional[Tuple] = None):
+    def set(self, query: str, result: Any, params: tuple | None = None):
         """Cache query result"""
         key = self._get_cache_key(query, params)
         with self.lock:
@@ -201,7 +202,7 @@ class RateLimiter:
                 self.stats["rate_limited"] += 1
                 return False
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get rate limiter statistics"""
         with self.lock:
             current_rate = len(self.query_times)
@@ -216,7 +217,7 @@ class OptimizedDatabaseManager:
         self.connection_pool = DatabaseConnectionPool()
         self.query_cache = QueryCache()
         self.rate_limiter = RateLimiter()
-        self.query_metrics: List[QueryMetrics] = []
+        self.query_metrics: list[QueryMetrics] = []
         self.metrics_lock = threading.Lock()
 
         # Initialize database
@@ -338,7 +339,7 @@ class OptimizedDatabaseManager:
     def execute_query(
         self,
         query: str,
-        params: Optional[Tuple] = None,
+        params: tuple | None = None,
         use_cache: bool = True,
     ) -> Any:
         """Execute query with caching and rate limiting"""
@@ -410,7 +411,7 @@ class OptimizedDatabaseManager:
 
         return result
 
-    def get_market_data(self, symbol: str, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_market_data(self, symbol: str, limit: int = 100) -> list[dict[str, Any]]:
         """Get market data with optimized query"""
         query = """
             SELECT symbol, price, volume, timestamp, created_at
@@ -428,7 +429,7 @@ class OptimizedDatabaseManager:
             logger.error(f"Failed to get market data for {symbol}: {e}")
             return []
 
-    def get_market_data_by_time_range(self, symbol: str, start_time: float, end_time: float) -> List[Dict[str, Any]]:
+    def get_market_data_by_time_range(self, symbol: str, start_time: float, end_time: float) -> list[dict[str, Any]]:
         """Get market data within a specific time range with optimized query"""
         query = """
             SELECT timestamp, price, volume, symbol, change_24h, market_cap
@@ -439,7 +440,7 @@ class OptimizedDatabaseManager:
         """
         return self.execute_query(query, (symbol, start_time, end_time), use_cache=False)
 
-    def get_latest_market_data(self, symbols: List[str]) -> List[Dict[str, Any]]:
+    def get_latest_market_data(self, symbols: list[str]) -> list[dict[str, Any]]:
         """Get latest market data for multiple symbols with optimized batch query"""
         if not symbols:
             return []
@@ -458,7 +459,7 @@ class OptimizedDatabaseManager:
         """
         return self.execute_query(query, tuple(symbols), use_cache=True)
 
-    def get_market_data_batch(self, symbols: List[str], limit: int = 100) -> Dict[str, List[Dict[str, Any]]]:
+    def get_market_data_batch(self, symbols: list[str], limit: int = 100) -> dict[str, list[dict[str, Any]]]:
         """Get market data for multiple symbols in a single optimized query"""
         if not symbols:
             return {}
@@ -487,7 +488,7 @@ class OptimizedDatabaseManager:
 
         return grouped_data
 
-    def get_aggregated_market_stats(self, symbols: List[str], timeframe: str = '24h') -> Dict[str, Dict[str, Any]]:
+    def get_aggregated_market_stats(self, symbols: list[str], timeframe: str = '24h') -> dict[str, dict[str, Any]]:
         """Get aggregated market statistics for multiple symbols"""
         if not symbols:
             return {}
@@ -533,7 +534,7 @@ class OptimizedDatabaseManager:
 
         return stats
 
-    def get_trending_symbols(self, limit: int = 10, timeframe: str = '24h') -> List[Dict[str, Any]]:
+    def get_trending_symbols(self, limit: int = 10, timeframe: str = '24h') -> list[dict[str, Any]]:
         """Get trending symbols based on volume and price change"""
         if timeframe == '24h':
             query = """
@@ -568,7 +569,7 @@ class OptimizedDatabaseManager:
 
         return self.execute_query(query, (limit,), use_cache=True)
 
-    def get_correlation_matrix(self, symbols: List[str], timeframe: str = '24h') -> Dict[str, Dict[str, float]]:
+    def get_correlation_matrix(self, symbols: list[str], timeframe: str = '24h') -> dict[str, dict[str, float]]:
         """Calculate correlation matrix for multiple symbols"""
         if len(symbols) < 2:
             return {}
@@ -629,7 +630,7 @@ class OptimizedDatabaseManager:
                             mean1 = sum(returns1) / len(returns1)
                             mean2 = sum(returns2) / len(returns2)
 
-                            numerator = sum((r1 - mean1) * (r2 - mean2) for r1, r2 in zip(returns1, returns2))
+                            numerator = sum((r1 - mean1) * (r2 - mean2) for r1, r2 in zip(returns1, returns2, strict=False))
                             denominator1 = sum((r1 - mean1) ** 2 for r1 in returns1)
                             denominator2 = sum((r2 - mean2) ** 2 for r2 in returns2)
 
@@ -645,7 +646,7 @@ class OptimizedDatabaseManager:
 
         return correlation_matrix
 
-    def get_volatility_analysis(self, symbol: str, timeframe: str = '24h') -> Dict[str, Any]:
+    def get_volatility_analysis(self, symbol: str, timeframe: str = '24h') -> dict[str, Any]:
         """Get detailed volatility analysis for a symbol"""
         if timeframe == '24h':
             query = """
@@ -707,7 +708,7 @@ class OptimizedDatabaseManager:
             'timestamp': time.time()
         }
 
-    def insert_market_data(self, symbol: str, price: float, volume: Optional[float] = None) -> bool:
+    def insert_market_data(self, symbol: str, price: float, volume: float | None = None) -> bool:
         """Insert market data with optimized query"""
         query = """
             INSERT INTO market_data (symbol, price, volume, timestamp)
@@ -721,7 +722,7 @@ class OptimizedDatabaseManager:
             logger.error(f"Failed to insert market data for {symbol}: {e}")
             return False
 
-    def get_performance_stats(self) -> Dict[str, Any]:
+    def get_performance_stats(self) -> dict[str, Any]:
         """Get comprehensive performance statistics"""
         with self.metrics_lock:
             if not self.query_metrics:
@@ -788,7 +789,7 @@ class OptimizedDatabaseManager:
         except Exception as e:
             logger.error(f"Database optimization failed: {e}")
 
-    def get_query_performance_stats(self) -> Dict[str, Any]:
+    def get_query_performance_stats(self) -> dict[str, Any]:
         """Get detailed query performance statistics"""
         try:
             with self.get_connection() as conn:

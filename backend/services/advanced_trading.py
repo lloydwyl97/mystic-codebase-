@@ -4,8 +4,8 @@ Handles advanced trading operations and strategies
 """
 
 import logging
-from typing import Dict, Any
 from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ class AdvancedTradingService:
         self.trading_pairs = []  # Will be populated dynamically from exchange APIs
         logger.info("âœ… AdvancedTradingService initialized")
 
-    async def get_strategy_status(self) -> Dict[str, Any]:
+    async def get_strategy_status(self) -> dict[str, Any]:
         """Get status of all trading strategies"""
         return {
             "active_strategies": len(self.active_strategies),
@@ -26,8 +26,8 @@ class AdvancedTradingService:
         }
 
     async def start_strategy(
-        self, strategy_name: str, pair: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, strategy_name: str, pair: str, params: dict[str, Any]
+    ) -> dict[str, Any]:
         """Start a trading strategy"""
         try:
             strategy_id = f"{strategy_name}_{pair}_{datetime.now().timestamp()}"
@@ -44,7 +44,7 @@ class AdvancedTradingService:
             logger.error(f"âŒ Error starting strategy: {e}")
             return {"success": False, "error": str(e)}
 
-    async def stop_strategy(self, strategy_id: str) -> Dict[str, Any]:
+    async def stop_strategy(self, strategy_id: str) -> dict[str, Any]:
         """Stop a trading strategy"""
         try:
             if strategy_id in self.active_strategies:
@@ -56,7 +56,7 @@ class AdvancedTradingService:
             logger.error(f"âŒ Error stopping strategy: {e}")
             return {"success": False, "error": str(e)}
 
-    async def get_market_analysis(self, pair: str) -> Dict[str, Any]:
+    async def get_market_analysis(self, pair: str) -> dict[str, Any]:
         """Get advanced market analysis for a pair"""
         try:
             # Simulate market analysis
@@ -73,7 +73,7 @@ class AdvancedTradingService:
             logger.error(f"âŒ Error getting market analysis: {e}")
             return {"error": str(e)}
 
-    async def get_risk_metrics(self) -> Dict[str, Any]:
+    async def get_risk_metrics(self) -> dict[str, Any]:
         """Get current risk metrics"""
         return {
             "total_exposure": 0.15,

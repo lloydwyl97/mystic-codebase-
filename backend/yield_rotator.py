@@ -6,9 +6,8 @@ and rotating back to trading.
 """
 
 import time
-from typing import Dict, List, Any
-from datetime import datetime, timedelta
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from typing import Any
 
 
 class YieldRotator:
@@ -87,7 +86,7 @@ class YieldRotator:
         amount: float,
         risk_tolerance: str = "medium",
         lock_period: int = 30,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Select optimal yield protocol based on parameters.
 
@@ -134,7 +133,7 @@ class YieldRotator:
 
     def park_capital(
         self, amount: float, protocol_id: str = None, lock_period: int = 30
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Park capital in yield protocol.
 
@@ -191,7 +190,7 @@ class YieldRotator:
             "expected_yield": amount * protocol["apy"] * (lock_period / 365),
         }
 
-    def withdraw_capital(self, parking_id: str, force: bool = False) -> Dict[str, Any]:
+    def withdraw_capital(self, parking_id: str, force: bool = False) -> dict[str, Any]:
         """
         Withdraw capital from yield protocol.
 
@@ -241,7 +240,7 @@ class YieldRotator:
             "total_returned": parking_record["amount"] + earned_yield,
         }
 
-    def get_parked_capital_summary(self) -> Dict[str, Any]:
+    def get_parked_capital_summary(self) -> dict[str, Any]:
         """Get summary of all parked capital."""
         if not self.parked_capital:
             return {
@@ -293,7 +292,7 @@ class YieldRotator:
         total_capital: float,
         trading_signal_strength: float,
         idle_percentage: float = 0.2,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Automatically rotate capital based on trading signals.
 
@@ -346,7 +345,7 @@ class YieldRotator:
             "trading_signal_strength": trading_signal_strength,
         }
 
-    def _log_parking_action(self, parking_record: Dict[str, Any]):
+    def _log_parking_action(self, parking_record: dict[str, Any]):
         """Log parking action."""
         log_entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -359,7 +358,7 @@ class YieldRotator:
         }
         self.yield_history.append(log_entry)
 
-    def _log_withdrawal_action(self, parking_record: Dict[str, Any]):
+    def _log_withdrawal_action(self, parking_record: dict[str, Any]):
         """Log withdrawal action."""
         log_entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -371,13 +370,13 @@ class YieldRotator:
         }
         self.yield_history.append(log_entry)
 
-    def get_yield_history(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_yield_history(self, limit: int = 50) -> list[dict[str, Any]]:
         """Get yield operation history."""
         return self.yield_history[-limit:]
 
 
 # Convenience functions
-def park_in_yield(usdt_amount: float, protocol_id: str = None) -> Dict[str, Any]:
+def park_in_yield(usdt_amount: float, protocol_id: str = None) -> dict[str, Any]:
     """
     Simple function to park capital in yield.
 
@@ -392,7 +391,7 @@ def park_in_yield(usdt_amount: float, protocol_id: str = None) -> Dict[str, Any]
     return rotator.park_capital(usdt_amount, protocol_id)
 
 
-def exit_yield(parking_id: str) -> Dict[str, Any]:
+def exit_yield(parking_id: str) -> dict[str, Any]:
     """
     Simple function to exit yield position.
 
@@ -406,7 +405,7 @@ def exit_yield(parking_id: str) -> Dict[str, Any]:
     return rotator.withdraw_capital(parking_id)
 
 
-def auto_rotate_yield(total_capital: float, trading_signal: float) -> Dict[str, Any]:
+def auto_rotate_yield(total_capital: float, trading_signal: float) -> dict[str, Any]:
     """
     Auto-rotate capital based on trading signals.
 

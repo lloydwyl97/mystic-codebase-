@@ -5,7 +5,6 @@ Handles security headers configuration and management.
 """
 
 import logging
-from typing import Dict
 
 from fastapi.responses import JSONResponse
 
@@ -94,7 +93,7 @@ class SecurityHeaders:
             },
         }
 
-    def get_path_specific_headers(self, path: str) -> Dict[str, str]:
+    def get_path_specific_headers(self, path: str) -> dict[str, str]:
         """Get security headers specific to the request path"""
         for prefix, headers in self.path_specific_headers.items():
             if path.startswith(prefix):

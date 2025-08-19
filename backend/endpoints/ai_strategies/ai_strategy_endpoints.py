@@ -1,6 +1,6 @@
 ﻿"""AI Strategy System Live Endpoints"""
 
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -136,7 +136,7 @@ async def get_ai_strategy_health():
 
 # POST endpoints
 @router.post("/ai-strategy/leaderboard/add")
-async def add_strategy(strategy: Dict[str, Any]):
+async def add_strategy(strategy: dict[str, Any]):
     """Add new strategy to leaderboard"""
     try:
         ai_service = get_ai_strategy_service()
@@ -147,7 +147,7 @@ async def add_strategy(strategy: Dict[str, Any]):
 
 
 @router.post("/ai-strategy/mutations/add")
-async def add_mutation(mutation: Dict[str, Any]):
+async def add_mutation(mutation: dict[str, Any]):
     """Add new mutation"""
     try:
         ai_service = get_ai_strategy_service()
@@ -158,7 +158,7 @@ async def add_mutation(mutation: Dict[str, Any]):
 
 
 @router.post("/ai-strategy/position/update")
-async def update_position(position: Dict[str, Any]):
+async def update_position(position: dict[str, Any]):
     """Update current position"""
     try:
         portfolio = await portfolio_service.update_position(position)

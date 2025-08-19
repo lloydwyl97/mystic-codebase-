@@ -7,7 +7,6 @@ Handles rate limiting logic and request tracking.
 import logging
 import time
 from collections import defaultdict
-from typing import Dict, List, Tuple
 
 from fastapi import HTTPException, Request
 
@@ -19,7 +18,7 @@ class RateLimiter:
 
     def __init__(self):
         # Store request counts per IP
-        self.requests: Dict[str, List[float]] = defaultdict(list)
+        self.requests: dict[str, list[float]] = defaultdict(list)
 
         # Rate limit configurations
         self.rate_limits = {
@@ -51,7 +50,7 @@ class RateLimiter:
         # Full cleanup interval (every hour)
         self.full_cleanup_interval = 3600
 
-    def get_rate_limit(self, path: str) -> Tuple[int, int]:
+    def get_rate_limit(self, path: str) -> tuple[int, int]:
         """Get rate limit configuration for a path"""
         # Check for endpoint-specific limit
         for endpoint, limit_type in self.endpoint_limits.items():
@@ -86,7 +85,7 @@ class RateLimiter:
         max_window = max(limit["window"] for limit in self.rate_limits.values())
 
         # Clean up each IP's requests
-        ips_to_remove: List[str] = []
+        ips_to_remove: list[str] = []
         for ip, requests in self.requests.items():
             self.requests[ip] = [
                 req_time for req_time in requests if current_time - req_time < max_window

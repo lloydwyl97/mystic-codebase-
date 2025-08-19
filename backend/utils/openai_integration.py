@@ -8,7 +8,7 @@ Generates rich, human-readable descriptions for evolved strategies using OpenAI'
 import json
 import logging
 import os
-from typing import Any, Dict, Optional
+from typing import Any
 
 import requests
 
@@ -21,9 +21,9 @@ MODEL = "gpt-3.5-turbo"  # Can be upgraded to gpt-4 for better descriptions
 
 
 def generate_openai_description(
-    strategy: Dict[str, Any],
+    strategy: dict[str, Any],
     parent: str = "",
-    backtest_results: Dict[str, Any] = None,
+    backtest_results: dict[str, Any] = None,
 ) -> str:
     """
     Generate a rich strategy description using OpenAI GPT.
@@ -60,7 +60,7 @@ def generate_openai_description(
 
 
 def create_strategy_prompt(
-    strategy: Dict[str, Any], parent: str, backtest_results: Dict[str, Any]
+    strategy: dict[str, Any], parent: str, backtest_results: dict[str, Any]
 ) -> str:
     """Create a detailed prompt for OpenAI to generate strategy description."""
 
@@ -89,7 +89,7 @@ Write in a professional, technical tone suitable for trading documentation."""
     return prompt
 
 
-def call_openai_api(prompt: str) -> Optional[Dict[str, Any]]:
+def call_openai_api(prompt: str) -> dict[str, Any] | None:
     """Make API call to OpenAI."""
 
     headers = {
@@ -124,7 +124,7 @@ def call_openai_api(prompt: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-def generate_fallback_description(strategy: Dict[str, Any], parent: str = "") -> str:
+def generate_fallback_description(strategy: dict[str, Any], parent: str = "") -> str:
     """Generate a fallback description when OpenAI is not available."""
 
     strategy_type = strategy.get("strategy_type", "unknown")
@@ -159,9 +159,9 @@ def is_openai_available() -> bool:
 
 # Global function for easy access
 def generate_strategy_description(
-    strategy: Dict[str, Any],
+    strategy: dict[str, Any],
     parent: str = "",
-    backtest_results: Dict[str, Any] = None,
+    backtest_results: dict[str, Any] = None,
 ) -> str:
     """Main function to generate strategy description."""
     return generate_openai_description(strategy, parent, backtest_results)

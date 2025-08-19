@@ -4,20 +4,21 @@ FastAPI Dashboard Backend
 Real-time monitoring and control interface for the AI trading system.
 """
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+import os
+from datetime import datetime, timezone
+
+import uvicorn
+from capital_allocator import CapitalAllocator
+from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-import uvicorn
-from datetime import datetime, timezone
-import os
+from hyper_tuner import HyperparameterTuner
+from position_sizer import PositionSizer
 
 # Import your modules
 from strategy_leaderboard import get_strategy_leaderboard
-from position_sizer import PositionSizer
-from capital_allocator import CapitalAllocator
-from yield_rotator import YieldRotator
 from watchdog import TradingWatchdog
-from hyper_tuner import HyperparameterTuner
+from yield_rotator import YieldRotator
 
 # Initialize FastAPI app
 app = FastAPI(

@@ -4,19 +4,19 @@ Handles trading signal processing and management
 """
 
 import logging
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class SignalManager:
     def __init__(self):
-        self.signals: List[Dict[str, Any]] = []
-        self.signal_processors: Dict[str, Any] = {}
+        self.signals: list[dict[str, Any]] = []
+        self.signal_processors: dict[str, Any] = {}
         self.is_running = False
 
-    async def process_signal(self, signal_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_signal(self, signal_data: dict[str, Any]) -> dict[str, Any]:
         """Process a trading signal"""
         try:
             signal_id = f"signal_{len(self.signals) + 1}"
@@ -49,7 +49,7 @@ class SignalManager:
             logger.error(f"Error processing signal: {e}")
             return {"status": "error", "message": str(e)}
 
-    async def _apply_signal_logic(self, signal: Dict[str, Any]) -> Dict[str, Any]:
+    async def _apply_signal_logic(self, signal: dict[str, Any]) -> dict[str, Any]:
         """Apply signal processing logic"""
         try:
             # Simple signal strength calculation
@@ -79,8 +79,8 @@ class SignalManager:
             return signal
 
     async def get_signals(
-        self, symbol: Optional[str] = None, action: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+        self, symbol: str | None = None, action: str | None = None
+    ) -> list[dict[str, Any]]:
         """Get signals with optional filtering"""
         filtered_signals = self.signals
 
@@ -92,11 +92,11 @@ class SignalManager:
 
         return filtered_signals
 
-    async def get_latest_signals(self, limit: int = 10) -> List[Dict[str, Any]]:
+    async def get_latest_signals(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get latest signals"""
         return sorted(self.signals, key=lambda x: x.get("timestamp", ""), reverse=True)[:limit]
 
-    async def get_signal_stats(self) -> Dict[str, Any]:
+    async def get_signal_stats(self) -> dict[str, Any]:
         """Get signal statistics"""
         try:
             total_signals = len(self.signals)

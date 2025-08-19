@@ -4,9 +4,9 @@ Handles AI-powered trading strategies and predictions
 """
 
 import logging
-from typing import Dict, Any, List
-from datetime import datetime, timezone
 import random
+from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class AIStrategiesService:
         self.supported_pairs = []  # Will be populated dynamically from exchange APIs
         logger.info("âœ… AIStrategiesService initialized")
 
-    async def get_ai_status(self) -> Dict[str, Any]:
+    async def get_ai_status(self) -> dict[str, Any]:
         """Get status of AI models and strategies"""
         return {
             "active_models": len(self.active_ai_models),
@@ -27,7 +27,7 @@ class AIStrategiesService:
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    async def generate_prediction(self, pair: str, timeframe: str = "1h") -> Dict[str, Any]:
+    async def generate_prediction(self, pair: str, timeframe: str = "1h") -> dict[str, Any]:
         """Generate AI prediction for a trading pair"""
         try:
             # Simulate AI prediction
@@ -46,8 +46,8 @@ class AIStrategiesService:
             return {"error": str(e)}
 
     async def start_ai_strategy(
-        self, strategy_name: str, pair: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, strategy_name: str, pair: str, params: dict[str, Any]
+    ) -> dict[str, Any]:
         """Start an AI-powered trading strategy"""
         try:
             strategy_id = f"ai_{strategy_name}_{pair}_{datetime.now().timestamp()}"
@@ -65,7 +65,7 @@ class AIStrategiesService:
             logger.error(f"âŒ Error starting AI strategy: {e}")
             return {"success": False, "error": str(e)}
 
-    async def get_strategy_performance(self, strategy_id: str = None) -> Dict[str, Any]:
+    async def get_strategy_performance(self, strategy_id: str = None) -> dict[str, Any]:
         """Get performance metrics for AI strategies"""
         if strategy_id:
             if strategy_id in self.active_ai_models:
@@ -87,7 +87,7 @@ class AIStrategiesService:
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    async def get_market_sentiment(self, pair: str) -> Dict[str, Any]:
+    async def get_market_sentiment(self, pair: str) -> dict[str, Any]:
         """Get AI-generated market sentiment analysis"""
         try:
             sentiment = {
@@ -116,11 +116,11 @@ class AIStrategiesService:
             return {"error": str(e)}
 
     # Missing methods that endpoints expect
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         """Get AI strategy system status"""
         return await self.get_ai_status()
 
-    async def get_leaderboard(self) -> List[Dict[str, Any]]:
+    async def get_leaderboard(self) -> list[dict[str, Any]]:
         """Get AI strategy leaderboard"""
         strategies = []
         for strategy_id, strategy in self.active_ai_models.items():
@@ -136,7 +136,7 @@ class AIStrategiesService:
             )
         return strategies
 
-    async def get_auto_buy_config(self) -> Dict[str, Any]:
+    async def get_auto_buy_config(self) -> dict[str, Any]:
         """Get auto-buy configuration"""
         return {
             "enabled": True,
@@ -148,7 +148,7 @@ class AIStrategiesService:
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    async def get_auto_buy_history(self) -> List[Dict[str, Any]]:
+    async def get_auto_buy_history(self) -> list[dict[str, Any]]:
         """Get auto-buy history"""
         return [
             {
@@ -162,7 +162,7 @@ class AIStrategiesService:
             }
         ]
 
-    async def get_events(self, limit: int = 10) -> List[Dict[str, Any]]:
+    async def get_events(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent AI strategy events"""
         events = []
         for i in range(min(limit, 5)):
@@ -183,11 +183,11 @@ class AIStrategiesService:
             )
         return events
 
-    async def get_performance_analytics(self) -> Dict[str, Any]:
+    async def get_performance_analytics(self) -> dict[str, Any]:
         """Get performance analytics"""
         return await self.get_strategy_performance()
 
-    async def get_mutations(self) -> List[Dict[str, Any]]:
+    async def get_mutations(self) -> list[dict[str, Any]]:
         """Get strategy mutations"""
         return [
             {
@@ -199,7 +199,7 @@ class AIStrategiesService:
             }
         ]
 
-    async def get_recent_logs(self, lines: int = 50) -> List[str]:
+    async def get_recent_logs(self, lines: int = 50) -> list[str]:
         """Get recent logs"""
         return [
             f"[{datetime.now(timezone.timezone.utc).isoformat()}] INFO: AI strategy system operational",
@@ -207,7 +207,7 @@ class AIStrategiesService:
             f"[{datetime.now(timezone.timezone.utc).isoformat()}] INFO: Auto-buy configuration loaded",
         ][:lines]
 
-    async def get_health(self) -> Dict[str, Any]:
+    async def get_health(self) -> dict[str, Any]:
         """Health check for AI strategy system"""
         return {
             "status": "healthy",
@@ -216,7 +216,7 @@ class AIStrategiesService:
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    async def add_strategy(self, strategy: Dict[str, Any]) -> Dict[str, Any]:
+    async def add_strategy(self, strategy: dict[str, Any]) -> dict[str, Any]:
         """Add new strategy to leaderboard"""
         strategy_id = f"ai_{strategy.get('name', 'strategy')}_{datetime.now().timestamp()}"
         self.active_ai_models[strategy_id] = {
@@ -228,7 +228,7 @@ class AIStrategiesService:
         }
         return {"success": True, "strategy_id": strategy_id}
 
-    async def add_mutation(self, mutation: Dict[str, Any]) -> Dict[str, Any]:
+    async def add_mutation(self, mutation: dict[str, Any]) -> dict[str, Any]:
         """Add new mutation"""
         return {
             "success": True,
@@ -246,19 +246,19 @@ def get_ai_strategy_service() -> AIStrategiesService:
 
 
 # Functions for compatibility with existing imports
-async def pattern_recognition(symbol: str, timeframe: str = "1h") -> Dict[str, Any]:
+async def pattern_recognition(symbol: str, timeframe: str = "1h") -> dict[str, Any]:
     """Pattern recognition for trading signals"""
     service = get_ai_strategy_service()
     return await service.generate_prediction(symbol, timeframe)
 
 
-async def predictive_analytics(symbol: str, data: Dict[str, Any]) -> Dict[str, Any]:
+async def predictive_analytics(symbol: str, data: dict[str, Any]) -> dict[str, Any]:
     """Predictive analytics for market analysis"""
     service = get_ai_strategy_service()
     return await service.get_market_sentiment(symbol)
 
 
-async def strategy_builder(strategy_config: Dict[str, Any]) -> Dict[str, Any]:
+async def strategy_builder(strategy_config: dict[str, Any]) -> dict[str, Any]:
     """Build AI trading strategy"""
     service = get_ai_strategy_service()
     return await service.start_ai_strategy(

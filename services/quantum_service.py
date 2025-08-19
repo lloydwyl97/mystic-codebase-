@@ -5,7 +5,7 @@ Provides quantum computing functionality for the trading platform
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class QuantumService:
         self.status = "stopped"
         logger.info("✅ Quantum service stopped")
         
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         """Get quantum service status"""
         return {
             "status": self.status,
@@ -39,7 +39,7 @@ class QuantumService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_performance(self) -> Dict[str, Any]:
+    async def get_performance(self) -> dict[str, Any]:
         """Get quantum performance metrics"""
         return {
             "quantum_bits": 50,
@@ -49,7 +49,7 @@ class QuantumService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_optimization_results(self) -> Dict[str, Any]:
+    async def get_optimization_results(self) -> dict[str, Any]:
         """Get quantum optimization results"""
         return {
             "optimization_score": 0.92,
@@ -58,7 +58,7 @@ class QuantumService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_quantum_data(self) -> Dict[str, Any]:
+    async def get_quantum_data(self) -> dict[str, Any]:
         """Get quantum computing data"""
         return {
             "quantum_bits": 50,

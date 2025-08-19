@@ -2,7 +2,6 @@
 
 from backend.config.coins import FEATURED_SYMBOLS
 
-
 router = APIRouter(prefix="/api/markets", tags=["markets"])
 
 

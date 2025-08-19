@@ -20,8 +20,9 @@ def init_database():
 
     try:
         # Import database modules
-        from config import DATABASE_URL
         from database import create_tables, init_db
+
+        from config import DATABASE_URL
 
         logger.info(f"Database URL: {DATABASE_URL}")
 
@@ -49,8 +50,9 @@ def create_initial_data():
 
     try:
         # Import data initialization functions
-        from init_data import init_sample_data
         import asyncio
+
+        from init_data import init_sample_data
 
         # Initialize with live data sources
         asyncio.run(init_sample_data())

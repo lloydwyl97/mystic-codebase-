@@ -4,8 +4,9 @@ This module is deprecated and replaced by endpoints/consolidated_router.py
 All route loading is now handled by the consolidated router system
 """
 
-from fastapi import FastAPI
 import logging
+
+from fastapi import FastAPI
 
 logger = logging.getLogger(__name__)
 

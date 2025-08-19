@@ -4,9 +4,9 @@ Binance US Autobuy Setup Script
 Setup and configuration for SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT autobuy system
 """
 
-import sys
 import json
 import logging
+import sys
 from pathlib import Path
 
 # Configure logging

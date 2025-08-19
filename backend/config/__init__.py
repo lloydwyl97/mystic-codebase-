@@ -1,4 +1,5 @@
 ﻿from .settings import settings
+
 __all__ = ["settings"]
 
 # shim: provide AUTO_BUY_CONFIG if missing

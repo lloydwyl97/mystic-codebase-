@@ -3,7 +3,6 @@ from __future__ import annotations
 import os
 import typing as t
 
-
 _ICON_DIR = os.path.join(os.path.dirname(__file__), "assets", "icons")
 
 

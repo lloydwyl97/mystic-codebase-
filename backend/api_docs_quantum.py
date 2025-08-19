@@ -1,6 +1,6 @@
-﻿from fastapi import APIRouter
+﻿
+from fastapi import APIRouter
 from pydantic import BaseModel
-from typing import Dict
 
 router = APIRouter(prefix="/quantum", tags=["Quantum Computing"])
 
@@ -11,7 +11,7 @@ class QuantumExecuteRequest(BaseModel):
 
 
 class QuantumExecuteResponse(BaseModel):
-    result: Dict[str, int]
+    result: dict[str, int]
     num_qubits: int
     shots: int
 
@@ -42,7 +42,7 @@ class QuantumMLResponse(BaseModel):
     "/qiskit/health",
     summary="Qiskit Service Health",
     description="Check the health status of the Qiskit quantum service",
-    response_model=Dict[str, str],
+    response_model=dict[str, str],
 )
 async def qiskit_health():
     """
@@ -97,7 +97,7 @@ async def qiskit_execute(request: QuantumExecuteRequest):
     "/cirq/health",
     summary="Cirq Service Health",
     description="Check the health status of the Cirq quantum service",
-    response_model=Dict[str, str],
+    response_model=dict[str, str],
 )
 async def cirq_health():
     """
@@ -152,7 +152,7 @@ async def cirq_optimize(request: QuantumOptimizeRequest):
     "/pennylane/health",
     summary="PennyLane Service Health",
     description="Check the health status of the PennyLane quantum service",
-    response_model=Dict[str, str],
+    response_model=dict[str, str],
 )
 async def pennylane_health():
     """

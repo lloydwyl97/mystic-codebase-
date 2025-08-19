@@ -3,7 +3,7 @@ import threading
 import time
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import Any, Dict
+from typing import Any
 
 import psutil
 
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class MetricsCollector:
     def __init__(self):
         # Metrics storage
-        self.metrics: Dict[str, Any] = {
+        self.metrics: dict[str, Any] = {
             "requests": defaultdict(int),
             "responses": defaultdict(int),
             "errors": defaultdict(int),
@@ -26,7 +26,7 @@ class MetricsCollector:
         }
 
         # Metrics configuration
-        self.config: Dict[str, Any] = {
+        self.config: dict[str, Any] = {
             "retention_period": 3600,  # 1 hour
             "sampling_interval": 60,  # 1 minute
             "max_samples": 1000,  # Maximum samples to keep
@@ -112,7 +112,7 @@ class MetricsCollector:
         except Exception as e:
             logger.error(f"Error cleaning up metrics: {str(e)}")
 
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, Any]:
         """Get all metrics"""
         try:
             return {
@@ -146,7 +146,7 @@ class MetricsCollector:
             logger.error(f"Error getting metrics: {str(e)}")
             return {"error": str(e)}
 
-    def get_metrics_summary(self) -> Dict[str, Any]:
+    def get_metrics_summary(self) -> dict[str, Any]:
         """Get metrics summary"""
         try:
             total_requests = sum(self.metrics["requests"].values())
@@ -177,7 +177,7 @@ class MetricsCollector:
             logger.error(f"Error getting metrics summary: {str(e)}")
             return {"error": str(e)}
 
-    def get_detailed_metrics(self) -> Dict[str, Any]:
+    def get_detailed_metrics(self) -> dict[str, Any]:
         """Get detailed metrics with time series data"""
         try:
             return {

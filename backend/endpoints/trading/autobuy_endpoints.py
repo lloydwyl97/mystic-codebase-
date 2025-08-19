@@ -6,7 +6,7 @@ All endpoints return live data - no stubs or placeholders
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, TYPE_CHECKING, Protocol, runtime_checkable, TypedDict, List, cast
+from typing import TYPE_CHECKING, Any, Protocol, TypedDict, cast, runtime_checkable
 
 from fastapi import APIRouter, HTTPException
 
@@ -16,23 +16,22 @@ try:
     from backend.endpoints.autobuy.autobuy_config import get_config as _real_get_autobuy_config
     from backend.modules.ai.ai_signals import signal_scorer
 
-    def get_autobuy_config() -> Dict[str, Any]:
+    def get_autobuy_config() -> dict[str, Any]:
         cfg = _real_get_autobuy_config()
         try:
             return cfg.to_dict()  # type: ignore[attr-defined]
         except Exception:
-            return cast(Dict[str, Any], cfg)
+            return cast(dict[str, Any], cfg)
 except ImportError as e:
     logging.warning(f"Some autobuy config modules not available: {e}")
-    def get_autobuy_status_config() -> Dict[str, Any]:  # type: ignore[misc]
+    def get_autobuy_status_config() -> dict[str, Any]:  # type: ignore[misc]
         return {}
     # Provide a dict-returning fallback to satisfy type checker
-    def get_autobuy_config() -> Dict[str, Any]:  # type: ignore[misc]
+    def get_autobuy_config() -> dict[str, Any]:  # type: ignore[misc]
         return {"config": {}}
 
 if TYPE_CHECKING:
-    from backend.services.autobuy_service import AutobuyService as _AutobuyService  # type: ignore[unused-ignore]
-    from backend.services.trading import TradingService as _TradingService  # type: ignore[unused-ignore]
+    pass  # type: ignore[unused-ignore]
 
 
 class PerformanceDict(TypedDict, total=False):
@@ -46,43 +45,43 @@ class StatusDict(TypedDict, total=False):
 
 @runtime_checkable
 class AutobuyServiceProtocol(Protocol):
-    async def get_configuration(self) -> Dict[str, Any]:
+    async def get_configuration(self) -> dict[str, Any]:
         ...
 
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         ...
 
-    async def get_statistics(self) -> Dict[str, Any]:
+    async def get_statistics(self) -> dict[str, Any]:
         ...
 
     async def get_performance_metrics(self) -> PerformanceDict:
         ...
 
-    async def get_recent_trades(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_trades(self, limit: int = 50) -> list[dict[str, Any]]:
         ...
 
-    async def get_trade_summary(self) -> Dict[str, Any]:
+    async def get_trade_summary(self) -> dict[str, Any]:
         ...
 
-    async def get_recent_signals(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_signals(self, limit: int = 50) -> list[dict[str, Any]]:
         ...
 
-    async def get_signal_analysis(self) -> Dict[str, Any]:
+    async def get_signal_analysis(self) -> dict[str, Any]:
         ...
 
-    async def get_ai_status(self) -> Dict[str, Any]:
+    async def get_ai_status(self) -> dict[str, Any]:
         ...
 
-    async def get_ai_performance(self) -> Dict[str, Any]:
+    async def get_ai_performance(self) -> dict[str, Any]:
         ...
 
-    async def start(self) -> Dict[str, Any]:
+    async def start(self) -> dict[str, Any]:
         ...
 
-    async def stop(self) -> Dict[str, Any]:
+    async def stop(self) -> dict[str, Any]:
         ...
 
-    async def update_configuration(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    async def update_configuration(self, config: dict[str, Any]) -> dict[str, Any]:
         ...
 
 logger = logging.getLogger(__name__)
@@ -90,8 +89,8 @@ router = APIRouter()
 
 # Initialize real services
 try:
-    from backend.services.redis_client import get_redis_client
     from backend.services.autobuy_service import AutobuyService as _RealAutobuyService  # noqa: F401
+    from backend.services.redis_client import get_redis_client
     from backend.services.trading import TradingService as _RealTradingService  # noqa: F401
 
     autobuy_service: AutobuyServiceProtocol = _RealAutobuyService()  # type: ignore[assignment]
@@ -106,10 +105,9 @@ All endpoints return live data - no stubs or placeholders
 """
 
 import logging
-from datetime import datetime, timezone
-from typing import Any, Dict, TYPE_CHECKING, Protocol, runtime_checkable, TypedDict, List, cast
+from typing import TYPE_CHECKING, Any, Protocol, TypedDict, runtime_checkable
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 # Import real services
 try:
@@ -117,23 +115,22 @@ try:
     from backend.endpoints.autobuy.autobuy_config import get_config as _real_get_autobuy_config
     from backend.modules.ai.ai_signals import signal_scorer
 
-    def get_autobuy_config() -> Dict[str, Any]:
+    def get_autobuy_config() -> dict[str, Any]:
         cfg = _real_get_autobuy_config()
         try:
             return cfg.to_dict()  # type: ignore[attr-defined]
         except Exception:
-            return cast(Dict[str, Any], cfg)
+            return cast(dict[str, Any], cfg)
 except ImportError as e:
     logging.warning(f"Some autobuy config modules not available: {e}")
-    def get_autobuy_status_config() -> Dict[str, Any]:  # type: ignore[misc]
+    def get_autobuy_status_config() -> dict[str, Any]:  # type: ignore[misc]
         return {}
     # Provide a dict-returning fallback to satisfy type checker
-    def get_autobuy_config() -> Dict[str, Any]:  # type: ignore[misc]
+    def get_autobuy_config() -> dict[str, Any]:  # type: ignore[misc]
         return {"config": {}}
 
 if TYPE_CHECKING:
-    from backend.services.autobuy_service import AutobuyService as _AutobuyService  # type: ignore[unused-ignore]
-    from backend.services.trading import TradingService as _TradingService  # type: ignore[unused-ignore]
+    pass  # type: ignore[unused-ignore]
 
 
 class PerformanceDict(TypedDict, total=False):
@@ -147,43 +144,43 @@ class StatusDict(TypedDict, total=False):
 
 @runtime_checkable
 class AutobuyServiceProtocol(Protocol):
-    async def get_configuration(self) -> Dict[str, Any]:
+    async def get_configuration(self) -> dict[str, Any]:
         ...
 
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         ...
 
-    async def get_statistics(self) -> Dict[str, Any]:
+    async def get_statistics(self) -> dict[str, Any]:
         ...
 
     async def get_performance_metrics(self) -> PerformanceDict:
         ...
 
-    async def get_recent_trades(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_trades(self, limit: int = 50) -> list[dict[str, Any]]:
         ...
 
-    async def get_trade_summary(self) -> Dict[str, Any]:
+    async def get_trade_summary(self) -> dict[str, Any]:
         ...
 
-    async def get_recent_signals(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_signals(self, limit: int = 50) -> list[dict[str, Any]]:
         ...
 
-    async def get_signal_analysis(self) -> Dict[str, Any]:
+    async def get_signal_analysis(self) -> dict[str, Any]:
         ...
 
-    async def get_ai_status(self) -> Dict[str, Any]:
+    async def get_ai_status(self) -> dict[str, Any]:
         ...
 
-    async def get_ai_performance(self) -> Dict[str, Any]:
+    async def get_ai_performance(self) -> dict[str, Any]:
         ...
 
-    async def start(self) -> Dict[str, Any]:
+    async def start(self) -> dict[str, Any]:
         ...
 
-    async def stop(self) -> Dict[str, Any]:
+    async def stop(self) -> dict[str, Any]:
         ...
 
-    async def update_configuration(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    async def update_configuration(self, config: dict[str, Any]) -> dict[str, Any]:
         ...
 
 logger = logging.getLogger(__name__)
@@ -191,8 +188,8 @@ router = APIRouter()
 
 # Initialize real services
 try:
-    from backend.services.redis_client import get_redis_client
     from backend.services.autobuy_service import AutobuyService as _RealAutobuyService  # noqa: F401
+    from backend.services.redis_client import get_redis_client
     from backend.services.trading import TradingService as _RealTradingService  # noqa: F401
 
     autobuy_service: AutobuyServiceProtocol = _RealAutobuyService()  # type: ignore[assignment]
@@ -203,7 +200,7 @@ except Exception as e:
 
 
 @router.get("/autobuy/config")
-async def get_autobuy_config_endpoint() -> Dict[str, Any]:
+async def get_autobuy_config_endpoint() -> dict[str, Any]:
     """Get autobuy configuration and settings"""
     try:
         # Get real autobuy configuration
@@ -224,7 +221,7 @@ async def get_autobuy_config_endpoint() -> Dict[str, Any]:
             service_config = {"error": "Service config unavailable"}
 
         # Enabled exchanges via unified router
-        enabled_exchanges: List[str] = []
+        enabled_exchanges: list[str] = []
         try:
             from backend.services.market_data_router import MarketDataRouter  # type: ignore[import-not-found]
             _router = MarketDataRouter()
@@ -250,7 +247,7 @@ async def get_autobuy_config_endpoint() -> Dict[str, Any]:
 
 
 @router.get("/autobuy/status")
-async def get_autobuy_status() -> Dict[str, Any]:
+async def get_autobuy_status() -> dict[str, Any]:
     """Get autobuy system status and health"""
     try:
         # Get real autobuy status
@@ -285,7 +282,7 @@ async def get_autobuy_status() -> Dict[str, Any]:
 
 
 @router.get("/autobuy/stats")
-async def get_autobuy_stats() -> Dict[str, Any]:
+async def get_autobuy_stats() -> dict[str, Any]:
     """Get autobuy performance statistics"""
     try:
         # Get real autobuy statistics
@@ -321,7 +318,7 @@ async def get_autobuy_stats() -> Dict[str, Any]:
 
 
 @router.get("/autobuy/trades")
-async def get_autobuy_trades(limit: int = 50) -> Dict[str, Any]:
+async def get_autobuy_trades(limit: int = 50) -> dict[str, Any]:
     """Get recent autobuy trades"""
     try:
         # Get real autobuy trades
@@ -359,7 +356,7 @@ async def get_autobuy_trades(limit: int = 50) -> Dict[str, Any]:
 
 
 @router.get("/autobuy/signals")
-async def get_autobuy_signals(limit: int = 50) -> Dict[str, Any]:
+async def get_autobuy_signals(limit: int = 50) -> dict[str, Any]:
     """Get recent autobuy signals"""
     try:
         # Get real autobuy signals
@@ -397,7 +394,7 @@ async def get_autobuy_signals(limit: int = 50) -> Dict[str, Any]:
 
 
 @router.get("/autobuy/ai-status")
-async def get_autobuy_ai_status() -> Dict[str, Any]:
+async def get_autobuy_ai_status() -> dict[str, Any]:
     """Get autobuy AI system status and performance"""
     try:
         # Get real AI status
@@ -442,7 +439,7 @@ async def get_autobuy_ai_status() -> Dict[str, Any]:
 
 
 @router.post("/autobuy/start")
-async def start_autobuy() -> Dict[str, Any]:
+async def start_autobuy() -> dict[str, Any]:
     """Start the autobuy system"""
     try:
         # Start real autobuy system
@@ -469,7 +466,7 @@ async def start_autobuy() -> Dict[str, Any]:
 
 
 @router.post("/autobuy/stop")
-async def stop_autobuy() -> Dict[str, Any]:
+async def stop_autobuy() -> dict[str, Any]:
     """Stop the autobuy system"""
     try:
         # Stop real autobuy system
@@ -496,7 +493,7 @@ async def stop_autobuy() -> Dict[str, Any]:
 
 
 @router.post("/autobuy/update-config")
-async def update_autobuy_config(config: Dict[str, Any]) -> Dict[str, Any]:
+async def update_autobuy_config(config: dict[str, Any]) -> dict[str, Any]:
     """Update autobuy configuration"""
     try:
         # Update real autobuy configuration
@@ -524,7 +521,7 @@ async def update_autobuy_config(config: Dict[str, Any]) -> Dict[str, Any]:
 
 # Aliases to match Streamlit paths
 @router.post("/autobuy/control/start")
-async def start_autobuy_control() -> Dict[str, Any]:
+async def start_autobuy_control() -> dict[str, Any]:
     try:
         result = await start_autobuy()
         started = (result.get("status") == "started") or (
@@ -536,7 +533,7 @@ async def start_autobuy_control() -> Dict[str, Any]:
 
 
 @router.post("/autobuy/control/stop")
-async def stop_autobuy_control() -> Dict[str, Any]:
+async def stop_autobuy_control() -> dict[str, Any]:
     try:
         result = await stop_autobuy()
         stopped = (result.get("status") == "stopped") or (
@@ -548,12 +545,12 @@ async def stop_autobuy_control() -> Dict[str, Any]:
 
 
 @router.post("/autobuy/config")
-async def set_autobuy_config(config: Dict[str, Any]) -> Dict[str, Any]:
+async def set_autobuy_config(config: dict[str, Any]) -> dict[str, Any]:
     return await update_autobuy_config(config)
 
 
 @router.get("/autobuy/decision")
-async def autobuy_decision(symbol: str = "BTC-USD") -> Dict[str, Any]:
+async def autobuy_decision(symbol: str = "BTC-USD") -> dict[str, Any]:
     try:
         warm = {}
         evald = {}

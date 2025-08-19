@@ -3,16 +3,15 @@
 import os
 import threading
 import time
-from typing import Any, Dict, List, Optional, Tuple, cast
+from typing import Any, cast
 
 import streamlit as st
 
 from mystic_ui import api_client
 from mystic_ui.top10_resolver import resolve_top10_binanceus
 
-
 # Legacy fallback list retained but unused by default; kept to satisfy "never remove unless it's upgraded"
-BINANCEUS_ORDERED: List[str] = [
+BINANCEUS_ORDERED: list[str] = [
     "BTCUSDT",
     "ETHUSDT",
     "ADAUSDT",
@@ -30,12 +29,12 @@ _st = cast(Any, st)
 
 # ----------------- module-level smart cache (stale-while-revalidate) -----------------
 _CACHE_TTL_S: int = 300  # 5 minutes
-_symbols_cache: Dict[str, Any] = {"data": None, "ts": 0.0}
+_symbols_cache: dict[str, Any] = {"data": None, "ts": 0.0}
 _refresh_lock = threading.Lock()
 _refreshing: bool = False
 
 
-def _parse_force_symbols_env() -> List[str]:
+def _parse_force_symbols_env() -> list[str]:
     raw = os.getenv("FORCE_SYMBOLS", "").strip()
     if not raw:
         return []
@@ -45,18 +44,18 @@ def _parse_force_symbols_env() -> List[str]:
 
 
 def _compute_working_symbols(
-    preferred: Optional[List[str]] = None,
+    preferred: list[str] | None = None,
     exchange: str = "binanceus",
     interval: str = "1h",
     target_count: int = 10,
-) -> Tuple[List[str], List[str]]:
+) -> tuple[list[str], list[str]]:
     """Compute validated working symbols and return (working, dropped_forced).
 
     - Honors FORCE_SYMBOLS exclusively when set; validates via real candles.
     - Otherwise resolves Top 10 dynamically with fallback to preferred/legacy list.
     """
     force_list = _parse_force_symbols_env()
-    dropped_forced: List[str] = []
+    dropped_forced: list[str] = []
 
     # Source candidate list
     if force_list:
@@ -65,7 +64,7 @@ def _compute_working_symbols(
         base_api = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:9000")
         candidates = resolve_top10_binanceus(base_api, limit=target_count * 2) or list(preferred or BINANCEUS_ORDERED)
 
-    working: List[str] = []
+    working: list[str] = []
     for sym in candidates:
         try:
             data = api_client.get_candles(sym, exchange=exchange, interval="1m", limit=120)
@@ -89,7 +88,7 @@ def _compute_working_symbols(
 
 
 def _refresh_cache_async(
-    preferred: Optional[List[str]], exchange: str, interval: str, target_count: int
+    preferred: list[str] | None, exchange: str, interval: str, target_count: int
 ) -> None:
     global _refreshing
     with _refresh_lock:
@@ -107,11 +106,11 @@ def _refresh_cache_async(
 
 
 def get_working_symbols(
-    preferred: List[str] | None = None,
+    preferred: list[str] | None = None,
     exchange: str = "binanceus",
     interval: str = "1h",
     target_count: int = 10,
-) -> List[str]:
+) -> list[str]:
     now = time.time()
     cached = _symbols_cache.get("data")
     ts = float(_symbols_cache.get("ts") or 0.0)
@@ -119,7 +118,7 @@ def get_working_symbols(
 
     # Fresh cache
     if cached and age is not None and age < _CACHE_TTL_S:
-        return cast(List[str], cached)
+        return cast(list[str], cached)
 
     # Stale cache: trigger background refresh and return stale immediately
     if cached:
@@ -128,7 +127,7 @@ def get_working_symbols(
             args=(preferred, exchange, interval, target_count),
             daemon=True,
         ).start()
-        return cast(List[str], cached)
+        return cast(list[str], cached)
 
     # No cache yet: compute synchronously
     data, dropped = _compute_working_symbols(preferred, exchange, interval, target_count)
@@ -150,7 +149,7 @@ def ensure_state_defaults() -> None:
     s["timeframe"] = "1h"
 
 
-def render_symbol_strip() -> List[str]:
+def render_symbol_strip() -> list[str]:
     ensure_state_defaults()
     forced = _parse_force_symbols_env()
     spinner_msg = (
@@ -163,7 +162,7 @@ def render_symbol_strip() -> List[str]:
 
     # If FORCE_SYMBOLS was provided, warn about any dropped items
     if forced:
-        dropped: List[str] = cast(List[str], _symbols_cache.get("dropped_forced") or [])
+        dropped: list[str] = cast(list[str], _symbols_cache.get("dropped_forced") or [])
         if dropped:
             _st.warning(
                 f"Dropped forced symbols with no working candles: {', '.join(dropped)}",

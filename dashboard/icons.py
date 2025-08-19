@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import streamlit as st
 from pathlib import Path
-from typing import Optional
+
+import streamlit as st
 
 
 def _asset_paths(base: str) -> list[Path]:
@@ -11,7 +11,7 @@ def _asset_paths(base: str) -> list[Path]:
     return [icons_root / f"{base}.png", icons_root / f"{base}.svg"]
 
 
-def get_coin_icon(base_or_symbol: str) -> Optional[str]:
+def get_coin_icon(base_or_symbol: str) -> str | None:
     """Get coin icon path if exists, return None if not found"""
     base = base_or_symbol.upper().split("-")[0].split("/")[0]
     for p in _asset_paths(base):

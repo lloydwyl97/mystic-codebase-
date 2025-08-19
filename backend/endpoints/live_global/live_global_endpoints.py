@@ -8,7 +8,7 @@ All data is live and connected to real market sources.
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
@@ -19,7 +19,7 @@ router = APIRouter()
 
 
 @router.get("/live/global")
-async def get_global_market_data() -> Dict[str, Any]:
+async def get_global_market_data() -> dict[str, Any]:
     """
     Get comprehensive global market data
 
@@ -196,7 +196,7 @@ async def get_global_market_data() -> Dict[str, Any]:
 
 
 @router.get("/live/global/summary")
-async def get_global_market_summary() -> Dict[str, Any]:
+async def get_global_market_summary() -> dict[str, Any]:
     """
     Get simplified global market summary
 

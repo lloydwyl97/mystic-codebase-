@@ -3,12 +3,12 @@ Liquidity Service for Mystic AI Trading Platform
 Provides live liquidity tracking and cross-exchange arbitrage analysis.
 """
 
-import logging
 import asyncio
-from typing import Dict, List, Any, Optional
-from datetime import datetime, timezone
-import sys
+import logging
 import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -59,7 +59,7 @@ class LiquidityService:
 
         logger.info("âœ… LiquidityService initialized")
 
-    def _generate_mock_orderbooks(self) -> Dict[str, Dict[str, Any]]:
+    def _generate_mock_orderbooks(self) -> dict[str, dict[str, Any]]:
         """Generate mock order book data for testing"""
         mock_data = {}
 
@@ -95,7 +95,7 @@ class LiquidityService:
 
         return mock_data
 
-    async def _fetch_orderbook(self, exchange: str, symbol: str) -> Optional[Dict[str, Any]]:
+    async def _fetch_orderbook(self, exchange: str, symbol: str) -> dict[str, Any] | None:
         """Fetch live order book from exchange"""
         try:
             # Use mock data for testing
@@ -122,18 +122,10 @@ class LiquidityService:
             logger.error(f"Failed to fetch orderbook for {symbol} on {exchange}: {e}")
             return None
 
-    def _parse_orderbook_response(self, exchange: str, symbol: str, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_orderbook_response(self, exchange: str, symbol: str, data: dict[str, Any]) -> dict[str, Any]:
         """Parse exchange-specific order book response"""
         try:
-            if exchange == "coinbase":
-                return {
-                    "bids": data.get("bids", []),
-                    "asks": data.get("asks", []),
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "symbol": symbol,
-                    "exchange": exchange
-                }
-            elif exchange == "binanceus":
+            if exchange == "coinbase" or exchange == "binanceus":
                 return {
                     "bids": data.get("bids", []),
                     "asks": data.get("asks", []),
@@ -175,7 +167,7 @@ class LiquidityService:
                 "error": str(e)
             }
 
-    def _calculate_available_volume(self, orderbook: Dict[str, Any], side: str) -> float:
+    def _calculate_available_volume(self, orderbook: dict[str, Any], side: str) -> float:
         """Calculate available volume for a given side of the order book"""
         try:
             orders = orderbook.get("bids" if side == "buy" else "asks", [])
@@ -193,7 +185,7 @@ class LiquidityService:
             logger.error(f"Failed to calculate available volume: {e}")
             return 0.0
 
-    def _calculate_slippage(self, orderbook: Dict[str, Any], trade_size_usd: float, side: str) -> Dict[str, Any]:
+    def _calculate_slippage(self, orderbook: dict[str, Any], trade_size_usd: float, side: str) -> dict[str, Any]:
         """Calculate slippage for a given trade size"""
         try:
             orders = orderbook.get("bids" if side == "buy" else "asks", [])
@@ -252,7 +244,7 @@ class LiquidityService:
             logger.error(f"Failed to calculate slippage: {e}")
             return {"slippage_pct": 0.0, "effective_price": 0.0, "available_volume": 0.0}
 
-    def _find_arbitrage_opportunities(self, symbol: str, orderbooks: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _find_arbitrage_opportunities(self, symbol: str, orderbooks: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
         """Find arbitrage opportunities across exchanges"""
         try:
             opportunities = []
@@ -313,7 +305,7 @@ class LiquidityService:
             logger.error(f"Failed to find arbitrage opportunities for {symbol}: {e}")
             return []
 
-    async def get_liquidity_snapshot(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    async def get_liquidity_snapshot(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get comprehensive liquidity snapshot for a symbol on an exchange"""
         try:
             # Fetch order book
@@ -390,7 +382,7 @@ class LiquidityService:
             logger.error(f"Failed to calculate liquidity score: {e}")
             return 0.0
 
-    async def get_cross_exchange_paths(self, symbol: str) -> Dict[str, Any]:
+    async def get_cross_exchange_paths(self, symbol: str) -> dict[str, Any]:
         """Get cross-exchange liquidity paths and arbitrage opportunities"""
         try:
             # Fetch order books from all exchanges
@@ -430,7 +422,7 @@ class LiquidityService:
                 "arbitrage_opportunities": []
             }
 
-    def _find_best_liquidity_paths(self, symbol: str, exchange_metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _find_best_liquidity_paths(self, symbol: str, exchange_metrics: dict[str, Any]) -> list[dict[str, Any]]:
         """Find best liquidity paths across exchanges"""
         try:
             paths = []
@@ -467,7 +459,7 @@ class LiquidityService:
             logger.error(f"Failed to find liquidity paths for {symbol}: {e}")
             return []
 
-    async def store_liquidity_data(self) -> Dict[str, Any]:
+    async def store_liquidity_data(self) -> dict[str, Any]:
         """Store comprehensive liquidity data in cache"""
         try:
             logger.info("ðŸ’¾ Storing comprehensive liquidity data")
@@ -526,7 +518,7 @@ class LiquidityService:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_liquidity_status(self) -> Dict[str, Any]:
+    def get_liquidity_status(self) -> dict[str, Any]:
         """Get current liquidity service status"""
         try:
             return {

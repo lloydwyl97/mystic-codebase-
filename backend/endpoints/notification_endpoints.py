@@ -5,14 +5,14 @@ Handles all notification-related API endpoints including fetching and marking as
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
 logger = logging.getLogger("notification_endpoints")
 
 # Global service references (will be set by main.py)
-notification_service: Optional[Any] = None
+notification_service: Any | None = None
 
 
 def set_services(ns: Any) -> None:
@@ -25,11 +25,11 @@ router = APIRouter()
 
 
 @router.get("/")
-async def get_notifications() -> Dict[str, Any]:
+async def get_notifications() -> dict[str, Any]:
     """Get all notifications"""
     try:
         if notification_service and hasattr(notification_service, "get_notifications"):
-            notifications: List[Dict[str, Any]] = await notification_service.get_notifications()
+            notifications: list[dict[str, Any]] = await notification_service.get_notifications()
             count = len(notifications)
             return {"notifications": notifications, "count": count}
         else:
@@ -41,8 +41,8 @@ async def get_notifications() -> Dict[str, Any]:
 
 @router.post("/mark-read")
 async def mark_notifications_read(
-    notification_ids: List[str],
-) -> Dict[str, Any]:
+    notification_ids: list[str],
+) -> dict[str, Any]:
     """Mark notifications as read"""
     try:
         if notification_service and hasattr(notification_service, "mark_read"):

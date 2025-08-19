@@ -5,9 +5,7 @@ Main API for frontend integration
 """
 
 import logging
-from typing import Any, Dict, List, Optional
-
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from typing import Any
 
 # Use absolute imports
 from autobuy_system import AutobuyManager
@@ -17,6 +15,7 @@ from crypto_autoengine_config import (
     get_enabled_symbols,
 )
 from data_fetchers import DataFetcherManager
+from fastapi import APIRouter, BackgroundTasks, HTTPException
 from shared_cache import SharedCache
 from strategy_system import StrategyManager
 
@@ -32,13 +31,13 @@ async def get_favicon():
     return {"message": "Favicon not implemented"}
 
 # Global instances (will be initialized in startup)
-cache: Optional[SharedCache] = None
-data_fetcher_manager: Optional[DataFetcherManager] = None
-strategy_manager: Optional[StrategyManager] = None
-autobuy_manager: Optional[AutobuyManager] = None
+cache: SharedCache | None = None
+data_fetcher_manager: DataFetcherManager | None = None
+strategy_manager: StrategyManager | None = None
+autobuy_manager: AutobuyManager | None = None
 
 
-def initialize_managers(redis_client: Optional[Any]) -> None:
+def initialize_managers(redis_client: Any | None) -> None:
     """Initialize all managers"""
     global cache, data_fetcher_manager, strategy_manager, autobuy_manager
 
@@ -56,7 +55,7 @@ def initialize_managers(redis_client: Optional[Any]) -> None:
 
 
 @router.get("/coinstate")
-async def get_coin_state() -> Dict[str, Any]:
+async def get_coin_state() -> dict[str, Any]:
     """Get all coin states for frontend - refreshes every 5-10 seconds"""
     if not cache:
         raise HTTPException(status_code=503, detail="System not initialized")
@@ -85,7 +84,7 @@ async def get_coin_state() -> Dict[str, Any]:
 
 
 @router.get("/coinstate/{symbol}")
-async def get_single_coin_state(symbol: str) -> Dict[str, Any]:
+async def get_single_coin_state(symbol: str) -> dict[str, Any]:
     """Get state for a specific coin"""
     if not cache:
         raise HTTPException(status_code=503, detail="System not initialized")
@@ -104,7 +103,7 @@ async def get_single_coin_state(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/coins")
-async def get_coins() -> Dict[str, List[str]]:
+async def get_coins() -> dict[str, list[str]]:
     """Get all available coins"""
     try:
         all_symbols = get_all_symbols()
@@ -120,7 +119,7 @@ async def get_coins() -> Dict[str, List[str]]:
 
 
 @router.get("/coins/{symbol}")
-async def get_coin_config(symbol: str) -> Dict[str, Any]:
+async def get_coin_config(symbol: str) -> dict[str, Any]:
     """Get configuration for a specific coin"""
     try:
         config = get_config()
@@ -137,7 +136,7 @@ async def get_coin_config(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/strategies")
-async def get_strategies() -> Dict[str, Any]:
+async def get_strategies() -> dict[str, Any]:
     """Get all available strategies"""
     if not strategy_manager:
         raise HTTPException(status_code=503, detail="Strategy manager not initialized")
@@ -150,7 +149,7 @@ async def get_strategies() -> Dict[str, Any]:
 
 
 @router.get("/strategies/{symbol}")
-async def get_coin_strategies(symbol: str) -> Dict[str, Any]:
+async def get_coin_strategies(symbol: str) -> dict[str, Any]:
     """Get strategies for a specific coin"""
     if not strategy_manager:
         raise HTTPException(status_code=503, detail="Strategy manager not initialized")
@@ -163,7 +162,7 @@ async def get_coin_strategies(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/trading")
-async def get_trading_info() -> Dict[str, Any]:
+async def get_trading_info() -> dict[str, Any]:
     """Get trading information"""
     if not autobuy_manager:
         raise HTTPException(status_code=503, detail="Autobuy manager not initialized")
@@ -176,7 +175,7 @@ async def get_trading_info() -> Dict[str, Any]:
 
 
 @router.post("/trading/start")
-async def start_trading(background_tasks: BackgroundTasks) -> Dict[str, Any]:
+async def start_trading(background_tasks: BackgroundTasks) -> dict[str, Any]:
     """Start trading"""
     if not autobuy_manager:
         raise HTTPException(status_code=503, detail="Autobuy manager not initialized")
@@ -190,7 +189,7 @@ async def start_trading(background_tasks: BackgroundTasks) -> Dict[str, Any]:
 
 
 @router.post("/trading/stop")
-async def stop_trading() -> Dict[str, Any]:
+async def stop_trading() -> dict[str, Any]:
     """Stop trading"""
     if not autobuy_manager:
         raise HTTPException(status_code=503, detail="Autobuy manager not initialized")
@@ -204,7 +203,7 @@ async def stop_trading() -> Dict[str, Any]:
 
 
 @router.post("/trading/cancel/{symbol}")
-async def cancel_order(symbol: str) -> Dict[str, Any]:
+async def cancel_order(symbol: str) -> dict[str, Any]:
     """Cancel orders for a specific symbol"""
     if not autobuy_manager:
         raise HTTPException(status_code=503, detail="Autobuy manager not initialized")
@@ -218,7 +217,7 @@ async def cancel_order(symbol: str) -> Dict[str, Any]:
 
 
 @router.post("/trading/cancel-all")
-async def cancel_all_orders() -> Dict[str, Any]:
+async def cancel_all_orders() -> dict[str, Any]:
     """Cancel all orders"""
     if not autobuy_manager:
         raise HTTPException(status_code=503, detail="Autobuy manager not initialized")
@@ -232,13 +231,13 @@ async def cancel_all_orders() -> Dict[str, Any]:
 
 
 @router.get("/health")
-async def health_check() -> Dict[str, Any]:
+async def health_check() -> dict[str, Any]:
     """Health check endpoint"""
     return {"status": "healthy"}
 
 
 @router.get("/portfolio/overview")
-async def get_portfolio_overview() -> Dict[str, Any]:
+async def get_portfolio_overview() -> dict[str, Any]:
     """Get portfolio overview"""
     return {
         "total_value": 100000.00,
@@ -251,7 +250,7 @@ async def get_portfolio_overview() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/performance")
-async def get_portfolio_performance() -> Dict[str, Any]:
+async def get_portfolio_performance() -> dict[str, Any]:
     """Get portfolio performance data"""
     return {
         "data": {
@@ -262,7 +261,7 @@ async def get_portfolio_performance() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/risk-metrics")
-async def get_portfolio_risk_metrics() -> Dict[str, Any]:
+async def get_portfolio_risk_metrics() -> dict[str, Any]:
     """Get portfolio risk metrics"""
     return {
         "metrics": {
@@ -275,7 +274,7 @@ async def get_portfolio_risk_metrics() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/allocation")
-async def get_portfolio_allocation() -> Dict[str, Any]:
+async def get_portfolio_allocation() -> dict[str, Any]:
     """Get portfolio allocation"""
     return {
         "allocation": {
@@ -289,7 +288,7 @@ async def get_portfolio_allocation() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/asset-performance")
-async def get_portfolio_asset_performance() -> Dict[str, Any]:
+async def get_portfolio_asset_performance() -> dict[str, Any]:
     """Get asset performance data"""
     return {
         "performance": {
@@ -303,7 +302,7 @@ async def get_portfolio_asset_performance() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/positions")
-async def get_portfolio_positions() -> Dict[str, Any]:
+async def get_portfolio_positions() -> dict[str, Any]:
     """Get current portfolio positions"""
     return {
         "positions": [
@@ -328,7 +327,7 @@ async def get_portfolio_positions() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/insights")
-async def get_portfolio_insights() -> Dict[str, Any]:
+async def get_portfolio_insights() -> dict[str, Any]:
     """Get portfolio insights"""
     return {
         "insights": [
@@ -347,7 +346,7 @@ async def get_portfolio_insights() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/monthly-returns")
-async def get_portfolio_monthly_returns() -> Dict[str, Any]:
+async def get_portfolio_monthly_returns() -> dict[str, Any]:
     """Get monthly returns data"""
     return {
         "data": {
@@ -358,7 +357,7 @@ async def get_portfolio_monthly_returns() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/drawdown")
-async def get_portfolio_drawdown() -> Dict[str, Any]:
+async def get_portfolio_drawdown() -> dict[str, Any]:
     """Get drawdown analysis"""
     return {
         "data": {
@@ -369,7 +368,7 @@ async def get_portfolio_drawdown() -> Dict[str, Any]:
 
 
 @router.get("/autobuy/status")
-async def get_autobuy_status() -> Dict[str, Any]:
+async def get_autobuy_status() -> dict[str, Any]:
     """Get autobuy system status"""
     return {
         "status": "active",
@@ -382,7 +381,7 @@ async def get_autobuy_status() -> Dict[str, Any]:
 
 
 @router.get("/ai/strategies")
-async def get_ai_strategies() -> Dict[str, Any]:
+async def get_ai_strategies() -> dict[str, Any]:
     """Get AI strategies status"""
     return {
         "active_strategies": 8,
@@ -394,7 +393,7 @@ async def get_ai_strategies() -> Dict[str, Any]:
 
 
 @router.get("/market/live")
-async def get_live_market_data() -> Dict[str, Any]:
+async def get_live_market_data() -> dict[str, Any]:
     """Get live market data"""
     return {
         "btc_price": 45000.00,
@@ -406,7 +405,7 @@ async def get_live_market_data() -> Dict[str, Any]:
 
 
 @router.get("/portfolio/live")
-async def get_live_portfolio() -> Dict[str, Any]:
+async def get_live_portfolio() -> dict[str, Any]:
     """Get live portfolio data"""
     return {
         "total_value": 100000.00,
@@ -419,7 +418,7 @@ async def get_live_portfolio() -> Dict[str, Any]:
 
 
 @router.get("/system/status")
-async def get_system_status() -> Dict[str, Any]:
+async def get_system_status() -> dict[str, Any]:
     """Get system status"""
     if not cache:
         raise HTTPException(status_code=503, detail="System not initialized")
@@ -439,7 +438,7 @@ async def get_system_status() -> Dict[str, Any]:
 
 
 @router.get("/trading/signals")
-async def get_trading_signals() -> Dict[str, Any]:
+async def get_trading_signals() -> dict[str, Any]:
     """Get trading signals"""
     return {
         "signals": [
@@ -452,7 +451,7 @@ async def get_trading_signals() -> Dict[str, Any]:
 
 
 @router.get("/phase5/metrics")
-async def get_phase5_metrics() -> Dict[str, Any]:
+async def get_phase5_metrics() -> dict[str, Any]:
     """Get Phase 5 monitoring metrics"""
     return {
         "data": {
@@ -469,7 +468,7 @@ async def get_phase5_metrics() -> Dict[str, Any]:
 
 
 @router.get("/phase5/status")
-async def get_phase5_status() -> Dict[str, Any]:
+async def get_phase5_status() -> dict[str, Any]:
     """Get Phase 5 system status"""
     return {
         "status": "active",
@@ -480,7 +479,7 @@ async def get_phase5_status() -> Dict[str, Any]:
 
 
 @router.get("/quantum/systems")
-async def get_quantum_systems() -> Dict[str, Any]:
+async def get_quantum_systems() -> dict[str, Any]:
     """Get quantum computing systems status"""
     return {
         "systems": [
@@ -493,7 +492,7 @@ async def get_quantum_systems() -> Dict[str, Any]:
 
 
 @router.get("/blockchain/status")
-async def get_blockchain_status() -> Dict[str, Any]:
+async def get_blockchain_status() -> dict[str, Any]:
     """Get blockchain system status"""
     return {
         "status": "active",
@@ -504,7 +503,7 @@ async def get_blockchain_status() -> Dict[str, Any]:
 
 
 @router.get("/mining/status")
-async def get_mining_status() -> Dict[str, Any]:
+async def get_mining_status() -> dict[str, Any]:
     """Get mining operations status"""
     return {
         "status": "active",
@@ -515,7 +514,7 @@ async def get_mining_status() -> Dict[str, Any]:
 
 
 @router.get("/experimental/status")
-async def get_experimental_status() -> Dict[str, Any]:
+async def get_experimental_status() -> dict[str, Any]:
     """Get experimental status"""
     return {
         "status": "active",
@@ -526,7 +525,7 @@ async def get_experimental_status() -> Dict[str, Any]:
 
 
 @router.get("/experimental/health")
-async def get_experimental_health() -> Dict[str, Any]:
+async def get_experimental_health() -> dict[str, Any]:
     """Get experimental health data"""
     return {
         "data": {
@@ -546,7 +545,7 @@ async def get_experimental_health() -> Dict[str, Any]:
 
 
 @router.get("/dashboard/performance")
-async def get_dashboard_performance() -> Dict[str, Any]:
+async def get_dashboard_performance() -> dict[str, Any]:
     """Get dashboard performance metrics"""
     return {
         "load_time": 0.8,
@@ -560,7 +559,7 @@ async def get_dashboard_performance() -> Dict[str, Any]:
 
 
 @router.get("/system/health")
-async def get_system_health() -> Dict[str, Any]:
+async def get_system_health() -> dict[str, Any]:
     """Get detailed system health"""
     return {
         "overall_health": "good",
@@ -572,7 +571,7 @@ async def get_system_health() -> Dict[str, Any]:
 
 
 @router.get("/phase5/health")
-async def get_phase5_health() -> Dict[str, Any]:
+async def get_phase5_health() -> dict[str, Any]:
     """Get Phase 5 system health"""
     return {
         "status": "healthy",
@@ -583,7 +582,7 @@ async def get_phase5_health() -> Dict[str, Any]:
 
 
 @router.get("/quantum/health")
-async def get_quantum_health() -> Dict[str, Any]:
+async def get_quantum_health() -> dict[str, Any]:
     """Get quantum systems health"""
     return {
         "status": "healthy",
@@ -594,7 +593,7 @@ async def get_quantum_health() -> Dict[str, Any]:
 
 
 @router.get("/blockchain/health")
-async def get_blockchain_health() -> Dict[str, Any]:
+async def get_blockchain_health() -> dict[str, Any]:
     """Get blockchain system health"""
     return {
         "status": "healthy",
@@ -605,7 +604,7 @@ async def get_blockchain_health() -> Dict[str, Any]:
 
 
 @router.get("/mining/health")
-async def get_mining_health() -> Dict[str, Any]:
+async def get_mining_health() -> dict[str, Any]:
     """Get mining operations health"""
     return {
         "status": "healthy",
@@ -616,7 +615,7 @@ async def get_mining_health() -> Dict[str, Any]:
 
 
 @router.get("/system/events")
-async def get_system_events() -> Dict[str, Any]:
+async def get_system_events() -> dict[str, Any]:
     """Get recent system events"""
     return {
         "events": [
@@ -629,7 +628,7 @@ async def get_system_events() -> Dict[str, Any]:
 
 # Phase 5 Additional Endpoints
 @router.get("/phase5/signal-types")
-async def get_phase5_signal_types() -> Dict[str, Any]:
+async def get_phase5_signal_types() -> dict[str, Any]:
     """Get Phase 5 signal types"""
     return {
         "signal_types": ["Neuro-Sync", "Cosmic Harmonic", "Aura Alignment", "Interdim Signal", "Quantum Coherence"]
@@ -637,7 +636,7 @@ async def get_phase5_signal_types() -> Dict[str, Any]:
 
 
 @router.get("/phase5/monitoring-levels")
-async def get_phase5_monitoring_levels() -> Dict[str, Any]:
+async def get_phase5_monitoring_levels() -> dict[str, Any]:
     """Get Phase 5 monitoring levels"""
     return {
         "monitoring_levels": ["Basic", "Enhanced", "Advanced", "Quantum", "Interdimensional"]
@@ -645,7 +644,7 @@ async def get_phase5_monitoring_levels() -> Dict[str, Any]:
 
 
 @router.get("/phase5/time-periods")
-async def get_phase5_time_periods() -> Dict[str, Any]:
+async def get_phase5_time_periods() -> dict[str, Any]:
     """Get Phase 5 time periods"""
     return {
         "time_periods": ["1 Hour", "6 Hours", "24 Hours", "7 Days", "30 Days", "All Time"]
@@ -653,7 +652,7 @@ async def get_phase5_time_periods() -> Dict[str, Any]:
 
 
 @router.get("/phase5/alert-types")
-async def get_phase5_alert_types() -> Dict[str, Any]:
+async def get_phase5_alert_types() -> dict[str, Any]:
     """Get Phase 5 alert types"""
     return {
         "alert_types": ["Info", "Warning", "Critical", "Quantum", "Interdimensional"]
@@ -661,7 +660,7 @@ async def get_phase5_alert_types() -> Dict[str, Any]:
 
 
 @router.get("/phase5/trends")
-async def get_phase5_trends() -> Dict[str, Any]:
+async def get_phase5_trends() -> dict[str, Any]:
     """Get Phase 5 trend data"""
     return {
         "data": {
@@ -686,7 +685,7 @@ async def get_phase5_trends() -> Dict[str, Any]:
 
 
 @router.get("/phase5/distribution")
-async def get_phase5_distribution() -> Dict[str, Any]:
+async def get_phase5_distribution() -> dict[str, Any]:
     """Get Phase 5 signal distribution"""
     return {
         "data": {
@@ -697,7 +696,7 @@ async def get_phase5_distribution() -> Dict[str, Any]:
 
 
 @router.get("/phase5/harmonization")
-async def get_phase5_harmonization() -> Dict[str, Any]:
+async def get_phase5_harmonization() -> dict[str, Any]:
     """Get Phase 5 harmonization data"""
     return {
         "data": [
@@ -710,7 +709,7 @@ async def get_phase5_harmonization() -> Dict[str, Any]:
 
 
 @router.get("/phase5/thresholds")
-async def get_phase5_thresholds() -> Dict[str, Any]:
+async def get_phase5_thresholds() -> dict[str, Any]:
     """Get Phase 5 thresholds"""
     return {
         "data": {
@@ -723,7 +722,7 @@ async def get_phase5_thresholds() -> Dict[str, Any]:
 
 
 @router.get("/phase5/alerts")
-async def get_phase5_alerts() -> Dict[str, Any]:
+async def get_phase5_alerts() -> dict[str, Any]:
     """Get Phase 5 alerts"""
     return {
         "data": [
@@ -734,7 +733,7 @@ async def get_phase5_alerts() -> Dict[str, Any]:
 
 
 @router.get("/phase5/recent-activity")
-async def get_phase5_recent_activity() -> Dict[str, Any]:
+async def get_phase5_recent_activity() -> dict[str, Any]:
     """Get Phase 5 recent activity"""
     return {
         "data": [
@@ -745,7 +744,7 @@ async def get_phase5_recent_activity() -> Dict[str, Any]:
 
 
 @router.get("/phase5/monitoring/settings")
-async def get_phase5_monitoring_settings() -> Dict[str, Any]:
+async def get_phase5_monitoring_settings() -> dict[str, Any]:
     """Get Phase 5 monitoring settings"""
     return {
         "data": {
@@ -757,7 +756,7 @@ async def get_phase5_monitoring_settings() -> Dict[str, Any]:
 
 
 @router.get("/phase5-monitoring/frequencies")
-async def get_phase5_monitoring_frequencies() -> Dict[str, Any]:
+async def get_phase5_monitoring_frequencies() -> dict[str, Any]:
     """Get Phase 5 monitoring frequencies"""
     return {
         "frequencies": ["1 second", "5 seconds", "10 seconds", "30 seconds", "1 minute"]
@@ -765,7 +764,7 @@ async def get_phase5_monitoring_frequencies() -> Dict[str, Any]:
 
 
 @router.get("/phase5/signal/settings")
-async def get_phase5_signal_settings() -> Dict[str, Any]:
+async def get_phase5_signal_settings() -> dict[str, Any]:
     """Get Phase 5 signal settings"""
     return {
         "data": {
@@ -778,7 +777,7 @@ async def get_phase5_signal_settings() -> Dict[str, Any]:
 
 # Quantum Computing Additional Endpoints
 @router.get("/quantum/systems-list")
-async def get_quantum_systems_list() -> Dict[str, Any]:
+async def get_quantum_systems_list() -> dict[str, Any]:
     """Get quantum systems list"""
     return {
         "systems": [
@@ -789,7 +788,7 @@ async def get_quantum_systems_list() -> Dict[str, Any]:
 
 
 @router.get("/quantum/algorithm-types")
-async def get_quantum_algorithm_types() -> Dict[str, Any]:
+async def get_quantum_algorithm_types() -> dict[str, Any]:
     """Get quantum algorithm types"""
     return {
         "algorithm_types": ["Grover", "Shor", "Quantum Fourier Transform", "Quantum Machine Learning"]
@@ -797,7 +796,7 @@ async def get_quantum_algorithm_types() -> Dict[str, Any]:
 
 
 @router.get("/quantum/qubit-counts")
-async def get_quantum_qubit_counts() -> Dict[str, Any]:
+async def get_quantum_qubit_counts() -> dict[str, Any]:
     """Get quantum qubit counts"""
     return {
         "qubit_counts": [64, 128, 256, 512, 1024]
@@ -805,7 +804,7 @@ async def get_quantum_qubit_counts() -> Dict[str, Any]:
 
 
 @router.get("/quantum/job-queue")
-async def get_quantum_job_queue() -> Dict[str, Any]:
+async def get_quantum_job_queue() -> dict[str, Any]:
     """Get quantum job queue"""
     return {
         "jobs": [
@@ -816,7 +815,7 @@ async def get_quantum_job_queue() -> Dict[str, Any]:
 
 
 @router.get("/quantum/algorithm-performance")
-async def get_quantum_algorithm_performance() -> Dict[str, Any]:
+async def get_quantum_algorithm_performance() -> dict[str, Any]:
     """Get quantum algorithm performance"""
     return {
         "performance": [
@@ -827,7 +826,7 @@ async def get_quantum_algorithm_performance() -> Dict[str, Any]:
 
 
 @router.get("/quantum/qml-metrics")
-async def get_quantum_qml_metrics() -> Dict[str, Any]:
+async def get_quantum_qml_metrics() -> dict[str, Any]:
     """Get quantum machine learning metrics"""
     return {
         "metrics": {
@@ -839,7 +838,7 @@ async def get_quantum_qml_metrics() -> Dict[str, Any]:
 
 
 @router.get("/quantum/optimization-performance")
-async def get_quantum_optimization_performance() -> Dict[str, Any]:
+async def get_quantum_optimization_performance() -> dict[str, Any]:
     """Get quantum optimization performance"""
     return {
         "performance": {
@@ -851,7 +850,7 @@ async def get_quantum_optimization_performance() -> Dict[str, Any]:
 
 
 @router.get("/quantum/portfolio-optimization")
-async def get_quantum_portfolio_optimization() -> Dict[str, Any]:
+async def get_quantum_portfolio_optimization() -> dict[str, Any]:
     """Get quantum portfolio optimization"""
     return {
         "optimization": {
@@ -864,7 +863,7 @@ async def get_quantum_portfolio_optimization() -> Dict[str, Any]:
 
 
 @router.get("/quantum/risk-assessment")
-async def get_quantum_risk_assessment() -> Dict[str, Any]:
+async def get_quantum_risk_assessment() -> dict[str, Any]:
     """Get quantum risk assessment"""
     return {
         "risk_assessment": {
@@ -877,7 +876,7 @@ async def get_quantum_risk_assessment() -> Dict[str, Any]:
 
 
 @router.get("/quantum/arbitrage-opportunities")
-async def get_quantum_arbitrage_opportunities() -> Dict[str, Any]:
+async def get_quantum_arbitrage_opportunities() -> dict[str, Any]:
     """Get quantum arbitrage opportunities"""
     return {
         "opportunities": [
@@ -888,7 +887,7 @@ async def get_quantum_arbitrage_opportunities() -> Dict[str, Any]:
 
 
 @router.get("/quantum/advantage-metrics")
-async def get_quantum_advantage_metrics() -> Dict[str, Any]:
+async def get_quantum_advantage_metrics() -> dict[str, Any]:
     """Get quantum advantage metrics"""
     return {
         "advantage_metrics": {
@@ -900,7 +899,7 @@ async def get_quantum_advantage_metrics() -> Dict[str, Any]:
 
 
 @router.get("/quantum/research-projects")
-async def get_quantum_research_projects() -> Dict[str, Any]:
+async def get_quantum_research_projects() -> dict[str, Any]:
     """Get quantum research projects"""
     return {
         "projects": [
@@ -911,7 +910,7 @@ async def get_quantum_research_projects() -> Dict[str, Any]:
 
 
 @router.get("/quantum/roadmap")
-async def get_quantum_roadmap() -> Dict[str, Any]:
+async def get_quantum_roadmap() -> dict[str, Any]:
     """Get quantum computing roadmap"""
     return {
         "roadmap": [
@@ -924,7 +923,7 @@ async def get_quantum_roadmap() -> Dict[str, Any]:
 
 # Blockchain Additional Endpoints
 @router.get("/blockchain/networks-list")
-async def get_blockchain_networks_list() -> Dict[str, Any]:
+async def get_blockchain_networks_list() -> dict[str, Any]:
     """Get blockchain networks list"""
     return {
         "networks": [
@@ -936,7 +935,7 @@ async def get_blockchain_networks_list() -> Dict[str, Any]:
 
 
 @router.get("/blockchain/time-periods")
-async def get_blockchain_time_periods() -> Dict[str, Any]:
+async def get_blockchain_time_periods() -> dict[str, Any]:
     """Get blockchain time periods"""
     return {
         "time_periods": ["1 Hour", "6 Hours", "24 Hours", "7 Days", "30 Days", "All Time"]
@@ -944,7 +943,7 @@ async def get_blockchain_time_periods() -> Dict[str, Any]:
 
 
 @router.get("/blockchain/metric-types")
-async def get_blockchain_metric_types() -> Dict[str, Any]:
+async def get_blockchain_metric_types() -> dict[str, Any]:
     """Get blockchain metric types"""
     return {
         "metric_types": ["Transaction Volume", "Network Hashrate", "Active Addresses", "Block Time"]
@@ -953,7 +952,7 @@ async def get_blockchain_metric_types() -> Dict[str, Any]:
 
 # Experimental Services Endpoints
 @router.get("/experimental/service-types")
-async def get_experimental_service_types() -> Dict[str, Any]:
+async def get_experimental_service_types() -> dict[str, Any]:
     """Get experimental service types"""
     return {
         "service_types": ["Quantum Computing", "Blockchain Mining", "Satellite Analysis", "5G Network", "All Services"]
@@ -961,7 +960,7 @@ async def get_experimental_service_types() -> Dict[str, Any]:
 
 
 @router.get("/experimental/statuses")
-async def get_experimental_statuses() -> Dict[str, Any]:
+async def get_experimental_statuses() -> dict[str, Any]:
     """Get experimental statuses"""
     return {
         "statuses": ["Online", "Offline", "Maintenance", "Error", "All Status"]
@@ -969,7 +968,7 @@ async def get_experimental_statuses() -> Dict[str, Any]:
 
 
 @router.get("/experimental/performance-levels")
-async def get_experimental_performance_levels() -> Dict[str, Any]:
+async def get_experimental_performance_levels() -> dict[str, Any]:
     """Get experimental performance levels"""
     return {
         "performance_levels": ["High", "Medium", "Low", "All Performance"]
@@ -977,7 +976,7 @@ async def get_experimental_performance_levels() -> Dict[str, Any]:
 
 
 @router.get("/experimental/time-periods")
-async def get_experimental_time_periods() -> Dict[str, Any]:
+async def get_experimental_time_periods() -> dict[str, Any]:
     """Get experimental time periods"""
     return {
         "time_periods": ["1 Hour", "6 Hours", "24 Hours", "7 Days", "30 Days", "All Time"]
@@ -985,7 +984,7 @@ async def get_experimental_time_periods() -> Dict[str, Any]:
 
 
 @router.get("/experimental/performance")
-async def get_experimental_performance() -> Dict[str, Any]:
+async def get_experimental_performance() -> dict[str, Any]:
     """Get experimental performance data"""
     return {
         "data": {
@@ -1010,7 +1009,7 @@ async def get_experimental_performance() -> Dict[str, Any]:
 
 
 @router.get("/experimental/distribution")
-async def get_experimental_distribution() -> Dict[str, Any]:
+async def get_experimental_distribution() -> dict[str, Any]:
     """Get experimental distribution data"""
     return {
         "data": {
@@ -1021,7 +1020,7 @@ async def get_experimental_distribution() -> Dict[str, Any]:
 
 
 @router.get("/experimental/services")
-async def get_experimental_services() -> Dict[str, Any]:
+async def get_experimental_services() -> dict[str, Any]:
     """Get experimental services list"""
     return {
         "data": [
@@ -1034,7 +1033,7 @@ async def get_experimental_services() -> Dict[str, Any]:
 
 
 @router.get("/experimental/recent-activity")
-async def get_experimental_recent_activity() -> Dict[str, Any]:
+async def get_experimental_recent_activity() -> dict[str, Any]:
     """Get experimental recent activity"""
     return {
         "data": [
@@ -1046,7 +1045,7 @@ async def get_experimental_recent_activity() -> Dict[str, Any]:
 
 
 @router.get("/experimental/quantum/settings")
-async def get_experimental_quantum_settings() -> Dict[str, Any]:
+async def get_experimental_quantum_settings() -> dict[str, Any]:
     """Get experimental quantum settings"""
     return {
         "data": {
@@ -1058,7 +1057,7 @@ async def get_experimental_quantum_settings() -> Dict[str, Any]:
 
 
 @router.get("/experimental/blockchain/settings")
-async def get_experimental_blockchain_settings() -> Dict[str, Any]:
+async def get_experimental_blockchain_settings() -> dict[str, Any]:
     """Get experimental blockchain settings"""
     return {
         "data": {
@@ -1071,61 +1070,61 @@ async def get_experimental_blockchain_settings() -> Dict[str, Any]:
 
 # Experimental POST endpoints
 @router.post("/experimental/start-all")
-async def start_all_experimental_services() -> Dict[str, Any]:
+async def start_all_experimental_services() -> dict[str, Any]:
     """Start all experimental services"""
     return {"success": True, "message": "All experimental services started"}
 
 
 @router.post("/experimental/stop-all")
-async def stop_all_experimental_services() -> Dict[str, Any]:
+async def stop_all_experimental_services() -> dict[str, Any]:
     """Stop all experimental services"""
     return {"success": True, "message": "All experimental services stopped"}
 
 
 @router.post("/experimental/quantum/execute-circuit")
-async def execute_quantum_circuit() -> Dict[str, Any]:
+async def execute_quantum_circuit() -> dict[str, Any]:
     """Execute quantum circuit"""
     return {"success": True, "message": "Quantum circuit executed successfully"}
 
 
 @router.post("/experimental/blockchain/mine-block")
-async def mine_bitcoin_block() -> Dict[str, Any]:
+async def mine_bitcoin_block() -> dict[str, Any]:
     """Mine Bitcoin block"""
     return {"success": True, "message": "Bitcoin block mined successfully"}
 
 
 @router.post("/experimental/satellite/analyze")
-async def analyze_satellite_data() -> Dict[str, Any]:
+async def analyze_satellite_data() -> dict[str, Any]:
     """Analyze satellite data"""
     return {"success": True, "message": "Satellite analysis completed"}
 
 
 @router.post("/experimental/5g/create-session")
-async def create_5g_session() -> Dict[str, Any]:
+async def create_5g_session() -> dict[str, Any]:
     """Create 5G session"""
     return {"success": True, "message": "5G session created successfully"}
 
 
 @router.post("/experimental/quantum/settings")
-async def save_quantum_settings() -> Dict[str, Any]:
+async def save_quantum_settings() -> dict[str, Any]:
     """Save quantum settings"""
     return {"success": True, "message": "Quantum settings saved"}
 
 
 @router.post("/experimental/blockchain/settings")
-async def save_blockchain_settings() -> Dict[str, Any]:
+async def save_blockchain_settings() -> dict[str, Any]:
     """Save blockchain settings"""
     return {"success": True, "message": "Blockchain settings saved"}
 
 
 @router.post("/experimental/generate-report")
-async def generate_experimental_report() -> Dict[str, Any]:
+async def generate_experimental_report() -> dict[str, Any]:
     """Generate experimental report"""
     return {"success": True, "message": "Experimental report generated successfully"}
 
 
 @router.post("/experimental/export-data")
-async def export_experimental_data() -> Dict[str, Any]:
+async def export_experimental_data() -> dict[str, Any]:
     """Export experimental data"""
     return {"success": True, "message": "Experimental data exported successfully"}
 

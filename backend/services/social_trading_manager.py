@@ -4,8 +4,8 @@ Handles social trading features and community signals
 """
 
 import logging
-from typing import Dict, Any, List
 from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class SocialTradingManager:
         self.performance_leaderboard = []
         logger.info("âœ… SocialTradingManager initialized")
 
-    async def get_social_status(self) -> Dict[str, Any]:
+    async def get_social_status(self) -> dict[str, Any]:
         """Get status of social trading features"""
         return {
             "active_traders": len(self.active_traders),
@@ -26,7 +26,7 @@ class SocialTradingManager:
             "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
         }
 
-    async def add_trader(self, trader_id: str, name: str, strategy: str) -> Dict[str, Any]:
+    async def add_trader(self, trader_id: str, name: str, strategy: str) -> dict[str, Any]:
         """Add a new trader to the social trading network"""
         try:
             self.active_traders[trader_id] = {
@@ -47,7 +47,7 @@ class SocialTradingManager:
             logger.error(f"âŒ Error adding trader: {e}")
             return {"success": False, "error": str(e)}
 
-    async def get_leaderboard(self) -> List[Dict[str, Any]]:
+    async def get_leaderboard(self) -> list[dict[str, Any]]:
         """Get performance leaderboard"""
         try:
             leaderboard = []
@@ -72,7 +72,7 @@ class SocialTradingManager:
 
     async def add_community_signal(
         self, trader_id: str, pair: str, signal_type: str, confidence: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Add a community trading signal"""
         try:
             signal = {
@@ -91,7 +91,7 @@ class SocialTradingManager:
             logger.error(f"âŒ Error adding community signal: {e}")
             return {"success": False, "error": str(e)}
 
-    async def get_recent_signals(self, limit: int = 10) -> List[Dict[str, Any]]:
+    async def get_recent_signals(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent community signals"""
         try:
             return self.community_signals[-limit:] if self.community_signals else []
@@ -100,8 +100,8 @@ class SocialTradingManager:
             return []
 
     async def update_trader_performance(
-        self, trader_id: str, trade_result: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, trader_id: str, trade_result: dict[str, Any]
+    ) -> dict[str, Any]:
         """Update trader performance after a trade"""
         try:
             if trader_id in self.active_traders:

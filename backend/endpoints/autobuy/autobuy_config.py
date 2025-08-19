@@ -7,10 +7,9 @@ Configuration for SOLUSDT, BTCUSDT, ETHUSDT, AVAXUSDT autobuy system
 import json
 import os
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from dotenv import load_dotenv
-
 from mystic_config import mystic_config
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -159,11 +158,11 @@ class AutobuyConfig:
             os.getenv("MAX_LOSS_PER_TRADE", "10.0")
         )  # $10 max loss per trade
 
-    def get_enabled_pairs(self) -> List[str]:
+    def get_enabled_pairs(self) -> list[str]:
         """Get list of enabled trading pairs"""
         return [pair.symbol for pair in self.trading_pairs.values() if pair.enabled]
 
-    def get_pair_config(self, symbol: str) -> Optional[TradingPair]:
+    def get_pair_config(self, symbol: str) -> TradingPair | None:
         """Get configuration for a specific trading pair"""
         return self.trading_pairs.get(symbol)
 
@@ -175,9 +174,9 @@ class AutobuyConfig:
             return False
         return True
 
-    def validate_config(self) -> List[str]:
+    def validate_config(self) -> list[str]:
         """Validate configuration and return list of errors"""
-        errors: List[str] = []
+        errors: list[str] = []
 
         # Check API credentials
         if not self.binance_api_key:
@@ -206,7 +205,7 @@ class AutobuyConfig:
 
         return errors
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert configuration to dictionary"""
         return {
             "trading_enabled": self.trading_enabled,
@@ -273,7 +272,7 @@ def validate_and_load_config() -> bool:
     return True
 
 
-def get_autobuy_status() -> Dict[str, Any]:
+def get_autobuy_status() -> dict[str, Any]:
     """Get current autobuy system status"""
     import time
 

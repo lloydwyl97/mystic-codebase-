@@ -33,7 +33,7 @@ def clear():
 
 def load_json(path):
     try:
-        with open(path, "r") as f:
+        with open(path) as f:
             return json.load(f)
     except Exception:
         return {}

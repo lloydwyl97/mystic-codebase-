@@ -4,27 +4,28 @@ Focused on AI price prediction functionality
 """
 
 import logging
-from datetime import timezone, datetime
-from typing import Any, Dict, List
+from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
-# Import actual AI services
-from backend.modules.ai.ai_signals import (
-    signal_scorer,
-    risk_adjusted_signals,
-    technical_signals,
-)
 from backend.ai.ai_brains import trend_analysis
 from backend.ai.ai_mystic import mystic_oracle
 from backend.ai.poller import cache
+
+# Import actual AI services
+from backend.modules.ai.ai_signals import (
+    risk_adjusted_signals,
+    signal_scorer,
+    technical_signals,
+)
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/ai", tags=["ai-predictions"])
 
 
 @router.get("/predictions")
-async def get_ai_predictions() -> List[Dict[str, Any]]:
+async def get_ai_predictions() -> list[dict[str, Any]]:
     """Get AI price predictions for cryptocurrencies"""
     try:
         predictions = []
@@ -126,7 +127,7 @@ async def get_ai_predictions() -> List[Dict[str, Any]]:
 
 
 @router.post("/train")
-async def train_ai_model(data: Dict[str, Any]) -> Dict[str, Any]:
+async def train_ai_model(data: dict[str, Any]) -> dict[str, Any]:
     """Train AI model for specific symbol and timeframe"""
     try:
         symbol = data.get("symbol", "BTC")
@@ -162,7 +163,7 @@ async def train_ai_model(data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @router.get("/trends")
-async def get_market_trends() -> Dict[str, Any]:
+async def get_market_trends() -> dict[str, Any]:
     """Get AI market trend analysis"""
     try:
         # Get trend analysis

@@ -4,7 +4,7 @@ Handles fetching technical indicators
 """
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ class IndicatorsFetcher:
 
     async def fetch_indicators(
         self, symbol: str, timeframe: str = "1d"
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Fetch technical indicators for a given symbol"""
         try:
             # Get real technical indicators from technical analysis service

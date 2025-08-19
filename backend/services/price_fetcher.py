@@ -4,7 +4,8 @@ Handles fetching live prices from multiple exchanges
 """
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any
+
 import httpx  # type: ignore
 
 logger = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ class PriceFetcher:
 
     async def fetch_price(
         self, symbol: str, exchange: str = "coingecko"
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Fetch price for a given symbol from specified exchange"""
         try:
             if exchange == "coingecko":
@@ -32,7 +33,7 @@ class PriceFetcher:
             logger.error(f"Error fetching price for {symbol} from {exchange}: {e}")
             return None
 
-    async def _fetch_from_coingecko(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def _fetch_from_coingecko(self, symbol: str) -> dict[str, Any] | None:
         """Fetch price from CoinGecko"""
         try:
             async with httpx.AsyncClient() as client:
@@ -60,7 +61,7 @@ class PriceFetcher:
             logger.error(f"CoinGecko fetch error: {e}")
             return None
 
-    async def _fetch_from_binance(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def _fetch_from_binance(self, symbol: str) -> dict[str, Any] | None:
         """Fetch price from Binance"""
         try:
             async with httpx.AsyncClient() as client:
@@ -77,7 +78,7 @@ class PriceFetcher:
             logger.error(f"Binance fetch error: {e}")
             return None
 
-    async def _fetch_from_coinbase(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def _fetch_from_coinbase(self, symbol: str) -> dict[str, Any] | None:
         """Fetch price from Coinbase"""
         try:
             async with httpx.AsyncClient() as client:

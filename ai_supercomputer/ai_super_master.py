@@ -1,15 +1,16 @@
+import asyncio
+import os
+import time
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from prometheus_client import (
+    CONTENT_TYPE_LATEST,
     Counter,
     Gauge,
     generate_latest,
-    CONTENT_TYPE_LATEST,
 )
-import time
-import os
-import asyncio
 
 app = FastAPI(
     title="Mystic AI Supercomputer Master",

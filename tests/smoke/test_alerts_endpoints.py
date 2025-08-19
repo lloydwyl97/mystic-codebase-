@@ -1,11 +1,10 @@
 import os
-from typing import Optional
 
 import pytest
 import requests
 
 
-def _backend() -> Optional[str]:
+def _backend() -> str | None:
     return os.getenv("MYSTIC_BACKEND")
 
 

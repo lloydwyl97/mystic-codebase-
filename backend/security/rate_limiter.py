@@ -9,13 +9,12 @@ Provides comprehensive rate limiting with:
 - Configurable limits per endpoint
 """
 
-import hashlib
 import logging
+import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import dataclass
-from typing import Any, Dict
-import threading
+from typing import Any
 
 try:
     import redis
@@ -67,8 +66,8 @@ class SecurityMonitor:
 
     def __init__(self):
         self.violations: deque = deque(maxlen=1000)
-        self.blocked_clients: Dict[str, float] = {}
-        self.suspicious_patterns: Dict[str, int] = defaultdict(int)
+        self.blocked_clients: dict[str, float] = {}
+        self.suspicious_patterns: dict[str, int] = defaultdict(int)
         self.security_alerts: deque = deque(maxlen=100)
         self.lock = threading.Lock()
 
@@ -118,7 +117,7 @@ class SecurityMonitor:
         self.security_alerts.append(alert)
         logger.warning(f"Security alert: {reason} for client {client_id}")
 
-    def get_security_stats(self) -> Dict[str, Any]:
+    def get_security_stats(self) -> dict[str, Any]:
         """Get security monitoring statistics"""
         with self.lock:
             return {
@@ -134,7 +133,7 @@ class SlidingWindowRateLimiter:
 
     def __init__(self, window_size: int = SLIDING_WINDOW_SIZE):
         self.window_size = window_size
-        self.requests: Dict[str, deque] = defaultdict(lambda: deque())
+        self.requests: dict[str, deque] = defaultdict(lambda: deque())
         self.lock = threading.Lock()
 
     def is_allowed(self, client_id: str, limit: int) -> bool:
@@ -173,8 +172,8 @@ class TokenBucketRateLimiter:
     def __init__(self, capacity: int = TOKEN_BUCKET_CAPACITY, rate: float = TOKEN_BUCKET_RATE):
         self.capacity = capacity
         self.rate = rate
-        self.tokens: Dict[str, float] = defaultdict(lambda: capacity)
-        self.last_update: Dict[str, float] = defaultdict(lambda: time.time())
+        self.tokens: dict[str, float] = defaultdict(lambda: capacity)
+        self.last_update: dict[str, float] = defaultdict(lambda: time.time())
         self.lock = threading.Lock()
 
     def is_allowed(self, client_id: str, tokens_required: int = 1) -> bool:
@@ -216,8 +215,8 @@ class AdvancedRateLimiter:
         self.sliding_window_limiter = SlidingWindowRateLimiter()
         self.token_bucket_limiter = TokenBucketRateLimiter()
         self.security_monitor = SecurityMonitor()
-        self.endpoint_configs: Dict[str, RateLimitConfig] = {}
-        self.request_counts: Dict[str, Dict[str, int]] = defaultdict(lambda: defaultdict(int))
+        self.endpoint_configs: dict[str, RateLimitConfig] = {}
+        self.request_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
         self.lock = threading.Lock()
         self.redis_client = None
 
@@ -277,7 +276,7 @@ class AdvancedRateLimiter:
         client_ip = request.client.host if hasattr(request, 'client') else 'unknown'
         return f"ip_{client_ip}"
 
-    def is_rate_limited(self, request, endpoint: str) -> tuple[bool, Dict[str, Any]]:
+    def is_rate_limited(self, request, endpoint: str) -> tuple[bool, dict[str, Any]]:
         """Check if request should be rate limited"""
         client_id = self.get_client_id(request)
 
@@ -352,7 +351,7 @@ class AdvancedRateLimiter:
 
             return False
 
-    def get_rate_limit_info(self, client_id: str, endpoint: str) -> Dict[str, Any]:
+    def get_rate_limit_info(self, client_id: str, endpoint: str) -> dict[str, Any]:
         """Get rate limit information for client and endpoint"""
         config = self.endpoint_configs.get(endpoint)
         if not config:
@@ -381,7 +380,7 @@ class AdvancedRateLimiter:
             self.endpoint_configs[config.endpoint] = config
             logger.info(f"Added rate limit config for {config.endpoint}: {config.requests_per_minute} req/min")
 
-    def get_rate_limit_stats(self) -> Dict[str, Any]:
+    def get_rate_limit_stats(self) -> dict[str, Any]:
         """Get comprehensive rate limiting statistics"""
         with self.lock:
             stats = self.security_monitor.get_security_stats()

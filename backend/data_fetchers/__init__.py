@@ -12,10 +12,11 @@ from __future__ import annotations
 import asyncio
 from typing import Any, Optional
 
+
 class DataFetcherManager:
     def __init__(self, shared_cache: Any | None = None) -> None:
         # Lazy: avoid importing heavy fetchers at import time
-        self._task: Optional[asyncio.Task[Any]] = None
+        self._task: asyncio.Task[Any] | None = None
 
     async def start_all(self) -> None:
         # No-op on purpose: the app factory launches a comprehensive fetcher

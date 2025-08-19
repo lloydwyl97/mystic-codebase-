@@ -7,7 +7,7 @@ Runs both Coinbase and Binance bots with proper error handling
 import asyncio
 import signal
 import sys
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 # Import the bot manager

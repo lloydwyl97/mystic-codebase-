@@ -10,8 +10,8 @@ import json
 import logging
 import sqlite3
 from datetime import datetime, timezone
-from typing import Dict, List, Any
 from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +94,7 @@ class MutationManager:
                 logger.error(f"âŒ Error in mutation loop: {e}")
                 await asyncio.sleep(60)  # Wait 1 minute before retrying
 
-    async def run_single_cycle(self) -> Dict[str, Any]:
+    async def run_single_cycle(self) -> dict[str, Any]:
         """Run a single mutation cycle"""
         try:
             self.cycle_count += 1
@@ -138,7 +138,7 @@ class MutationManager:
             logger.error(f"âŒ Error in mutation cycle: {e}")
             return {"error": str(e)}
 
-    async def _generate_ai_strategies(self) -> List[Dict[str, Any]]:
+    async def _generate_ai_strategies(self) -> list[dict[str, Any]]:
         """Generate new AI strategies"""
         strategies = []
 
@@ -160,7 +160,7 @@ class MutationManager:
 
         return strategies
 
-    async def _mutate_base_strategies(self) -> List[Dict[str, Any]]:
+    async def _mutate_base_strategies(self) -> list[dict[str, Any]]:
         """Mutate existing base strategies"""
         strategies = []
 
@@ -168,7 +168,7 @@ class MutationManager:
         base_path = Path("strategies") / self.base_strategy
         if base_path.exists():
             try:
-                with open(base_path, "r") as f:
+                with open(base_path) as f:
                     base_data = json.load(f)
 
                 # Create mutated version
@@ -193,7 +193,7 @@ class MutationManager:
 
         return strategies
 
-    def _generate_strategy_parameters(self, strategy_type: str) -> Dict[str, Any]:
+    def _generate_strategy_parameters(self, strategy_type: str) -> dict[str, Any]:
         """Generate parameters for a strategy type"""
         if strategy_type == "breakout":
             return {
@@ -225,7 +225,7 @@ class MutationManager:
                 "stop_loss": 0.003,
             }
 
-    def _mutate_parameters(self, base_params: Dict[str, Any]) -> Dict[str, Any]:
+    def _mutate_parameters(self, base_params: dict[str, Any]) -> dict[str, Any]:
         """Mutate existing parameters"""
         import random
 
@@ -246,7 +246,7 @@ class MutationManager:
 
         return mutated_params
 
-    async def _evaluate_strategy(self, strategy: Dict[str, Any]) -> Dict[str, Any]:
+    async def _evaluate_strategy(self, strategy: dict[str, Any]) -> dict[str, Any]:
         """Evaluate a strategy's performance"""
         # Simulate backtesting
         import random
@@ -282,7 +282,7 @@ class MutationManager:
             ),
         }
 
-    def _save_mutation(self, strategy: Dict[str, Any]):
+    def _save_mutation(self, strategy: dict[str, Any]):
         """Save mutation to database"""
         try:
             conn = sqlite3.connect(self.db_path)
@@ -364,7 +364,7 @@ class MutationManager:
         except Exception as e:
             logger.error(f"âŒ Error promoting strategies: {e}")
 
-    def get_mutation_stats(self) -> Dict[str, Any]:
+    def get_mutation_stats(self) -> dict[str, Any]:
         """Get mutation system statistics"""
         try:
             conn = sqlite3.connect(self.db_path)
@@ -411,7 +411,7 @@ class MutationManager:
                 "is_running": self.is_running,
             }
 
-    def get_recent_mutations(self, limit: int = 20) -> List[Dict[str, Any]]:
+    def get_recent_mutations(self, limit: int = 20) -> list[dict[str, Any]]:
         """Get recent mutations"""
         try:
             conn = sqlite3.connect(self.db_path)

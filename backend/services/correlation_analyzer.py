@@ -6,7 +6,7 @@ Tracks relationships between assets and sectors for diversification
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class AdvancedCorrelationAnalyzer:
     """Advanced correlation analysis for crypto markets"""
 
     def __init__(self):
-        self.correlation_history: Dict[str, Any] = {}
+        self.correlation_history: dict[str, Any] = {}
         self.sector_weights = {
             "defi": 0.25,
             "layer1": 0.30,
@@ -163,7 +163,7 @@ class AdvancedCorrelationAnalyzer:
         else:
             return "Standard crypto allocation recommended"
 
-    def get_correlation_summary(self, symbol: str) -> Dict[str, Any]:
+    def get_correlation_summary(self, symbol: str) -> dict[str, Any]:
         """Get correlation analysis summary"""
         return {
             "symbol": symbol,

@@ -6,7 +6,7 @@ fractal time, and other esoteric trading features.
 
 import os
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any
 
 
 @dataclass
@@ -130,7 +130,7 @@ class MysticConfig:
         """Check if ML prediction confidence is above threshold"""
         return bool(confidence >= self.ml.prediction_threshold)
 
-    def get_config_summary(self) -> Dict[str, Any]:
+    def get_config_summary(self) -> dict[str, Any]:
         """Get a summary of all mystic configuration"""
         return {
             "schumann": {

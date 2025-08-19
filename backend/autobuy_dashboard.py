@@ -8,16 +8,16 @@ import asyncio
 import json
 import logging
 import time
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass, asdict
+from typing import Any
 
+import uvicorn
+from binance_us_autobuy import autobuy_system
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
-import uvicorn
 
 from backend.endpoints.autobuy.autobuy_config import get_config
-from binance_us_autobuy import autobuy_system
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="Binance US Autobuy Dashboard", version="1.0.0")
 
 # WebSocket connections
-websocket_connections: List[WebSocket] = []
+websocket_connections: list[WebSocket] = []
 
 
 @dataclass
@@ -41,7 +41,7 @@ class DashboardStats:
     active_trades: int
     success_rate: float
     avg_trade_amount: float
-    last_trade_time: Optional[str]
+    last_trade_time: str | None
     system_uptime: float
     trading_enabled: bool
     emergency_stop: bool
@@ -88,7 +88,7 @@ class AutobuyDashboard:
             emergency_stop=self.config.emergency_stop,
         )
 
-    def get_trading_pairs_status(self) -> Dict[str, Any]:
+    def get_trading_pairs_status(self) -> dict[str, Any]:
         """Get status of all trading pairs"""
         pairs_status = {}
 
@@ -122,11 +122,11 @@ class AutobuyDashboard:
 
         return pairs_status
 
-    def get_recent_trades(self, limit: int = 20) -> List[Dict[str, Any]]:
+    def get_recent_trades(self, limit: int = 20) -> list[dict[str, Any]]:
         """Get recent trade history"""
         return autobuy_system.trade_history[-limit:] if autobuy_system.trade_history else []
 
-    def get_system_config(self) -> Dict[str, Any]:
+    def get_system_config(self) -> dict[str, Any]:
         """Get current system configuration"""
         return self.config.to_dict()
 
@@ -430,7 +430,7 @@ async def websocket_endpoint(websocket: WebSocket):
             websocket_connections.remove(websocket)
 
 
-async def broadcast_update(update_type: str, data: Dict[str, Any]):
+async def broadcast_update(update_type: str, data: dict[str, Any]):
     """Broadcast update to all WebSocket connections"""
     message = json.dumps({"type": update_type, "data": data})
     disconnected = []

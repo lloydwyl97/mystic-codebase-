@@ -5,7 +5,7 @@ Defines all settings and parameters for the three-tier signal architecture
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -20,8 +20,8 @@ class Tier1Config:
     retry_delay: int = 1
 
     # Supported coins per exchange
-    binance_coins: Optional[List[str]] = None
-    coinbase_coins: Optional[List[str]] = None
+    binance_coins: list[str] | None = None
+    coinbase_coins: list[str] | None = None
 
     def __post_init__(self):
         if self.binance_coins is None:
@@ -132,7 +132,7 @@ class RedisConfig:
     host: str = "redis"
     port: int = 6379
     db: int = 0
-    password: Optional[str] = None
+    password: str | None = None
     decode_responses: bool = True
     socket_timeout: int = 5
     socket_connect_timeout: int = 5
@@ -176,7 +176,7 @@ class TieredSystemConfig:
         self.api = APIConfig()
         self.logging = LoggingConfig()
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert configuration to dictionary"""
         return {
             "tier1": self.tier1.__dict__,
@@ -190,7 +190,7 @@ class TieredSystemConfig:
         }
 
     @classmethod
-    def from_dict(cls, config_dict: Dict[str, Any]) -> "TieredSystemConfig":
+    def from_dict(cls, config_dict: dict[str, Any]) -> "TieredSystemConfig":
         """Create configuration from dictionary"""
         config = cls()
 

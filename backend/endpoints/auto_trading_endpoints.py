@@ -6,7 +6,7 @@ Handles all auto-trading related API endpoints including start, stop, and status
 
 import logging
 import time
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # Simple in-memory rate limiter
 RATE_LIMIT = 60  # requests per minute
-rate_limit_cache: Dict[str, int] = {}
+rate_limit_cache: dict[str, int] = {}
 
 
 def rate_limiter(request: Request) -> None:
@@ -117,7 +117,7 @@ async def get_auto_bot_status(
 
 @router.post("/auto-bot/config")
 async def update_auto_bot_config(
-    config: Dict[str, Any], auto_trading_manager: Any = Depends(lambda: get_auto_trading_manager())
+    config: dict[str, Any], auto_trading_manager: Any = Depends(lambda: get_auto_trading_manager())
 ):
     """Update auto bot configuration"""
     try:

@@ -10,18 +10,9 @@ import json
 import logging
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional, Union, cast
+from typing import Any, Union, cast
 
 import pandas as pd
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    Request,
-    WebSocket,
-    WebSocketDisconnect,
-)
-
 from advanced_trading import (
     AdvancedOrder,
     OrderType,
@@ -30,29 +21,14 @@ from advanced_trading import (
     portfolio_analyzer,
     risk_manager,
 )
-from backend.services.ai_strategies import (
-    pattern_recognition,
-    predictive_analytics,
-    strategy_builder,
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Request,
+    WebSocket,
+    WebSocketDisconnect,
 )
-from enhanced_logging import log_event, log_operation_performance
-
-# Import all the advanced modules
-from backend.services.exchange_integration import OrderRequest, exchange_manager
-
-# Import real services
-from backend.services.auto_trading_service import get_auto_trading_service
-from backend.services.notification_service import get_notification_service
-from backend.services.analytics_service import analytics_service
-from backend.services.binance_trading import get_binance_trading_service
-from backend.services.coinbase_trading import get_coinbase_trading_service
-
-# Import live services
-from backend.services.live_market_data import live_market_data_service
-from backend.modules.data.market_data import market_data_manager
-from backend.services.order_service import order_service
-from backend.services.portfolio_service import portfolio_service
-from backend.services.signal_service import signal_service
 
 # Import shared endpoints
 from shared_endpoints import register_shared_endpoints
@@ -63,6 +39,29 @@ from social_trading import (
 )
 
 from backend.config import settings
+from backend.modules.data.market_data import market_data_manager
+from backend.services.ai_strategies import (
+    pattern_recognition,
+    predictive_analytics,
+    strategy_builder,
+)
+from backend.services.analytics_service import analytics_service
+
+# Import real services
+from backend.services.auto_trading_service import get_auto_trading_service
+from backend.services.binance_trading import get_binance_trading_service
+from backend.services.coinbase_trading import get_coinbase_trading_service
+
+# Import all the advanced modules
+from backend.services.exchange_integration import OrderRequest, exchange_manager
+
+# Import live services
+from backend.services.live_market_data import live_market_data_service
+from backend.services.notification_service import get_notification_service
+from backend.services.order_service import order_service
+from backend.services.portfolio_service import portfolio_service
+from backend.services.signal_service import signal_service
+from enhanced_logging import log_event, log_operation_performance
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -74,7 +73,7 @@ api_logger = logger
 
 # Simple in-memory rate limiter
 RATE_LIMIT = 60  # requests per minute
-rate_limit_cache: Dict[str, int] = {}
+rate_limit_cache: dict[str, int] = {}
 
 
 def rate_limiter(request: Request) -> None:
@@ -187,7 +186,7 @@ async def get_auto_trade_status(
 async def get_performance_metrics(
     timeframe: str = "30d",
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get comprehensive performance metrics"""
     try:
         # Get real performance data from analytics service
@@ -205,10 +204,10 @@ async def get_performance_metrics(
 async def get_trade_history(
     limit: int = 100,
     offset: int = 0,
-    symbol: Optional[str] = None,
-    strategy: Optional[str] = None,
+    symbol: str | None = None,
+    strategy: str | None = None,
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get detailed trade history"""
     try:
         # Get real trade history from order service
@@ -224,7 +223,7 @@ async def get_trade_history(
 @router.get("/api/analytics/strategies")
 async def get_strategy_performance(
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get strategy performance comparison"""
     try:
         # Get real strategy performance from analytics service
@@ -241,7 +240,7 @@ async def get_strategy_performance(
 @router.get("/api/analytics/ai-insights")
 async def get_ai_insights(
     redis_client: Any = Depends(lambda: get_redis_client()),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get AI-powered trading insights"""
     try:
         # Get real AI insights from analytics service
@@ -262,7 +261,7 @@ async def get_auto_bot_status(
         # Get real auto bot status from auto trading manager
         auto_trading_manager = cast(Any, get_auto_trading_manager())
         auto_bot_data = await auto_trading_manager.get_auto_bot_status()
-        return cast(Dict[str, Any], auto_bot_data)
+        return cast(dict[str, Any], auto_bot_data)
     except Exception as e:
         logger.error(f"Error getting auto bot status: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error getting auto bot status: {str(e)}")
@@ -270,7 +269,7 @@ async def get_auto_bot_status(
 
 @router.post("/api/auto-bot/config")
 async def update_auto_bot_config(
-    config: Dict[str, Any],
+    config: dict[str, Any],
     redis_client: Any = Depends(lambda: get_redis_client()),
 ):
     """Update auto bot configuration"""
@@ -280,7 +279,7 @@ async def update_auto_bot_config(
         updated_config = await auto_trading_manager.update_auto_bot_config(config)
         return {
             "status": "success",
-            "config": cast(Dict[str, Any], updated_config),
+            "config": cast(dict[str, Any], updated_config),
             "message": "Auto bot configuration updated successfully",
         }
     except Exception as e:
@@ -437,7 +436,7 @@ async def clear_all_notifications(
 
 # Coin state endpoint (fast cached version)
 @router.get("/api/coinstate")
-async def get_coin_state() -> Dict[str, Any]:
+async def get_coin_state() -> dict[str, Any]:
     """Get current coin state using cached market data"""
     try:
         # Use cached market data from the persistent cache
@@ -616,7 +615,7 @@ async def get_auto_buy_history():
 
 # Portfolio endpoints (updated to use live data)
 @router.get("/api/portfolio/overview")
-async def get_portfolio_overview() -> Dict[str, Any]:
+async def get_portfolio_overview() -> dict[str, Any]:
     """Get portfolio overview with live market data"""
     try:
         # Get global market data
@@ -656,7 +655,7 @@ async def get_portfolio_overview() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio/positions")
-async def get_portfolio_positions() -> Dict[str, Any]:
+async def get_portfolio_positions() -> dict[str, Any]:
     """Get portfolio positions with live market data"""
     try:
         # Get live market data for popular coins
@@ -695,7 +694,7 @@ async def get_portfolio_positions() -> Dict[str, Any]:
 
 # Exchange endpoints (updated to use live data)
 @router.get("/api/exchanges")
-async def get_exchanges() -> Dict[str, Any]:
+async def get_exchanges() -> dict[str, Any]:
     """Get available exchanges with live status"""
     try:
         exchanges = ["binance", "coinbase", "kraken"]
@@ -752,7 +751,7 @@ async def get_exchanges() -> Dict[str, Any]:
 
 
 @router.get("/api/exchanges/{exchange_name}/account")
-async def get_exchange_account(exchange_name: str) -> Dict[str, Any]:
+async def get_exchange_account(exchange_name: str) -> dict[str, Any]:
     """Get exchange account information with live data"""
     try:
         if exchange_name.lower() == "binance" and settings.exchange.binance_api_key:
@@ -795,7 +794,7 @@ async def get_exchange_account(exchange_name: str) -> Dict[str, Any]:
 
 
 @router.get("/api/live/market-data")
-async def get_live_market_data() -> Dict[str, Any]:
+async def get_live_market_data() -> dict[str, Any]:
     """Get live market data summary"""
     try:
         # Get live market data from the service
@@ -822,7 +821,7 @@ async def get_live_market_data() -> Dict[str, Any]:
 
 
 @router.get("/api/live/market-data/{symbol}")
-async def get_live_market_data_symbol(symbol: str) -> Dict[str, Any]:
+async def get_live_market_data_symbol(symbol: str) -> dict[str, Any]:
     """Get live market data for specific symbol"""
     try:
         market_data = await live_market_data_service.get_symbol_data(symbol.upper())
@@ -855,7 +854,7 @@ async def get_live_market_data_symbol(symbol: str) -> Dict[str, Any]:
 
 if False:
     @router.get("/api/market/candles")
-    async def get_candlestick_data(symbol: str, interval: str = "1h") -> Dict[str, Any]:
+    async def get_candlestick_data(symbol: str, interval: str = "1h") -> dict[str, Any]:
         """Get candlestick data for a symbol"""
         try:
             candles = await live_market_data_service.get_candlestick_data(symbol.upper(), interval)
@@ -879,7 +878,7 @@ if False:
 
 
 @router.get("/api/market/depth/{symbol}")
-async def get_market_depth(symbol: str) -> Dict[str, Any]:
+async def get_market_depth(symbol: str) -> dict[str, Any]:
     """Get market depth for a symbol"""
     try:
         depth = await live_market_data_service.get_order_book(symbol.upper())
@@ -903,7 +902,7 @@ async def get_market_depth(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/api/market/indicators/{symbol}")
-async def get_technical_indicators(symbol: str) -> Dict[str, Any]:
+async def get_technical_indicators(symbol: str) -> dict[str, Any]:
     """Get technical indicators for a symbol"""
     try:
         indicators = await live_market_data_service.get_technical_indicators(symbol.upper())
@@ -925,7 +924,7 @@ async def get_technical_indicators(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/api/trading/signals")
-async def get_trading_signals() -> Dict[str, Any]:
+async def get_trading_signals() -> dict[str, Any]:
     """Get trading signals"""
     try:
         signals = await signal_service.get_latest_signals()
@@ -945,7 +944,7 @@ async def get_trading_signals() -> Dict[str, Any]:
 
 
 @router.get("/api/ai/predictions")
-async def get_ai_predictions() -> Dict[str, Any]:
+async def get_ai_predictions() -> dict[str, Any]:
     """Get AI predictions"""
     try:
         predictions = await analytics_service.get_ai_predictions()
@@ -965,7 +964,7 @@ async def get_ai_predictions() -> Dict[str, Any]:
 
 
 @router.get("/api/ai/signals")
-async def get_ai_signals() -> Dict[str, Any]:
+async def get_ai_signals() -> dict[str, Any]:
     """Get AI-generated trading signals"""
     try:
         # Get live market data
@@ -1051,7 +1050,7 @@ async def get_ai_signals() -> Dict[str, Any]:
 
 
 @router.get("/api/ai/thoughts")
-async def get_ai_thoughts() -> Dict[str, Any]:
+async def get_ai_thoughts() -> dict[str, Any]:
     """Get AI thinking process and analysis"""
     try:
         # Get live market data for analysis
@@ -1190,7 +1189,7 @@ async def get_ai_thoughts() -> Dict[str, Any]:
 
 
 @router.get("/api/ai/bots")
-async def get_ai_bots() -> Dict[str, Any]:
+async def get_ai_bots() -> dict[str, Any]:
     """Get AI bot statuses"""
     try:
         # Get bot statuses from bot manager
@@ -1243,7 +1242,7 @@ async def get_ai_bots() -> Dict[str, Any]:
 
 
 @router.get("/api/ai/performance")
-async def get_ai_performance() -> Dict[str, Any]:
+async def get_ai_performance() -> dict[str, Any]:
     """Get AI trading performance metrics"""
     try:
         # Get real performance data from analytics service
@@ -1312,7 +1311,7 @@ async def get_ai_performance() -> Dict[str, Any]:
 
 
 @router.get("/api/ai/status")
-async def get_ai_status() -> Dict[str, Any]:
+async def get_ai_status() -> dict[str, Any]:
     """Get AI system status and metrics"""
     try:
         # Get live market data for AI model accuracy calculation
@@ -1421,7 +1420,7 @@ async def get_ai_status() -> Dict[str, Any]:
 
 
 @router.get("/api/portfolio")
-async def get_portfolio_data() -> Dict[str, Any]:
+async def get_portfolio_data() -> dict[str, Any]:
     """Get portfolio data"""
     try:
         portfolio = await portfolio_service.get_portfolio_overview()
@@ -1441,7 +1440,7 @@ async def get_portfolio_data() -> Dict[str, Any]:
 
 
 @router.get("/api/signals/live")
-async def get_signals_live() -> Dict[str, Any]:
+async def get_signals_live() -> dict[str, Any]:
     """Get live trading signals"""
     try:
         signals = [
@@ -1495,7 +1494,7 @@ async def get_signals_live() -> Dict[str, Any]:
 
 
 @router.get("/api/crypto/status")
-async def get_crypto_status() -> Dict[str, Any]:
+async def get_crypto_status() -> dict[str, Any]:
     """Get crypto trading system status"""
     try:
         return {
@@ -1532,7 +1531,7 @@ async def get_crypto_status() -> Dict[str, Any]:
 
 
 @router.get("/api/mystic/status")
-async def get_mystic_status() -> Dict[str, Any]:
+async def get_mystic_status() -> dict[str, Any]:
     """Get mystic AI system status"""
     try:
         return {
@@ -1562,7 +1561,7 @@ async def get_mystic_status() -> Dict[str, Any]:
 
 
 @router.get("/api/core/status")
-async def get_core_status() -> Dict[str, Any]:
+async def get_core_status() -> dict[str, Any]:
     """Get core system status"""
     try:
         return {
@@ -1598,7 +1597,7 @@ async def get_core_status() -> Dict[str, Any]:
 
 
 @router.get("/api/trading/history")
-async def get_trading_history() -> Dict[str, Any]:
+async def get_trading_history() -> dict[str, Any]:
     """Get trading history"""
     try:
         history = await order_service.get_trade_history()
@@ -1618,7 +1617,7 @@ async def get_trading_history() -> Dict[str, Any]:
 
 
 @router.get("/api/bots/status")
-async def get_bots_status() -> Dict[str, Any]:
+async def get_bots_status() -> dict[str, Any]:
     """Get bots status"""
     try:
         # Get auto trading status
@@ -1648,7 +1647,7 @@ async def get_bots_status() -> Dict[str, Any]:
 
 
 @router.post("/api/bots/{bot_id}/start")
-async def start_bot(bot_id: str) -> Dict[str, Any]:
+async def start_bot(bot_id: str) -> dict[str, Any]:
     """Start a bot"""
     try:
         if bot_id == "auto_trading":
@@ -1674,7 +1673,7 @@ async def start_bot(bot_id: str) -> Dict[str, Any]:
 
 
 @router.post("/api/bots/{bot_id}/stop")
-async def stop_bot(bot_id: str) -> Dict[str, Any]:
+async def stop_bot(bot_id: str) -> dict[str, Any]:
     """Stop a bot"""
     try:
         if bot_id == "auto_trading":
@@ -1700,7 +1699,7 @@ async def stop_bot(bot_id: str) -> Dict[str, Any]:
 
 
 @router.get("/api/alerts")
-async def get_alerts() -> Dict[str, Any]:
+async def get_alerts() -> dict[str, Any]:
     """Get alerts"""
     try:
         notification_service = get_notification_service()
@@ -1721,7 +1720,7 @@ async def get_alerts() -> Dict[str, Any]:
 
 
 @router.post("/api/alerts")
-async def create_alert(alert_data: Dict[str, Any]) -> Dict[str, Any]:
+async def create_alert(alert_data: dict[str, Any]) -> dict[str, Any]:
     """Create an alert"""
     try:
         notification_service = get_notification_service()
@@ -1744,7 +1743,7 @@ async def create_alert(alert_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @router.delete("/api/alerts/{alert_id}")
-async def delete_alert(alert_id: str) -> Dict[str, Any]:
+async def delete_alert(alert_id: str) -> dict[str, Any]:
     """Delete an alert"""
     try:
         notification_service = get_notification_service()
@@ -1767,7 +1766,7 @@ async def delete_alert(alert_id: str) -> Dict[str, Any]:
 
 
 @router.get("/api/social/sentiment/{symbol}")
-async def get_social_sentiment(symbol: str) -> Dict[str, Any]:
+async def get_social_sentiment(symbol: str) -> dict[str, Any]:
     """Get social sentiment for a symbol"""
     try:
         # Get real sentiment data from sentiment analyzer service
@@ -1792,7 +1791,7 @@ async def get_social_sentiment(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/api/news/feed")
-async def get_news_feed() -> Dict[str, Any]:
+async def get_news_feed() -> dict[str, Any]:
     """Get news feed"""
     try:
         # Get real news data from news service
@@ -1813,7 +1812,7 @@ async def get_news_feed() -> Dict[str, Any]:
 
 
 @router.get("/api/wallet/balance")
-async def get_wallet_balance() -> Dict[str, Any]:
+async def get_wallet_balance() -> dict[str, Any]:
     """Get wallet balance"""
     try:
         balance = await portfolio_service.get_wallet_balance()
@@ -1833,7 +1832,7 @@ async def get_wallet_balance() -> Dict[str, Any]:
 
 
 @router.get("/api/transactions/history")
-async def get_transaction_history() -> Dict[str, Any]:
+async def get_transaction_history() -> dict[str, Any]:
     """Get transaction history"""
     try:
         history = await portfolio_service.get_transaction_history()
@@ -1853,7 +1852,7 @@ async def get_transaction_history() -> Dict[str, Any]:
 
 
 @router.post("/api/orders")
-async def place_order(order_data: Dict[str, Any]) -> Dict[str, Any]:
+async def place_order(order_data: dict[str, Any]) -> dict[str, Any]:
     """Place an order"""
     try:
         result = await order_service.place_order(order_data)
@@ -1875,7 +1874,7 @@ async def place_order(order_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @router.delete("/api/orders/{order_id}")
-async def cancel_order(order_id: str) -> Dict[str, Any]:
+async def cancel_order(order_id: str) -> dict[str, Any]:
     """Cancel an order"""
     try:
         result = await order_service.cancel_order(order_id)
@@ -1897,7 +1896,7 @@ async def cancel_order(order_id: str) -> Dict[str, Any]:
 
 
 @router.get("/api/orders/{order_id}/status")
-async def get_order_status(order_id: str) -> Dict[str, Any]:
+async def get_order_status(order_id: str) -> dict[str, Any]:
     """Get order status"""
     try:
         status = await order_service.get_order_status(order_id)
@@ -1917,7 +1916,7 @@ async def get_order_status(order_id: str) -> Dict[str, Any]:
 
 
 @router.get("/api/system/status")
-async def get_system_status() -> Dict[str, Any]:
+async def get_system_status() -> dict[str, Any]:
     """Get system status"""
     try:
         health_monitor = get_health_monitor()
@@ -1938,7 +1937,7 @@ async def get_system_status() -> Dict[str, Any]:
 
 
 @router.get("/api/logs")
-async def get_logs() -> Dict[str, Any]:
+async def get_logs() -> dict[str, Any]:
     """Get system logs"""
     try:
         # Get real system logs from logging service

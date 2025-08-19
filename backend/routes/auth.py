@@ -5,7 +5,6 @@ Contains login, logout, refresh token, and authentication endpoints.
 """
 
 import logging
-from typing import Dict
 
 from fastapi import APIRouter, HTTPException
 
@@ -18,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 @router.post("/api/auth/login")
-async def login(credentials: Dict[str, str]):
+async def login(credentials: dict[str, str]):
     """User login endpoint"""
     try:
         # Real authentication using auth service

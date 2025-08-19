@@ -5,9 +5,7 @@ Contains all notification-related functionality including real-time alerts and m
 """
 
 # Import specific modules instead of wildcard imports
-from . import alert_manager
-from . import message_handler
-from . import notification_service
+from . import alert_manager, message_handler, notification_service
 
 __all__ = ["notification_service", "alert_manager", "message_handler"]
 

@@ -5,29 +5,30 @@ Implements quantum optimization algorithms for trading strategies
 
 import asyncio
 import json
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
 import os
 import sys
+from datetime import datetime, timedelta
+from typing import Any
+
+import networkx as nx
+import numpy as np
+import pandas as pd
 import qiskit
 from qiskit import (
+    Aer,
+    ClassicalRegister,
     QuantumCircuit,
     QuantumRegister,
-    ClassicalRegister,
     execute,
-    Aer,
 )
-from qiskit.algorithms import VQE, QAOA, Grover
-from qiskit.algorithms.optimizers import SPSA, COBYLA, ADAM, L_BFGS_B
-from qiskit.circuit.library import TwoLocal, RealAmplitudes, EfficientSU2
-from qiskit.primitives import Sampler, Estimator
+from qiskit.algorithms import QAOA, VQE, Grover
+from qiskit.algorithms.optimizers import ADAM, COBYLA, L_BFGS_B, SPSA
+from qiskit.circuit.library import EfficientSU2, RealAmplitudes, TwoLocal
+from qiskit.primitives import Estimator, Sampler
 from qiskit.quantum_info import Pauli, SparsePauliOp
 from qiskit_finance.applications import PortfolioOptimization
 from qiskit_finance.data_providers import RandomDataProvider
 from qiskit_finance.optimization import EfficientFrontier
-import networkx as nx
 from scipy.optimize import minimize
 from sklearn.preprocessing import StandardScaler
 
@@ -130,7 +131,7 @@ class QuantumAnnealingOptimizer:
             print(f"âŒ Error in quantum annealing optimization: {e}")
             return None
 
-    def extract_weights_from_counts(self, counts: Dict[str, int], num_assets: int) -> np.ndarray:
+    def extract_weights_from_counts(self, counts: dict[str, int], num_assets: int) -> np.ndarray:
         """Extract portfolio weights from measurement counts"""
         try:
             total_shots = sum(counts.values())
@@ -159,7 +160,7 @@ class VariationalQuantumOptimizer:
         self.optimizer = None
 
     def optimize_trading_strategy_vqe(
-        self, strategy_params: Dict[str, Any], market_data: np.ndarray
+        self, strategy_params: dict[str, Any], market_data: np.ndarray
     ):
         """Optimize trading strategy parameters using VQE"""
         try:
@@ -199,7 +200,7 @@ class VariationalQuantumOptimizer:
             print(f"âŒ Error in VQE optimization: {e}")
             return None
 
-    def create_strategy_hamiltonian(self, strategy_params: Dict[str, Any]):
+    def create_strategy_hamiltonian(self, strategy_params: dict[str, Any]):
         """Create Hamiltonian for strategy optimization"""
         try:
             # Create a simple Hamiltonian based on strategy parameters
@@ -253,8 +254,8 @@ class QuantumConstraintOptimizer:
     def optimize_with_constraints(
         self,
         objective_func,
-        constraints: List[Dict],
-        bounds: List[Tuple],
+        constraints: list[dict],
+        bounds: list[tuple],
         initial_guess: np.ndarray,
     ):
         """Optimize with quantum-enhanced constraint handling"""
@@ -303,7 +304,7 @@ class QuantumConstraintOptimizer:
             print(f"âŒ Error in quantum constraint optimization: {e}")
             return None
 
-    def apply_constraint(self, circuit: QuantumCircuit, qr: QuantumRegister, constraint: Dict):
+    def apply_constraint(self, circuit: QuantumCircuit, qr: QuantumRegister, constraint: dict):
         """Apply constraint to quantum circuit"""
         try:
             # Simple constraint application
@@ -340,7 +341,7 @@ class QuantumConstraintOptimizer:
             return circuit
 
     def extract_solution_from_counts(
-        self, counts: Dict[str, int], num_variables: int, bounds: List[Tuple]
+        self, counts: dict[str, int], num_variables: int, bounds: list[tuple]
     ) -> np.ndarray:
         """Extract optimal solution from measurement counts"""
         try:
@@ -363,7 +364,7 @@ class QuantumConstraintOptimizer:
             print(f"âŒ Error extracting solution: {e}")
             return np.zeros(num_variables)
 
-    def check_constraints(self, solution: np.ndarray, constraints: List[Dict]) -> bool:
+    def check_constraints(self, solution: np.ndarray, constraints: list[dict]) -> bool:
         """Check if solution satisfies constraints"""
         try:
             for constraint in constraints:
@@ -586,7 +587,7 @@ class QuantumOptimizationAgent(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process market data for optimization"""
         try:
             symbol = market_data.get("symbol")
@@ -682,7 +683,7 @@ class QuantumOptimizationAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error performing portfolio optimizations: {e}")
 
-    async def get_symbol_market_data(self, symbol: str) -> List[Dict[str, Any]]:
+    async def get_symbol_market_data(self, symbol: str) -> list[dict[str, Any]]:
         """Get market data for a symbol"""
         try:
             # Get from cache first
@@ -757,7 +758,7 @@ class QuantumOptimizationAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error optimizing trading strategies: {e}")
 
-    async def get_combined_market_data(self) -> Optional[np.ndarray]:
+    async def get_combined_market_data(self) -> np.ndarray | None:
         """Get combined market data for all symbols"""
         try:
             all_data = []
@@ -777,7 +778,7 @@ class QuantumOptimizationAgent(BaseAgent):
             print(f"âŒ Error getting combined market data: {e}")
             return None
 
-    async def broadcast_portfolio_optimization(self, optimization_result: Dict[str, Any]):
+    async def broadcast_portfolio_optimization(self, optimization_result: dict[str, Any]):
         """Broadcast portfolio optimization results"""
         try:
             optimization_update = {
@@ -796,7 +797,7 @@ class QuantumOptimizationAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting portfolio optimization: {e}")
 
-    async def broadcast_strategy_optimization(self, optimization_result: Dict[str, Any]):
+    async def broadcast_strategy_optimization(self, optimization_result: dict[str, Any]):
         """Broadcast strategy optimization results"""
         try:
             optimization_update = {
@@ -815,7 +816,7 @@ class QuantumOptimizationAgent(BaseAgent):
         except Exception as e:
             print(f"âŒ Error broadcasting strategy optimization: {e}")
 
-    async def handle_optimize_portfolio(self, message: Dict[str, Any]):
+    async def handle_optimize_portfolio(self, message: dict[str, Any]):
         """Handle manual portfolio optimization request"""
         try:
             symbols = message.get("symbols", self.trading_symbols)
@@ -881,7 +882,7 @@ class QuantumOptimizationAgent(BaseAgent):
             print(f"âŒ Error handling portfolio optimization: {e}")
             await self.broadcast_error(f"Portfolio optimization error: {e}")
 
-    async def handle_optimize_strategy(self, message: Dict[str, Any]):
+    async def handle_optimize_strategy(self, message: dict[str, Any]):
         """Handle manual strategy optimization request"""
         try:
             strategy_params = message.get("strategy_params", {})
@@ -926,7 +927,7 @@ class QuantumOptimizationAgent(BaseAgent):
             print(f"âŒ Error handling strategy optimization: {e}")
             await self.broadcast_error(f"Strategy optimization error: {e}")
 
-    async def handle_constraint_optimization(self, message: Dict[str, Any]):
+    async def handle_constraint_optimization(self, message: dict[str, Any]):
         """Handle constraint optimization request"""
         try:
             objective_func = message.get("objective_func")
@@ -966,7 +967,7 @@ class QuantumOptimizationAgent(BaseAgent):
             print(f"âŒ Error handling constraint optimization: {e}")
             await self.broadcast_error(f"Constraint optimization error: {e}")
 
-    async def handle_get_optimization_status(self, message: Dict[str, Any]):
+    async def handle_get_optimization_status(self, message: dict[str, Any]):
         """Handle optimization status request"""
         try:
             optimization_type = message.get("optimization_type")

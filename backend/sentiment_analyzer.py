@@ -6,10 +6,11 @@ Analyzes market sentiment from multiple sources
 import asyncio
 import json
 import os
-import redis
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any
+
 import aiohttp
+import redis
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -58,7 +59,7 @@ class SentimentAnalyzer:
                 print(f"âŒ Error in sentiment analysis: {e}")
                 await asyncio.sleep(600)
 
-    async def calculate_sentiment(self) -> Dict[str, Any]:
+    async def calculate_sentiment(self) -> dict[str, Any]:
         """Calculate market sentiment from multiple sources"""
         try:
             sentiment_data = {
@@ -90,14 +91,14 @@ class SentimentAnalyzer:
             print(f"Error calculating sentiment: {e}")
             return {}
 
-    async def store_sentiment_data(self, data: Dict[str, Any]):
+    async def store_sentiment_data(self, data: dict[str, Any]):
         """Store sentiment data in Redis"""
         try:
             self.redis_client.set("sentiment_data", json.dumps(data), ex=1800)  # 30 minutes TTL
         except Exception as e:
             print(f"Error storing sentiment data: {e}")
 
-    async def publish_sentiment_updates(self, data: Dict[str, Any]):
+    async def publish_sentiment_updates(self, data: dict[str, Any]):
         """Publish sentiment updates to Redis channels"""
         try:
             self.redis_client.publish("sentiment_updates", json.dumps(data))

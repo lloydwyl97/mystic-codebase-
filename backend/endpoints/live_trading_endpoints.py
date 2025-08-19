@@ -7,7 +7,7 @@ Integrates CoinGecko, Binance, and Coinbase services.
 
 import logging
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 async def get_live_market_data(
     currency: str = Query("usd", description="Currency for prices"),
     per_page: int = Query(100, description="Number of coins to return"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get live market data for top cryptocurrencies"""
     try:
         data = await live_market_data_service.get_market_data(currency, per_page)
@@ -44,7 +44,7 @@ async def get_live_market_data(
 @router.get("/live/market-data/{symbol}")
 async def get_live_market_data_by_symbol(
     symbol: str, currency: str = Query("usd", description="Currency for price")
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get live market data for a specific symbol"""
     try:
         # Get price data for the symbol
@@ -71,7 +71,7 @@ async def get_live_market_data_by_symbol(
 async def get_live_coin_data(
     coin_id: str,
     currency: str = Query("usd", description="Currency for price"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get live data for a specific coin"""
     try:
         # Get price data
@@ -91,7 +91,7 @@ async def get_live_coin_data(
 
 
 @router.get("/live/trending")
-async def get_trending_coins() -> Dict[str, Any]:
+async def get_trending_coins() -> dict[str, Any]:
     """Get trending coins in the last 24 hours"""
     try:
         data = await live_market_data_service.get_trending_coins()
@@ -102,7 +102,7 @@ async def get_trending_coins() -> Dict[str, Any]:
 
 
 @router.get("/live/global")
-async def get_global_market_data() -> Dict[str, Any]:
+async def get_global_market_data() -> dict[str, Any]:
     """Get global cryptocurrency market data"""
     try:
         data = await live_market_data_service.get_global_data()
@@ -115,7 +115,7 @@ async def get_global_market_data() -> Dict[str, Any]:
 @router.get("/live/search")
 async def search_coins(
     query: str = Query(..., description="Search query for coins")
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Search for coins by name or symbol"""
     try:
         data = await live_market_data_service.search_coins(query)
@@ -130,7 +130,7 @@ async def get_historical_data(
     coin_id: str,
     days: int = Query(30, description="Number of days of historical data"),
     currency: str = Query("usd", description="Currency for prices"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get historical price data for a coin"""
     try:
         data = await live_market_data_service.get_historical_data(coin_id, days, currency)
@@ -146,7 +146,7 @@ async def get_historical_data(
 
 
 @router.get("/binance/account")
-async def get_binance_account() -> Dict[str, Any]:
+async def get_binance_account() -> dict[str, Any]:
     """Get Binance account information and balances"""
     try:
         # Get service instance
@@ -164,7 +164,7 @@ async def get_binance_account() -> Dict[str, Any]:
 
 
 @router.get("/binance/price/{symbol}")
-async def get_binance_price(symbol: str) -> Dict[str, Any]:
+async def get_binance_price(symbol: str) -> dict[str, Any]:
     """Get current price for a symbol on Binance"""
     try:
         binance_service = get_binance_trading_service(
@@ -185,7 +185,7 @@ async def place_binance_market_order(
     symbol: str = Query(..., description="Trading symbol"),
     side: str = Query(..., description="Order side (BUY/SELL)"),
     quantity: float = Query(..., description="Order quantity"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Place a market order on Binance"""
     try:
         binance_service = get_binance_trading_service(
@@ -207,7 +207,7 @@ async def place_binance_limit_order(
     side: str = Query(..., description="Order side (BUY/SELL)"),
     quantity: float = Query(..., description="Order quantity"),
     price: float = Query(..., description="Limit price"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Place a limit order on Binance"""
     try:
         binance_service = get_binance_trading_service(
@@ -225,8 +225,8 @@ async def place_binance_limit_order(
 
 @router.get("/binance/orders")
 async def get_binance_orders(
-    symbol: Optional[str] = Query(None, description="Filter by symbol")
-) -> Dict[str, Any]:
+    symbol: str | None = Query(None, description="Filter by symbol")
+) -> dict[str, Any]:
     """Get open orders on Binance"""
     try:
         binance_service = get_binance_trading_service(
@@ -244,9 +244,9 @@ async def get_binance_orders(
 
 @router.get("/binance/history")
 async def get_binance_history(
-    symbol: Optional[str] = Query(None, description="Filter by symbol"),
+    symbol: str | None = Query(None, description="Filter by symbol"),
     limit: int = Query(100, description="Number of orders to return"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get order history on Binance"""
     try:
         binance_service = get_binance_trading_service(
@@ -264,9 +264,9 @@ async def get_binance_history(
 
 @router.get("/binance/trades")
 async def get_binance_trades(
-    symbol: Optional[str] = Query(None, description="Filter by symbol"),
+    symbol: str | None = Query(None, description="Filter by symbol"),
     limit: int = Query(100, description="Number of trades to return"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Get trade history on Binance"""
     try:
         binance_service = get_binance_trading_service(
@@ -288,7 +288,7 @@ async def get_binance_trades(
 
 
 @router.get("/coinbase/account")
-async def get_coinbase_account() -> Dict[str, Any]:
+async def get_coinbase_account() -> dict[str, Any]:
     """Get Coinbase account information and balances"""
     try:
         coinbase_service = get_coinbase_trading_service(
@@ -305,7 +305,7 @@ async def get_coinbase_account() -> Dict[str, Any]:
 
 
 @router.get("/coinbase/price/{product_id}")
-async def get_coinbase_price(product_id: str) -> Dict[str, Any]:
+async def get_coinbase_price(product_id: str) -> dict[str, Any]:
     """Get current price for a product on Coinbase"""
     try:
         coinbase_service = get_coinbase_trading_service(
@@ -326,7 +326,7 @@ async def place_coinbase_market_order(
     product_id: str = Query(..., description="Product ID"),
     side: str = Query(..., description="Order side (BUY/SELL)"),
     size: float = Query(..., description="Order size"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Place a market order on Coinbase"""
     try:
         coinbase_service = get_coinbase_trading_service(
@@ -348,7 +348,7 @@ async def place_coinbase_limit_order(
     side: str = Query(..., description="Order side (BUY/SELL)"),
     size: float = Query(..., description="Order size"),
     price: float = Query(..., description="Limit price"),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Place a limit order on Coinbase"""
     try:
         coinbase_service = get_coinbase_trading_service(
@@ -366,8 +366,8 @@ async def place_coinbase_limit_order(
 
 @router.get("/coinbase/orders")
 async def get_coinbase_orders(
-    product_id: Optional[str] = Query(None, description="Filter by product ID")
-) -> Dict[str, Any]:
+    product_id: str | None = Query(None, description="Filter by product ID")
+) -> dict[str, Any]:
     """Get open orders on Coinbase"""
     try:
         coinbase_service = get_coinbase_trading_service(
@@ -384,7 +384,7 @@ async def get_coinbase_orders(
 
 
 @router.get("/coinbase/products")
-async def get_coinbase_products() -> Dict[str, Any]:
+async def get_coinbase_products() -> dict[str, Any]:
     """Get available products on Coinbase"""
     try:
         coinbase_service = get_coinbase_trading_service(
@@ -409,10 +409,10 @@ async def get_coinbase_products() -> Dict[str, Any]:
 
 
 @router.get("/live/price-comparison/{symbol}")
-async def get_price_comparison(symbol: str) -> Dict[str, Any]:
+async def get_price_comparison(symbol: str) -> dict[str, Any]:
     """Get price comparison across multiple exchanges"""
     try:
-        result: Dict[str, Any] = {
+        result: dict[str, Any] = {
             "symbol": symbol,
             "prices": {},
             "timestamp": time.time(),
@@ -462,10 +462,10 @@ async def get_price_comparison(symbol: str) -> Dict[str, Any]:
 
 
 @router.get("/live/exchange-status")
-async def get_exchange_status() -> Dict[str, Any]:
+async def get_exchange_status() -> dict[str, Any]:
     """Get status of all connected exchanges"""
     try:
-        result: Dict[str, Any] = {"exchanges": {}, "timestamp": time.time()}
+        result: dict[str, Any] = {"exchanges": {}, "timestamp": time.time()}
 
         # Test CoinGecko
         try:

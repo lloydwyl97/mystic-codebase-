@@ -10,7 +10,6 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import List
 
 # Add current directory to Python path
 current_dir = Path(__file__).parent
@@ -44,7 +43,7 @@ def check_dependencies():
         "numpy",
     ]
 
-    missing_packages: List[str] = []
+    missing_packages: list[str] = []
     for package in required_packages:
         try:
             __import__(package)

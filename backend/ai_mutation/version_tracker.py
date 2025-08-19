@@ -8,16 +8,16 @@ version comparison and rollback capabilities.
 import json
 import logging
 import sqlite3
-from pathlib import Path
-from typing import Dict, List, Any, Optional
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 from .strategy_locker import get_live_strategy
 
 logger = logging.getLogger(__name__)
 
 
-def get_strategy_versions(strategy_name: str = None) -> List[Dict[str, Any]]:
+def get_strategy_versions(strategy_name: str = None) -> list[dict[str, Any]]:
     """Get version history for strategies"""
     try:
         conn = sqlite3.connect("simulation_trades.db")
@@ -99,7 +99,7 @@ def _extract_version_from_filename(filename: str) -> str:
         return "v1.0.0"
 
 
-def get_version_comparison(strategy_name: str, version1: str, version2: str) -> Dict[str, Any]:
+def get_version_comparison(strategy_name: str, version1: str, version2: str) -> dict[str, Any]:
     """Compare two versions of a strategy"""
     try:
         conn = sqlite3.connect("simulation_trades.db")
@@ -177,7 +177,7 @@ def get_version_comparison(strategy_name: str, version1: str, version2: str) -> 
         return {"error": str(e)}
 
 
-def rollback_to_version(strategy_name: str, target_version: str) -> Dict[str, Any]:
+def rollback_to_version(strategy_name: str, target_version: str) -> dict[str, Any]:
     """Rollback to a specific version of a strategy"""
     try:
         # Find the target version file
@@ -247,7 +247,7 @@ def rollback_to_version(strategy_name: str, target_version: str) -> Dict[str, An
         return {"success": False, "error": str(e)}
 
 
-def get_version_history(strategy_name: str) -> List[Dict[str, Any]]:
+def get_version_history(strategy_name: str) -> list[dict[str, Any]]:
     """Get detailed version history for a specific strategy"""
     try:
         conn = sqlite3.connect("simulation_trades.db")
@@ -292,7 +292,7 @@ def get_version_history(strategy_name: str) -> List[Dict[str, Any]]:
         return []
 
 
-def get_latest_version(strategy_name: str) -> Optional[Dict[str, Any]]:
+def get_latest_version(strategy_name: str) -> dict[str, Any] | None:
     """Get the latest version of a strategy"""
     try:
         versions = get_strategy_versions(strategy_name)
@@ -305,7 +305,7 @@ def get_latest_version(strategy_name: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-def get_promoted_versions() -> List[Dict[str, Any]]:
+def get_promoted_versions() -> list[dict[str, Any]]:
     """Get all promoted versions"""
     try:
         conn = sqlite3.connect("simulation_trades.db")
@@ -377,7 +377,7 @@ def create_version_tag(strategy_file: str, tag: str, description: str = "") -> b
         return False
 
 
-def get_version_tags() -> List[Dict[str, Any]]:
+def get_version_tags() -> list[dict[str, Any]]:
     """Get all version tags"""
     try:
         tags_dir = Path("strategies/version_tags")
@@ -387,7 +387,7 @@ def get_version_tags() -> List[Dict[str, Any]]:
         tags = []
         for tag_file in tags_dir.glob("*.json"):
             try:
-                with open(tag_file, "r") as f:
+                with open(tag_file) as f:
                     tag_data = json.load(f)
                 tags.append(tag_data)
             except Exception as e:

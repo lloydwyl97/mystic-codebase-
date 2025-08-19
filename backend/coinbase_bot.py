@@ -8,9 +8,9 @@ import asyncio
 import random
 import time
 from dataclasses import dataclass
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, TypedDict
 
 import aiohttp
 
@@ -26,7 +26,7 @@ class RateLimitConfig(TypedDict):
     requests_per_minute: int
     requests_per_coin: int
     interval_per_coin: int
-    last_request_time: Dict[str, float]
+    last_request_time: dict[str, float]
     request_count: int
     reset_time: float
 
@@ -38,7 +38,7 @@ class StatsConfig(TypedDict):
     total_trades: int
     successful_trades: int
     failed_trades: int
-    last_update: Optional[str]
+    last_update: str | None
 
 
 class BotStatus(Enum):
@@ -72,7 +72,7 @@ class CoinbaseBot:
     def __init__(self):
         self.status = BotStatus.STOPPED
         self.is_running = False
-        self.session: Optional[aiohttp.ClientSession] = None
+        self.session: aiohttp.ClientSession | None = None
 
         # Coinbase specific configuration
         self.coinbase_base_url = "https://api.pro.coinbase.us"
@@ -109,9 +109,9 @@ class CoinbaseBot:
         }
 
         # Data storage
-        self.market_data: Dict[str, CoinData] = {}
-        self.trade_history: List[Dict[str, Any]] = []
-        self.signals: List[TradeSignal] = []
+        self.market_data: dict[str, CoinData] = {}
+        self.trade_history: list[dict[str, Any]] = []
+        self.signals: list[TradeSignal] = []
 
         # Performance tracking
         self.stats: StatsConfig = {
@@ -181,7 +181,7 @@ class CoinbaseBot:
         self.rate_limit["last_request_time"][coin] = current_time
         self.rate_limit["request_count"] += 1
 
-    async def fetch_coin_data(self, coin: str) -> Optional[CoinData]:
+    async def fetch_coin_data(self, coin: str) -> CoinData | None:
         """Fetch data for a single coin from Coinbase"""
         if not self.session:
             logger.error("No HTTP session available")
@@ -253,9 +253,9 @@ class CoinbaseBot:
         self.stats["last_update"] = datetime.now(timezone.utc).isoformat()
         logger.info(f"Coinbase market data update completed. Updated {len(self.market_data)} coins")
 
-    def generate_signals(self) -> List[TradeSignal]:
+    def generate_signals(self) -> list[TradeSignal]:
         """Generate trading signals based on market data using a real algorithm (SMA crossover)"""
-        signals: List[TradeSignal] = []
+        signals: list[TradeSignal] = []
 
         for coin, data in self.market_data.items():
             try:
@@ -372,7 +372,7 @@ class CoinbaseBot:
         finally:
             await self.close()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get current bot status"""
         return {
             "status": self.status.value,

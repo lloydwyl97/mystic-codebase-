@@ -555,7 +555,7 @@ def get_strategy_metadata():
             try:
                 strategy_path = os.path.join("strategies", row[0])
                 if os.path.exists(strategy_path):
-                    with open(strategy_path, "r") as f:
+                    with open(strategy_path) as f:
                         strategy_data = json.load(f)
 
                     meta = strategy_data.get("metadata", {})

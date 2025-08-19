@@ -7,15 +7,15 @@ All endpoints return live data - no stubs or placeholders
 import logging
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, Protocol, runtime_checkable, List
+from typing import Any, Protocol, runtime_checkable
 
 import psutil
 from fastapi import APIRouter, HTTPException
 
 # Import real services
 try:
-    from backend.modules.ai.persistent_cache import get_persistent_cache
     from backend.modules.ai.analytics_engine import AnalyticsEngine
+    from backend.modules.ai.persistent_cache import get_persistent_cache
     from backend.modules.notifications.alert_manager import AlertManager
     from backend.services.performance_monitor import PerformanceMonitor
     from backend.services.system_monitor import SystemMonitor
@@ -34,19 +34,19 @@ router = APIRouter()
 # Protocols to describe expected service interfaces
 @runtime_checkable
 class PerformanceMonitorProtocol(Protocol):
-    async def get_performance_metrics(self) -> Dict[str, Any]:
+    async def get_performance_metrics(self) -> dict[str, Any]:
         ...
 
-    async def get_detailed_metrics(self) -> Dict[str, Any]:
+    async def get_detailed_metrics(self) -> dict[str, Any]:
         ...
 
 
 @runtime_checkable
 class SystemMonitorProtocol(Protocol):
-    async def get_services_status(self) -> Dict[str, Any]:
+    async def get_services_status(self) -> dict[str, Any]:
         ...
 
-    async def get_recent_events(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_events(self, limit: int = 50) -> list[dict[str, Any]]:
         ...
 
 # Initialize real services
@@ -60,7 +60,7 @@ except Exception as e:
 
 
 @router.get("/system/health")
-async def get_system_health() -> Dict[str, Any]:
+async def get_system_health() -> dict[str, Any]:
     """Get comprehensive system health status"""
     try:
         # Get real system metrics
@@ -69,7 +69,7 @@ async def get_system_health() -> Dict[str, Any]:
         disk = psutil.disk_usage("/")
 
         # Get service status from real monitoring
-        services_status: Dict[str, Any] = {}
+        services_status: dict[str, Any] = {}
         try:
             if system_monitor and hasattr(system_monitor, "get_services_status"):
                 services_status = await system_monitor.get_services_status()  # type: ignore[misc]
@@ -122,11 +122,11 @@ async def get_system_health() -> Dict[str, Any]:
 
 
 @router.get("/system/status")
-async def get_system_status() -> Dict[str, Any]:
+async def get_system_status() -> dict[str, Any]:
     """Get detailed system status and performance metrics"""
     try:
         # Get real performance metrics
-        performance_data: Dict[str, Any] = {}
+        performance_data: dict[str, Any] = {}
         try:
             if performance_monitor and hasattr(performance_monitor, "get_performance_metrics"):
                 performance_data = await performance_monitor.get_performance_metrics()  # type: ignore[misc]
@@ -170,7 +170,7 @@ async def get_system_status() -> Dict[str, Any]:
 
 
 @router.get("/system/events")
-async def get_system_events(limit: int = 50) -> Dict[str, Any]:
+async def get_system_events(limit: int = 50) -> dict[str, Any]:
     """Get recent system events and logs"""
     try:
         # Get real system events from monitoring
@@ -207,7 +207,7 @@ async def get_system_events(limit: int = 50) -> Dict[str, Any]:
 
 
 @router.get("/system/config")
-async def get_system_config() -> Dict[str, Any]:
+async def get_system_config() -> dict[str, Any]:
     """Get system configuration and settings"""
     try:
         # Get real configuration from database or config files
@@ -249,11 +249,11 @@ async def get_system_config() -> Dict[str, Any]:
 
 
 @router.get("/system/performance")
-async def get_system_performance() -> Dict[str, Any]:
+async def get_system_performance() -> dict[str, Any]:
     """Get detailed system performance metrics"""
     try:
         # Get real performance data
-        performance_metrics: Dict[str, Any] = {}
+        performance_metrics: dict[str, Any] = {}
         try:
             if performance_monitor and hasattr(performance_monitor, "get_detailed_metrics"):
                 performance_metrics = await performance_monitor.get_detailed_metrics()  # type: ignore[misc]
@@ -307,7 +307,7 @@ async def get_system_performance() -> Dict[str, Any]:
 
 
 @router.post("/system/restart")
-async def restart_system() -> Dict[str, Any]:
+async def restart_system() -> dict[str, Any]:
     """Restart the system (admin only)"""
     try:
         # This would trigger a real system restart
@@ -329,7 +329,7 @@ async def restart_system() -> Dict[str, Any]:
 
 
 @router.post("/system/shutdown")
-async def shutdown_system() -> Dict[str, Any]:
+async def shutdown_system() -> dict[str, Any]:
     """Shutdown the system (admin only)"""
     try:
         # This would trigger a real system shutdown
@@ -351,7 +351,7 @@ async def shutdown_system() -> Dict[str, Any]:
 
 
 @router.post("/system/clear-cache")
-async def clear_system_cache() -> Dict[str, Any]:
+async def clear_system_cache() -> dict[str, Any]:
     try:
         cleared = False
         try:
@@ -372,9 +372,9 @@ async def clear_system_cache() -> Dict[str, Any]:
 
 
 @router.post("/system/generate-report")
-async def generate_system_report() -> Dict[str, Any]:
+async def generate_system_report() -> dict[str, Any]:
     try:
-        report: Dict[str, Any] = {}
+        report: dict[str, Any] = {}
         try:
             if performance_monitor and hasattr(performance_monitor, "get_performance_metrics"):
                 report["performance"] = await performance_monitor.get_performance_metrics()  # type: ignore[misc]
@@ -393,7 +393,7 @@ async def generate_system_report() -> Dict[str, Any]:
 
 
 @router.post("/system/health-check")
-async def run_system_health_check() -> Dict[str, Any]:
+async def run_system_health_check() -> dict[str, Any]:
     try:
         health = await get_system_health()
         status = health.get("status", "unknown")  # type: ignore[assignment]
@@ -408,9 +408,9 @@ async def run_system_health_check() -> Dict[str, Any]:
 
 
 @router.get("/system/health-check")
-async def get_health_check() -> Dict[str, Any]:
+async def get_health_check() -> dict[str, Any]:
     try:
-        adapters: List[str] = []
+        adapters: list[str] = []
         autobuy_status = "ready"
         try:
             from backend.services.market_data_router import MarketDataRouter  # type: ignore[import-not-found]
@@ -434,7 +434,7 @@ async def get_health_check() -> Dict[str, Any]:
 
 # Consolidated signals endpoint expected by UI
 @router.get("/signals")
-async def get_signals() -> Dict[str, Any]:
+async def get_signals() -> dict[str, Any]:
     try:
         # Minimal response; upgrade to real feed when the unified signal source is available
         return {"signals": []}

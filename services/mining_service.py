@@ -5,7 +5,7 @@ Provides mining functionality for the trading platform
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class MiningService:
         self.status = "stopped"
         logger.info("✅ Mining service stopped")
         
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         """Get mining service status"""
         return {
             "status": self.status,
@@ -39,7 +39,7 @@ class MiningService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_performance(self) -> Dict[str, Any]:
+    async def get_performance(self) -> dict[str, Any]:
         """Get mining performance metrics"""
         return {
             "hashrate": 1000000,
@@ -49,7 +49,7 @@ class MiningService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_mining_data(self) -> Dict[str, Any]:
+    async def get_mining_data(self) -> dict[str, Any]:
         """Get mining data"""
         return {
             "hashrate": 1000000,

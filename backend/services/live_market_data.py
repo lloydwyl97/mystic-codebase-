@@ -4,15 +4,16 @@ Connects to real APIs for live market data
 """
 
 import asyncio
+import logging
+import os
+import time
+from datetime import datetime
+from typing import Any
+
 import aiohttp
 import ccxt
 import yfinance as yf
-from typing import Dict, Any, List, Optional
-import os
-from datetime import datetime
-import logging
 from dotenv import load_dotenv
-import time
 
 # Load environment variables
 load_dotenv()
@@ -50,7 +51,7 @@ class LiveMarketDataService:
         self.cache = {}
         self.cache_timeout = 30  # seconds
 
-    async def get_live_prices(self, symbols: List[str]) -> Dict[str, Any]:
+    async def get_live_prices(self, symbols: list[str]) -> dict[str, Any]:
         """Get live prices for multiple symbols"""
         try:
             results = {}
@@ -76,7 +77,7 @@ class LiveMarketDataService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def _get_symbol_price(self, symbol: str) -> Optional[Dict[str, Any]]:
+    async def _get_symbol_price(self, symbol: str) -> dict[str, Any] | None:
         """Get price for a single symbol from multiple sources"""
         try:
             # Try Binance first (most reliable for crypto)
@@ -126,7 +127,7 @@ class LiveMarketDataService:
             logger.error(f"Error fetching price for {symbol}: {e}")
             return None
 
-    async def get_market_overview(self) -> Dict[str, Any]:
+    async def get_market_overview(self) -> dict[str, Any]:
         """Get market overview with major indices and crypto"""
         try:
             # Major crypto pairs
@@ -160,7 +161,7 @@ class LiveMarketDataService:
 
     async def get_historical_data(
         self, symbol: str, timeframe: str = "1d", limit: int = 100
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get historical data for charting"""
         try:
             if self.binance and "/" in symbol:
@@ -208,7 +209,7 @@ class LiveMarketDataService:
             logger.error(f"Error fetching historical data for {symbol}: {e}")
             return {"status": "error", "message": str(e), "symbol": symbol}
 
-    async def get_market_data(self, currency: str = "usd", per_page: int = 100) -> Dict[str, Any]:
+    async def get_market_data(self, currency: str = "usd", per_page: int = 100) -> dict[str, Any]:
         """Get market data for top cryptocurrencies"""
         try:
             # Use CoinGecko API for market data
@@ -246,7 +247,7 @@ class LiveMarketDataService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_global_data(self) -> Dict[str, Any]:
+    async def get_global_data(self) -> dict[str, Any]:
         """Get global cryptocurrency market data"""
         try:
             url = "https://api.coingecko.com/api/v3/global"
@@ -276,7 +277,7 @@ class LiveMarketDataService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_trending_coins(self) -> Dict[str, Any]:
+    async def get_trending_coins(self) -> dict[str, Any]:
         """Get trending coins"""
         try:
             url = "https://api.coingecko.com/api/v3/search/trending"
@@ -306,7 +307,7 @@ class LiveMarketDataService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_coin_price(self, symbol: str, currency: str = "usd") -> Dict[str, Any]:
+    async def get_coin_price(self, symbol: str, currency: str = "usd") -> dict[str, Any]:
         """Get current price for a specific coin"""
         try:
             url = "https://api.coingecko.com/api/v3/simple/price"
@@ -337,7 +338,7 @@ class LiveMarketDataService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_coin_details(self, symbol: str) -> Dict[str, Any]:
+    async def get_coin_details(self, symbol: str) -> dict[str, Any]:
         """Get detailed information for a specific coin"""
         try:
             url = f"https://api.coingecko.com/api/v3/coins/{symbol.lower()}"
@@ -367,7 +368,7 @@ class LiveMarketDataService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def search_coins(self, query: str) -> Dict[str, Any]:
+    async def search_coins(self, query: str) -> dict[str, Any]:
         """Search for coins by name or symbol"""
         try:
             url = "https://api.coingecko.com/api/v3/search"
@@ -398,7 +399,7 @@ class LiveMarketDataService:
                 "timestamp": datetime.now().isoformat(),
             }
 
-    async def get_market_summary(self) -> Dict[str, Any]:
+    async def get_market_summary(self) -> dict[str, Any]:
         """Get market summary from persistent cache"""
         try:
             # Get real market summary from persistent cache
@@ -480,7 +481,7 @@ class LiveMarketDataService:
                 "live_data": False,
             }
 
-    async def get_symbol_data(self, symbol: str) -> Dict[str, Any]:
+    async def get_symbol_data(self, symbol: str) -> dict[str, Any]:
         """Get comprehensive data for a specific symbol"""
         try:
             # Get price data
@@ -531,7 +532,7 @@ class LiveMarketDataService:
                 "live_data": False,
             }
 
-    async def get_candlestick_data(self, symbol: str, interval: str = "1h") -> Dict[str, Any]:
+    async def get_candlestick_data(self, symbol: str, interval: str = "1h") -> dict[str, Any]:
         """Get candlestick data for a symbol"""
         try:
             # Convert interval to timeframe
@@ -572,7 +573,7 @@ class LiveMarketDataService:
             logger.error(f"Error getting candlestick data for {symbol}: {e}")
             return []
 
-    async def get_order_book(self, symbol: str, limit: int = 10) -> Dict[str, Any]:
+    async def get_order_book(self, symbol: str, limit: int = 10) -> dict[str, Any]:
         """Get order book for a symbol"""
         try:
             if self.binance and "/" in symbol:
@@ -590,7 +591,7 @@ class LiveMarketDataService:
             logger.error(f"Error getting order book for {symbol}: {e}")
             return {"bids": [], "asks": []}
 
-    async def get_technical_indicators(self, symbol: str) -> Dict[str, Any]:
+    async def get_technical_indicators(self, symbol: str) -> dict[str, Any]:
         """Get technical indicators for a symbol"""
         try:
             # Get historical data for calculations
@@ -650,7 +651,7 @@ class LiveMarketDataService:
         rsi = 100 - (100 / (1 + rs))
         return rsi
 
-    def _calculate_macd(self, prices: list) -> Dict[str, float]:
+    def _calculate_macd(self, prices: list) -> dict[str, float]:
         """Calculate MACD"""
         if len(prices) < 26:
             return {"macd": 0, "signal": 0, "histogram": 0}

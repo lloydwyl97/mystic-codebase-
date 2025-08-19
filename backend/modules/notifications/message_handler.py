@@ -9,11 +9,12 @@ import json
 import logging
 import smtplib
 from datetime import datetime, timedelta
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from typing import Any, Dict, List, Optional
+from email.mime.text import MIMEText
+from typing import Any
 
 import requests
+
 from backend.utils.exceptions import NotificationException
 
 logger = logging.getLogger(__name__)
@@ -26,12 +27,12 @@ class MessageHandler:
     """Message handler for notifications and alerts delivery"""
 
     def __init__(self):
-        self.channels: Dict[str, Dict[str, Any]] = {}
-        self.message_templates: Dict[str, str] = {}
-        self.delivery_history: List[Dict[str, Any]] = []
-        self.messages: Dict[str, Dict[str, Any]] = {}
-        self.message_queue: List[str] = []
-        self.message_types: Dict[str, Dict[str, Any]] = {
+        self.channels: dict[str, dict[str, Any]] = {}
+        self.message_templates: dict[str, str] = {}
+        self.delivery_history: list[dict[str, Any]] = []
+        self.messages: dict[str, dict[str, Any]] = {}
+        self.message_queue: list[str] = []
+        self.message_types: dict[str, dict[str, Any]] = {
             "notification": {"fields": ["title", "content", "recipient"]},
             "alert": {"fields": ["title", "content", "recipient"]},
             "trade": {"fields": ["title", "content", "recipient"]},
@@ -41,7 +42,7 @@ class MessageHandler:
         }
         self.is_active: bool = True
 
-    def add_channel(self, channel_name: str, config: Dict[str, Any]) -> Dict[str, Any]:
+    def add_channel(self, channel_name: str, config: dict[str, Any]) -> dict[str, Any]:
         """Add a new message delivery channel"""
         channel = {
             "name": channel_name,
@@ -55,7 +56,7 @@ class MessageHandler:
 
         return {"success": True, "channel": channel}
 
-    def remove_channel(self, channel_name: str) -> Dict[str, Any]:
+    def remove_channel(self, channel_name: str) -> dict[str, Any]:
         """Remove a message delivery channel"""
         if channel_name in self.channels:
             del self.channels[channel_name]
@@ -64,14 +65,14 @@ class MessageHandler:
 
         return {"success": False, "error": "Channel not found"}
 
-    def add_template(self, template_name: str, template_content: str) -> Dict[str, Any]:
+    def add_template(self, template_name: str, template_content: str) -> dict[str, Any]:
         """Add a message template"""
         self.message_templates[template_name] = template_content
         logger.info(f"Message template added: {template_name}")
 
         return {"success": True, "template": template_name}
 
-    def remove_template(self, template_name: str) -> Dict[str, Any]:
+    def remove_template(self, template_name: str) -> dict[str, Any]:
         """Remove a message template"""
         if template_name in self.message_templates:
             del self.message_templates[template_name]
@@ -83,9 +84,9 @@ class MessageHandler:
     def send_message(
         self,
         message_type: str,
-        content: Dict[str, Any],
-        channels: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        content: dict[str, Any],
+        channels: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Send a message through specified channels"""
         if not self.is_active:
             return {"error": "Message handler is not active"}
@@ -146,8 +147,8 @@ class MessageHandler:
         title: str,
         content: str,
         recipient: str,
-        priority: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        priority: str | None = None,
+    ) -> dict[str, Any]:
         return self.create_message(
             message_type="notification",
             title=title,
@@ -161,8 +162,8 @@ class MessageHandler:
         title: str,
         content: str,
         recipient: str,
-        priority: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        priority: str | None = None,
+    ) -> dict[str, Any]:
         return self.create_message(
             message_type="alert",
             title=title,
@@ -172,8 +173,8 @@ class MessageHandler:
         )
 
     def send_trade_notification(
-        self, recipient: str, trade_data: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, recipient: str, trade_data: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         if trade_data:
             if "title" in trade_data:
                 title = trade_data["title"]
@@ -208,8 +209,8 @@ class MessageHandler:
         title: str,
         content: str,
         recipient: str,
-        priority: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        priority: str | None = None,
+    ) -> dict[str, Any]:
         msg = self.create_message(
             message_type="system_notification",
             title=title,
@@ -220,7 +221,7 @@ class MessageHandler:
         msg["type"] = "system_notification"
         return msg
 
-    def get_delivery_status(self, message_id: Optional[str] = None) -> Dict[str, Any]:
+    def get_delivery_status(self, message_id: str | None = None) -> dict[str, Any]:
         """Get delivery status for messages"""
         if message_id:
             # Find specific message in history
@@ -246,7 +247,7 @@ class MessageHandler:
             "recent_deliveries": recent_deliveries,
         }
 
-    def get_channel_status(self) -> Dict[str, Any]:
+    def get_channel_status(self) -> dict[str, Any]:
         """Get status of all channels"""
         status = {}
 
@@ -259,7 +260,7 @@ class MessageHandler:
 
         return status
 
-    def test_channel(self, channel_name: str) -> Dict[str, Any]:
+    def test_channel(self, channel_name: str) -> dict[str, Any]:
         """Test a specific channel"""
         if channel_name not in self.channels:
             return {"error": "Channel not found"}
@@ -287,8 +288,8 @@ class MessageHandler:
             return {"error": str(e)}
 
     def _send_to_channel(
-        self, channel_name: str, message_type: str, content: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, channel_name: str, message_type: str, content: dict[str, Any]
+    ) -> dict[str, Any]:
         """Send message to a specific channel"""
         channel = self.channels[channel_name]
         config = channel.get("config", {})
@@ -304,7 +305,7 @@ class MessageHandler:
         else:
             return {"error": f"Unsupported channel: {channel_name}"}
 
-    def _send_email(self, config: Dict[str, Any], content: Dict[str, Any]) -> Dict[str, Any]:
+    def _send_email(self, config: dict[str, Any], content: dict[str, Any]) -> dict[str, Any]:
         """Send email message"""
         try:
             # Extract email configuration
@@ -339,7 +340,7 @@ class MessageHandler:
             logger.error(f"Email sending failed: {e}")
             return {"error": str(e)}
 
-    def _send_webhook(self, config: Dict[str, Any], content: Dict[str, Any]) -> Dict[str, Any]:
+    def _send_webhook(self, config: dict[str, Any], content: dict[str, Any]) -> dict[str, Any]:
         """Send webhook message"""
         try:
             webhook_url = config.get("url", "")
@@ -368,7 +369,7 @@ class MessageHandler:
             logger.error(f"Webhook sending failed: {e}")
             return {"error": str(e)}
 
-    def _send_slack(self, config: Dict[str, Any], content: Dict[str, Any]) -> Dict[str, Any]:
+    def _send_slack(self, config: dict[str, Any], content: dict[str, Any]) -> dict[str, Any]:
         """Send Slack message"""
         try:
             webhook_url = config.get("webhook_url", "")
@@ -413,7 +414,7 @@ class MessageHandler:
             logger.error(f"Slack sending failed: {e}")
             return {"error": str(e)}
 
-    def _send_telegram(self, config: Dict[str, Any], content: Dict[str, Any]) -> Dict[str, Any]:
+    def _send_telegram(self, config: dict[str, Any], content: dict[str, Any]) -> dict[str, Any]:
         """Send Telegram message"""
         try:
             bot_token = config.get("bot_token", "")
@@ -449,7 +450,7 @@ class MessageHandler:
             logger.error(f"Telegram sending failed: {e}")
             return {"error": str(e)}
 
-    def _format_notification(self, notification_type: str, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _format_notification(self, notification_type: str, data: dict[str, Any]) -> dict[str, Any]:
         """Format notification content"""
         template = self.message_templates.get(notification_type, "")
 
@@ -469,8 +470,8 @@ class MessageHandler:
         }
 
     def _format_alert(
-        self, alert_type: str, alert_data: Dict[str, Any], severity: str
-    ) -> Dict[str, Any]:
+        self, alert_type: str, alert_data: dict[str, Any], severity: str
+    ) -> dict[str, Any]:
         """Format alert content"""
         template = self.message_templates.get(f"alert_{alert_type}", "")
 
@@ -503,11 +504,11 @@ class MessageHandler:
     def create_message(
         self,
         message_type: str,
-        title: Optional[str] = None,
-        content: Optional[str] = None,
-        recipient: Optional[str] = None,
-        priority: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        title: str | None = None,
+        content: str | None = None,
+        recipient: str | None = None,
+        priority: str | None = None,
+    ) -> dict[str, Any]:
         if message_type not in self.message_types:
             raise NotificationException(f"Invalid message type: {message_type}")
         required = self.message_types[message_type]["fields"]
@@ -534,7 +535,7 @@ class MessageHandler:
         logger.info(f"Message created: {message_type} - {title}")
         return message
 
-    def get_message(self, message_id: str) -> Optional[Dict[str, Any]]:
+    def get_message(self, message_id: str) -> dict[str, Any] | None:
         return self.messages.get(message_id)
 
     def mark_as_read(self, message_id: str) -> bool:
@@ -553,10 +554,10 @@ class MessageHandler:
 
     def list_messages(
         self,
-        message_type: Optional[str] = None,
-        recipient: Optional[str] = None,
+        message_type: str | None = None,
+        recipient: str | None = None,
         unread_only: bool = False,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         message_ids = list(self.messages.keys())
         if message_type:
             message_ids = [mid for mid in message_ids if self.messages[mid]["type"] == message_type]
@@ -568,10 +569,10 @@ class MessageHandler:
             message_ids = [mid for mid in message_ids if not self.messages[mid]["read"]]
         return [self.messages[mid] for mid in message_ids]
 
-    def list_unread_messages(self, recipient: str) -> List[Dict[str, Any]]:
+    def list_unread_messages(self, recipient: str) -> list[dict[str, Any]]:
         return [m for m in self.messages.values() if m["recipient"] == recipient and not m["read"]]
 
-    def get_message_statistics(self, recipient: Optional[str] = None) -> Dict[str, Any]:
+    def get_message_statistics(self, recipient: str | None = None) -> dict[str, Any]:
         if recipient:
             filtered = [m for m in self.messages.values() if m["recipient"] == recipient]
         else:
@@ -598,21 +599,21 @@ class MessageHandler:
             self.delete_message(mid)
         return len(to_delete)
 
-    def bulk_mark_as_read(self, message_ids: List[str]) -> int:
+    def bulk_mark_as_read(self, message_ids: list[str]) -> int:
         count = 0
         for mid in message_ids:
             if self.mark_as_read(mid):
                 count += 1
         return count
 
-    def bulk_delete_messages(self, message_ids: List[str]) -> int:
+    def bulk_delete_messages(self, message_ids: list[str]) -> int:
         count = 0
         for mid in message_ids:
             if self.delete_message(mid):
                 count += 1
         return count
 
-    def search_messages(self, query: str, recipient: Optional[str] = None) -> List[Dict[str, Any]]:
+    def search_messages(self, query: str, recipient: str | None = None) -> list[dict[str, Any]]:
         result = []
         for m in self.messages.values():
             if recipient and m.get("recipient") != recipient:

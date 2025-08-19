@@ -1,14 +1,13 @@
-﻿import numpy as np
-import pandas as pd
-import time
-import json
-import requests
-from datetime import datetime
-from typing import Dict, List, Tuple
-import sqlite3
-from scipy.optimize import minimize
+﻿import json
 import logging
+import sqlite3
+import time
 from datetime import datetime, timezone
+
+import numpy as np
+import pandas as pd
+import requests
+from scipy.optimize import minimize
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -83,7 +82,7 @@ class RiskDatabase:
         conn.commit()
         conn.close()
 
-    def save_portfolio_weights(self, weights_data: List[Dict]):
+    def save_portfolio_weights(self, weights_data: list[dict]):
         """Save portfolio weights to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -110,7 +109,7 @@ class RiskDatabase:
         conn.commit()
         conn.close()
 
-    def save_risk_metrics(self, metrics: Dict):
+    def save_risk_metrics(self, metrics: dict):
         """Save risk metrics to database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -136,7 +135,7 @@ class RiskDatabase:
         conn.commit()
         conn.close()
 
-    def save_stress_test(self, stress_data: Dict):
+    def save_stress_test(self, stress_data: dict):
         """Save stress test results"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -160,7 +159,7 @@ class RiskDatabase:
         conn.close()
 
 
-def get_historical_returns(symbols: List[str], days: int = 90) -> pd.DataFrame:
+def get_historical_returns(symbols: list[str], days: int = 90) -> pd.DataFrame:
     """Get historical returns for portfolio optimization"""
     returns_data = {}
 
@@ -184,7 +183,7 @@ def get_historical_returns(symbols: List[str], days: int = 90) -> pd.DataFrame:
     return pd.DataFrame(returns_data)
 
 
-def calculate_portfolio_metrics(weights: np.array, returns: pd.DataFrame) -> Dict:
+def calculate_portfolio_metrics(weights: np.array, returns: pd.DataFrame) -> dict:
     """Calculate portfolio risk and return metrics"""
     # Expected returns
     expected_returns = returns.mean()
@@ -225,7 +224,7 @@ def calculate_portfolio_metrics(weights: np.array, returns: pd.DataFrame) -> Dic
     }
 
 
-def optimize_portfolio(returns: pd.DataFrame) -> Tuple[np.array, Dict]:
+def optimize_portfolio(returns: pd.DataFrame) -> tuple[np.array, dict]:
     """Optimize portfolio weights using Markowitz optimization"""
     n_assets = len(returns.columns)
 
@@ -282,7 +281,7 @@ def calculate_correlation_matrix(returns: pd.DataFrame) -> pd.DataFrame:
     return returns.corr()
 
 
-def run_stress_tests(weights: np.array, returns: pd.DataFrame) -> List[Dict]:
+def run_stress_tests(weights: np.array, returns: pd.DataFrame) -> list[dict]:
     """Run stress tests on portfolio"""
     stress_scenarios = [
         {

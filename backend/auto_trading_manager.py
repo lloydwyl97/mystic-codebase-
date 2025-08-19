@@ -6,9 +6,9 @@ Manages automated trading operations, separated from signal management for bette
 
 import json
 import logging
-from datetime import datetime, timezone
-from typing import Any, Dict
 import os
+from datetime import datetime, timezone
+from typing import Any
 
 from notification_service import get_notification_service
 from trading_config import trading_config
@@ -29,12 +29,12 @@ class AutoTradingManager:
             self.notification_service = None
 
         # Load trading strategies
-        self.trading_strategies: Dict[str, Dict[str, Any]] = self._load_trading_strategies()
+        self.trading_strategies: dict[str, dict[str, Any]] = self._load_trading_strategies()
 
         # Initialize auto-trading status from Redis if available
         self._initialize_status()
 
-    def _load_trading_strategies(self) -> Dict[str, Dict[str, Any]]:
+    def _load_trading_strategies(self) -> dict[str, dict[str, Any]]:
         """Load trading strategies from Redis or config file. Raise if unavailable."""
         try:
             strategy_data = self.redis_client.get("trading_strategies")
@@ -45,7 +45,7 @@ class AutoTradingManager:
         # Try to load from config file
         config_path = os.path.join(os.path.dirname(__file__), "autobuy_config.json")
         if os.path.exists(config_path):
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 config = json.load(f)
                 if "trading_strategies" in config:
                     return config["trading_strategies"]
@@ -74,7 +74,7 @@ class AutoTradingManager:
     def _save_default_config(self, enabled: bool = False) -> None:
         """Save default auto-trading configuration to Redis"""
         try:
-            auto_trade_config: Dict[str, Any] = {
+            auto_trade_config: dict[str, Any] = {
                 "enabled": enabled,
                 "start_time": (
                     datetime.now(timezone.timezone.utc).isoformat() if enabled else None
@@ -101,13 +101,13 @@ class AutoTradingManager:
         except Exception as e:
             logger.error(f"Error saving default auto-trading config: {str(e)}")
 
-    async def start_auto_trading(self) -> Dict[str, Any]:
+    async def start_auto_trading(self) -> dict[str, Any]:
         """Start automated trading"""
         try:
             logger.info("Starting automated trading...")
 
             # Define auto_trade_config with proper typing
-            auto_trade_config: Dict[str, Any] = {
+            auto_trade_config: dict[str, Any] = {
                 "enabled": True,
                 "start_time": datetime.now(timezone.timezone.utc).isoformat(),
                 "strategies": list(self.trading_strategies.keys()),
@@ -159,7 +159,7 @@ class AutoTradingManager:
             logger.error(f"Error starting auto-trading: {str(e)}")
             raise
 
-    async def stop_auto_trading(self) -> Dict[str, Any]:
+    async def stop_auto_trading(self) -> dict[str, Any]:
         """Stop automated trading"""
         try:
             logger.info("Stopping automated trading...")
@@ -168,7 +168,7 @@ class AutoTradingManager:
             config_data = self.redis_client.get("auto_trade_config")
 
             # Define auto_trade_config with proper typing
-            auto_trade_config: Dict[str, Any] = {}
+            auto_trade_config: dict[str, Any] = {}
 
             if config_data:
                 auto_trade_config = json.loads(config_data)
@@ -228,7 +228,7 @@ class AutoTradingManager:
             logger.error(f"Error stopping auto-trading: {str(e)}")
             raise
 
-    async def get_auto_trade_status(self) -> Dict[str, Any]:
+    async def get_auto_trade_status(self) -> dict[str, Any]:
         """Get auto-trading status. Fail if Redis is unavailable or data is missing."""
         try:
             config_data = self.redis_client.get("auto_trade_config")
@@ -244,7 +244,7 @@ class AutoTradingManager:
             logger.error(f"Error getting auto-trade status: {str(e)}")
             raise
 
-    async def check_health(self) -> Dict[str, bool]:
+    async def check_health(self) -> dict[str, bool]:
         """Check the health of auto-trading. Fail if Redis is unavailable or data is missing."""
         try:
             config_data = self.redis_client.get("auto_trade_config")
@@ -256,7 +256,7 @@ class AutoTradingManager:
             logger.error(f"Error checking auto-trading health: {str(e)}")
             raise
 
-    async def self_heal(self) -> Dict[str, Any]:
+    async def self_heal(self) -> dict[str, Any]:
         """Self-heal auto-trading if needed"""
         try:
             # Check if auto-trading is supposed to be enabled but isn't

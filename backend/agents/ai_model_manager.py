@@ -4,18 +4,19 @@ Handles model versioning, deployment, and lifecycle management
 """
 
 import asyncio
+import hashlib
 import json
 import os
-import sys
 import shutil
-import hashlib
+import sys
 from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
-import torch
-import joblib
+from pathlib import Path
+from typing import Any
+
+import joblib  # type: ignore[reportMissingTypeStubs]
 import numpy as np
 import pandas as pd
-from pathlib import Path
+import torch
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # noqa: E402
@@ -31,7 +32,7 @@ class ModelVersion:
         model_id: str,
         version: str,
         model_type: str,
-        metadata: Dict[str, Any],
+        metadata: dict[str, Any],
     ):
         self.model_id = model_id
         self.version = version
@@ -41,8 +42,8 @@ class ModelVersion:
         self.status = "created"
         self.performance_metrics = {}
         self.deployment_status = "not_deployed"
-        self.model_size: Optional[int] = None
-        self.last_updated: Optional[datetime] = None
+        self.model_size: int | None = None
+        self.last_updated: datetime | None = None
         self.retention_period: timedelta = timedelta(days=30)
 
 
@@ -60,7 +61,7 @@ class ModelRegistry:
         try:
             registry_file = self.registry_path / "registry.json"
             if registry_file.exists():
-                with open(registry_file, "r") as f:
+                with open(registry_file) as f:
                     registry_data = json.load(f)
                     self.models = registry_data
         except Exception as e:
@@ -80,7 +81,7 @@ class ModelRegistry:
         model_id: str,
         version: str,
         model_type: str,
-        metadata: Dict[str, Any],
+        metadata: dict[str, Any],
     ) -> ModelVersion:
         """Register a new model version"""
         try:
@@ -105,7 +106,7 @@ class ModelRegistry:
             print(f"âŒ Error registering model: {e}")
             return None
 
-    def get_model_versions(self, model_id: str) -> List[str]:
+    def get_model_versions(self, model_id: str) -> list[str]:
         """Get all versions of a model"""
         try:
             if model_id in self.models:
@@ -115,7 +116,7 @@ class ModelRegistry:
             print(f"âŒ Error getting model versions: {e}")
             return []
 
-    def get_latest_version(self, model_id: str) -> Optional[str]:
+    def get_latest_version(self, model_id: str) -> str | None:
         """Get the latest version of a model"""
         try:
             versions = self.get_model_versions(model_id)
@@ -138,7 +139,7 @@ class ModelRegistry:
         except Exception as e:
             print(f"âŒ Error updating model status: {e}")
 
-    def update_performance_metrics(self, model_id: str, version: str, metrics: Dict[str, Any]):
+    def update_performance_metrics(self, model_id: str, version: str, metrics: dict[str, Any]):
         """Update model performance metrics"""
         try:
             if model_id in self.models and version in self.models[model_id]:
@@ -220,7 +221,7 @@ class AIModelManager(BaseAgent):
 
         print(f"ðŸ“¦ AI Model Manager {agent_id} initialized")
 
-    async def validate_model_file(self, model_path: str, model_type: str) -> Tuple[bool, str]:
+    async def validate_model_file(self, model_path: str, model_type: str) -> tuple[bool, str]:
         """Validate model file using appropriate framework"""
         try:
             model_file = Path(model_path)
@@ -265,7 +266,7 @@ class AIModelManager(BaseAgent):
         except Exception as e:
             return False, f"Model validation error: {e}"
 
-    async def calculate_model_metrics(self, model_path: str, model_type: str) -> Dict[str, Any]:
+    async def calculate_model_metrics(self, model_path: str, model_type: str) -> dict[str, Any]:
         """Calculate model metrics using numpy and pandas"""
         try:
             model_file = Path(model_path)
@@ -446,7 +447,7 @@ class AIModelManager(BaseAgent):
         finally:
             pubsub.close()
 
-    async def process_model_update(self, update_data: Dict[str, Any]):
+    async def process_model_update(self, update_data: dict[str, Any]):
         """Process model update"""
         try:
             update_type = update_data.get("type")
@@ -461,7 +462,7 @@ class AIModelManager(BaseAgent):
         except Exception as e:
             print(f"âŒ Error processing model update: {e}")
 
-    async def handle_model_trained(self, update_data: Dict[str, Any]):
+    async def handle_model_trained(self, update_data: dict[str, Any]):
         """Handle model trained event"""
         try:
             model_id = update_data.get("model_id")
@@ -506,7 +507,7 @@ class AIModelManager(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling model trained: {e}")
 
-    async def handle_model_metrics(self, update_data: Dict[str, Any]):
+    async def handle_model_metrics(self, update_data: dict[str, Any]):
         """Handle model metrics update"""
         try:
             model_id = update_data.get("model_id")
@@ -528,7 +529,7 @@ class AIModelManager(BaseAgent):
         except Exception as e:
             print(f"âŒ Error handling model metrics: {e}")
 
-    async def handle_model_deployed(self, update_data: Dict[str, Any]):
+    async def handle_model_deployed(self, update_data: dict[str, Any]):
         """Handle model deployed event"""
         try:
             model_id = update_data.get("model_id")
@@ -620,7 +621,7 @@ class AIModelManager(BaseAgent):
             print(f"âŒ Error calculating file hash: {e}")
             return ""
 
-    def should_deploy_model(self, model_id: str, version: str, metrics: Dict[str, Any]) -> bool:
+    def should_deploy_model(self, model_id: str, version: str, metrics: dict[str, Any]) -> bool:
         """Check if model should be deployed"""
         try:
             if not self.model_config["deployment_settings"]["auto_deploy"]:
@@ -636,7 +637,7 @@ class AIModelManager(BaseAgent):
             print(f"âŒ Error checking deployment condition: {e}")
             return False
 
-    def should_rollback_model(self, model_id: str, version: str, metrics: Dict[str, Any]) -> bool:
+    def should_rollback_model(self, model_id: str, version: str, metrics: dict[str, Any]) -> bool:
         """Check if model should be rolled back"""
         try:
             # Check performance threshold
@@ -829,7 +830,7 @@ class AIModelManager(BaseAgent):
         except Exception as e:
             print(f"âŒ Error removing model version: {e}")
 
-    async def handle_register_model(self, message: Dict[str, Any]):
+    async def handle_register_model(self, message: dict[str, Any]):
         """Handle model registration request"""
         try:
             model_id = message.get("model_id")
@@ -897,7 +898,7 @@ class AIModelManager(BaseAgent):
             print(f"âŒ Error handling model registration: {e}")
             await self.broadcast_error(f"Model registration error: {e}")
 
-    async def handle_deploy_model(self, message: Dict[str, Any]):
+    async def handle_deploy_model(self, message: dict[str, Any]):
         """Handle model deployment request"""
         try:
             model_id = message.get("model_id")
@@ -933,7 +934,7 @@ class AIModelManager(BaseAgent):
             print(f"âŒ Error handling model deployment: {e}")
             await self.broadcast_error(f"Model deployment error: {e}")
 
-    async def handle_get_model_info(self, message: Dict[str, Any]):
+    async def handle_get_model_info(self, message: dict[str, Any]):
         """Handle model info request"""
         try:
             model_id = message.get("model_id")
@@ -968,7 +969,7 @@ class AIModelManager(BaseAgent):
             print(f"âŒ Error handling model info request: {e}")
             await self.broadcast_error(f"Model info error: {e}")
 
-    async def handle_update_metrics(self, message: Dict[str, Any]):
+    async def handle_update_metrics(self, message: dict[str, Any]):
         """Handle metrics update request"""
         try:
             model_id = message.get("model_id")
@@ -1029,10 +1030,10 @@ class AIModelManager(BaseAgent):
         except Exception as e:
             print(f"âŒ Error updating model metrics: {e}")
 
-    async def process_market_data(self, market_data: Dict[str, Any]):
+    async def process_market_data(self, market_data: dict[str, Any]):
         """Process incoming market data for model management"""
         try:
-            print(f"ðŸ“Š Processing market data for model management")
+            print("ðŸ“Š Processing market data for model management")
 
             # Update market data in state
             self.state["last_market_data"] = market_data
@@ -1051,13 +1052,13 @@ class AIModelManager(BaseAgent):
             # Update model metrics
             await self.update_model_metrics()
 
-            print(f"âœ… Market data processed for model management")
+            print("âœ… Market data processed for model management")
 
         except Exception as e:
             print(f"âŒ Error processing market data for model management: {e}")
             await self.broadcast_error(f"Model management market data error: {e}")
 
-    async def analyze_model_performance(self, model_id: str, market_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def analyze_model_performance(self, model_id: str, market_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze model performance based on market data"""
         try:
             # Mock performance analysis
@@ -1079,7 +1080,7 @@ class AIModelManager(BaseAgent):
                 "market_conditions": "unknown"
             }
 
-    async def handle_model_retraining_request(self, model_id: str, performance_metrics: Dict[str, Any]):
+    async def handle_model_retraining_request(self, model_id: str, performance_metrics: dict[str, Any]):
         """Handle model retraining request"""
         try:
             print(f"ðŸ”„ Initiating retraining for model {model_id}")

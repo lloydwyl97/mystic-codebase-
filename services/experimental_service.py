@@ -5,7 +5,7 @@ Provides experimental functionality for the trading platform
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class ExperimentalService:
         self.status = "stopped"
         logger.info("✅ Experimental service stopped")
         
-    async def get_status(self) -> Dict[str, Any]:
+    async def get_status(self) -> dict[str, Any]:
         """Get experimental service status"""
         return {
             "status": self.status,
@@ -39,7 +39,7 @@ class ExperimentalService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_integration_metrics(self) -> Dict[str, Any]:
+    async def get_integration_metrics(self) -> dict[str, Any]:
         """Get experimental integration metrics"""
         return {
             "metrics": {
@@ -51,7 +51,7 @@ class ExperimentalService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def activate_feature(self, feature_id: str) -> Dict[str, Any]:
+    async def activate_feature(self, feature_id: str) -> dict[str, Any]:
         """Activate experimental feature"""
         return {
             "feature_id": feature_id,
@@ -60,7 +60,7 @@ class ExperimentalService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def deactivate_feature(self, feature_id: str) -> Dict[str, Any]:
+    async def deactivate_feature(self, feature_id: str) -> dict[str, Any]:
         """Deactivate experimental feature"""
         return {
             "feature_id": feature_id,
@@ -69,7 +69,7 @@ class ExperimentalService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_integration_status(self) -> Dict[str, Any]:
+    async def get_integration_status(self) -> dict[str, Any]:
         """Get experimental integration status"""
         return {
             "integrations": {
@@ -80,7 +80,7 @@ class ExperimentalService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_feature_status(self) -> Dict[str, Any]:
+    async def get_feature_status(self) -> dict[str, Any]:
         """Get experimental feature status"""
         return {
             "features": [
@@ -91,7 +91,7 @@ class ExperimentalService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_health(self) -> Dict[str, Any]:
+    async def get_health(self) -> dict[str, Any]:
         """Get experimental service health"""
         return {
             "health": "good",
@@ -100,7 +100,7 @@ class ExperimentalService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_features(self) -> Dict[str, Any]:
+    async def get_features(self) -> dict[str, Any]:
         """Get experimental features"""
         return {
             "features": [
@@ -111,7 +111,7 @@ class ExperimentalService:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
-    async def get_experimental_data(self) -> Dict[str, Any]:
+    async def get_experimental_data(self) -> dict[str, Any]:
         """Get experimental data"""
         return {
             "experiment_id": "EXP_001",

@@ -4,22 +4,22 @@ Advanced AI capabilities with modern LLM integration
 """
 
 import logging
-from datetime import datetime
-from typing import Dict, List, Optional, Any
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Any
+
 import numpy as np
 import pandas as pd
-from dataclasses import dataclass
 import structlog
-from datetime import datetime, timezone
 
 # AI/ML imports
 try:
-    from transformers import pipeline
-    from sentence_transformers import SentenceTransformer
     import torch
-    from langchain_community.llms import OpenAI
     from langchain.chains import LLMChain
     from langchain.prompts import PromptTemplate
+    from langchain_community.llms import OpenAI
+    from sentence_transformers import SentenceTransformer
+    from transformers import pipeline
 except ImportError:
     logging.warning("Some AI libraries not available, using fallback implementations")
 
@@ -31,7 +31,7 @@ class MarketSentiment:
     symbol: str
     sentiment_score: float  # -1 to 1
     confidence: float
-    sources: List[str]
+    sources: list[str]
     timestamp: datetime
     news_count: int
     social_volume: int
@@ -46,7 +46,7 @@ class AIPrediction:
     confidence: float
     timeframe: str
     model_version: str
-    features_used: List[str]
+    features_used: list[str]
     timestamp: datetime
 
 
@@ -59,8 +59,8 @@ class StrategyRecommendation:
     risk_level: str
     expected_return: float
     time_horizon: str
-    stop_loss: Optional[float]
-    take_profit: Optional[float]
+    stop_loss: float | None
+    take_profit: float | None
     timestamp: datetime
 
 
@@ -96,7 +96,7 @@ class EnhancedSentimentAnalyzer:
             logger.warning(f"Could not initialize AI models: {e}")
 
     async def analyze_market_sentiment(
-        self, symbol: str, news_data: List[Dict], social_data: List[Dict]
+        self, symbol: str, news_data: list[dict], social_data: list[dict]
     ) -> MarketSentiment:
         """Analyze market sentiment from multiple sources"""
 
@@ -221,7 +221,7 @@ class AdvancedPredictor:
         symbol: str,
         historical_data: pd.DataFrame,
         sentiment_data: MarketSentiment,
-        technical_indicators: Dict[str, float],
+        technical_indicators: dict[str, float],
     ) -> AIPrediction:
         """Predict price direction using ensemble of models"""
 
@@ -287,8 +287,8 @@ class AdvancedPredictor:
         self,
         historical_data: pd.DataFrame,
         sentiment_data: MarketSentiment,
-        technical_indicators: Dict[str, float],
-    ) -> Dict[str, float]:
+        technical_indicators: dict[str, float],
+    ) -> dict[str, float]:
         """Prepare features for prediction"""
 
         features = {}
@@ -323,7 +323,7 @@ class AdvancedPredictor:
         recent_returns = historical_data["close"].pct_change().tail(10)
         return recent_returns.mean()
 
-    def _transformer_prediction(self, features: Dict[str, float]) -> float:
+    def _transformer_prediction(self, features: dict[str, float]) -> float:
         """Transformer-based prediction"""
         # Simplified transformer prediction
         sentiment_weight = 0.4
@@ -338,7 +338,7 @@ class AdvancedPredictor:
         """Sentiment-based prediction"""
         return sentiment_data.sentiment_score * 0.5  # Scale down sentiment impact
 
-    def _technical_prediction(self, technical_indicators: Dict[str, float]) -> float:
+    def _technical_prediction(self, technical_indicators: dict[str, float]) -> float:
         """Technical indicator-based prediction"""
         # Combine multiple technical indicators
         rsi = technical_indicators.get("rsi", 50)
@@ -353,7 +353,7 @@ class AdvancedPredictor:
         return (rsi_signal + macd_signal + bb_signal) / 3
 
     def _calculate_prediction_confidence(
-        self, predictions: List[float], weights: List[float]
+        self, predictions: list[float], weights: list[float]
     ) -> float:
         """Calculate confidence based on model agreement"""
         if not predictions:
@@ -414,7 +414,7 @@ class AIStrategyGenerator:
         except Exception as e:
             logger.warning(f"Could not initialize LLM chain: {e}")
 
-    def _load_strategy_templates(self) -> Dict[str, str]:
+    def _load_strategy_templates(self) -> dict[str, str]:
         """Load strategy templates"""
         return {
             "momentum": (
@@ -446,9 +446,9 @@ class AIStrategyGenerator:
     async def generate_strategy(
         self,
         symbol: str,
-        market_data: Dict[str, Any],
+        market_data: dict[str, Any],
         sentiment_data: MarketSentiment,
-        technical_indicators: Dict[str, float],
+        technical_indicators: dict[str, float],
         risk_profile: str = "moderate",
     ) -> StrategyRecommendation:
         """Generate AI-powered trading strategy"""
@@ -483,11 +483,11 @@ class AIStrategyGenerator:
             logger.error(f"Error generating strategy for {symbol}: {e}")
             return self._create_fallback_recommendation(symbol)
 
-    def _summarize_market_data(self, market_data: Dict[str, Any]) -> str:
+    def _summarize_market_data(self, market_data: dict[str, Any]) -> str:
         """Summarize market data for LLM"""
         return f"Price: {market_data.get('current_price', 0):.2f}, Volume: {market_data.get('volume', 0)}, 24h Change: {market_data.get('change_24h', 0):.2%}"
 
-    def _summarize_technical_indicators(self, indicators: Dict[str, float]) -> str:
+    def _summarize_technical_indicators(self, indicators: dict[str, float]) -> str:
         """Summarize technical indicators"""
         summary = []
         for name, value in indicators.items():
@@ -497,7 +497,7 @@ class AIStrategyGenerator:
     def _fallback_strategy_generation(
         self,
         sentiment_data: MarketSentiment,
-        technical_indicators: Dict[str, float],
+        technical_indicators: dict[str, float],
         risk_profile: str,
     ) -> str:
         """Fallback strategy generation"""
@@ -518,7 +518,7 @@ class AIStrategyGenerator:
         symbol: str,
         strategy_text: str,
         sentiment_data: MarketSentiment,
-        technical_indicators: Dict[str, float],
+        technical_indicators: dict[str, float],
     ) -> StrategyRecommendation:
         """Parse strategy text to recommendation"""
 
@@ -569,17 +569,17 @@ class EnhancedAITrading:
         self.sentiment_analyzer = EnhancedSentimentAnalyzer()
         self.predictor = AdvancedPredictor()
         self.strategy_generator = AIStrategyGenerator()
-        self.active_predictions: Dict[str, AIPrediction] = {}
-        self.active_recommendations: Dict[str, StrategyRecommendation] = {}
+        self.active_predictions: dict[str, AIPrediction] = {}
+        self.active_recommendations: dict[str, StrategyRecommendation] = {}
 
     async def analyze_symbol(
         self,
         symbol: str,
-        market_data: Dict[str, Any],
-        news_data: List[Dict],
-        social_data: List[Dict],
-        technical_indicators: Dict[str, float],
-    ) -> Dict[str, Any]:
+        market_data: dict[str, Any],
+        news_data: list[dict],
+        social_data: list[dict],
+        technical_indicators: dict[str, float],
+    ) -> dict[str, Any]:
         """Complete AI analysis for a symbol"""
 
         try:
@@ -619,7 +619,7 @@ class EnhancedAITrading:
                 "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
-    async def get_portfolio_insights(self, portfolio_symbols: List[str]) -> Dict[str, Any]:
+    async def get_portfolio_insights(self, portfolio_symbols: list[str]) -> dict[str, Any]:
         """Get AI insights for entire portfolio"""
 
         insights = {

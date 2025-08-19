@@ -5,7 +5,7 @@ FastAPI middleware for adding security headers.
 """
 
 import logging
-from typing import Awaitable, Callable, Union
+from collections.abc import Awaitable, Callable
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 @log_operation_performance("security_headers")
 async def security_headers_middleware(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
-) -> Union[Response, JSONResponse]:
+) -> Response | JSONResponse:
     """
     Middleware to add security headers to responses.
     """

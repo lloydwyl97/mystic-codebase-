@@ -7,7 +7,7 @@ Integrates with the main trading system for automated staking of idle capital.
 
 import logging
 import time
-from typing import Dict, Any
+from typing import Any
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ def stake_to_validator(
     amount: float,
     chain: str = "Ethereum",
     validator_address: str = "0xValidatorAddressHere",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Stake funds to a validator node on the specified blockchain.
 
@@ -69,7 +69,7 @@ def stake_to_validator(
         }
 
 
-def auto_stake_if_idle(balance: float, threshold: float = 500) -> Dict[str, Any]:
+def auto_stake_if_idle(balance: float, threshold: float = 500) -> dict[str, Any]:
     """
     Automatically stake funds if balance exceeds threshold.
 
@@ -116,7 +116,7 @@ def auto_stake_if_idle(balance: float, threshold: float = 500) -> Dict[str, Any]
         }
 
 
-def get_staking_rewards(validator_address: str, chain: str = "Ethereum") -> Dict[str, Any]:
+def get_staking_rewards(validator_address: str, chain: str = "Ethereum") -> dict[str, Any]:
     """
     Get staking rewards for a validator.
 

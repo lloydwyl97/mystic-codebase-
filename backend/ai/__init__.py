@@ -1,4 +1,6 @@
-﻿import importlib, sys
+﻿import importlib
+import sys
+
 _pkg = importlib.import_module("backend.modules.ai")
 for _name in getattr(_pkg, "__all__", []):
     globals()[_name] = getattr(_pkg, _name)
@@ -16,7 +18,7 @@ try:
             key = f"market:{ns_name}"
             try:
                 # Prefer the real setter if present
-                return getattr(self, "set")(key, payload)
+                return self.set(key, payload)
             except Exception:
                 # Best-effort in-memory fallback
                 self._store = getattr(self, "_store", {})
@@ -25,11 +27,11 @@ try:
         return _update
 
     if PC and not hasattr(PC, "update_binance"):
-        setattr(PC, "update_binance", _bind_update("binanceus"))
+        PC.update_binance = _bind_update("binanceus")
     if PC and not hasattr(PC, "update_coinbase"):
-        setattr(PC, "update_coinbase", _bind_update("coinbase"))
+        PC.update_coinbase = _bind_update("coinbase")
     if PC and not hasattr(PC, "update_coingecko"):
-        setattr(PC, "update_coingecko", _bind_update("coingecko"))
+        PC.update_coingecko = _bind_update("coingecko")
 except Exception:
     # Dont break import on environments that dont need this.
     pass

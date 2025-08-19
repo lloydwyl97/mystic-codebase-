@@ -5,16 +5,21 @@ Provides data for the frontend dashboard
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
+
 
 # Lazy-import trade tracker functions inside handlers to avoid any potential cycles
 def _get_trade_funcs():
     from backend.modules.ai.trade_tracker import (
         get_active_trades as _get_active_trades,
-        get_trade_summary as _get_trade_summary,
+    )
+    from backend.modules.ai.trade_tracker import (
         get_trade_history as _get_trade_history,
+    )
+    from backend.modules.ai.trade_tracker import (
+        get_trade_summary as _get_trade_summary,
     )
     return _get_active_trades, _get_trade_summary, _get_trade_history
 
@@ -53,7 +58,7 @@ def get_trading_status():
 
 
 @router.get("/ui/status")
-async def get_status() -> Dict[str, Any]:
+async def get_status() -> dict[str, Any]:
     """Get comprehensive status for dashboard UI"""
     try:
         cache = _get_cache()
@@ -84,7 +89,7 @@ async def get_status() -> Dict[str, Any]:
 
 
 @router.get("/ui/dashboard")
-async def get_dashboard_data() -> Dict[str, Any]:
+async def get_dashboard_data() -> dict[str, Any]:
     """Get dashboard-specific data"""
     try:
         cache = _get_cache()
@@ -131,7 +136,7 @@ async def get_dashboard_data() -> Dict[str, Any]:
 
 
 @router.get("/ui/market-data")
-async def get_market_data() -> Dict[str, Any]:
+async def get_market_data() -> dict[str, Any]:
     """Get real-time market data"""
     try:
         cache = _get_cache()
@@ -158,7 +163,7 @@ async def get_market_data() -> Dict[str, Any]:
 
 
 @router.get("/ui/trading-overview")
-async def get_trading_overview() -> Dict[str, Any]:
+async def get_trading_overview() -> dict[str, Any]:
     """Get trading system overview"""
     try:
         return {
@@ -173,7 +178,7 @@ async def get_trading_overview() -> Dict[str, Any]:
 
 
 @router.get("/ui/analytics")
-async def get_analytics_data() -> Dict[str, Any]:
+async def get_analytics_data() -> dict[str, Any]:
     """Get analytics data for charts and graphs"""
     try:
         cache = _get_cache()

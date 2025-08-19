@@ -1,17 +1,18 @@
 import streamlit as st
-from mystic_ui.api_client import request_json as _request_json
-from mystic_ui.display import render_table, render_kpis
+
+from mystic_ui.api_client import request_json
+from mystic_ui.display import render_kpis, render_table
 
 
 def render() -> None:
 	st.title(" AI Strategies")
 
 	st.subheader("Strategies")
-	render_table(_request_json("GET", "/ai/strategies"))
+	render_table(request_json("GET", "/ai/strategies"))
 	st.subheader("Leaderboard")
-	render_table(_request_json("GET", "/ai/strategies/leaderboard"))
+	render_table(request_json("GET", "/ai/strategies/leaderboard"))
 	st.subheader("Status")
-	status = _request_json("GET", "/ai/status") or {}
+	status = request_json("GET", "/ai/status") or {}
 	render_kpis([
 		("CPU %", status.get("systemMetrics", {}).get("cpuUsage"), None),
 		("Mem %", status.get("systemMetrics", {}).get("memoryUsage"), None),
@@ -24,7 +25,7 @@ def render() -> None:
 	if st.button("POST /api/ai/update-strategy"):
 		import json
 		try:
-			st.json(_request_json("POST", "/ai/update-strategy", json=json.loads(txt)))
+			st.json(request_json("POST", "/ai/update-strategy", json=json.loads(txt)))
 		except Exception as e:
 			st.error(str(e))
 

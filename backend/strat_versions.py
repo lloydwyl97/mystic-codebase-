@@ -5,13 +5,12 @@ Manages strategy versions, saves/loads configurations, and tracks evolution.
 Built for Windows 11 Home + PowerShell + Docker.
 """
 
-import json
-import os
-import logging
-from typing import Dict, Any, List, Optional
-from datetime import datetime
 import hashlib
+import json
+import logging
+import os
 from datetime import datetime, timezone
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +19,7 @@ STRATEGY_VERSIONS_DIR = "strategy_versions"
 os.makedirs(STRATEGY_VERSIONS_DIR, exist_ok=True)
 
 
-def generate_version_id(config: Dict[str, Any], strategy_type: str) -> str:
+def generate_version_id(config: dict[str, Any], strategy_type: str) -> str:
     """
     Generate a unique version ID for a strategy configuration.
 
@@ -42,10 +41,10 @@ def generate_version_id(config: Dict[str, Any], strategy_type: str) -> str:
 
 
 def save_strategy_version(
-    config: Dict[str, Any],
+    config: dict[str, Any],
     strategy_type: str,
-    performance: Optional[Dict[str, Any]] = None,
-    metadata: Optional[Dict[str, Any]] = None,
+    performance: dict[str, Any] | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> str:
     """
     Save a strategy version with configuration and performance data.
@@ -84,7 +83,7 @@ def save_strategy_version(
         return ""
 
 
-def load_strategy_version(version_id: str) -> Optional[Dict[str, Any]]:
+def load_strategy_version(version_id: str) -> dict[str, Any] | None:
     """
     Load a strategy version by version ID.
 
@@ -101,7 +100,7 @@ def load_strategy_version(version_id: str) -> Optional[Dict[str, Any]]:
             logger.warning(f"Strategy version not found: {version_id}")
             return None
 
-        with open(filename, "r") as f:
+        with open(filename) as f:
             version_data = json.load(f)
 
         logger.info(f"Loaded strategy version: {version_id}")
@@ -113,8 +112,8 @@ def load_strategy_version(version_id: str) -> Optional[Dict[str, Any]]:
 
 
 def list_strategy_versions(
-    strategy_type: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    strategy_type: str | None = None,
+) -> list[dict[str, Any]]:
     """
     List all available strategy versions.
 
@@ -134,7 +133,7 @@ def list_strategy_versions(
             if filename.endswith(".json"):
                 try:
                     filepath = os.path.join(STRATEGY_VERSIONS_DIR, filename)
-                    with open(filepath, "r") as f:
+                    with open(filepath) as f:
                         version_data = json.load(f)
 
                     # Filter by strategy type if specified
@@ -171,7 +170,7 @@ def list_strategy_versions(
 
 def get_best_performing_version(
     strategy_type: str, metric: str = "total_profit"
-) -> Optional[Dict[str, Any]]:
+) -> dict[str, Any] | None:
     """
     Get the best performing version of a strategy type.
 
@@ -236,7 +235,7 @@ def delete_strategy_version(version_id: str) -> bool:
         return False
 
 
-def compare_versions(version_id1: str, version_id2: str) -> Dict[str, Any]:
+def compare_versions(version_id1: str, version_id2: str) -> dict[str, Any]:
     """
     Compare two strategy versions.
 
@@ -349,7 +348,7 @@ def import_strategy_version(import_path: str) -> str:
         Version ID of imported strategy
     """
     try:
-        with open(import_path, "r") as f:
+        with open(import_path) as f:
             version_data = json.load(f)
 
         # Validate required fields
@@ -379,7 +378,7 @@ def import_strategy_version(import_path: str) -> str:
 
 # Convenience functions for hyperparameter tuner
 def save_optimized_config(
-    config: Dict[str, Any], strategy_type: str, performance: Dict[str, Any]
+    config: dict[str, Any], strategy_type: str, performance: dict[str, Any]
 ) -> str:
     """
     Save an optimized configuration with performance data.
@@ -400,7 +399,7 @@ def save_optimized_config(
     return save_strategy_version(config, strategy_type, performance, metadata)
 
 
-def load_latest_version(strategy_type: str) -> Optional[Dict[str, Any]]:
+def load_latest_version(strategy_type: str) -> dict[str, Any] | None:
     """
     Load the latest version of a strategy type.
 

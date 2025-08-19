@@ -4,12 +4,12 @@ Database Initialization Script for Mystic Trading Platform
 Fixes database file access issues and ensures proper setup
 """
 
-import os
-import sys
-import sqlite3
 import json
-from pathlib import Path
+import os
+import sqlite3
+import sys
 from datetime import datetime
+from pathlib import Path
 
 
 def ensure_database_directory():

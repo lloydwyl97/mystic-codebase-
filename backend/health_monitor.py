@@ -7,7 +7,7 @@ Monitors the health of all system components and performs self-healing when need
 import asyncio
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Any
 
 from .services.websocket_manager import websocket_manager
 
@@ -22,7 +22,7 @@ class HealthMonitor:
         signal_manager: Any,
         auto_trading_manager: Any,
         notification_service: Any,
-        metrics_collector: Optional[Any] = None,
+        metrics_collector: Any | None = None,
     ):
         self.signal_manager = signal_manager
         self.auto_trading_manager = auto_trading_manager
@@ -30,8 +30,8 @@ class HealthMonitor:
         self.metrics_collector = metrics_collector
         self.is_running = False
         self.monitor_task = None
-        self.service_health: Dict[str, Dict[str, Any]] = {}
-        self.system_metrics: Dict[str, Dict[str, Any]] = {}
+        self.service_health: dict[str, dict[str, Any]] = {}
+        self.system_metrics: dict[str, dict[str, Any]] = {}
 
     async def start_monitoring(self) -> None:
         """Start the health monitoring background task."""
@@ -143,7 +143,7 @@ class HealthMonitor:
             # Check every 60 seconds
             await asyncio.sleep(60)
 
-    async def check_health(self) -> Dict[str, Any]:
+    async def check_health(self) -> dict[str, Any]:
         """Check the health of all system components."""
         try:
             # Get signal health
@@ -178,7 +178,7 @@ class HealthMonitor:
                 "timestamp": datetime.now(timezone.timezone.utc).isoformat(),
             }
 
-    async def perform_self_healing(self) -> Dict[str, Any]:
+    async def perform_self_healing(self) -> dict[str, Any]:
         """Manually trigger self-healing of all system components."""
         try:
             # Perform signal self-healing
@@ -213,7 +213,7 @@ class HealthMonitor:
         self,
         service_name: str,
         status: str,
-        details: Optional[Dict[str, Any]] = None,
+        details: dict[str, Any] | None = None,
     ):
         """Update health status for a specific service"""
         try:
@@ -243,7 +243,7 @@ class HealthMonitor:
         except Exception as e:
             logger.error(f"Error updating health for {service_name}: {e}")
 
-    def update_system_metrics(self, metrics: Dict[str, Any]):
+    def update_system_metrics(self, metrics: dict[str, Any]):
         """Update system-wide metrics"""
         try:
             # Ensure all metrics are stored as Dict[str, Any]
@@ -275,7 +275,7 @@ def get_health_monitor(
     signal_manager: Any,
     auto_trading_manager: Any,
     notification_service: Any,
-    metrics_collector: Optional[Any] = None,
+    metrics_collector: Any | None = None,
 ) -> HealthMonitor:
     """Get or create health monitor instance."""
     global health_monitor

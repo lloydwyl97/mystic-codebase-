@@ -9,10 +9,10 @@ Usage: python throttle_controller.py [command] [options]
 import argparse
 import sys
 import time
-from typing import Any, Dict
+from typing import Any
 
 
-def get_performance_dashboard() -> Dict[str, Any]:
+def get_performance_dashboard() -> dict[str, Any]:
     """Get current performance dashboard"""
     try:
         from performance_monitor import performance_monitor
@@ -23,7 +23,7 @@ def get_performance_dashboard() -> Dict[str, Any]:
         return {}
 
 
-def get_api_stats() -> Dict[str, Any]:
+def get_api_stats() -> dict[str, Any]:
     """Get API throttling statistics"""
     try:
         from api_throttler import api_throttler

@@ -6,16 +6,17 @@ Port 8004 - Standalone AI trading engine service
 
 import asyncio
 import json
-import time
+import logging
 import os
 import sys
-import logging
+import time
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Any
+
+import redis
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-import redis
 
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -85,7 +86,8 @@ class AITradeEngineService:
         while self.running:
             try:
                 # Check for trade requests
-                request = self.redis_client.lpop("ai_trade_queue")
+                from utils.redis_helpers import to_str
+                request = to_str(self.redis_client.lpop("ai_trade_queue"))
 
                 if request:
                     request_data = json.loads(request)
@@ -98,13 +100,13 @@ class AITradeEngineService:
                 logger.error(f"âŒ Error in trade monitor loop: {e}")
                 await asyncio.sleep(30)
 
-    async def process_trade_request(self, request_data: Dict[str, Any]):
+    async def process_trade_request(self, request_data: dict[str, Any]):
         """Process a trade request"""
         try:
             symbol = request_data.get("symbol", "ETHUSDT")
             side = request_data.get("side", "BUY")
             quantity = request_data.get("quantity", 0.01)
-            price = request_data.get("price", None)
+            price = request_data.get("price")
             strategy_id = request_data.get("strategy_id", "unknown")
 
             logger.info(f"ðŸŽ¯ Processing trade request for {symbol} {side} {quantity}")
@@ -157,8 +159,8 @@ class AITradeEngineService:
         symbol: str,
         side: str,
         quantity: float,
-        price: Optional[float] = None,
-    ) -> Dict[str, Any]:
+        price: float | None = None,
+    ) -> dict[str, Any]:
         """Execute a trade"""
         try:
             logger.info(f"ðŸŽ¯ Executing trade: {symbol} {side} {quantity}")
@@ -188,7 +190,7 @@ class AITradeEngineService:
             logger.error(f"âŒ Error executing trade: {e}")
             raise
 
-    async def get_trade_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+    async def get_trade_history(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get trade history"""
         try:
             # Return recent trades
@@ -197,7 +199,7 @@ class AITradeEngineService:
             logger.error(f"âŒ Error getting trade history: {e}")
             return []
 
-    async def get_strategy_trades(self, strategy_id: str) -> List[Dict[str, Any]]:
+    async def get_strategy_trades(self, strategy_id: str) -> list[dict[str, Any]]:
         """Get trades for a specific strategy"""
         try:
             trades = []
@@ -210,7 +212,7 @@ class AITradeEngineService:
             logger.error(f"âŒ Error getting strategy trades: {e}")
             return []
 
-    async def get_portfolio_status(self) -> Dict[str, Any]:
+    async def get_portfolio_status(self) -> dict[str, Any]:
         """Get current portfolio status"""
         try:
             # Get portfolio from trade engine
@@ -284,8 +286,8 @@ async def execute_trade(
     symbol: str,
     side: str,
     quantity: float,
-    price: Optional[float] = None,
-    strategy_id: Optional[str] = None,
+    price: float | None = None,
+    strategy_id: str | None = None,
 ):
     """Execute a trade"""
     if not trade_service:
@@ -368,7 +370,8 @@ async def process_trade_queue():
     try:
         processed = 0
         while True:
-            request = trade_service.redis_client.lpop("ai_trade_queue")
+            from utils.redis_helpers import to_str
+            request = to_str(trade_service.redis_client.lpop("ai_trade_queue"))
             if not request:
                 break
 

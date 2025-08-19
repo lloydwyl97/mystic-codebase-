@@ -9,7 +9,7 @@ import math
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -59,14 +59,14 @@ class AdvancedOrder:
     order_type: OrderType
     side: str
     quantity: float
-    price: Optional[float] = None
-    stop_price: Optional[float] = None
-    limit_price: Optional[float] = None
-    trailing_distance: Optional[float] = None
+    price: float | None = None
+    stop_price: float | None = None
+    limit_price: float | None = None
+    trailing_distance: float | None = None
     time_in_force: str = "GTC"
-    expires_at: Optional[datetime] = None
+    expires_at: datetime | None = None
     risk_params: RiskParameters = field(default_factory=RiskParameters)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -78,7 +78,7 @@ class PortfolioMetrics:
     max_drawdown: float
     volatility: float
     beta: float
-    correlation_matrix: Dict[str, Dict[str, float]]
+    correlation_matrix: dict[str, dict[str, float]]
     risk_score: float
     timestamp: datetime
 
@@ -89,7 +89,7 @@ class RiskManager:
     def __init__(self, risk_level: RiskLevel = RiskLevel.MODERATE):
         self.risk_level: RiskLevel = risk_level
         self.risk_params: RiskParameters = self._get_risk_params(risk_level)
-        self.position_history: List[Dict[str, Any]] = []
+        self.position_history: list[dict[str, Any]] = []
         self.daily_pnl: float = 0.0
         self.max_drawdown: float = 0.0
         self.peak_value: float = 0.0
@@ -129,8 +129,8 @@ class RiskManager:
         portfolio_value: float,
         symbol: str,
         current_price: float,
-        volatility: Optional[float] = None,
-        correlation_data: Optional[Dict[str, float]] = None,
+        volatility: float | None = None,
+        correlation_data: dict[str, float] | None = None,
     ) -> float:
         """Calculate optimal position size using Kelly Criterion and risk adjustments."""
 
@@ -166,7 +166,7 @@ class RiskManager:
         kelly = (win_rate * avg_win - (1 - win_rate) * avg_loss) / avg_win
         return max(0.0, min(kelly, 0.25))  # Cap at 25%
 
-    def _calculate_correlation_penalty(self, correlation_data: Dict[str, float]) -> float:
+    def _calculate_correlation_penalty(self, correlation_data: dict[str, float]) -> float:
         """Calculate correlation penalty for position sizing."""
         high_correlation_count = sum(
             1
@@ -184,8 +184,8 @@ class RiskManager:
         self,
         portfolio_value: float,
         new_position_value: float,
-        current_positions: List[Dict[str, Any]],
-    ) -> Tuple[bool, str]:
+        current_positions: list[dict[str, Any]],
+    ) -> tuple[bool, str]:
         """Check if new position violates risk limits."""
 
         # Check daily loss limit
@@ -222,9 +222,9 @@ class AdvancedOrderManager:
     """Manages complex order types and execution strategies."""
 
     def __init__(self):
-        self.active_orders: Dict[str, Dict[str, Any]] = {}
-        self.order_history: List[Dict[str, Any]] = []
-        self.execution_strategies: Dict[str, Any] = {}
+        self.active_orders: dict[str, dict[str, Any]] = {}
+        self.order_history: list[dict[str, Any]] = []
+        self.execution_strategies: dict[str, Any] = {}
 
     async def place_advanced_order(self, order: AdvancedOrder) -> str:
         """Place an advanced order with complex logic."""
@@ -345,7 +345,7 @@ class AdvancedOrderManager:
 
         return order_id
 
-    def _calculate_twap_schedule(self, order: AdvancedOrder) -> List[Dict[str, Any]]:
+    def _calculate_twap_schedule(self, order: AdvancedOrder) -> list[dict[str, Any]]:
         """Calculate TWAP execution schedule."""
         # Default to 1-hour execution with 12 slices
         duration_minutes = 60
@@ -380,7 +380,7 @@ class AdvancedOrderManager:
 
         return order_id
 
-    async def update_trailing_stops(self, current_prices: Dict[str, float]):
+    async def update_trailing_stops(self, current_prices: dict[str, float]):
         """Update trailing stop orders with current prices."""
         for order_id, order_data in self.active_orders.items():
             if order_data["type"] == "trailing_stop":
@@ -439,8 +439,8 @@ class PortfolioAnalyzer:
 
     def calculate_portfolio_metrics(
         self,
-        positions: List[Dict[str, Any]],
-        historical_data: Dict[str, List[float]],
+        positions: list[dict[str, Any]],
+        historical_data: dict[str, list[float]],
     ) -> PortfolioMetrics:
         """Calculate comprehensive portfolio metrics."""
 
@@ -482,13 +482,13 @@ class PortfolioAnalyzer:
             timestamp=datetime.now(timezone.timezone.utc),
         )
 
-    def _calculate_returns(self, historical_data: Dict[str, List[float]]) -> List[float]:
+    def _calculate_returns(self, historical_data: dict[str, list[float]]) -> list[float]:
         """Calculate portfolio returns."""
         if not historical_data:
             return []
 
         # Simple return calculation
-        returns: List[float] = []
+        returns: list[float] = []
         for i in range(1, len(list(historical_data.values())[0])):
             total_return = 0.0
             for symbol, prices in historical_data.items():
@@ -499,7 +499,7 @@ class PortfolioAnalyzer:
 
         return returns
 
-    def _calculate_sharpe_ratio(self, returns: List[float]) -> float:
+    def _calculate_sharpe_ratio(self, returns: list[float]) -> float:
         """Calculate Sharpe ratio."""
         if not returns:
             return 0.0
@@ -512,7 +512,7 @@ class PortfolioAnalyzer:
 
         return float((avg_return - self.risk_free_rate) / volatility)
 
-    def _calculate_max_drawdown(self, returns: List[float]) -> float:
+    def _calculate_max_drawdown(self, returns: list[float]) -> float:
         """Calculate maximum drawdown."""
         if not returns:
             return 0.0
@@ -532,7 +532,7 @@ class PortfolioAnalyzer:
 
         return max_dd
 
-    def _calculate_volatility(self, returns: List[float]) -> float:
+    def _calculate_volatility(self, returns: list[float]) -> float:
         """Calculate volatility (standard deviation of returns)."""
         if len(returns) < 2:
             return 0.0
@@ -541,7 +541,7 @@ class PortfolioAnalyzer:
         variance = sum((r - mean_return) ** 2 for r in returns) / (len(returns) - 1)
         return math.sqrt(variance)
 
-    def _calculate_beta(self, returns: List[float]) -> float:
+    def _calculate_beta(self, returns: list[float]) -> float:
         """Calculate beta (market correlation)."""
         # Simplified beta calculation
         if len(returns) < 2:
@@ -552,7 +552,7 @@ class PortfolioAnalyzer:
 
         covariance = sum(
             (r - sum(returns) / len(returns)) * (m - sum(market_returns) / len(market_returns))
-            for r, m in zip(returns, market_returns)
+            for r, m in zip(returns, market_returns, strict=False)
         )
 
         market_variance = sum(
@@ -565,10 +565,10 @@ class PortfolioAnalyzer:
         return covariance / market_variance
 
     def _calculate_correlation_matrix(
-        self, historical_data: Dict[str, List[float]]
-    ) -> Dict[str, Dict[str, float]]:
+        self, historical_data: dict[str, list[float]]
+    ) -> dict[str, dict[str, float]]:
         """Calculate correlation matrix between assets."""
-        correlation_matrix: Dict[str, Dict[str, float]] = {}
+        correlation_matrix: dict[str, dict[str, float]] = {}
 
         symbols = list(historical_data.keys())
         for i, symbol1 in enumerate(symbols):
@@ -584,7 +584,7 @@ class PortfolioAnalyzer:
 
         return correlation_matrix
 
-    def _calculate_correlation(self, data1: List[float], data2: List[float]) -> float:
+    def _calculate_correlation(self, data1: list[float], data2: list[float]) -> float:
         """Calculate correlation between two data series."""
         if len(data1) != len(data2) or len(data1) < 2:
             return 0.0
@@ -592,7 +592,7 @@ class PortfolioAnalyzer:
         mean1 = sum(data1) / len(data1)
         mean2 = sum(data2) / len(data2)
 
-        numerator = sum((x - mean1) * (y - mean2) for x, y in zip(data1, data2))
+        numerator = sum((x - mean1) * (y - mean2) for x, y in zip(data1, data2, strict=False))
         denominator1 = sum((x - mean1) ** 2 for x in data1)
         denominator2 = sum((y - mean2) ** 2 for y in data2)
 

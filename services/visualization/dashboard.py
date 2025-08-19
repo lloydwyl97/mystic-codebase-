@@ -1,13 +1,14 @@
 # dashboard.py
 import logging
+
+import pandas as pd
+import plotly.graph_objs as go
+import uvicorn
+from db_logger import get_active_strategies, get_recent_trades
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-import uvicorn
-import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import pandas as pd
-from db_logger import get_recent_trades, get_active_strategies
 from reward_engine import get_top_performers
 
 # Configure logging

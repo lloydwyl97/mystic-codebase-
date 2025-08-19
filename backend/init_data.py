@@ -5,10 +5,9 @@ Populates the AI cache with live data from real APIs
 
 import asyncio
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 from backend.ai.poller import cache
-from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 

@@ -8,7 +8,8 @@ import json
 import os
 import sys
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Any
+
 import redis
 
 # Add parent directory to path for imports
@@ -19,10 +20,10 @@ class AgentOrchestrator:
     """Main orchestrator for all AI agents"""
 
     def __init__(self) -> None:
-        self.agents: Dict[str, Any] = {}
+        self.agents: dict[str, Any] = {}
         self.running: bool = False
-        self.redis_client: Optional[redis.Redis] = None
-        self.agent_tasks: List[asyncio.Task] = []
+        self.redis_client: redis.Redis | None = None
+        self.agent_tasks: list[asyncio.Task] = []
 
         # Initialize Redis connection
         try:
@@ -58,17 +59,17 @@ class AgentOrchestrator:
         """Initialize Phase 5 interdimensional agents"""
         try:
             # Import Phase 5 agents
+            from backend.agents.auranet_channel_interface import (
+                AuraNetChannelInterface,
+            )  # noqa: E402
+            from backend.agents.cosmic_pattern_recognizer import (
+                CosmicPatternRecognizer,
+            )  # noqa: E402
             from backend.agents.interdimensional_signal_decoder import (
                 InterdimensionalSignalDecoder,
             )  # noqa: E402
             from backend.agents.neuro_synchronization_engine import (
                 NeuroSynchronizationEngine,
-            )  # noqa: E402
-            from backend.agents.cosmic_pattern_recognizer import (
-                CosmicPatternRecognizer,
-            )  # noqa: E402
-            from backend.agents.auranet_channel_interface import (
-                AuraNetChannelInterface,
             )  # noqa: E402
 
             # Create Phase 5 agents
@@ -188,12 +189,12 @@ class AgentOrchestrator:
         except Exception as e:
             print(f"âŒ Error stopping agents: {e}")
 
-    async def get_agent_status(self) -> Dict[str, Any]:
+    async def get_agent_status(self) -> dict[str, Any]:
         """Get status of all agents"""
         try:
-            status: Dict[str, Any] = {}
-            agent_list: List[str] = list(self.agents.keys())  # Use List from typing
-            optional_agent_types: Optional[List[str]] = None  # Use Optional from typing
+            status: dict[str, Any] = {}
+            agent_list: list[str] = list(self.agents.keys())  # Use List from typing
+            optional_agent_types: list[str] | None = None  # Use Optional from typing
 
             # Use agent_list to track processed agents
             processed_agents = []
@@ -237,7 +238,7 @@ class AgentOrchestrator:
             print(f"âŒ Error getting agent status: {e}")
             return {}
 
-    async def broadcast_message(self, message: Dict[str, Any]) -> None:
+    async def broadcast_message(self, message: dict[str, Any]) -> None:
         """Broadcast message to all agents"""
         try:
             for agent_id, agent in self.agents.items():

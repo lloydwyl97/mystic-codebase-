@@ -4,11 +4,12 @@ Calculates optimal USD allocation per symbol based on risk, confidence, and dive
 """
 
 import logging
-import numpy as np
-from typing import Dict, List, Any
-from datetime import datetime, timezone
-import sys
 import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
+
+import numpy as np
 
 # Add backend to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -72,7 +73,7 @@ class CapitalAllocationEngine:
             logger.error(f"Failed to get signal confidence for {symbol}: {e}")
             return 0.5
 
-    def _get_overlord_decision(self, symbol: str) -> Dict[str, Any]:
+    def _get_overlord_decision(self, symbol: str) -> dict[str, Any]:
         """Get final decision from GlobalOverlord"""
         try:
             # Get recent overlord decisions from cache
@@ -106,7 +107,7 @@ class CapitalAllocationEngine:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def _get_time_optimization(self, symbol: str) -> Dict[str, Any]:
+    def _get_time_optimization(self, symbol: str) -> dict[str, Any]:
         """Get time optimization from TimeAwareTradeOptimizer"""
         try:
             # Get recent time optimizations from cache
@@ -231,8 +232,8 @@ class CapitalAllocationEngine:
             logger.error(f"Failed to calculate allocation score for {symbol}: {e}")
             return 0.5  # Default allocation score
 
-    def _apply_diversification_constraints(self, allocations: Dict[str, float],
-                                        portfolio_balance: float) -> Dict[str, float]:
+    def _apply_diversification_constraints(self, allocations: dict[str, float],
+                                        portfolio_balance: float) -> dict[str, float]:
         """Apply diversification constraints to allocations"""
         try:
             # Sort symbols by allocation score
@@ -274,7 +275,7 @@ class CapitalAllocationEngine:
             logger.error(f"Failed to apply diversification constraints: {e}")
             return allocations
 
-    def get_allocation_plan(self, portfolio_balance: float) -> Dict[str, Any]:
+    def get_allocation_plan(self, portfolio_balance: float) -> dict[str, Any]:
         """Get optimal allocation plan for portfolio"""
         try:
             logger.info(f"ðŸ’° Calculating allocation plan for ${portfolio_balance:,.2f} portfolio")
@@ -296,7 +297,7 @@ class CapitalAllocationEngine:
             else:
                 # Equal distribution if no scores
                 equal_allocation = portfolio_balance / len(self.top_symbols)
-                allocations = {symbol: equal_allocation for symbol in self.top_symbols}
+                allocations = dict.fromkeys(self.top_symbols, equal_allocation)
 
             # Apply diversification constraints
             final_allocations = self._apply_diversification_constraints(allocations, portfolio_balance)
@@ -344,7 +345,7 @@ class CapitalAllocationEngine:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def allocate_for_symbol(self, symbol: str, balance: float) -> Dict[str, Any]:
+    def allocate_for_symbol(self, symbol: str, balance: float) -> dict[str, Any]:
         """Get allocation recommendation for a specific symbol"""
         try:
             logger.info(f"ðŸ’° Calculating allocation for {symbol} with ${balance:,.2f}")
@@ -412,7 +413,7 @@ class CapitalAllocationEngine:
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
-    def get_allocation_history(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_allocation_history(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get capital allocation history"""
         try:
             # Get recent allocation signals from cache
@@ -424,7 +425,7 @@ class CapitalAllocationEngine:
             logger.error(f"Failed to get allocation history: {e}")
             return []
 
-    def get_engine_status(self) -> Dict[str, Any]:
+    def get_engine_status(self) -> dict[str, Any]:
         """Get current allocation engine status"""
         try:
             return {

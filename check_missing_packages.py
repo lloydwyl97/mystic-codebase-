@@ -3,17 +3,18 @@
 Script to identify missing packages by comparing requirements with installed packages.
 """
 
-import pkg_resources
-from typing import Dict, Set
 
-def parse_requirements_file(file_path: str) -> Set[str]:
+import pkg_resources
+
+
+def parse_requirements_file(file_path: str) -> set[str]:
     """Parse a requirements file and extract package names."""
     packages = set()
     try:
         # Try different encodings
         for encoding in ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']:
             try:
-                with open(file_path, 'r', encoding=encoding) as f:
+                with open(file_path, encoding=encoding) as f:
                     for line in f:
                         line = line.strip()
                         # Skip comments, empty lines, and section headers
@@ -39,7 +40,7 @@ def parse_requirements_file(file_path: str) -> Set[str]:
         print(f"Warning: {file_path} not found")
     return packages
 
-def get_installed_packages() -> Dict[str, str]:
+def get_installed_packages() -> dict[str, str]:
     """Get currently installed packages."""
     return {pkg.key.lower(): pkg.version for pkg in pkg_resources.working_set}
 
@@ -60,13 +61,13 @@ def main():
         print(f"  - {package}")
     
     # Check for version mismatches
-    print(f"\nChecking for version mismatches...")
+    print("\nChecking for version mismatches...")
     mismatches = []
     
     # Re-parse requirements with versions
     for encoding in ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']:
         try:
-            with open('all_requirements_combined.txt', 'r', encoding=encoding) as f:
+            with open('all_requirements_combined.txt', encoding=encoding) as f:
                 for line in f:
                     line = line.strip()
                     if (line and 

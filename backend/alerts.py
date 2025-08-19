@@ -1,9 +1,10 @@
 ﻿# alerts.py
-import requests
-import os
 import logging
+import os
+from typing import Any
+
+import requests
 from dotenv import load_dotenv
-from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 
-def send_discord_alert(message: str, embed_data: Optional[Dict[str, Any]] = None) -> bool:
+def send_discord_alert(message: str, embed_data: dict[str, Any] | None = None) -> bool:
     """
     Send a Discord alert via webhook
 
@@ -52,7 +53,7 @@ def send_discord_alert(message: str, embed_data: Optional[Dict[str, Any]] = None
         return False
 
 
-def alert_strategy_mutation(mutation_info: Dict[str, Any]) -> bool:
+def alert_strategy_mutation(mutation_info: dict[str, Any]) -> bool:
     """
     Send alert for new strategy mutation
 
@@ -96,7 +97,7 @@ def alert_strategy_mutation(mutation_info: Dict[str, Any]) -> bool:
     return send_discord_alert(message, embed_data)
 
 
-def alert_strategy_deactivation(strategy_info: Dict[str, Any]) -> bool:
+def alert_strategy_deactivation(strategy_info: dict[str, Any]) -> bool:
     """
     Send alert for strategy deactivation
 
@@ -140,7 +141,7 @@ def alert_strategy_deactivation(strategy_info: Dict[str, Any]) -> bool:
     return send_discord_alert(message, embed_data)
 
 
-def alert_trade_execution(trade_info: Dict[str, Any]) -> bool:
+def alert_trade_execution(trade_info: dict[str, Any]) -> bool:
     """
     Send alert for trade execution
 
@@ -203,7 +204,7 @@ def alert_trade_execution(trade_info: Dict[str, Any]) -> bool:
     return send_discord_alert(message, embed_data)
 
 
-def alert_daily_summary(summary_data: Dict[str, Any]) -> bool:
+def alert_daily_summary(summary_data: dict[str, Any]) -> bool:
     """
     Send daily trading summary
 
@@ -260,7 +261,7 @@ def alert_daily_summary(summary_data: Dict[str, Any]) -> bool:
     return send_discord_alert(message, embed_data)
 
 
-def alert_evolution_cycle(evolution_data: Dict[str, Any]) -> bool:
+def alert_evolution_cycle(evolution_data: dict[str, Any]) -> bool:
     """
     Send alert for evolution cycle completion
 
@@ -320,7 +321,7 @@ def alert_evolution_cycle(evolution_data: Dict[str, Any]) -> bool:
     return send_discord_alert(message, embed_data)
 
 
-def alert_system_health(health_data: Dict[str, Any]) -> bool:
+def alert_system_health(health_data: dict[str, Any]) -> bool:
     """
     Send system health alert
 

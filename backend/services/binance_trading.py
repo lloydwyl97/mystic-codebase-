@@ -8,12 +8,12 @@ Handles orders, account management, and real-time data.
 import logging
 import time
 from decimal import Decimal
-from typing import Any, Dict, Optional
+from typing import Any
 
 from binance.client import Client
 from binance.enums import (
-    ORDER_TYPE_MARKET,
     ORDER_TYPE_LIMIT,
+    ORDER_TYPE_MARKET,
     SIDE_BUY,
     SIDE_SELL,
     TIME_IN_FORCE_GTC,
@@ -44,7 +44,7 @@ class BinanceTradingService:
 
         logger.info(f"Binance US trading service initialized (testnet: {testnet})")
 
-    async def get_account_info(self) -> Dict[str, Any]:
+    async def get_account_info(self) -> dict[str, Any]:
         """Get account information and balances"""
         now = time.time()
 
@@ -101,7 +101,7 @@ class BinanceTradingService:
             logger.error(f"Error getting account info: {str(e)}")
             return {"error": str(e), "timestamp": now}
 
-    async def get_market_price(self, symbol: str) -> Dict[str, Any]:
+    async def get_market_price(self, symbol: str) -> dict[str, Any]:
         """Get current market price for a symbol"""
         try:
             ticker = self.client.get_symbol_ticker(symbol=symbol)
@@ -129,7 +129,7 @@ class BinanceTradingService:
                 "timestamp": time.time(),
             }
 
-    async def place_market_order(self, symbol: str, side: str, quantity: float) -> Dict[str, Any]:
+    async def place_market_order(self, symbol: str, side: str, quantity: float) -> dict[str, Any]:
         """Place a market order"""
         try:
             # Validate side
@@ -187,7 +187,7 @@ class BinanceTradingService:
 
     async def place_limit_order(
         self, symbol: str, side: str, quantity: float, price: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Place a limit order"""
         try:
             # Validate side
@@ -243,7 +243,7 @@ class BinanceTradingService:
                 "timestamp": time.time(),
             }
 
-    async def cancel_order(self, symbol: str, order_id: int) -> Dict[str, Any]:
+    async def cancel_order(self, symbol: str, order_id: int) -> dict[str, Any]:
         """Cancel an order"""
         try:
             result = self.client.cancel_order(symbol=symbol, orderId=order_id)
@@ -264,7 +264,7 @@ class BinanceTradingService:
                 "timestamp": time.time(),
             }
 
-    async def get_open_orders(self, symbol: Optional[str] = None) -> Dict[str, Any]:
+    async def get_open_orders(self, symbol: str | None = None) -> dict[str, Any]:
         """Get open orders"""
         try:
             orders = self.client.get_open_orders(symbol=symbol)
@@ -302,8 +302,8 @@ class BinanceTradingService:
             }
 
     async def get_order_history(
-        self, symbol: Optional[str] = None, limit: int = 100
-    ) -> Dict[str, Any]:
+        self, symbol: str | None = None, limit: int = 100
+    ) -> dict[str, Any]:
         """Get order history"""
         try:
             orders = self.client.get_all_orders(symbol=symbol, limit=limit)
@@ -346,8 +346,8 @@ class BinanceTradingService:
             }
 
     async def get_trade_history(
-        self, symbol: Optional[str] = None, limit: int = 100
-    ) -> Dict[str, Any]:
+        self, symbol: str | None = None, limit: int = 100
+    ) -> dict[str, Any]:
         """Get trade history"""
         try:
             trades = self.client.get_my_trades(symbol=symbol, limit=limit)
@@ -384,7 +384,7 @@ class BinanceTradingService:
                 "timestamp": time.time(),
             }
 
-    async def get_symbol_info(self, symbol: str) -> Dict[str, Any]:
+    async def get_symbol_info(self, symbol: str) -> dict[str, Any]:
         """Get symbol information"""
         try:
             info = self.client.get_symbol_info(symbol)
@@ -412,7 +412,7 @@ class BinanceTradingService:
                 "timestamp": time.time(),
             }
 
-    async def get_exchange_info(self) -> Dict[str, Any]:
+    async def get_exchange_info(self) -> dict[str, Any]:
         """Get exchange information"""
         try:
             info = self.client.get_exchange_info()
@@ -429,7 +429,7 @@ class BinanceTradingService:
             logger.error(f"Binance API error getting exchange info: {str(e)}")
             return {"error": str(e), "timestamp": time.time()}
 
-    async def test_connection(self) -> Dict[str, Any]:
+    async def test_connection(self) -> dict[str, Any]:
         """Test connection to Binance API"""
         try:
             # Test server time
