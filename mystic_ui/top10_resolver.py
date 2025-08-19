@@ -1,37 +1,72 @@
-﻿import time
-from typing import List, Tuple
-from mystic_ui.api_client import get_candles
+﻿from __future__ import annotations
+from typing import List, Dict, Any
 
-# Curated BinanceUS pairs (hyphen format)
-SEED = [
-    "BTC-USD","ETH-USD","BNB-USD","SOL-USD","ADA-USD",
-    "DOGE-USD","AVAX-USD","MATIC-USD","LTC-USD","ATOM-USD",
-    "XRP-USD","TRX-USD","LINK-USD","BCH-USD","DOT-USD",
-    "NEAR-USD","ETC-USD","XLM-USD","FIL-USD","ALGO-USD"
-]
+_VOLUME_KEYS = ("quoteVolume", "volume_quote", "volume_24h", "volume", "vol")
 
-_cache = {"ts": 0, "syms": []}
+def _lower(d: Dict[str, Any]) -> Dict[str, Any]:
+	return {str(k).lower(): v for k, v in d.items()}
 
-def _score_volume_24h(candles: List[dict]) -> float:
-    # Use whatever interval backend returns (often 1h). Sum last 24 entries.
-    window = candles[-24:] if len(candles) >= 24 else candles
-    return float(sum((c.get("volume") or 0) for c in window))
+def _rows(payload: Any) -> list[dict]:
+	if isinstance(payload, list):
+		return [r for r in payload if isinstance(r, dict)]
+	if isinstance(payload, dict):
+		for key in ("data", "rows", "items", "result"):
+			v = payload.get(key)
+			if isinstance(v, list):
+				return [r for r in v if isinstance(r, dict)]
+		vals = list(payload.values())
+		if vals and all(isinstance(x, dict) for x in vals):
+			return vals
+	return []
 
-def resolve_top10(timeframe: str = "1h", limit: int = 300) -> List[str]:
-    global _cache
-    now = time.time()
-    if _cache["syms"] and (now - _cache["ts"] < 300):  # 5 min cache
-        return _cache["syms"]
+def resolve_top10_binanceus(base_api: str, limit: int = 10) -> List[str]:
+	try:
+		from mystic_ui.api_client import request_json as _request_json
+	except Exception:
+		from mystic_ui.api_client import _request_json as _request_json
 
-    scored: List[Tuple[str, float]] = []
-    for sym in SEED:
-        res = get_candles(symbol=sym, timeframe=timeframe, limit=limit, exchange="binanceus")
-        candles = res.get("candles", [])
-        if candles:
-            scored.append((sym, _score_volume_24h(candles)))
+	symbols: List[str] = []
+	try:
+		global_payload = _request_json(f"{base_api}/market/global", params=None)
+		ranked: list[tuple[str, float]] = []
+		for row in _rows(global_payload):
+			L = _lower(row)
+			sym = row.get("symbol") or L.get("symbol")
+			if not sym:
+				continue
+			exch = (L.get("exchange") or "").strip().lower()
+			if exch and exch != "binanceus":
+				continue
+			if not exch and not (sym.endswith("USDT") or sym.endswith("USD")):
+				continue
+			vol = 0.0
+			for k in _VOLUME_KEYS:
+				if k in row:
+					try:
+						vol = float(row[k]); break
+					except Exception:
+						pass
+				lk = k.lower()
+				if lk in L:
+					try:
+						vol = float(L[lk]); break
+					except Exception:
+						pass
+			ranked.append((sym, vol))
+		ranked.sort(key=lambda x: x[1], reverse=True)
+		symbols = [s for s, _ in ranked[:limit]]
+	except Exception:
+		symbols = []
 
-    scored.sort(key=lambda x: x[1], reverse=True)
-    top = [s for s, _ in scored[:10]]
-    if top:
-        _cache = {"ts": now, "syms": top}
-    return top or SEED[:10]
+	if len(symbols) < limit:
+		fallback = [
+			"BTCUSDT","ETHUSDT","SOLUSDT","ADAUSDT","XRPUSDT",
+			"DOGEUSDT","LTCUSDT","BCHUSDT","LINKUSDT","TRXUSDT",
+		]
+		for s in fallback:
+			if s not in symbols:
+				symbols.append(s)
+			if len(symbols) >= limit:
+				break
+	return symbols[:limit]
+

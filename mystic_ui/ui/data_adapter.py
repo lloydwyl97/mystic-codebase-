@@ -1,4 +1,4 @@
-import os
+﻿import os
 from typing import Any, Dict, List, Optional, Mapping, Sequence, cast
 
 import requests
@@ -85,13 +85,12 @@ def fetch_candles(exchange: str = "binanceus", symbol: str = "BTCUSDT", interval
       }
     Never raises on missing keys; uses empty list on errors.
     """
-    api_base = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:9000").rstrip("/")
+    api_base = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:8000").rstrip("/")
     pair = to_dash_symbol(symbol)
     params = {"exchange": str(exchange or "").lower(), "symbol": pair, "interval": str(interval or "1h")}
 
-    # Some deployments mount FastAPI at /api and also define routes with /api/... producing /api/api/...
-    # Try that first as requested, then fall back to single /api/market/candles.
-    candidates = ["/api/api/market/candles", "/api/market/candles"]
+    # Normalize to canonical market candles endpoints only
+    candidates = ["/api/market/candles", "/market/candles"]
 
     last_status: Optional[int] = None
     last_json: Any = None
@@ -258,5 +257,6 @@ def _normalize_candle_list(items: Sequence[Any]) -> List[Dict[str, Any]]:
                 pass
 
     return out
+
 
 

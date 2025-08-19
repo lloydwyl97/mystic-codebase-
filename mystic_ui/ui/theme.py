@@ -1,4 +1,4 @@
-import streamlit as st
+﻿import streamlit as st
 
 
 def inject_global_theme() -> None:
@@ -181,5 +181,6 @@ def inject_global_theme() -> None:
 	</style>
 	"""
 	st.markdown(css, unsafe_allow_html=True)  # type: ignore[attr-defined]
+
 
 

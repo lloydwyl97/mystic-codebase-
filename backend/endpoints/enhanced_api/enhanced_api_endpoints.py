@@ -18,7 +18,7 @@ from fastapi import APIRouter, HTTPException
 # Load environment variables
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
-router = APIRouter(prefix="/api", tags=["Enhanced API"])
+router = APIRouter(prefix="", tags=["Enhanced API"])
 
 # Redis connection
 try:
@@ -253,7 +253,7 @@ try:
 except ImportError:
     portfolio_manager = None
 try:
-    from backend.ai.persistent_cache import get_persistent_cache
+    from backend.modules.ai.persistent_cache import get_persistent_cache
 except ImportError:
     get_persistent_cache = None
 

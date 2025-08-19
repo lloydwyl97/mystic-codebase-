@@ -17,6 +17,7 @@ from db_logger import (
 from reward_engine import evaluate_strategies
 from mutator import run_evolution_cycle
 from alerts import (
+from datetime import datetime, timezone
     alert_trade_execution,
     alert_strategy_mutation,
     alert_evolution_cycle,
@@ -128,7 +129,7 @@ class TradeMemoryIntegration:
                     "strategy_name": strategy_name,
                     "entry_price": entry_price,
                     "quantity": quantity,
-                    "entry_time": datetime.datetime.timezone.utcnow(),
+                    "entry_time": datetime.datetime.now(timezone.utc),
                 }
 
                 self.trade_counter += 1
@@ -168,7 +169,7 @@ class TradeMemoryIntegration:
 
             # Calculate duration
             (
-                datetime.datetime.timezone.utcnow() - trade_info["entry_time"]
+                datetime.datetime.now(timezone.utc) - trade_info["entry_time"]
             ).total_seconds() / 60
 
             # Update the trade with exit information
@@ -283,7 +284,7 @@ class TradeMemoryIntegration:
                 "quantity": info["quantity"],
                 "entry_time": info["entry_time"].isoformat(),
                 "duration_minutes": (
-                    (datetime.datetime.timezone.utcnow() - info["entry_time"]).total_seconds() / 60
+                    (datetime.datetime.now(timezone.utc) - info["entry_time"]).total_seconds() / 60
                 ),
             }
             for trade_id, info in self.active_trades.items()
@@ -344,5 +345,4 @@ def force_evaluation() -> Dict[str, Any]:
 def force_evolution() -> Dict[str, Any]:
     """Convenience function to force evolution"""
     return trade_memory.force_evolution()
-
 

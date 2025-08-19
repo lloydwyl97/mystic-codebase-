@@ -17,6 +17,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import secrets
 from functools import wraps
+from datetime import datetime, timezone
 
 logger = structlog.get_logger()
 
@@ -116,7 +117,7 @@ class RateLimiter:
             return False
 
         key = f"{endpoint}:{identifier}"
-        now = datetime.timezone.utcnow()
+        now = datetime.now(timezone.utc)
 
         if key not in self.request_counts:
             self.request_counts[key] = []
@@ -146,7 +147,7 @@ class RateLimiter:
         if key not in self.request_counts:
             return self.rate_limits[endpoint]["max_requests"]
 
-        now = datetime.timezone.utcnow()
+        now = datetime.now(timezone.utc)
         window = self.rate_limits[endpoint]["window_seconds"]
         cutoff_time = now - timedelta(seconds=window)
 
@@ -187,7 +188,7 @@ class AuditLogger:
             ip_address=ip_address,
             endpoint=endpoint,
             method=method,
-            timestamp=datetime.timezone.utcnow(),
+            timestamp=datetime.now(timezone.utc),
             details=details,
             severity=severity,
             status=status,
@@ -263,7 +264,7 @@ class AuditLogger:
 
     def get_security_summary(self) -> Dict[str, Any]:
         """Get security summary statistics"""
-        now = datetime.timezone.utcnow()
+        now = datetime.now(timezone.utc)
         last_24h = now - timedelta(hours=24)
         now - timedelta(days=7)
 
@@ -337,14 +338,14 @@ class APIKeyManager:
 
         expires_at = None
         if expires_in_days:
-            expires_at = datetime.timezone.utcnow() + timedelta(days=expires_in_days)
+            expires_at = datetime.now(timezone.utc) + timedelta(days=expires_in_days)
 
         api_key_obj = APIKey(
             key_id=key_id,
             user_id=user_id,
             key_hash=self.encryption_manager.hash_api_key(api_key),
             permissions=permissions,
-            created_at=datetime.timezone.utcnow(),
+            created_at=datetime.now(timezone.utc),
             expires_at=expires_at,
             last_used=None,
             is_active=True,
@@ -370,7 +371,7 @@ class APIKeyManager:
                 return None
 
             # Check if key is expired
-            if api_key_obj.expires_at and api_key_obj.expires_at < datetime.timezone.utcnow():
+            if api_key_obj.expires_at and api_key_obj.expires_at < datetime.now(timezone.utc):
                 return None
 
             # Verify key hash
@@ -378,7 +379,7 @@ class APIKeyManager:
                 return None
 
             # Update last used
-            api_key_obj.last_used = datetime.timezone.utcnow()
+            api_key_obj.last_used = datetime.now(timezone.utc)
 
             return api_key_obj
 
@@ -546,5 +547,4 @@ class SecurityMiddleware:
 
 # Global security instance
 security_middleware = SecurityMiddleware()
-
 

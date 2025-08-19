@@ -1,6 +1,7 @@
 ﻿import json
 import sqlite3
 from datetime import datetime
+from datetime import datetime, timezone
 
 
 def export_trade_history(output_file="trade_history.json"):
@@ -24,7 +25,7 @@ def export_performance_report(output_file="performance_report.json"):
     health = get_ai_health_report()
 
     report = {
-        "export_timestamp": datetime.timezone.utcnow().isoformat(),
+        "export_timestamp": datetime.now(timezone.utc).isoformat(),
         "performance_metrics": metrics,
         "ai_health": health,
         "summary": {
@@ -59,5 +60,4 @@ def export_csv_trades(output_file="trades.csv"):
             f.write(",".join(str(val) for val in row) + "\n")
 
     print(f"[Export] CSV trades exported to {output_file}")
-
 

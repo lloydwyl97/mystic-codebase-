@@ -7,7 +7,7 @@ Replaces the chaotic multiple router loading systems
 import logging
 
 from fastapi import APIRouter
-from backend.config import settings as cfg_settings
+# settings may be used by downstream includes; keep import local when needed
 
 logger = logging.getLogger(__name__)
 
@@ -97,8 +97,11 @@ def load_all_endpoints() -> None:
             router as live_data_router,
         )
 
+        # Canonical mount
         consolidated_router.include_router(live_data_router)
-        logger.info("âœ… Loaded live data endpoints")
+        # API-prefixed alias for UI stability (/api/live/...)
+        consolidated_router.include_router(live_data_router, prefix="/api")
+        logger.info("âœ… Loaded live data endpoints (with /api alias)")
     except ImportError as e:
         logger.warning(f"âš ï¸ Live data endpoints not available: {e}")
 
@@ -124,7 +127,7 @@ def load_all_endpoints() -> None:
     except ImportError as e:
         logger.warning(f"âš ï¸ Enhanced API endpoints not available: {e}")
 
-    # Crypto Autoengine Endpoints (router has internal '/api' prefix; results in '/api/api/*' when mounted)
+    # Crypto Autoengine Endpoints (router has internal '/api' prefix; may produce double-API paths when mounted)
     try:
         from crypto_autoengine_api import router as crypto_router
 
@@ -163,6 +166,19 @@ def load_all_endpoints() -> None:
         logger.info("âœ… Loaded missing dashboard endpoints")
     except ImportError as e:
         logger.warning(f"âš ï¸ Missing dashboard endpoints not available: {e}")
+
+    # Ensure generic candles endpoint is available under main path
+    try:
+        # Import module then read 'router' attribute dynamically to satisfy type checkers
+        from backend.endpoints.missing import missing_endpoints as missing_mod  # type: ignore[no-redef]
+        generic_missing_router = getattr(missing_mod, "router", None)
+        if generic_missing_router is not None:
+            consolidated_router.include_router(generic_missing_router)  # type: ignore[arg-type]
+            logger.info("âœ… Loaded generic missing endpoints (includes /market/candles)")
+        else:
+            raise ImportError("router not found in missing_endpoints")
+    except ImportError as e:
+        logger.warning(f"âš ï¸ Generic missing endpoints not available: {e}")
 
     try:
         from backend.endpoints.portfolio_missing.portfolio_missing_endpoints import (
@@ -311,6 +327,42 @@ def load_all_endpoints() -> None:
         logger.info("âœ… Loaded WebSocket endpoints")
     except ImportError as e:
         logger.warning(f"âš ï¸ WebSocket endpoints not available: {e}")
+
+    # Additional mounts requested
+    try:
+        from backend.endpoints.portfolio.transactions_endpoints import router as transactions_router
+        consolidated_router.include_router(transactions_router)
+        logger.info("âœ… Loaded portfolio transactions endpoints")
+    except ImportError as e:
+        logger.warning(f"âš ï¸ Portfolio transactions endpoints not available: {e}")
+
+    try:
+        from backend.endpoints.ai.ai_leaderboard_endpoints import router as ai_leaderboard_router
+        consolidated_router.include_router(ai_leaderboard_router)
+        logger.info("âœ… Loaded AI leaderboard endpoints")
+    except ImportError as e:
+        logger.warning(f"âš ï¸ AI leaderboard endpoints not available: {e}")
+
+    try:
+        from backend.endpoints.compat.trading_alias_endpoints import router as trading_alias_router
+        consolidated_router.include_router(trading_alias_router)
+        logger.info("âœ… Loaded trading alias endpoints")
+    except ImportError as e:
+        logger.warning(f"âš ï¸ Trading alias endpoints not available: {e}")
+
+    try:
+        from backend.endpoints.portfolio.risk_metrics_endpoints import router as risk_metrics_router
+        consolidated_router.include_router(risk_metrics_router)
+        logger.info("âœ… Loaded portfolio risk metrics endpoints")
+    except ImportError as e:
+        logger.warning(f"âš ï¸ Portfolio risk metrics endpoints not available: {e}")
+
+    try:
+        from backend.endpoints.signals.whale_alerts_endpoints import router as whale_alerts_router
+        consolidated_router.include_router(whale_alerts_router)
+        logger.info("âœ… Loaded whale alerts endpoints")
+    except ImportError as e:
+        logger.warning(f"âš ï¸ Whale alerts endpoints not available: {e}")
 
     logger.info(
         f"âœ… Consolidated router loaded with {len(consolidated_router.routes)} total routes"

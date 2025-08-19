@@ -23,7 +23,7 @@ from strategy_system import StrategyManager
 logger = logging.getLogger(__name__)
 
 # Create router
-router = APIRouter(prefix="/api", tags=["crypto-autoengine"])
+router = APIRouter(prefix="", tags=["crypto-autoengine"])
 
 # Add favicon endpoint to prevent 404 errors
 @router.get("/favicon.ico")
@@ -556,17 +556,7 @@ async def get_dashboard_performance() -> Dict[str, Any]:
     }
 
 
-@router.get("/alerts/recent")
-async def get_recent_alerts() -> Dict[str, Any]:
-    """Get recent system alerts"""
-    return {
-        "alerts": [
-            {"type": "info", "message": "System running normally", "timestamp": "2024-01-15T10:30:00Z"},
-            {"type": "warning", "message": "High memory usage detected", "timestamp": "2024-01-15T10:25:00Z"}
-        ],
-        "total_alerts": 2,
-        "unread_alerts": 1
-    }
+# Removed overlapping alias. Use canonical `/api/alerts/recent` from dashboard_missing endpoints.
 
 
 @router.get("/system/health")

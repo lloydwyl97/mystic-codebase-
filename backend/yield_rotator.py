@@ -8,6 +8,7 @@ and rotating back to trading.
 import time
 from typing import Dict, List, Any
 from datetime import datetime, timedelta
+from datetime import datetime, timezone
 
 
 class YieldRotator:
@@ -169,8 +170,8 @@ class YieldRotator:
             "protocol_name": protocol["name"],
             "apy": protocol["apy"],
             "lock_period": lock_period,
-            "start_time": datetime.timezone.utcnow().isoformat(),
-            "end_time": ((datetime.timezone.utcnow() + timedelta(days=lock_period)).isoformat()),
+            "start_time": datetime.now(timezone.utc).isoformat(),
+            "end_time": ((datetime.now(timezone.utc) + timedelta(days=lock_period)).isoformat()),
             "status": "active",
             "earned_yield": 0.0,
         }
@@ -211,7 +212,7 @@ class YieldRotator:
 
         # Check if lock period has ended
         end_time = datetime.fromisoformat(parking_record["end_time"])
-        current_time = datetime.timezone.utcnow()
+        current_time = datetime.now(timezone.utc)
 
         if current_time < end_time and not force:
             return {
@@ -262,7 +263,7 @@ class YieldRotator:
 
                 # Calculate current earned yield
                 start_time = datetime.fromisoformat(record["start_time"])
-                days_parked = (datetime.timezone.utcnow() - start_time).days
+                days_parked = (datetime.now(timezone.utc) - start_time).days
                 earned = record["amount"] * record["apy"] * (days_parked / 365)
                 total_earned += earned
 
@@ -348,7 +349,7 @@ class YieldRotator:
     def _log_parking_action(self, parking_record: Dict[str, Any]):
         """Log parking action."""
         log_entry = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "action": "park",
             "parking_id": parking_record["id"],
             "amount": parking_record["amount"],
@@ -361,7 +362,7 @@ class YieldRotator:
     def _log_withdrawal_action(self, parking_record: Dict[str, Any]):
         """Log withdrawal action."""
         log_entry = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "action": "withdraw",
             "parking_id": parking_record["id"],
             "amount": parking_record["amount"],
@@ -445,5 +446,4 @@ if __name__ == "__main__":
         print(f"Actions taken: {rotation['actions_taken']}")
 
     print("\nðŸŽ¯ Yield rotation testing complete!")
-
 

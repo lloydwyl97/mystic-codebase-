@@ -1,6 +1,7 @@
 ﻿import sqlite3
 from datetime import datetime, timedelta
 import os
+from datetime import datetime, timezone
 
 DB_FILE = os.getenv("TRADE_LOG_DB", "trades.db")
 
@@ -10,7 +11,7 @@ def fetch_recent_strategy_stats(hours_back=24):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
 
-    since_time = (datetime.timezone.utcnow() - timedelta(hours=hours_back)).isoformat()
+    since_time = (datetime.now(timezone.utc) - timedelta(hours=hours_back)).isoformat()
 
     c.execute(
         """
@@ -114,5 +115,4 @@ def run_mutation_cycle():
 
 if __name__ == "__main__":
     run_mutation_cycle()
-
 

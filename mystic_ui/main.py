@@ -1,4 +1,4 @@
-"""
+﻿"""
 Main Streamlit application entry point
 """
 
@@ -15,16 +15,11 @@ try:
 except Exception:
     pass
 
-# Inject theme before importing heavy pages
-from streamlit.ui.theme import inject_global_theme
-inject_global_theme()
+import streamlit as st
 
-# Import entrypoint (fallback to no-op if module missing)
-try:
-	from streamlit._pages.mystic_super_dashboard import main  # type: ignore[attr-defined]
-except Exception:
-	def main():  # type: ignore[no-redef]
-		return None
+def main() -> None:
+	st.write("Use 'streamlit run mystic_ui/app.py' to launch the main dashboard.")
 
 if __name__ == "__main__":
     main()
+

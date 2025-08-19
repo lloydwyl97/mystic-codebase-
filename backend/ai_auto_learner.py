@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 
 from simulation_logger import SimulationLogger
+from datetime import datetime, timezone
 
 MODEL_STATE_FILE = os.getenv("MODEL_STATE_PATH", "ai_model_state.json")
 
@@ -46,7 +47,7 @@ class AIAutoLearner:
 
         if improved:
             self.state["adjustment_count"] += 1
-            self.state["last_update"] = datetime.timezone.utcnow().isoformat()
+            self.state["last_update"] = datetime.now(timezone.utc).isoformat()
             self._save_state()
             print(f"[AutoLearner] AI strategy adjusted: {self.state}")
         else:
@@ -54,5 +55,4 @@ class AIAutoLearner:
 
     def get_current_threshold(self):
         return self.state["confidence_threshold"]
-
 

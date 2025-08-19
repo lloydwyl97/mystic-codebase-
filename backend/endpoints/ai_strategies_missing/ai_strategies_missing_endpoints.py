@@ -11,7 +11,7 @@ from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException
 
-from backend.ai.persistent_cache import get_persistent_cache
+from backend.modules.ai.persistent_cache import get_persistent_cache
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

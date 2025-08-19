@@ -11,6 +11,7 @@ import json
 import logging
 from datetime import datetime
 from typing import Dict, List, Any
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +107,7 @@ def calculate_health_percentage(last_update: str) -> int:
 
     try:
         last_time = datetime.fromisoformat(last_update.replace("Z", "+00:00"))
-        now = datetime.timezone.utcnow()
+        now = datetime.now(timezone.utc)
         time_diff = (now - last_time).total_seconds()
 
         # Consider healthy if updated within last 5 minutes
@@ -161,7 +162,7 @@ async def get_system_status() -> Dict[str, Any]:
         )
 
         return {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "system_status": system_status,
             "overall_health": overall_health,
             "total_modules": total_modules,
@@ -253,7 +254,7 @@ async def health_check() -> Dict[str, Any]:
     """Simple health check endpoint"""
     return {
         "status": "healthy",
-        "timestamp": datetime.timezone.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "service": "AI Trading System Status Monitor",
     }
 
@@ -268,16 +269,16 @@ async def get_module_logs(module_id: str, lines: int = 50) -> Dict[str, Any]:
         # This would normally read from actual log files
         # For now, return simulated logs
         logs = [
-            f"[{datetime.timezone.utcnow().strftime('%Y-%m-%d %H:%M:%S')}] {module_id}: Module is running",
-            f"[{datetime.timezone.utcnow().strftime('%Y-%m-%d %H:%M:%S')}] {module_id}: Processing data...",
-            f"[{datetime.timezone.utcnow().strftime('%Y-%m-%d %H:%M:%S')}] {module_id}: Task completed successfully",
+            f"[{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}] {module_id}: Module is running",
+            f"[{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}] {module_id}: Processing data...",
+            f"[{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}] {module_id}: Task completed successfully",
         ]
 
         return {
             "module": module_id,
             "logs": logs[-lines:],  # Return last N lines
             "total_lines": len(logs),
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
     except HTTPException:
@@ -290,5 +291,4 @@ async def get_module_logs(module_id: str, lines: int = 50) -> Dict[str, Any]:
             details={"module_id": module_id, "original_error": str(e)},
             original_exception=e
         )
-
 

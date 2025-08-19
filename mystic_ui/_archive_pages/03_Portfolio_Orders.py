@@ -5,14 +5,10 @@ from typing import Any, Dict, List, Optional, cast
 import pandas as pd
 import streamlit as st
 
-from streamlit.api_client import (
-	dc_get_orders,
-	dc_get_portfolio_overview,
-	dc_get_portfolio_positions,
-)
-from streamlit.state import get_app_state, render_sidebar_controls
-from streamlit.ui.data_adapter import safe_number_format
-from streamlit.ui.theme import inject_global_theme
+from mystic_ui.api_client import request_json as _req
+from mystic_ui._archive_pages.components.common_utils import get_app_state, render_sidebar_controls  # public wrapper
+from mystic_ui._archive_pages.components.common_utils import safe_number_format  # public wrapper
+from mystic_ui._archive_pages.components.common_utils import inject_global_theme  # public wrapper
 
 _st = cast(Any, st)
 
@@ -96,7 +92,7 @@ def _format_orders_table(rows: List[Dict[str, Any]]) -> pd.DataFrame:
 
 
 def main() -> None:
-	_st.set_page_config(page_title="Portfolio & Orders", layout="wide")
+	# set_page_config is centralized in mystic_ui/app.py
 	inject_global_theme()
 	render_sidebar_controls()
 	_ = get_app_state()  # ensure defaults
@@ -104,21 +100,21 @@ def main() -> None:
 	# Fetch data with guards
 	with _st.spinner("Loading portfolio & orders…"):
 		try:
-			ov_res = dc_get_portfolio_overview()
-		except Exception as e:
-			ov_res = {"data": None, "error": str(e), "route": None, "status": None}
+			ov_payload_any = _req("GET", "/api/portfolio/overview")
+		except Exception:
+			ov_payload_any = None
 		try:
-			pos_res = dc_get_portfolio_positions()
-		except Exception as e:
-			pos_res = {"data": None, "error": str(e), "route": None, "status": None}
+			pos_payload_any = _req("GET", "/api/live/trading/positions")
+		except Exception:
+			pos_payload_any = None
 		try:
-			ord_res = dc_get_orders()
-		except Exception as e:
-			ord_res = {"data": None, "error": str(e), "route": None, "status": None}
+			ord_payload_any = _req("GET", "/api/live/trading/orders")
+		except Exception:
+			ord_payload_any = None
 
-	ov_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], ov_res.get("data"))
-	pos_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], pos_res.get("data"))
-	ord_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], ord_res.get("data"))
+	ov_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], ov_payload_any if isinstance(ov_payload_any, dict) else None)
+	pos_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], pos_payload_any if isinstance(pos_payload_any, dict) else None)
+	ord_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], ord_payload_any if isinstance(ord_payload_any, dict) else None)
 
 	positions = _extract_positions(pos_payload or ov_payload)
 	orders = _extract_orders(ord_payload)
@@ -126,35 +122,11 @@ def main() -> None:
 
 	# Compact info notices if any payloads are empty/unavailable
 	if not ov_payload:
-		msg = "Portfolio overview unavailable"
-		route = ov_res.get("route")
-		status = ov_res.get("status")
-		err = ov_res.get("error")
-		if route or status:
-			msg += f" — {route or ''} {f'({status})' if status is not None else ''}"
-		if err:
-			msg += f" • {err}"
-		_st.info(msg.strip())
+		_st.info("Portfolio overview unavailable")
 	if not pos_payload:
-		msg = "Positions unavailable"
-		route = pos_res.get("route")
-		status = pos_res.get("status")
-		err = pos_res.get("error")
-		if route or status:
-			msg += f" — {route or ''} {f'({status})' if status is not None else ''}"
-		if err:
-			msg += f" • {err}"
-		_st.info(msg.strip())
+		_st.info("Positions unavailable")
 	if not ord_payload:
-		msg = "Orders unavailable"
-		route = ord_res.get("route")
-		status = ord_res.get("status")
-		err = ord_res.get("error")
-		if route or status:
-			msg += f" — {route or ''} {f'({status})' if status is not None else ''}"
-		if err:
-			msg += f" • {err}"
-		_st.info(msg.strip())
+		_st.info("Orders unavailable")
 
 	# Header strip with compact P&L metrics
 	m1, m2, m3, m4 = _st.columns(4)
@@ -195,5 +167,6 @@ def main() -> None:
 
 if __name__ == "__main__":
 	main()
+
 
 

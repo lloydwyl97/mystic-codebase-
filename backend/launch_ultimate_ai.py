@@ -11,6 +11,7 @@ import subprocess
 import threading
 from datetime import datetime
 import argparse
+from datetime import datetime, timezone
 
 
 class UltimateAILauncher:
@@ -132,7 +133,7 @@ class UltimateAILauncher:
             self.processes[service_name] = {
                 "process": process,
                 "config": service_config,
-                "start_time": datetime.timezone.utcnow(),
+                "start_time": datetime.now(timezone.utc),
             }
 
             # Wait a moment for startup
@@ -440,5 +441,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

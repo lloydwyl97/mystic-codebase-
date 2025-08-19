@@ -12,6 +12,7 @@ from typing import Any, Dict, List
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
+from datetime import datetime, timezone
 
 logger = logging.getLogger("chart_profit")
 
@@ -224,7 +225,7 @@ def generate_trading_report() -> Dict[str, Any]:
             "sell_trades": sell_trades,
             "avg_trade_size": round(avg_trade_size, 2),
             "completion_rate": (round(sell_trades / buy_trades * 100, 2) if buy_trades > 0 else 0),
-            "generated_at": datetime.timezone.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
         return report
@@ -239,5 +240,4 @@ if __name__ == "__main__":
     plot_profits()
     plot_market_performance()
     print("Charts generated successfully!")
-
 

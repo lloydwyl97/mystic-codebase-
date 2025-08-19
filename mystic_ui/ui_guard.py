@@ -1,4 +1,4 @@
-from contextlib import contextmanager
+﻿from contextlib import contextmanager
 
 @contextmanager
 def display_guard(*args, **kwargs):
@@ -17,5 +17,6 @@ def display_guard(title: str):
         st.error(f"{title}: {e.__class__.__name__}: {e}")
         with st.expander("Debug"):
             st.code("".join(traceback.format_exc())[-4000:])
+
 
 

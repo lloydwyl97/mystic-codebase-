@@ -1,6 +1,7 @@
 ﻿import sqlite3
 import os
 from datetime import datetime, timedelta
+from datetime import datetime, timezone
 
 DB_FILE = os.getenv("TRADE_LOG_DB", "trades.db")
 LOCK_FILE = "strategy_locks.txt"
@@ -11,7 +12,7 @@ def get_strategy_leaderboard(hours_back=24):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
 
-    since = (datetime.timezone.utcnow() - timedelta(hours=hours_back)).isoformat()
+    since = (datetime.now(timezone.utc) - timedelta(hours=hours_back)).isoformat()
     c.execute(
         """
         SELECT strategy, COUNT(*), AVG(profit_usd), SUM(profit_usd),
@@ -82,7 +83,7 @@ def auto_evolve():
 
 def clone_and_mutate(base_strategy):
     """Clone and mutate a winning strategy"""
-    new_name = base_strategy + "_mutant_" + datetime.timezone.utcnow().strftime("%H%M%S")
+    new_name = base_strategy + "_mutant_" + datetime.now(timezone.utc).strftime("%H%M%S")
     print(f"[MUTATE] {base_strategy} â†’ {new_name}")
     # Copy the strategy logic file or config and apply mutations
 
@@ -106,5 +107,4 @@ if __name__ == "__main__":
         print(
             f"{i}. {strat['strategy']}: ${strat['total_profit']:.2f} | WR: {strat['win_rate']:.2%}"
         )
-
 

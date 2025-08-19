@@ -53,13 +53,11 @@ if _api_client is None:
                         fallback_paths += [
                             "/strategies/performance",
                             "/api/strategies/performance",
-                            "/api/api/strategies/performance",
                         ]
                     if endpoint == "/risk/alerts":
                         fallback_paths += [
                             "/risk/metrics",
                             "/api/risk/metrics",
-                            "/api/api/risk/metrics",
                         ]
                     if endpoint == "/market/liquidity":
                         fallback_paths += [
@@ -415,12 +413,8 @@ def compute_spread_from_price_entry(entry: Dict[str, Any]) -> Optional[float]:
 
 @st.cache_data(show_spinner=False, ttl=3)
 def get_alerts(limit: int = 100) -> FetchResult:
-    payload, latency = _request("GET", "/live/notifications")
+    payload, latency = _request("GET", "/api/alerts/recent")
     data = _extract(payload)
-    if not data:
-        payload2, latency2 = _request("GET", "/api/alerts")
-        data = _extract(payload2)
-        latency = latency2
     return _finalize("dash", "get_alerts", data, latency, 0)
 
 

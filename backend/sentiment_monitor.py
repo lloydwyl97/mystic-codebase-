@@ -12,6 +12,7 @@ import os
 import logging
 from datetime import datetime
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from datetime import datetime, timezone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -79,7 +80,7 @@ def create_ping_file(sentiment_score, headline_count):
             json.dump(
                 {
                     "status": "online",
-                    "last_update": datetime.timezone.utcnow().isoformat(),
+                    "last_update": datetime.now(timezone.utc).isoformat(),
                     "sentiment_score": sentiment_score,
                     "headline_count": headline_count,
                 },
@@ -144,7 +145,7 @@ def analyze_sentiment():
 
             # Log sentiment data
             sentiment_log = {
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "sentiment_score": avg_sentiment,
                 "headline_count": len(headlines),
                 "positive_count": len([s for s in sentiments if s > 0.1]),
@@ -182,5 +183,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

@@ -8,6 +8,7 @@ import logging
 from datetime import datetime
 
 from backend.ai.poller import cache
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +23,9 @@ async def init_live_data():
 
         # Set last update timestamps
         cache.last_update = {
-            "binance": datetime.timezone.utcnow().isoformat(),
-            "coinbase": datetime.timezone.utcnow().isoformat(),
-            "coingecko": datetime.timezone.utcnow().isoformat(),
+            "binance": datetime.now(timezone.utc).isoformat(),
+            "coinbase": datetime.now(timezone.utc).isoformat(),
+            "coingecko": datetime.now(timezone.utc).isoformat(),
         }
 
         logger.info("âœ… Live data cache initialized:")
@@ -48,5 +49,4 @@ if __name__ == "__main__":
 
 def init_sample_data():
     print("Sample data initialized (placeholder).")
-
 

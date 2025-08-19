@@ -11,6 +11,7 @@ import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 import hashlib
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +36,7 @@ def generate_version_id(config: Dict[str, Any], strategy_type: str) -> str:
     config_hash = hashlib.md5(config_str.encode()).hexdigest()[:8]
 
     # Add timestamp for uniqueness
-    timestamp = datetime.timezone.utcnow().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
     return f"{strategy_type}_v{timestamp}_{config_hash}"
 
@@ -65,7 +66,7 @@ def save_strategy_version(
             "version_id": version_id,
             "strategy_type": strategy_type,
             "config": config,
-            "created_at": datetime.timezone.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "performance": performance or {},
             "metadata": metadata or {},
         }
@@ -449,5 +450,4 @@ if __name__ == "__main__":
     print(f"Found {len(versions)} versions")
 
     print("Strategy versioning system test completed!")
-
 

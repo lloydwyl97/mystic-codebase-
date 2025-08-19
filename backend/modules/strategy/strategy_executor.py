@@ -10,6 +10,7 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from backend.utils.exceptions import StrategyException
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -467,7 +468,7 @@ class StrategyExecutor:
             {
                 "action": "load",
                 "id": strategy_id,
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
         return True
@@ -567,5 +568,4 @@ class StrategyExecutor:
             "order_id": "12345",
             "action": action["action"],
         }
-
 

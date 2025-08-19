@@ -395,7 +395,7 @@ class AutobuyReporter:
         if report.recommendations:
             print("\nðŸ’¡ RECOMMENDATIONS:")
             for rec in report.recommendations:
-                print(f"   â€¢ {rec}")
+                print(f"   • {rec}")
 
         print("\n" + "=" * 80)
 

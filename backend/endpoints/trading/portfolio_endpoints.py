@@ -12,7 +12,7 @@ from fastapi import APIRouter, HTTPException
 
 # Import real services
 try:
-    from backend.ai.persistent_cache import get_persistent_cache
+    from backend.modules.ai.persistent_cache import get_persistent_cache
     from backend.modules.ai.trade_tracker import (
         get_active_trades,
         get_trade_history,

@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Dict, List
 import pandas as pd
 import os
+from datetime import datetime, timezone
 
 # Enhanced configuration
 EXPLAINER_DB = "./data/trade_explanations.db"
@@ -268,7 +269,7 @@ def get_sentiment_data(symbol: str) -> Dict:
 def analyze_trade_factors(symbol: str, trade_type: str, entry_price: float) -> List[Dict]:
     """Analyze factors that influenced the trade"""
     factors = []
-    timestamp = datetime.timezone.utcnow().isoformat()
+    timestamp = datetime.now(timezone.utc).isoformat()
 
     # Get market data
     market_data = get_market_data(symbol)
@@ -459,14 +460,14 @@ def explain_trade_enhanced():
                 "trade_type": "BUY",
                 "entry_price": 45000.0,
                 "quantity": 0.1,
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             },
             {
                 "symbol": "ETHUSDT",
                 "trade_type": "SELL",
                 "entry_price": 3200.0,
                 "quantity": 1.0,
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             },
         ]
 
@@ -533,5 +534,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
 

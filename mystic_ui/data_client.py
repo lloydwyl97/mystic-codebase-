@@ -1,8 +1,8 @@
-import os
+﻿import os
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 import requests
 
-API = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:9000").rstrip("/")
+API = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:8000").rstrip("/")
 
 # ----------------- helpers -----------------
 def _to_int(x: Any, default: int) -> int:
@@ -201,11 +201,9 @@ def get_alerts(limit: int = 100) -> Optional[Any]:
     """
     p = {"limit": int(limit)}
     return _first_ok([
-        # Preferred live notifications endpoint
-        ("/api/live/notifications", None),
-        # Recent alerts under dashboard endpoints
+        # Prefer canonical recent alerts
         ("/api/alerts/recent", p),
-        # Generic alerts collections
+        # Generic alerts collections (legacy)
         ("/api/alerts", None),
         ("/alerts", p),
     ])
@@ -237,3 +235,4 @@ def get_system_health_detailed() -> Optional[Any]:
         ("/system/health", None),
         ("/health/comprehensive", None),
     ])
+

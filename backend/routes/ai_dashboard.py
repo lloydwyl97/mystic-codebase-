@@ -482,6 +482,7 @@ async def get_ai_dashboard_html() -> str:
         <!DOCTYPE html>
         <html>
         <head>
+    <meta charset=\"utf-8\">
             <title>AI Trading Dashboard</title>
             <style>
                 body {{ font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }}

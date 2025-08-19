@@ -1,3 +1,8 @@
+# NOTE: This file was deliberately disabled (renamed with .disabled) to avoid a duplicate build
+# system definition in the repository. The root-level pyproject.toml is the single source of truth
+# for packaging, dependencies, lint/format config, and scripts. If you need to re-enable this file,
+# confirm there is a strong reason to maintain a separate build system for the backend package and
+# ensure versions remain consistent with the root configuration.
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"

@@ -8,3 +8,9 @@ logs/
 .env.*
 cache.db
 .vscode/
+
+# backup noise
+*.bak_cursor
+
+# frontend build
+/frontend/dist/

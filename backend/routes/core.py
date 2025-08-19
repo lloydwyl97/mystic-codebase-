@@ -125,6 +125,7 @@ async def comprehensive_health_check():
 
 
 @router.get("/features")
+@router.get("/api/features")
 async def get_available_features():
     """Get available platform features with live status"""
     features = [

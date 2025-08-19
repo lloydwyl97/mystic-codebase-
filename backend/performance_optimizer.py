@@ -13,6 +13,7 @@ import structlog
 import aiohttp
 import aioredis
 from functools import wraps
+from datetime import datetime, timezone
 
 logger = structlog.get_logger()
 
@@ -62,7 +63,7 @@ class AdvancedCache:
             # Try memory cache first
             if key in self.memory_cache:
                 item = self.memory_cache[key]
-                if item["expires_at"] > datetime.timezone.utcnow():
+                if item["expires_at"] > datetime.now(timezone.utc):
                     self.cache_stats["hits"] += 1
                     return item["value"]
                 else:
@@ -76,7 +77,7 @@ class AdvancedCache:
                     # Store in memory cache for faster access
                     self.memory_cache[key] = {
                         "value": value,
-                        "expires_at": (datetime.timezone.utcnow() + timedelta(seconds=60)),
+                        "expires_at": (datetime.now(timezone.utc) + timedelta(seconds=60)),
                     }
                     return value
 
@@ -95,7 +96,7 @@ class AdvancedCache:
             # Set in memory cache
             self.memory_cache[key] = {
                 "value": value,
-                "expires_at": (datetime.timezone.utcnow() + timedelta(seconds=ttl)),
+                "expires_at": (datetime.now(timezone.utc) + timedelta(seconds=ttl)),
             }
 
             # Set in Redis cache
@@ -134,7 +135,7 @@ class AdvancedCache:
 
     def _cleanup_memory_cache(self):
         """Clean up expired items from memory cache"""
-        now = datetime.timezone.utcnow()
+        now = datetime.now(timezone.utc)
         expired_keys = [key for key, item in self.memory_cache.items() if item["expires_at"] <= now]
 
         for key in expired_keys:
@@ -244,7 +245,7 @@ class AsyncTaskQueue:
             "func": task_func,
             "args": args,
             "kwargs": kwargs,
-            "created_at": datetime.timezone.utcnow(),
+            "created_at": datetime.now(timezone.utc),
         }
 
         await self.task_queue.put(task_data)
@@ -403,7 +404,7 @@ class PerformanceMonitor:
         queue_size = 5
 
         return PerformanceMetrics(
-            timestamp=datetime.timezone.utcnow(),
+            timestamp=datetime.now(timezone.utc),
             cpu_usage=cpu_usage,
             memory_usage=memory_usage,
             disk_io=disk_io_metrics,
@@ -420,7 +421,7 @@ class PerformanceMonitor:
 
     def get_metrics_history(self, hours: int = 24) -> List[PerformanceMetrics]:
         """Get metrics history for specified hours"""
-        cutoff_time = datetime.timezone.utcnow() - timedelta(hours=hours)
+        cutoff_time = datetime.now(timezone.utc) - timedelta(hours=hours)
         return [metrics for metrics in self.metrics_history if metrics.timestamp >= cutoff_time]
 
     def get_performance_summary(self) -> Dict[str, Any]:
@@ -619,5 +620,4 @@ class PerformanceOptimizer:
 
 # Global performance optimizer instance
 performance_optimizer = PerformanceOptimizer()
-
 

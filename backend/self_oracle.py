@@ -31,7 +31,7 @@ def fetch_real_world_trigger() -> bool:
         headlines = [x["title"] for x in news["news"]]
 
         if any("ban" in h.lower() or "regulation" in h.lower() for h in headlines):
-            trigger_msg = "[ORACLE] Detected regulation news â€” evolving AI strat params."
+            trigger_msg = "[ORACLE] Detected regulation news — evolving AI strat params."
             print(trigger_msg)
             logger.warning(trigger_msg)
             return True

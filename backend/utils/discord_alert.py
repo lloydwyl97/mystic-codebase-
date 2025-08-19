@@ -11,6 +11,7 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 import requests
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -448,7 +449,7 @@ class DiscordNotifier:
                     "inline": False,
                 }
             ],
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "footer": {"text": "Mystic Trading Platform - Error Alert"},
         }
 
@@ -501,7 +502,7 @@ class DiscordNotifier:
                     "inline": True,
                 },
             ],
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "footer": {"text": "Mystic Trading Platform - System Status"},
         }
 
@@ -547,5 +548,4 @@ discord_notifier = DiscordNotifier()
 def send_discord_alert(strategy_name: str, results: Dict[str, Any]) -> bool:
     """Simple Discord alert function for backward compatibility"""
     return discord_notifier.send_strategy_promoted_alert(strategy_name, results)
-
 

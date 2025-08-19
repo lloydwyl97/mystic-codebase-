@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
+from datetime import datetime, timezone
 
 # Enhanced configuration
 REAPER_DB = "./data/strategy_reaper.db"
@@ -245,7 +246,7 @@ def evaluate_strategy_lifecycle(performance: Dict) -> str:
     score = performance["performance_score"]
     trades = performance["total_trades"]
     age_days = (
-        datetime.timezone.utcnow() - datetime.fromisoformat(performance["created_date"])
+        datetime.now(timezone.utc) - datetime.fromisoformat(performance["created_date"])
     ).days
 
     if score > 0.8 and trades > 20:
@@ -282,7 +283,7 @@ def should_reap_strategy(performance: Dict, thresholds: Dict) -> Tuple[bool, str
 
     # Check age for underperforming strategies
     age_days = (
-        datetime.timezone.utcnow() - datetime.fromisoformat(performance["created_date"])
+        datetime.now(timezone.utc) - datetime.fromisoformat(performance["created_date"])
     ).days
     if age_days > 60 and performance["performance_score"] < 0.4:
         reasons.append(f"Old and underperforming: {age_days} days")
@@ -302,7 +303,7 @@ def reap_strategy(strategy_file: str, reason: str, performance: Dict):
 
         backup_file = os.path.join(
             backup_dir,
-            f"reaped_{os.path.basename(strategy_file)}_{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            f"reaped_{os.path.basename(strategy_file)}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
         )
 
         # Copy file to backup
@@ -393,7 +394,7 @@ def reap_strategies_enhanced():
 
                     # Save reaper action
                     action = {
-                        "timestamp": datetime.timezone.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "action_type": "reap",
                         "strategy_name": performance["strategy_name"],
                         "reason": reason,
@@ -406,7 +407,7 @@ def reap_strategies_enhanced():
                         "strategy_name": performance["strategy_name"],
                         "phase": "reaped",
                         "start_date": performance["created_date"],
-                        "end_date": datetime.timezone.utcnow().isoformat(),
+                        "end_date": datetime.now(timezone.utc).isoformat(),
                         "performance_metrics": performance,
                         "notes": f"Reaped due to: {reason}",
                     }
@@ -433,7 +434,7 @@ def reap_strategies_enhanced():
 
                             # Save action
                             action = {
-                                "timestamp": (datetime.timezone.utcnow().isoformat()),
+                                "timestamp": (datetime.now(timezone.utc).isoformat()),
                                 "action_type": "optimize",
                                 "strategy_name": strategy_name,
                                 "reason": reason,
@@ -461,6 +462,5 @@ def reap_strategies_enhanced():
 while True:
     reap_strategies_enhanced()
     time.sleep(REAPER_INTERVAL)
-
 
 

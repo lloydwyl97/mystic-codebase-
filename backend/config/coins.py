@@ -1,16 +1,15 @@
-﻿"""Stable re-export of feature flags for dashboard.
-
-Allows imports such as `from backend.config.coins import FEATURED_EXCHANGE, FEATURED_SYMBOLS`
-while keeping the single source of truth in the repo-level `config/coins.py`.
+﻿"""
+Export coin config from repo-level config/coins.py with safe defaults.
 """
+from typing import List
+
+DEFAULT_FEATURED_EXCHANGE = "binanceus"
+DEFAULT_FEATURED_SYMBOLS: List[str] = ["BTCUSDT", "ETHUSDT"]
 
 try:
-    # Primary source of truth
-    from backend.config.coins import FEATURED_EXCHANGE, FEATURED_SYMBOLS  # type: ignore
-except Exception as e:  # pragma: no cover - safety fallback
-    # Conservative defaults if root config fails to import
-    FEATURED_EXCHANGE = "binanceus"
-    FEATURED_SYMBOLS = ["BTCUSDT", "ETHUSDT"]
-
-
-
+    from config.coins import FEATURED_EXCHANGE as FEATURED_EXCHANGE  # type: ignore[no-redef]
+    from config.coins import FEATURED_SYMBOLS as FEATURED_SYMBOLS  # type: ignore[no-redef]
+except Exception:
+    # Hard failover to avoid silent defaults; but clearly mark source
+    FEATURED_EXCHANGE = DEFAULT_FEATURED_EXCHANGE  # type: ignore[assignment]
+    FEATURED_SYMBOLS = DEFAULT_FEATURED_SYMBOLS  # type: ignore[assignment]

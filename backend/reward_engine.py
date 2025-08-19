@@ -6,6 +6,7 @@ from db_logger import get_session
 import datetime
 import logging
 from typing import List, Dict, Any
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ def evaluate_strategies(min_trades: int = 5, days: int = 7) -> Dict[str, Any]:
     session = get_session()
     try:
         strategies = session.query(Strategy).filter_by(is_active=True).all()
-        now = datetime.datetime.timezone.utcnow()
+        now = datetime.datetime.now(timezone.utc)
         cutoff_date = now - datetime.timedelta(days=days)
 
         evaluation_results = {
@@ -236,7 +237,7 @@ def deactivate_strategy(strategy_id: int) -> bool:
         strategy = session.query(Strategy).filter_by(id=strategy_id).first()
         if strategy:
             strategy.is_active = False
-            strategy.updated_at = datetime.datetime.timezone.utcnow()
+            strategy.updated_at = datetime.datetime.now(timezone.utc)
             session.commit()
             logger.info(f"Deactivated strategy: {strategy.name}")
             return True
@@ -262,7 +263,7 @@ def get_strategy_performance_history(strategy_id: int, days: int = 30) -> List[D
     """
     session = get_session()
     try:
-        cutoff_date = datetime.datetime.timezone.utcnow() - datetime.timedelta(days=days)
+        cutoff_date = datetime.datetime.now(timezone.utc) - datetime.timedelta(days=days)
 
         performances = (
             session.query(StrategyPerformance)
@@ -309,5 +310,4 @@ def run_daily_evaluation() -> Dict[str, Any]:
         f"Daily evaluation completed. Top performers: {len(top_performers)}, Poor performers: {len(poor_performers)}"
     )
     return results
-
 

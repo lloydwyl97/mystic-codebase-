@@ -402,7 +402,7 @@ class LiveMarketDataService:
         """Get market summary from persistent cache"""
         try:
             # Get real market summary from persistent cache
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
             symbols = []

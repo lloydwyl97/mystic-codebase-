@@ -6,6 +6,7 @@ from typing import Dict, List
 import sqlite3
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
+from datetime import datetime, timezone
 
 # Enhanced configuration
 ANOMALY_DB = "./data/anomaly_detection.db"
@@ -276,7 +277,7 @@ def detect_price_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
             anomaly_type = "price_spike" if latest_data["price_change"] > 0.05 else "price_crash"
 
             anomaly = {
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "symbol": symbol,
                 "anomaly_score": abs(latest_score),
                 "anomaly_type": anomaly_type,
@@ -310,7 +311,7 @@ def detect_volume_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
         # Detect volume spikes
         if volume_ratio > 3.0:  # 3x average volume
             anomaly = {
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "symbol": symbol,
                 "volume_ratio": volume_ratio,
                 "avg_volume": avg_volume,
@@ -342,7 +343,7 @@ def detect_pattern_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
             recent_highs = highs.tail(20)
             if len(recent_highs[recent_highs > recent_highs.quantile(0.8)]) >= 2:
                 anomaly = {
-                    "timestamp": datetime.timezone.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "symbol": symbol,
                     "pattern_type": "double_top",
                     "confidence": 0.7,
@@ -358,7 +359,7 @@ def detect_pattern_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
 
         if current_price < support_level * 0.98:  # Break below support
             anomaly = {
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "symbol": symbol,
                 "pattern_type": "support_break",
                 "confidence": 0.8,
@@ -369,7 +370,7 @@ def detect_pattern_anomalies(df: pd.DataFrame, symbol: str) -> List[Dict]:
 
         elif current_price > resistance_level * 1.02:  # Break above resistance
             anomaly = {
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "symbol": symbol,
                 "pattern_type": "resistance_break",
                 "confidence": 0.8,
@@ -443,5 +444,4 @@ def monitor_anomalies_enhanced():
 while True:
     monitor_anomalies_enhanced()
     time.sleep(CHECK_INTERVAL)
-
 

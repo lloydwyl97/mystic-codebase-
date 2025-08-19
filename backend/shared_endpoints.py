@@ -25,7 +25,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import BaseModel, Field
 from backend.modules.trading.order_manager import OrderManager, Order
-from backend.modules.metrics.analytics_engine import AnalyticsEngine
+from backend.modules.ai.analytics_engine import AnalyticsEngine
 from backend.utils.exceptions import RateLimitException, TradingException
 from backend.middleware.rate_limiter import rate_limit
 
@@ -70,7 +70,7 @@ def create_portfolio_overview_endpoint(prefix: str = "/api"):
         """Get portfolio overview and performance"""
         try:
             # Get real portfolio data from AI services
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
 
@@ -116,7 +116,7 @@ def create_portfolio_positions_endpoint(prefix: str = "/api"):
         """Get portfolio positions"""
         try:
             # Get real portfolio positions from AI services
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
 
@@ -174,7 +174,7 @@ def create_portfolio_analysis_endpoint(prefix: str = "/api"):
         """Get comprehensive portfolio analysis"""
         try:
             # Get real portfolio analysis from AI services
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             get_persistent_cache()
 
@@ -227,7 +227,7 @@ def create_orders_endpoint(prefix: str = "/api"):
         """Get orders with optional filtering"""
         try:
             # Get real orders from trading services
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             get_persistent_cache()
 
@@ -360,7 +360,7 @@ def create_exchanges_endpoint(prefix: str = "/api"):
         """Get available exchanges"""
         try:
             # Get real exchange status from services
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
 
@@ -403,7 +403,7 @@ def create_exchange_account_endpoint(prefix: str = "/api"):
         """Get exchange account information"""
         try:
             # Get real account data from exchanges
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
 
@@ -528,7 +528,7 @@ def create_multi_exchange_market_data_endpoint(prefix: str = "/api"):
                     if isinstance(data, dict):
                         return data
                     else:
-                        from backend.ai.persistent_cache import get_persistent_cache
+                        from backend.modules.ai.persistent_cache import get_persistent_cache
 
                         cache = get_persistent_cache()
                         live_data = cache.get_binance().get(symbol) or cache.get_coinbase().get(
@@ -1241,7 +1241,7 @@ def create_market_data_endpoint(prefix: str = "/api"):
                     if isinstance(data, dict):
                         return data
                     else:
-                        from backend.ai.persistent_cache import get_persistent_cache
+                        from backend.modules.ai.persistent_cache import get_persistent_cache
 
                         cache = get_persistent_cache()
                         live_data = cache.get_binance().get(symbol) or cache.get_coinbase().get(
@@ -1293,7 +1293,7 @@ def create_all_market_data_endpoint(prefix: str = "/api"):
     async def get_all_market_data() -> Dict[str, Any]:
         try:
             # Get real market data from persistent cache
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
             market_data = {}
@@ -1350,7 +1350,7 @@ def create_market_summary_endpoint(prefix: str = "/api"):
     async def get_market_summary() -> Dict[str, Any]:
         try:
             # Get real market summary from persistent cache
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
             symbols = []

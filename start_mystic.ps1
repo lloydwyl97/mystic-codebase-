@@ -1,32 +1,38 @@
-﻿$ErrorActionPreference = "Stop"
-$root = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location $root
+﻿# start_mystic.ps1
+$ErrorActionPreference = "Stop"
+$ROOT = Split-Path -Parent $MyInvocation.MyCommand.Path
+$base = "http://127.0.0.1:9000"
 
-# Env that both processes inherit
-$env:PYTHONPATH = $root
-$env:MYSTIC_BACKEND = "http://127.0.0.1:9000"
-if (-not $env:COMPREHENSIVE_MAX_PER_EXCHANGE) { $env:COMPREHENSIVE_MAX_PER_EXCHANGE = "10" }
+# Free stuck ports
+foreach ($port in 9000,8501) {
+  Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue |
+    Select-Object -ExpandProperty OwningProcess -Unique |
+    ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }
+}
 
-$py        = Join-Path $root "venv\Scripts\python.exe"
-$streamlit = Join-Path $root "venv\Scripts\streamlit.exe"
-$logs      = Join-Path $root "logs"
-New-Item -ItemType Directory -Force -Path $logs | Out-Null
+# --- Backend ---
+$backendCmd = @"
+cd "$ROOT"; & "$ROOT\venv\Scripts\Activate.ps1";
+`$env:PYTHONPATH="$ROOT";
+`$env:COMPREHENSIVE_MAX_PER_EXCHANGE="10";
+uvicorn backend.main:app --host 127.0.0.1 --port 9000
+"@
+Start-Process powershell -WindowStyle Minimized -ArgumentList @('-NoExit','-Command', $backendCmd)
 
-# Backend (no --reload for background)
-$backendArgs = @("-m","uvicorn","backend.main:app","--host","127.0.0.1","--port","9000")
-$bp = Start-Process -FilePath $py -ArgumentList $backendArgs `
-  -WorkingDirectory $root -WindowStyle Hidden -PassThru `
-  -RedirectStandardOutput (Join-Path $logs "backend.out.log") `
-  -RedirectStandardError  (Join-Path $logs "backend.err.log")
+# Wait briefly for backend
+$ok = $false
+for ($i=0; $i -lt 30; $i++) {
+  try { Invoke-RestMethod "$base/openapi.json" -TimeoutSec 2 | Out-Null; $ok=$true; break } catch { Start-Sleep -Milliseconds 500 }
+}
 
-Start-Sleep -Seconds 2
+# --- UI ---
+$uiCmd = @"
+cd "$ROOT"; & "$ROOT\venv\Scripts\Activate.ps1";
+`$env:PYTHONPATH="$ROOT";
+`$env:MYSTIC_BACKEND="$base";
+"$ROOT\venv\Scripts\streamlit.exe" run "$ROOT\mystic_ui\app.py" --server.port 8501 --server.headless true
+"@
+Start-Process powershell -WindowStyle Minimized -ArgumentList @('-NoExit','-Command', $uiCmd)
 
-# UI
-$uiArgs = @("run",(Join-Path $root "mystic_ui\app.py"),"--server.port","8501","--server.headless","true")
-$sp = Start-Process -FilePath $streamlit -ArgumentList $uiArgs `
-  -WorkingDirectory $root -WindowStyle Hidden -PassThru `
-  -RedirectStandardOutput (Join-Path $logs "ui.out.log") `
-  -RedirectStandardError  (Join-Path $logs "ui.err.log")
-
-"backend=$($bp.Id)`nui=$($sp.Id)" | Set-Content (Join-Path $logs "pids.txt")
-Write-Host "Started. Backend PID=$($bp.Id)  UI PID=$($sp.Id). Logs in $logs"
+Start-Process "http://127.0.0.1:8501/"
+Write-Host "Mystic started. Backend: $base  UI: http://127.0.0.1:8501/"

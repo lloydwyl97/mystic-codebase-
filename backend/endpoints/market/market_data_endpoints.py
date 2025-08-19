@@ -16,7 +16,7 @@ from backend.config.coins import FEATURED_SYMBOLS
 
 # Import real services
 try:
-    from backend.ai.persistent_cache import get_persistent_cache
+    from backend.modules.ai.persistent_cache import get_persistent_cache
     from backend.modules.data.binance_data import BinanceDataFetcher as BinanceData  # type: ignore[import-not-found]
     from backend.modules.data.coinbase_data import CoinbaseData  # type: ignore[import-not-found]
     from backend.services.coingecko_service import CoinGeckoService

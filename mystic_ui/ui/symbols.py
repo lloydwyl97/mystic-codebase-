@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import os
 import threading
@@ -7,8 +7,8 @@ from typing import Any, Dict, List, Optional, Tuple, cast
 
 import streamlit as st
 
-from streamlit.ui.data_adapter import fetch_candles
-from streamlit.top10_resolver import resolve_top10
+from mystic_ui import api_client
+from mystic_ui.top10_resolver import resolve_top10_binanceus
 
 
 # Legacy fallback list retained but unused by default; kept to satisfy "never remove unless it's upgraded"
@@ -62,14 +62,14 @@ def _compute_working_symbols(
     if force_list:
         candidates = force_list
     else:
-        candidates = resolve_top10(exchange=exchange, timeframe="1m") or list(preferred or BINANCEUS_ORDERED)
+        base_api = os.getenv("MYSTIC_BACKEND", "http://127.0.0.1:9000")
+        candidates = resolve_top10_binanceus(base_api, limit=target_count * 2) or list(preferred or BINANCEUS_ORDERED)
 
     working: List[str] = []
     for sym in candidates:
         try:
-            res = fetch_candles(exchange=exchange, symbol=sym, interval="1m")
-            candles = res.get("candles")
-            if candles:
+            data = api_client.get_candles(sym, exchange=exchange, interval="1m", limit=120)
+            if data.get("timestamps") or data.get("opens"):
                 working.append(sym)
                 if not force_list and len(working) >= target_count:
                     break
@@ -167,7 +167,7 @@ def render_symbol_strip() -> List[str]:
         if dropped:
             _st.warning(
                 f"Dropped forced symbols with no working candles: {', '.join(dropped)}",
-                icon="⚠️",
+                icon="âš ï¸",
             )
 
     # Default current symbol if missing or invalid
@@ -194,56 +194,17 @@ def render_symbol_strip() -> List[str]:
             _st.session_state["timeframe"] = "1h"
             _st.rerun()
     with right:
-        if _st.button("↻ Refresh Top 10", key="refresh_top10", use_container_width=True):
-            try:
-                resolve_top10(exchange="binanceus", timeframe="1m", force_refresh=True)
-            finally:
-                # Clear our local cache and re-run; background refresh will repopulate
-                _symbols_cache["data"] = None
-                _symbols_cache["ts"] = 0.0
-                _st.rerun()
+        if _st.button("â†» Refresh Top 10", key="refresh_top10", use_container_width=True):
+            # Clear our local cache and re-run; background refresh will repopulate
+            _symbols_cache["data"] = None
+            _symbols_cache["ts"] = 0.0
+            _st.rerun()
 
     # Debug expander: shows accepted Top 10 with volumes and rejected with reasons
     with _st.expander("Debug / Top 10 Discovery", expanded=False):
-        try:
-            dbg_any = resolve_top10(exchange="binanceus", timeframe="1m", debug=True)
-            debug: Dict[str, Any] = cast(Dict[str, Any], dbg_any)
-            accepted = cast(List[Dict[str, Any]], debug.get("accepted", []))
-            rejected = cast(List[Dict[str, Any]], debug.get("rejected", []))
-
-            _st.subheader("Accepted (Top 10)")
-            if accepted:
-                acc_rows = [
-                    {
-                        "Rank": a.get("rank"),
-                        "Symbol": a.get("symbol"),
-                        "24h Quote Vol": round(float(a.get("quote_volume", 0.0)), 2),
-                        "24h Base Vol": round(float(a.get("base_volume", 0.0)), 2),
-                    }
-                    for a in accepted
-                ]
-                _st.table(acc_rows)
-            else:
-                _st.caption("No accepted symbols.")
-
-            _st.subheader("Rejected")
-            if rejected:
-                rej_rows = [
-                    {
-                        "Symbol": r.get("symbol"),
-                        "Reason": r.get("reason"),
-                    }
-                    for r in rejected
-                ]
-                _st.table(rej_rows)
-            else:
-                _st.caption("No rejections recorded.")
-
-            if err := debug.get("http_error"):
-                _st.error(str(err))
-        except Exception as e:
-            _st.exception(e)
+        _st.caption("Resolver switched to lightweight API-based Top 10 for BinanceUS.")
 
     return symbols
+
 
 

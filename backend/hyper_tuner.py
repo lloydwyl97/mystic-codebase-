@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Import your existing modules
 from strat_versions import save_strategy_version
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -187,7 +188,7 @@ class HyperparameterTuner:
                 "win_rate": round(win_rate, 4),
                 "trades_count": trades_count,
                 "sharpe_ratio": round(sharpe_ratio, 4),
-                "evaluation_time": datetime.timezone.utcnow().isoformat(),
+                "evaluation_time": datetime.now(timezone.utc).isoformat(),
             }
 
         except Exception as e:
@@ -258,7 +259,7 @@ class HyperparameterTuner:
         if best_configs and save_best:
             best_config = best_configs[0]
             config_name = (
-                f"{strategy_type}_optimized_{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}"
+                f"{strategy_type}_optimized_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
             )
             save_strategy_version(config_name, best_config)
             print(f"ðŸ’¾ Saved best config as: {config_name}")
@@ -346,7 +347,7 @@ class HyperparameterTuner:
         if best_configs and save_best:
             best_config = best_configs[-1]
             config_name = (
-                f"{strategy_type}_genetic_{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}"
+                f"{strategy_type}_genetic_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
             )
             save_strategy_version(config_name, best_config)
             print(f"ðŸ’¾ Saved best config as: {config_name}")
@@ -416,7 +417,7 @@ class HyperparameterTuner:
         if best_configs and save_best:
             best_config = best_configs[0]
             config_name = (
-                f"{strategy_type}_bayesian_{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}"
+                f"{strategy_type}_bayesian_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
             )
             save_strategy_version(config_name, best_config)
             print(f"ðŸ’¾ Saved best config as: {config_name}")
@@ -505,5 +506,4 @@ if __name__ == "__main__":
             print(f"âŒ {method.upper()} failed: {e}")
 
     print("\nðŸŽ‰ Optimization testing complete!")
-
 

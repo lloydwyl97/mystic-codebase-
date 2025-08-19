@@ -376,32 +376,8 @@ async def get_live_bot_status():
 
 
 # ============================================================================
-# LIVE NOTIFICATIONS
+# LIVE NOTIFICATIONS (removed alias: use /api/alerts/recent)
 # ============================================================================
-
-
-@router.get("/api/live/notifications")
-async def get_live_notifications():
-    """Get live notifications from system events (live)"""
-    try:
-        if alert_manager:
-            notifications = await alert_manager.get_recent_alerts(20)
-        else:
-            raise HTTPException(
-                status_code=503, detail="No live notifications data source available."
-            )
-        return {
-            "status": "success",
-            "data": {
-                "notifications": notifications,
-                "unread_count": len([n for n in notifications if not n.get("read", False)]),
-                "last_updated": datetime.now(timezone.utc).isoformat(),
-                "source": "system_events",
-            },
-        }
-    except Exception as e:
-        logger.error(f"Error getting live notifications: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error getting notifications: {str(e)}")
 
 
 # ============================================================================

@@ -1,4 +1,4 @@
-# --- MystIC path bootstrap (put at very top) ---
+﻿# --- MystIC path bootstrap (put at very top) ---
 import os, sys
 _ROOT    = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 _ST      = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -20,10 +20,9 @@ from typing import Any, Dict, cast
 from backend.config.coins import FEATURED_EXCHANGE, FEATURED_SYMBOLS
 from data_client import get_ohlcv, get_trades
 
-API = os.environ.get("MYSTIC_BACKEND", "http://127.0.0.1:9000")
+API = os.environ.get("MYSTIC_BACKEND", "http://127.0.0.1:8000")
 _st = cast(Any, st)
-_st.set_page_config(page_title=f"Mystic — {FEATURED_EXCHANGE.upper()}", layout="wide")
-_st.title(f"{FEATURED_EXCHANGE.upper()} — Live AI Dashboard")
+_st.title(f"{FEATURED_EXCHANGE.upper()} â€” Live AI Dashboard")
 
 
 def chart_one(symbol: str):
@@ -40,9 +39,9 @@ def chart_one(symbol: str):
             err = meta.get("error")
             msg = "OHLCV unavailable"
             if route or status is not None:
-                msg += f" — {route or ''} {f'({status})' if status is not None else ''}"
+                msg += f" â€” {route or ''} {f'({status})' if status is not None else ''}"
             if err:
-                msg += f" • {err}"
+                msg += f" â€¢ {err}"
             _st.info(msg.strip())
             candles = None
         else:
@@ -85,9 +84,9 @@ def chart_one(symbol: str):
             err = meta.get("error")
             msg = "Trades unavailable"
             if route or status is not None:
-                msg += f" — {route or ''} {f'({status})' if status is not None else ''}"
+                msg += f" â€” {route or ''} {f'({status})' if status is not None else ''}"
             if err:
-                msg += f" • {err}"
+                msg += f" â€¢ {err}"
             _st.info(msg.strip())
         else:
             payload_tr: Any = res_tr
@@ -98,7 +97,7 @@ def chart_one(symbol: str):
                     trades = t_any
             elif isinstance(payload_tr, list):
                 trades = payload_tr
-        _st.caption(f"{symbol} — recent trades ({len(trades)})")
+        _st.caption(f"{symbol} â€” recent trades ({len(trades)})")
         if trades:
             _st.dataframe(trades, height=460, use_container_width=True)
         else:
@@ -106,7 +105,7 @@ def chart_one(symbol: str):
 
 
 def ai_explain(symbol: str):
-    _st.subheader(f"AI — What it used for {symbol}")
+    _st.subheader(f"AI â€” What it used for {symbol}")
     try:
         r = requests.get(f"{API}/api/ai/explain/attribution", params={"symbol": symbol}, timeout=6)
         data: Any = r.json()
@@ -134,5 +133,6 @@ for sym in FEATURED_SYMBOLS:
     chart_one(sym)
     ai_explain(sym)
     _st.divider()
+
 
 

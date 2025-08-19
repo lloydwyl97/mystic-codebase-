@@ -10,6 +10,7 @@ import time
 import logging
 import os
 from datetime import datetime
+from datetime import datetime, timezone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -33,7 +34,7 @@ def create_ping_file(stablecoin_ratio, total_value, rebalance_needed):
             json.dump(
                 {
                     "status": "online",
-                    "last_update": datetime.timezone.utcnow().isoformat(),
+                    "last_update": datetime.now(timezone.utc).isoformat(),
                     "stablecoin_ratio": stablecoin_ratio,
                     "total_value": total_value,
                     "rebalance_needed": rebalance_needed,
@@ -61,7 +62,7 @@ def load_portfolio():
                     "DOT": 50,
                 },
                 "total_value_usdt": 15000,
-                "last_updated": datetime.timezone.utcnow().isoformat(),
+                "last_updated": datetime.now(timezone.utc).isoformat(),
                 "performance": {
                     "daily_change": 0.02,
                     "weekly_change": 0.08,
@@ -78,7 +79,7 @@ def load_portfolio():
 def save_portfolio(portfolio):
     """Save portfolio data to file"""
     try:
-        portfolio["last_updated"] = datetime.timezone.utcnow().isoformat()
+        portfolio["last_updated"] = datetime.now(timezone.utc).isoformat()
         with open(PORTFOLIO_FILE, "w") as f:
             json.dump(portfolio, f, indent=2)
     except Exception as e:
@@ -125,7 +126,7 @@ def evaluate_portfolio():
 
         # Log portfolio evaluation
         balance_log = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "stablecoin_ratio": stablecoin_ratio,
             "total_value": total_value,
             "rebalance_needed": rebalance_needed,
@@ -166,5 +167,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

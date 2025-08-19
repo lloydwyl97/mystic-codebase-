@@ -19,6 +19,7 @@ from urllib.parse import urlencode
 import requests
 from dotenv import load_dotenv
 from backend.config import settings
+from datetime import datetime, timezone
 
 # Load environment variables
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -124,7 +125,7 @@ class AutoWithdrawSystem:
         try:
             # Log to file
             log_entry = {
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "exchange": exchange,
                 "amount": amount,
                 "status": status,
@@ -139,9 +140,9 @@ class AutoWithdrawSystem:
             if status == "success":
                 self.stats["total_withdrawals"] += 1
                 self.stats["total_amount_withdrawn"] += amount
-                self.stats["last_withdrawal"] = datetime.timezone.utcnow().isoformat()
+                self.stats["last_withdrawal"] = datetime.now(timezone.utc).isoformat()
 
-            self.stats["last_check"] = datetime.timezone.utcnow().isoformat()
+            self.stats["last_check"] = datetime.now(timezone.utc).isoformat()
 
         except Exception as e:
             logger.error(f"Failed to log withdrawal: {e}")
@@ -383,5 +384,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

@@ -8,6 +8,7 @@ from typing import Dict, List, Tuple, Any
 import ast
 import hashlib
 import logging
+from datetime import datetime, timezone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -522,7 +523,7 @@ def train_mutations_enhanced():
                 if individual["parent_ids"]:
                     for parent_id in individual["parent_ids"]:
                         operation = {
-                            "timestamp": (datetime.timezone.utcnow().isoformat()),
+                            "timestamp": (datetime.now(timezone.utc).isoformat()),
                             "operation_type": (
                                 "mutation" if len(individual["parent_ids"]) == 1 else "crossover"
                             ),
@@ -554,7 +555,7 @@ def train_mutations_enhanced():
 
         # Save best strategy
         with open(
-            f"./strategies/best_evolved_strategy_{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}.py",
+            f"./strategies/best_evolved_strategy_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.py",
             "w",
         ) as f:
             f.write(best_individual["strategy_code"])
@@ -569,5 +570,4 @@ def train_mutations_enhanced():
 while True:
     train_mutations_enhanced()
     time.sleep(TRAINER_INTERVAL)
-
 

@@ -5,8 +5,9 @@ from typing import Any, Dict, List, MutableMapping, Tuple, cast
 import streamlit as st
 import plotly.graph_objects as go  # type: ignore[import-not-found]
 
-from streamlit.ui.data_adapter import fetch_candles, safe_number_format
-from streamlit.ui.symbols import render_symbol_strip, ensure_state_defaults
+from mystic_ui._archive_pages.components.api_client import fetch_candles  # public wrapper
+from mystic_ui._archive_pages.components.common_utils import safe_number_format  # public wrapper
+from mystic_ui._archive_pages.components.common_utils import ensure_state_defaults  # public wrapper
 
 
 _st = cast(Any, st)
@@ -260,15 +261,16 @@ def render_system_advanced_section() -> None:
 
 
 def main() -> None:
-    ensure_state_defaults()
-    try:
-        _st.set_page_config(page_title="Mystic — Super Dashboard", layout="wide")
-    except Exception:
-        pass
+    # Ensure session defaults exist
+    ensure_state_defaults(cast(MutableMapping[str, Any], _st.session_state), {
+        "exchange": "binanceus",
+        "symbol": "BTCUSDT",
+        "interval": "1h",
+    })
+    # set_page_config is centralized in mystic_ui/app.py
     _st.title("Mystic Super Dashboard")
 
-    # Top symbol strip (no direct HTTP; uses data adapter under the hood)
-    render_symbol_strip()
+    # Top symbol strip removed from archive; future public wrapper can re-add safely
 
     # Status line
     s = cast(MutableMapping[str, Any], _st.session_state)
@@ -298,3 +300,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

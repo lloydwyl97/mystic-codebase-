@@ -7,6 +7,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from datetime import datetime
 from typing import Dict, List
 import re
+from datetime import datetime, timezone
 
 # Enhanced configuration
 NEWS_SOURCES = {
@@ -103,7 +104,7 @@ class SentimentDatabase:
             VALUES (?, ?, ?, ?)
         """,
             (
-                datetime.timezone.utcnow().isoformat(),
+                datetime.now(timezone.utc).isoformat(),
                 alert_type,
                 sentiment_score,
                 message,
@@ -278,7 +279,7 @@ async def analyze_sentiment_enhanced():
 
         # Prepare data for database
         sentiment_data = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "source": "multi_source",
             "sentiment_score": overall_sentiment,
             "headline_count": total_headlines,
@@ -333,5 +334,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
 

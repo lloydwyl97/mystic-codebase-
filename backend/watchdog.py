@@ -10,6 +10,7 @@ import psutil
 from typing import Dict, List, Any
 from datetime import datetime
 import requests
+from datetime import datetime, timezone
 
 
 class TradingWatchdog:
@@ -109,7 +110,7 @@ class TradingWatchdog:
 
         health_status = {
             "service": service_name,
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "overall_healthy": overall_healthy,
             "process_running": process_running,
             "port_healthy": port_healthy,
@@ -117,7 +118,7 @@ class TradingWatchdog:
             "memory_ok": memory_ok,
             "cpu_ok": cpu_ok,
             "resource_usage": resource_usage,
-            "last_check": datetime.timezone.utcnow().isoformat(),
+            "last_check": datetime.now(timezone.utc).isoformat(),
         }
 
         # Update service status
@@ -220,7 +221,7 @@ class TradingWatchdog:
 
             restart_result = {
                 "service": service_name,
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "restart_attempt": restart_count + 1,
                 "process_id": process.pid,
                 "success": health_check["overall_healthy"],
@@ -240,7 +241,7 @@ class TradingWatchdog:
         except Exception as e:
             error_result = {
                 "service": service_name,
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "success": False,
                 "error": str(e),
             }
@@ -281,7 +282,7 @@ class TradingWatchdog:
         print(f"ðŸ” Checking health of {len(self.critical_services)} services...")
 
         monitoring_results = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "services_checked": len(self.critical_services),
             "healthy_services": 0,
             "unhealthy_services": 0,
@@ -338,7 +339,7 @@ class TradingWatchdog:
             "total_services": total_count,
             "health_percentage": round((healthy_count / total_count) * 100, 1),
             "service_uptimes": service_uptimes,
-            "last_check": datetime.timezone.utcnow().isoformat(),
+            "last_check": datetime.now(timezone.utc).isoformat(),
         }
 
     def get_health_history(self, limit: int = 100) -> List[Dict[str, Any]]:
@@ -426,5 +427,4 @@ if __name__ == "__main__":
     # Start continuous monitoring
     print("\nðŸš€ Starting continuous monitoring (Ctrl+C to stop)...")
     watchdog.run_continuous_monitoring()
-
 

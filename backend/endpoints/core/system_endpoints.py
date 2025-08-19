@@ -396,7 +396,7 @@ async def generate_system_report() -> Dict[str, Any]:
 async def run_system_health_check() -> Dict[str, Any]:
     try:
         health = await get_system_health()
-        status = health.get("status", "unknown") if isinstance(health, dict) else "unknown"  # type: ignore[truthy-bool]
+        status = health.get("status", "unknown")  # type: ignore[assignment]
         return {
             "status": status,
             "detail": health,
@@ -422,13 +422,24 @@ async def get_health_check() -> Dict[str, Any]:
         try:
             from backend.services.autobuy_service import autobuy_service  # type: ignore[import-not-found]
             hb = await autobuy_service.heartbeat()  # type: ignore[attr-defined]
-            if isinstance(hb, dict) and str(hb.get("status")) != "ready":
+            # tolerate any shape; coerce to string
+            if str(getattr(hb, "get", lambda *_: None)("status")) != "ready":  # type: ignore[call-arg]
                 autobuy_status = "degraded"
         except Exception:
             autobuy_status = "error"
         return {"status": "ok", "adapters": adapters, "autobuy": ("ready" if autobuy_status == "ready" else str(autobuy_status))}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"System health-check failed: {str(e)}")
+
+
+# Consolidated signals endpoint expected by UI
+@router.get("/signals")
+async def get_signals() -> Dict[str, Any]:
+    try:
+        # Minimal response; upgrade to real feed when the unified signal source is available
+        return {"signals": []}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Signals failed: {str(e)}")
 
 
 

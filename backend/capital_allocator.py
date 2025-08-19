@@ -8,6 +8,7 @@ from typing import Dict, List, Any
 from datetime import datetime
 from strategy_leaderboard import get_strategy_leaderboard
 from position_sizer import PositionSizer
+from datetime import datetime, timezone
 
 
 class CapitalAllocator:
@@ -352,7 +353,7 @@ class CapitalAllocator:
     ):
         """Log allocation decision."""
         log_entry = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "method": method,
             "total_capital": self.total_capital,
             "allocations": allocations,
@@ -376,7 +377,7 @@ class CapitalAllocator:
     ):
         """Log rebalancing decision."""
         log_entry = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "type": "rebalancing",
             "current_allocations": current,
             "new_allocations": new,
@@ -491,5 +492,4 @@ if __name__ == "__main__":
             print(f"âŒ {method} failed: {e}")
 
     print("\nðŸŽ¯ Capital allocation testing complete!")
-
 

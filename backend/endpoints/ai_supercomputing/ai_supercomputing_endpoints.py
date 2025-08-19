@@ -614,7 +614,7 @@ async def get_system_health():
 
         # Add cache health
         try:
-            from backend.ai.persistent_cache import get_persistent_cache
+            from backend.modules.ai.persistent_cache import get_persistent_cache
 
             cache = get_persistent_cache()
             components.append(

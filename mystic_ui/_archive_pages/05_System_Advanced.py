@@ -11,15 +11,8 @@ _ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if _ROOT not in sys.path:
     sys.path.append(_ROOT)
 
-from streamlit.state import render_sidebar_controls
-from streamlit.ui_guard import display_guard
-from streamlit.data_client import (
-    get_features,
-    get_ai_heartbeat,
-    get_autobuy_status,
-    get_system_health_basic,
-    get_system_health_detailed,
-)
+from mystic_ui.api_client import request_json as _req
+from mystic_ui._archive_pages.components.common_utils import render_sidebar_controls, display_guard
 
 _st = cast(Any, st)
 
@@ -36,7 +29,7 @@ def _display_small_stat(label: str, value: Any, help_text: Optional[str] = None)
 
 
 def main() -> None:
-    _st.set_page_config(page_title="System / Advanced (Debug)", layout="wide")
+    # set_page_config is centralized in mystic_ui/app.py
     render_sidebar_controls()
 
     # Grid: Feature Flags | AI Status | Autobuy Status | Server Health Pings
@@ -46,7 +39,7 @@ def main() -> None:
     with display_guard("Feature Flags"):
         with c1:
             _st.subheader("Feature Flags")
-            features_payload = cast(Optional[Dict[str, Any]], get_features())
+            features_payload = cast(Optional[Dict[str, Any]], _req("GET", "/api/features"))
             if isinstance(features_payload, dict) and "__meta__" in features_payload:
                 meta = cast(Dict[str, Any], features_payload.get("__meta__") or {})
                 route = meta.get("route")
@@ -83,7 +76,7 @@ def main() -> None:
     with display_guard("AI Status"):
         with c2:
             _st.subheader("AI Status")
-            ai_payload = cast(Optional[Dict[str, Any]], get_ai_heartbeat())
+            ai_payload = cast(Optional[Dict[str, Any]], _req("GET", "/api/ai/heartbeat"))
             if isinstance(ai_payload, dict) and "__meta__" in ai_payload:
                 meta = cast(Dict[str, Any], ai_payload.get("__meta__") or {})
                 route = meta.get("route")
@@ -109,7 +102,7 @@ def main() -> None:
     with display_guard("Autobuy Status"):
         with c3:
             _st.subheader("Autobuy Status")
-            ab_payload = cast(Optional[Dict[str, Any]], get_autobuy_status())
+            ab_payload = cast(Optional[Dict[str, Any]], _req("GET", "/api/autobuy/status"))
             if isinstance(ab_payload, dict) and "__meta__" in ab_payload:
                 meta = cast(Dict[str, Any], ab_payload.get("__meta__") or {})
                 route = meta.get("route")
@@ -145,8 +138,8 @@ def main() -> None:
     with display_guard("Server Health Pings"):
         with c4:
             _st.subheader("Server Health")
-            basic = cast(Optional[Dict[str, Any]], get_system_health_basic())
-            detailed = cast(Optional[Dict[str, Any]], get_system_health_detailed())
+            basic = cast(Optional[Dict[str, Any]], _req("GET", "/api/health"))
+            detailed = cast(Optional[Dict[str, Any]], _req("GET", "/health/comprehensive"))
             # Notices if metadata only
             for name, payload in ("basic", basic), ("detailed", detailed):
                 if isinstance(payload, dict) and "__meta__" in payload:
@@ -176,5 +169,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
 

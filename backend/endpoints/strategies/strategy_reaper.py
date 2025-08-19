@@ -10,6 +10,7 @@ import logging
 import os
 import time
 from datetime import datetime
+from datetime import datetime, timezone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -32,7 +33,7 @@ def create_ping_file(strategies_deleted, total_strategies):
             json.dump(
                 {
                     "status": "online",
-                    "last_update": datetime.timezone.utcnow().isoformat(),
+                    "last_update": datetime.now(timezone.utc).isoformat(),
                     "strategies_deleted": strategies_deleted,
                     "total_strategies": total_strategies,
                 },
@@ -140,7 +141,7 @@ def reap_strategies():
 
                     # Log deletion
                     deletion_log = {
-                        "timestamp": datetime.timezone.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "filename": filename,
                         "reason": reason,
                         "score": score,
@@ -191,6 +192,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 

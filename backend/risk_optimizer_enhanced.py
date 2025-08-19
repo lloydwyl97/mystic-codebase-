@@ -8,6 +8,7 @@ from typing import Dict, List, Tuple
 import sqlite3
 from scipy.optimize import minimize
 import logging
+from datetime import datetime, timezone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -322,7 +323,7 @@ def run_stress_tests(weights: np.array, returns: pd.DataFrame) -> List[Dict]:
 
         stress_results.append(
             {
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "scenario_name": scenario["name"],
                 "portfolio_loss": portfolio_loss,
                 "worst_case_loss": worst_case_loss,
@@ -358,7 +359,7 @@ def optimize_risk_enhanced():
             if i < len(optimal_weights):
                 weights_data.append(
                     {
-                        "timestamp": datetime.timezone.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "symbol": symbol,
                         "weight": optimal_weights[i],
                         "position_size": (optimal_weights[i] * 100000),  # Assuming $100k portfolio
@@ -376,7 +377,7 @@ def optimize_risk_enhanced():
 
         # Save risk metrics
         risk_metrics = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "portfolio_value": 100000,  # Assumed portfolio value
             "total_risk": portfolio_metrics["volatility"],
             "var_95": portfolio_metrics["var_95"],
@@ -419,5 +420,4 @@ def optimize_risk_enhanced():
 while True:
     optimize_risk_enhanced()
     time.sleep(OPTIMIZATION_INTERVAL)
-
 

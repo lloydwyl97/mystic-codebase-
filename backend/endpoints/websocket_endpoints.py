@@ -51,3 +51,32 @@ async def websocket_trading_signals(websocket: WebSocket):
 
 
 
+@router.get("/api/websocket/status")
+async def get_websocket_status():
+    """Minimal HTTP status for WebSocket health under consolidated router."""
+    try:
+        details = {
+            "websocket": "alive",
+            "connections": None,
+            "topics": None,
+        }
+        # If a manager is present, enrich status without failing
+        try:
+            if websocket_manager and hasattr(websocket_manager, "summary"):
+                summary_any: Any = websocket_manager.summary()  # type: ignore[call-arg]
+                if isinstance(summary_any, dict):
+                    details.update(summary_any)  # type: ignore[arg-type]
+        except Exception:
+            pass
+        return details
+    except Exception as e:
+        logger.error(f"websocket status error: {e}")
+        return {"websocket": "error", "error": str(e)}
+
+
+# UI sometimes calls non-prefix variant; provide alias
+@router.get("/websocket/status")
+async def get_websocket_status_alias():
+    return await get_websocket_status()
+
+

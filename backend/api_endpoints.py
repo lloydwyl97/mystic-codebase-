@@ -441,7 +441,7 @@ async def get_coin_state() -> Dict[str, Any]:
     """Get current coin state using cached market data"""
     try:
         # Use cached market data from the persistent cache
-        from backend.ai.persistent_cache import get_persistent_cache
+        from backend.modules.ai.persistent_cache import get_persistent_cache
 
         cache = get_persistent_cache()
 
@@ -853,28 +853,29 @@ async def get_live_market_data_symbol(symbol: str) -> Dict[str, Any]:
         }
 
 
-@router.get("/api/market/candles")
-async def get_candlestick_data(symbol: str, interval: str = "1h") -> Dict[str, Any]:
-    """Get candlestick data for a symbol"""
-    try:
-        candles = await live_market_data_service.get_candlestick_data(symbol.upper(), interval)
-        return {
-            "symbol": symbol.upper(),
-            "interval": interval,
-            "candles": candles,
-            "timestamp": int(time.time()),
-            "live_data": True,
-        }
-    except Exception as e:
-        logger.error(f"Error getting candlestick data for {symbol}: {str(e)}")
-        return {
-            "symbol": symbol.upper(),
-            "interval": interval,
-            "candles": [],
-            "timestamp": int(time.time()),
-            "live_data": False,
-            "error": str(e),
-        }
+if False:
+    @router.get("/api/market/candles")
+    async def get_candlestick_data(symbol: str, interval: str = "1h") -> Dict[str, Any]:
+        """Get candlestick data for a symbol"""
+        try:
+            candles = await live_market_data_service.get_candlestick_data(symbol.upper(), interval)
+            return {
+                "symbol": symbol.upper(),
+                "interval": interval,
+                "candles": candles,
+                "timestamp": int(time.time()),
+                "live_data": True,
+            }
+        except Exception as e:
+            logger.error(f"Error getting candlestick data for {symbol}: {str(e)}")
+            return {
+                "symbol": symbol.upper(),
+                "interval": interval,
+                "candles": [],
+                "timestamp": int(time.time()),
+                "live_data": False,
+                "error": str(e),
+            }
 
 
 @router.get("/api/market/depth/{symbol}")

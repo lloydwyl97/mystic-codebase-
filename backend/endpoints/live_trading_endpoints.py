@@ -153,7 +153,7 @@ async def get_binance_account() -> Dict[str, Any]:
         binance_service = get_binance_trading_service(
             api_key=settings.exchange.binance_us_api_key or "",
             secret_key=settings.exchange.binance_us_secret_key or "",
-            testnet=settings.exchange.testnet,
+            testnet=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await binance_service.get_account_info()
@@ -170,7 +170,7 @@ async def get_binance_price(symbol: str) -> Dict[str, Any]:
         binance_service = get_binance_trading_service(
             api_key=settings.exchange.binance_us_api_key or "",
             secret_key=settings.exchange.binance_us_secret_key or "",
-            testnet=settings.exchange.testnet,
+            testnet=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await binance_service.get_market_price(symbol)
@@ -191,7 +191,7 @@ async def place_binance_market_order(
         binance_service = get_binance_trading_service(
             api_key=settings.exchange.binance_us_api_key or "",
             secret_key=settings.exchange.binance_us_secret_key or "",
-            testnet=settings.exchange.testnet,
+            testnet=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await binance_service.place_market_order(symbol, side, quantity)
@@ -213,7 +213,7 @@ async def place_binance_limit_order(
         binance_service = get_binance_trading_service(
             api_key=settings.exchange.binance_us_api_key or "",
             secret_key=settings.exchange.binance_us_secret_key or "",
-            testnet=settings.exchange.testnet,
+            testnet=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await binance_service.place_limit_order(symbol, side, quantity, price)
@@ -232,7 +232,7 @@ async def get_binance_orders(
         binance_service = get_binance_trading_service(
             api_key=settings.exchange.binance_us_api_key or "",
             secret_key=settings.exchange.binance_us_secret_key or "",
-            testnet=settings.exchange.testnet,
+            testnet=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await binance_service.get_open_orders(symbol)
@@ -252,7 +252,7 @@ async def get_binance_history(
         binance_service = get_binance_trading_service(
             api_key=settings.exchange.binance_us_api_key or "",
             secret_key=settings.exchange.binance_us_secret_key or "",
-            testnet=settings.exchange.testnet,
+            testnet=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await binance_service.get_order_history(symbol, limit)
@@ -272,7 +272,7 @@ async def get_binance_trades(
         binance_service = get_binance_trading_service(
             api_key=settings.exchange.binance_us_api_key or "",
             secret_key=settings.exchange.binance_us_secret_key or "",
-            testnet=settings.exchange.testnet,
+            testnet=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await binance_service.get_trade_history(symbol, limit)
@@ -294,7 +294,7 @@ async def get_coinbase_account() -> Dict[str, Any]:
         coinbase_service = get_coinbase_trading_service(
             api_key=settings.exchange.coinbase_api_key or "",
             secret_key=settings.exchange.coinbase_secret_key or "",
-            sandbox=settings.exchange.testnet,
+            sandbox=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await coinbase_service.get_account_info()
@@ -311,7 +311,7 @@ async def get_coinbase_price(product_id: str) -> Dict[str, Any]:
         coinbase_service = get_coinbase_trading_service(
             api_key=settings.exchange.coinbase_api_key or "",
             secret_key=settings.exchange.coinbase_secret_key or "",
-            sandbox=settings.exchange.testnet,
+            sandbox=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await coinbase_service.get_market_price(product_id)
@@ -332,7 +332,7 @@ async def place_coinbase_market_order(
         coinbase_service = get_coinbase_trading_service(
             api_key=settings.exchange.coinbase_api_key or "",
             secret_key=settings.exchange.coinbase_secret_key or "",
-            sandbox=settings.exchange.testnet,
+            sandbox=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await coinbase_service.place_market_order(product_id, side, size)
@@ -354,7 +354,7 @@ async def place_coinbase_limit_order(
         coinbase_service = get_coinbase_trading_service(
             api_key=settings.exchange.coinbase_api_key or "",
             secret_key=settings.exchange.coinbase_secret_key or "",
-            sandbox=settings.exchange.testnet,
+            sandbox=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await coinbase_service.place_limit_order(product_id, side, size, price)
@@ -373,7 +373,7 @@ async def get_coinbase_orders(
         coinbase_service = get_coinbase_trading_service(
             api_key=settings.exchange.coinbase_api_key or "",
             secret_key=settings.exchange.coinbase_secret_key or "",
-            sandbox=settings.exchange.testnet,
+            sandbox=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await coinbase_service.get_open_orders(product_id)
@@ -390,7 +390,7 @@ async def get_coinbase_products() -> Dict[str, Any]:
         coinbase_service = get_coinbase_trading_service(
             api_key=settings.exchange.coinbase_api_key or "",
             secret_key=settings.exchange.coinbase_secret_key or "",
-            sandbox=settings.exchange.testnet,
+            sandbox=settings.exchange.__dict__.get("testnet", False),
         )
 
         data = await coinbase_service.get_products()
@@ -432,7 +432,7 @@ async def get_price_comparison(symbol: str) -> Dict[str, Any]:
                 binance_service = get_binance_trading_service(
                     api_key=settings.exchange.binance_us_api_key,
                     secret_key=settings.exchange.binance_us_secret_key,
-                    testnet=settings.exchange.testnet,
+                    testnet=settings.exchange.__dict__.get("testnet", False),
                 )
                 binance_price = await binance_service.get_market_price(f"{symbol.upper()}USDT")
                 result["prices"]["binance"] = binance_price
@@ -446,7 +446,7 @@ async def get_price_comparison(symbol: str) -> Dict[str, Any]:
                 coinbase_service = get_coinbase_trading_service(
                     api_key=settings.exchange.coinbase_api_key,
                     secret_key=settings.exchange.coinbase_secret_key,
-                    sandbox=settings.exchange.testnet,
+                    sandbox=settings.exchange.__dict__.get("testnet", False),
                 )
                 coinbase_price = await coinbase_service.get_market_price(f"{symbol.upper()}-USD")
                 result["prices"]["coinbase"] = coinbase_price
@@ -484,7 +484,7 @@ async def get_exchange_status() -> Dict[str, Any]:
                 binance_service = get_binance_trading_service(
                     api_key=settings.exchange.binance_us_api_key,
                     secret_key=settings.exchange.binance_us_secret_key,
-                    testnet=settings.exchange.testnet,
+                    testnet=settings.exchange.__dict__.get("testnet", False),
                 )
                 binance_status = await binance_service.test_connection()
                 result["exchanges"]["binance"] = binance_status
@@ -500,7 +500,7 @@ async def get_exchange_status() -> Dict[str, Any]:
                 coinbase_service = get_coinbase_trading_service(
                     api_key=settings.exchange.coinbase_api_key,
                     secret_key=settings.exchange.coinbase_secret_key,
-                    sandbox=settings.exchange.testnet,
+                    sandbox=settings.exchange.__dict__.get("testnet", False),
                 )
                 coinbase_status = await coinbase_service.test_connection()
                 result["exchanges"]["coinbase"] = coinbase_status
@@ -518,6 +518,7 @@ async def get_exchange_status() -> Dict[str, Any]:
 
 
 logger.info("âœ… Live trading endpoints loaded successfully")
+
 
 
 

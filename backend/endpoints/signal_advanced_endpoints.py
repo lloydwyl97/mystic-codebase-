@@ -238,3 +238,11 @@ async def get_signal_system_health(health_monitor: Any = Depends(lambda: get_hea
 
 
 
+# --- patched at end: bind redis into SignalManager ---
+def get_signal_manager():
+    from backend.services.redis_service import SharedCache
+    try:
+        r = SharedCache.get_redis()
+    except Exception:
+        r = None
+    return SignalManager(redis_client=r)

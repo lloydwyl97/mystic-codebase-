@@ -1,4 +1,4 @@
-import os, streamlit as st
+﻿import os, streamlit as st
 from typing import MutableMapping, Any, cast
 
 _st = cast(Any, st)
@@ -20,3 +20,4 @@ def render_sidebar_controls() -> None:
         s["symbol"]   = _st.text_input("Symbol",   s["symbol"]) 
     with cols[2]:
         s["timeframe"]= _st.text_input("Timeframe",s["timeframe"]) 
+

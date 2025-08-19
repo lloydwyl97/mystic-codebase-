@@ -10,6 +10,7 @@ import time
 import logging
 import os
 from datetime import datetime
+from datetime import datetime, timezone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -32,7 +33,7 @@ def create_ping_file(risk_level, winrate):
             json.dump(
                 {
                     "status": "online",
-                    "last_update": datetime.timezone.utcnow().isoformat(),
+                    "last_update": datetime.now(timezone.utc).isoformat(),
                     "risk_level": risk_level,
                     "winrate": winrate,
                 },
@@ -58,7 +59,7 @@ def load_risk_config():
                 "recent_winrate": 0.6,
                 "total_trades": 0,
                 "profitable_trades": 0,
-                "last_updated": datetime.timezone.utcnow().isoformat(),
+                "last_updated": datetime.now(timezone.utc).isoformat(),
             }
             save_risk_config(default_config)
             return default_config
@@ -70,7 +71,7 @@ def load_risk_config():
 def save_risk_config(config):
     """Save risk configuration to file"""
     try:
-        config["last_updated"] = datetime.timezone.utcnow().isoformat()
+        config["last_updated"] = datetime.now(timezone.utc).isoformat()
         with open(RISK_FILE, "w") as f:
             json.dump(config, f, indent=2)
     except Exception as e:
@@ -135,7 +136,7 @@ def adjust_risk():
 
         # Log risk adjustment
         risk_log = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "winrate": winrate,
             "stop_loss_pct": config["stop_loss_pct"],
             "max_position_size": config["max_position_size"],
@@ -168,5 +169,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

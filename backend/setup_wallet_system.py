@@ -7,6 +7,7 @@ Initializes database tables and sample data for the real-time wallet panel
 import json
 import sqlite3
 from datetime import datetime
+from datetime import datetime, timezone
 
 
 def setup_database():
@@ -105,7 +106,7 @@ def insert_live_data():
     INSERT OR REPLACE INTO wallet_allocations (wallet_name, allocation_percent, current_balance, last_updated, status)
     VALUES (?, ?, ?, ?, 'waiting_for_live_data')
     """,
-        [(w[0], w[1], w[2], datetime.timezone.utcnow().isoformat()) for w in live_wallets],
+        [(w[0], w[1], w[2], datetime.now(timezone.utc).isoformat()) for w in live_wallets],
     )
 
     # Initialize empty yield positions - will be populated by live DeFi APIs
@@ -114,7 +115,7 @@ def insert_live_data():
     INSERT OR REPLACE INTO yield_positions (provider, protocol, amount_deployed, apy, start_date, status)
     VALUES ('Initializing', 'Live Data', 0.0, 0.0, ?, 'waiting_for_live_data')
     """,
-        (datetime.timezone.utcnow().isoformat(),),
+        (datetime.now(timezone.utc).isoformat(),),
     )
 
     # Initialize empty cold wallet syncs - will be populated by live wallet monitoring
@@ -123,7 +124,7 @@ def insert_live_data():
     INSERT OR REPLACE INTO cold_wallet_syncs (amount, timestamp, threshold_triggered, status)
     VALUES (0.0, ?, 0.0, 'waiting_for_live_data')
     """,
-        (datetime.timezone.utcnow().isoformat(),),
+        (datetime.now(timezone.utc).isoformat(),),
     )
 
     conn.commit()
@@ -140,7 +141,7 @@ def create_ai_model_state():
         "confidence_threshold": 0.75,
         "avg_profit_threshold": 0.5,
         "adjustment_count": 0,
-        "last_update": datetime.timezone.utcnow().isoformat(),
+        "last_update": datetime.now(timezone.utc).isoformat(),
         "performance_metrics": {
             "total_trades": 0,
             "win_rate": 0.0,
@@ -211,5 +212,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

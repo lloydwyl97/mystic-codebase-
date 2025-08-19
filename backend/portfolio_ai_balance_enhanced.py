@@ -7,6 +7,7 @@ import requests
 from datetime import datetime
 from typing import Dict, List, Tuple
 from scipy.optimize import minimize
+from datetime import datetime, timezone
 
 # Enhanced configuration
 BALANCE_DB = "./data/portfolio_balance.db"
@@ -410,7 +411,7 @@ def check_rebalance_needed(
 
             rebalance_actions.append(
                 {
-                    "timestamp": datetime.timezone.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "action_type": action_type,
                     "symbol": symbol,
                     "quantity": quantity,
@@ -464,7 +465,7 @@ def balance_portfolio_enhanced():
 
         # Save portfolio snapshot
         snapshot = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "total_value": total_value,
             "cash_balance": cash_balance,
             "asset_allocations": {
@@ -513,5 +514,4 @@ def balance_portfolio_enhanced():
 while True:
     balance_portfolio_enhanced()
     time.sleep(BALANCE_INTERVAL)
-
 

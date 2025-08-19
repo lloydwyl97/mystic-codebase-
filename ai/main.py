@@ -20,13 +20,13 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import AI modules (compat: support both ai.ai.* and ai.* layouts)
 try:
-    from ai.ai.ai_brains import AIBrains  # type: ignore[import-not-found]
-    from ai.ai.ai_breakouts import AIBreakouts  # type: ignore[import-not-found]
+    from backend.modules.ai.ai_brains import AIBrains  # type: ignore[import-not-found]
+    from backend.modules.ai.ai_breakouts import AIBreakouts  # type: ignore[import-not-found]
     from ai.ai.ai_mystic import AIMystic  # type: ignore[import-not-found]
     from ai.ai.ai_signals import AISignals  # type: ignore[import-not-found]
     from ai.ai.ai_volume import AIVolume  # type: ignore[import-not-found]
     from ai.poller import AIPoller  # type: ignore[import-not-found]
-    from ai.persistent_cache import PersistentCache  # type: ignore[import-not-found]
+    from backend.modules.ai.persistent_cache import PersistentCache  # type: ignore[import-not-found]
 except Exception:
     from ai_brains import AIBrains  # type: ignore[no-redef]
     from ai_breakouts import AIBreakouts  # type: ignore[no-redef]

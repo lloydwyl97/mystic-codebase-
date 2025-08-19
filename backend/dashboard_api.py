@@ -8,7 +8,7 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 import uvicorn
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 
 # Import your modules
@@ -50,7 +50,7 @@ async def root():
         "message": "Mystic AI Trading Dashboard",
         "version": "1.0.0",
         "status": "running",
-        "timestamp": datetime.timezone.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -59,7 +59,7 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "timestamp": datetime.timezone.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "services": {
             "dashboard": "running",
             "trade_logger": "running",
@@ -75,7 +75,7 @@ async def get_leaderboard(hours_back: int = 24):
         leaderboard = get_strategy_leaderboard(hours_back)
         return {
             "leaderboard": leaderboard,
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "period_hours": hours_back,
         }
     except Exception as e:
@@ -129,7 +129,7 @@ async def get_recent_trades(limit: int = 50):
         return {
             "trades": trades,
             "count": len(trades),
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching trades: {str(e)}")
@@ -179,7 +179,7 @@ async def get_system_stats():
             "capital_allocation": portfolio_summary,
             "yield_rotation": yield_summary,
             "system_health": system_health,
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching stats: {str(e)}")
@@ -251,7 +251,7 @@ async def allocate_capital(method: str = "performance", total_capital: float = 1
             "allocations": allocations,
             "method": method,
             "total_capital": total_capital,
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error allocating capital: {str(e)}")
@@ -264,7 +264,7 @@ async def park_capital(amount: float, protocol_id: str = None, lock_period: int 
         result = yield_rotator.park_capital(amount, protocol_id, lock_period)
         return {
             "result": result,
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parking capital: {str(e)}")
@@ -277,7 +277,7 @@ async def withdraw_capital(parking_id: str, force: bool = False):
         result = yield_rotator.withdraw_capital(parking_id, force)
         return {
             "result": result,
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error withdrawing capital: {str(e)}")
@@ -295,7 +295,7 @@ async def get_system_health():
             "system_summary": watchdog.get_system_summary(),
             "health_history": watchdog.get_health_history(10),
             "restart_history": watchdog.get_restart_history(10),
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching system health: {str(e)}")
@@ -308,7 +308,7 @@ async def restart_service(service_name: str):
         result = watchdog.restart_service(service_name)
         return {
             "result": result,
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error restarting service: {str(e)}")
@@ -338,7 +338,7 @@ async def get_position_sizing_info(capital: float = 10000, strategy_name: str = 
             "strategy_performance": strategy_perf,
             "position_sizing": position_result,
             "position_history": position_sizer.get_position_history(10),
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(
@@ -355,7 +355,7 @@ async def get_yield_summary():
             "parked_capital": yield_rotator.get_parked_capital_summary(),
             "yield_history": yield_rotator.get_yield_history(20),
             "available_protocols": yield_rotator.yield_protocols,
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching yield summary: {str(e)}")
@@ -369,7 +369,7 @@ async def get_capital_allocation():
             "current_allocations": capital_allocator.current_allocations,
             "portfolio_summary": capital_allocator.get_portfolio_summary(),
             "allocation_history": capital_allocator.get_allocation_history(10),
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         raise HTTPException(
@@ -385,6 +385,7 @@ async def dashboard_html():
     <!DOCTYPE html>
     <html>
     <head>
+    <meta charset=\"utf-8\">
         <title>Mystic AI Trading Dashboard</title>
         <style>
             body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }

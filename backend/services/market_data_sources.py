@@ -150,11 +150,11 @@ def show_coin_summary():
     print(f"ðŸ“‹ COIN LIST: {', '.join(SUPPORTED_COINS)}")
 
     print("\nðŸ”§ STAGGERED BATCHING STRATEGY:")
-    print(f"   â€¢ FAST COINS ({len(FAST_COINS)}): {', '.join(FAST_COINS)}")
+    print(f"   • FAST COINS ({len(FAST_COINS)}): {', '.join(FAST_COINS)}")
 
     print("\nðŸ“ˆ OPTIMIZED API HITS PER SERVICE:")
-    print(f"   â€¢ Binance: {len(SUPPORTED_COINS)} hits (no delay)")
-    print(f"   â€¢ Coinbase: {len(SUPPORTED_COINS)} hits (no delay)")
+    print(f"   • Binance: {len(SUPPORTED_COINS)} hits (no delay)")
+    print(f"   • Coinbase: {len(SUPPORTED_COINS)} hits (no delay)")
 
     # Calculate optimized time
     fast_time = 0  # No delays
@@ -163,8 +163,8 @@ def show_coin_summary():
     print(f"\nâ±ï¸  OPTIMIZED TOTAL TIME: {total_time} seconds ({total_time/60:.1f} minutes)")
 
     print("\nðŸŽ¯ RATE LIMIT COMPLIANCE:")
-    print(f"   â€¢ Binance: {len(SUPPORTED_COINS)} hits vs {RATE_LIMITS['binance']['rpm']}/min âœ…")
-    print(f"   â€¢ Coinbase: {len(SUPPORTED_COINS)} hits vs {RATE_LIMITS['coinbase']['rpm']}/min âœ…")
+    print(f"   • Binance: {len(SUPPORTED_COINS)} hits vs {RATE_LIMITS['binance']['rpm']}/min âœ…")
+    print(f"   • Coinbase: {len(SUPPORTED_COINS)} hits vs {RATE_LIMITS['coinbase']['rpm']}/min âœ…")
 
     print("=" * 60)
     return {

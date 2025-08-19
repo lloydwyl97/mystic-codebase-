@@ -6,7 +6,7 @@ Populates the persistent cache with sample data for testing endpoints
 import asyncio
 import logging
 
-from backend.ai.persistent_cache import get_persistent_cache
+from backend.modules.ai.persistent_cache import get_persistent_cache
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

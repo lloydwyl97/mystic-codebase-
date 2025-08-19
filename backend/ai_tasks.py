@@ -15,6 +15,7 @@ from sqlalchemy import create_engine
 import httpx
 import psutil
 import structlog
+from datetime import datetime, timezone
 
 # Configure structured logging
 logger = structlog.get_logger()
@@ -216,7 +217,7 @@ def rebalance_portfolio(self, portfolio_id: Optional[str] = None) -> Dict[str, A
 
         results = {
             "portfolio_id": portfolio["id"],
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "total_value": total_value,
             "rebalancing_actions": rebalancing_actions,
             "actions_count": len(rebalancing_actions),
@@ -225,7 +226,7 @@ def rebalance_portfolio(self, portfolio_id: Optional[str] = None) -> Dict[str, A
 
         # Store rebalancing results
         redis_client.setex(
-            f"rebalancing:{portfolio['id']}:{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            f"rebalancing:{portfolio['id']}:{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
             3600,  # 1 hour TTL
             json.dumps(results),
         )
@@ -275,7 +276,7 @@ def assess_risk(self, portfolio_id: Optional[str] = None) -> Dict[str, Any]:
                 {
                     "level": "HIGH",
                     "message": (f"VaR 95% exceeds threshold: {portfolio_risk['var_95']:.2%}"),
-                    "timestamp": datetime.timezone.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
             )
 
@@ -286,13 +287,13 @@ def assess_risk(self, portfolio_id: Optional[str] = None) -> Dict[str, Any]:
                     "message": (
                         f"Maximum drawdown exceeds threshold: {portfolio_risk['max_drawdown']:.2%}"
                     ),
-                    "timestamp": datetime.timezone.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
             )
 
         results = {
             "portfolio_id": portfolio_id or "default",
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "risk_metrics": portfolio_risk,
             "alerts": alerts,
             "risk_score": calculate_overall_risk_score(portfolio_risk),
@@ -301,7 +302,7 @@ def assess_risk(self, portfolio_id: Optional[str] = None) -> Dict[str, Any]:
 
         # Store risk assessment
         redis_client.setex(
-            f"risk_assessment:{portfolio_id or 'default'}:{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            f"risk_assessment:{portfolio_id or 'default'}:{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
             1800,  # 30 minutes TTL
             json.dumps(results),
         )
@@ -396,7 +397,7 @@ def evaluate_ai_strategies(self) -> Dict[str, Any]:
                 )
 
         results = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "strategies": strategies,
             "recommendations": recommendations,
             "top_strategy": top_strategy["name"],
@@ -405,7 +406,7 @@ def evaluate_ai_strategies(self) -> Dict[str, Any]:
 
         # Store evaluation results
         redis_client.setex(
-            f"strategy_evaluation:{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            f"strategy_evaluation:{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
             7200,  # 2 hours TTL
             json.dumps(results),
         )
@@ -459,7 +460,7 @@ def calculate_performance_metrics(self) -> Dict[str, Any]:
             insights.append("Win rate below 50% - consider strategy adjustment")
 
         results = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "metrics": performance_data,
             "insights": insights,
             "performance_grade": calculate_performance_grade(performance_data),
@@ -468,7 +469,7 @@ def calculate_performance_metrics(self) -> Dict[str, Any]:
 
         # Store performance metrics
         redis_client.setex(
-            f"performance_metrics:{datetime.timezone.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            f"performance_metrics:{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
             3600,  # 1 hour TTL
             json.dumps(results),
         )
@@ -490,7 +491,7 @@ def cleanup_old_data(self, days_to_keep: int = 30) -> Dict[str, Any]:
     try:
         task_logger.info(f"Starting data cleanup. Keeping data from last {days_to_keep} days")
 
-        cutoff_date = datetime.timezone.utcnow() - timedelta(days=days_to_keep)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=days_to_keep)
 
         # Simulate cleanup operations
         cleanup_results = {
@@ -508,7 +509,7 @@ def cleanup_old_data(self, days_to_keep: int = 30) -> Dict[str, Any]:
             redis_client.delete(*keys_to_delete)
 
         results = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "cutoff_date": cutoff_date.isoformat(),
             "cleanup_results": cleanup_results,
             "total_items_cleaned": sum(cleanup_results.values()),
@@ -547,7 +548,7 @@ def send_risk_alert(self, risk_data: Dict[str, Any]) -> Dict[str, Any]:
                     {
                         "channel": channel,
                         "status": "sent",
-                        "timestamp": datetime.timezone.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                 )
             except Exception as e:
@@ -556,12 +557,12 @@ def send_risk_alert(self, risk_data: Dict[str, Any]) -> Dict[str, Any]:
                         "channel": channel,
                         "status": "failed",
                         "error": str(e),
-                        "timestamp": datetime.timezone.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                 )
 
         results = {
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "risk_data": risk_data,
             "alerts_sent": sent_alerts,
             "success_count": len([a for a in sent_alerts if a["status"] == "sent"]),
@@ -693,7 +694,7 @@ def health_check() -> Dict[str, Any]:
     """Health check for the Celery system"""
     return {
         "status": "healthy",
-        "timestamp": datetime.timezone.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "worker_count": len(celery_app.control.inspect().active()),
         "queue_size": redis_client.llen("celery"),
     }
@@ -701,5 +702,4 @@ def health_check() -> Dict[str, Any]:
 
 if __name__ == "__main__":
     celery_app.start()
-
 

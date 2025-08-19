@@ -363,7 +363,7 @@ async def get_market_data() -> Dict[str, Any]:
     """Get market data endpoint"""
     try:
         # Import persistent cache
-        from backend.ai.persistent_cache import get_persistent_cache
+        from backend.modules.ai.persistent_cache import get_persistent_cache
 
         cache = get_persistent_cache()
         market_data = {}

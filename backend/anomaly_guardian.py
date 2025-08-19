@@ -13,6 +13,7 @@ import os
 import logging
 from datetime import datetime
 from sklearn.ensemble import IsolationForest
+from datetime import datetime, timezone
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -43,7 +44,7 @@ def create_ping_file(anomaly_count, symbols_checked):
             json.dump(
                 {
                     "status": "online",
-                    "last_update": datetime.timezone.utcnow().isoformat(),
+                    "last_update": datetime.now(timezone.utc).isoformat(),
                     "anomaly_count": anomaly_count,
                     "symbols_checked": symbols_checked,
                 },
@@ -127,5 +128,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

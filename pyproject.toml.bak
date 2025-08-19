@@ -1,0 +1,194 @@
+[tool.poetry]
+name = "mystic-trading"
+version = "0.0.0"
+description = "Mystic Trading Platform"
+authors = ["<you>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+fastapi = "0.115.6"
+uvicorn = {version = "0.32.1", extras = ["standard"]}
+pydantic = "2.7.1"
+websockets = "12.0"
+ccxt = "4.4.*"
+redis = "5.2.1"
+pika = "1.3.2"
+
+# If you were previously using RQ, keep it here:
+rq = "^1.15.1"
+
+# Move Celery to an optional group so it doesn't install by default.
+[tool.poetry.group.workers]
+optional = true
+
+[tool.poetry.group.workers.dependencies]
+celery = "5.3.6"  # install with: poetry install --with workers
+
+[tool.poetry.group.dev.dependencies]
+black = "23.11.0"
+flake8 = "6.1.0"
+mypy = "1.7.1"
+isort = "5.12.0"
+pytest = "7.4.3"
+pytest-asyncio = "0.21.1"
+pytest-cov = "4.1.0"
+pre-commit = "3.5.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "7.4.3"
+pytest-asyncio = "0.21.1"
+pytest-cov = "4.1.0"
+httpx = "0.25.2"
+factory-boy = "3.3.0"
+
+[tool.poetry.scripts]
+# Fix the console entrypoint: call a function, not the ASGI app object.
+mystic-trading = "backend.main:main"
+
+[build-system]
+requires = ["poetry-core>=1.5.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "ccxt.*",
+    "binance.*",
+    "coinbase.*",
+    "redis.*",
+    "pika.*",
+    "sqlalchemy.*",
+    "prometheus_client.*",
+    "structlog.*",
+    "loguru.*",
+    # "ta.*",  # Removed - using custom implementations
+    "scikit-learn.*",
+    "scipy.*",
+    "pandas.*",
+    "numpy.*",
+    "boto3.*",
+    "minio.*",
+    "influxdb_client.*",
+    "hvac.*",
+    "consul.*",
+    "apscheduler.*",
+    "httptools.*",
+    "secure.*",
+    "orjson.*",
+    "python_dateutil.*",
+    "authlib.*",
+    "python_jose.*",
+    "PyJWT.*",
+    "python_multipart.*",
+    "slowapi.*",
+    "rq.*",
+    "databases.*",
+    "prometheus_fastapi_instrumentator.*",
+    "psutil.*",
+    "httpx.*",
+    "aiofiles.*",
+    "starlette.*",
+    "python_decouple.*"
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+
+[tool.coverage.run]
+source = ["backend"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/migrations/*",
+    "*/stubs/*"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod"
+]
+
+[tool.flake8]
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+select = ["E","F","I","UP","B","C4","SIM"]
+ignore = ["E203"]
+
+[tool.ruff.lint.isort]
+profile = "black"
+known-first-party = ["backend","services","dashboard"]
+max-line-length = 120
+extend-ignore = ["E501", "W503", "E203", "W291", "W292", "W293"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    "venv",
+    ".venv",
+    "node_modules",
+    "migrations"
+]
+per-file-ignores = [
+    "__init__.py:F401",
+    "*/stubs/*:F401",
+    "*/mocks.py:F401"
+]

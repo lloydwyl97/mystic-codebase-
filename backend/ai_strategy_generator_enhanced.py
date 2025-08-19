@@ -8,6 +8,7 @@ import random
 from datetime import datetime
 from typing import Dict, Optional
 import ast
+from datetime import datetime, timezone
 
 STRATEGY_DIR = "./generated_modules"
 INTERVAL_HOURS = 3
@@ -141,7 +142,7 @@ def save_strategy_version(code: str, filename: str, metadata: Dict) -> None:
     # Save metadata
     metadata_file = filepath.replace(".py", "_metadata.json")
     metadata["hash"] = generate_strategy_hash(code)
-    metadata["created_at"] = datetime.timezone.utcnow().isoformat()
+    metadata["created_at"] = datetime.now(timezone.utc).isoformat()
     metadata["filename"] = filename
 
     with open(metadata_file, "w") as f:
@@ -185,7 +186,7 @@ def run_basic_backtest(filename: str) -> Dict:
             "profit": profit,
             "max_drawdown": float(df["close"].max() - df["close"].min()),
             "sharpe_ratio": 0,  # Placeholder, can be calculated with returns
-            "backtest_date": datetime.timezone.utcnow().isoformat(),
+            "backtest_date": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         return {"error": str(e)}
@@ -253,7 +254,7 @@ def generate_strategy_enhanced():
             return
 
         # Create filename with timestamp
-        ts = datetime.timezone.utcnow().strftime("%Y%m%d_%H%M%S")
+        ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         filename = f"strategy_llm_{ts}.py"
 
         # Prepare metadata
@@ -292,5 +293,4 @@ while True:
     except Exception as e:
         print(f"[LLM] Enhanced Gen Error: {e}")
     time.sleep(INTERVAL_HOURS * 3600)
-
 

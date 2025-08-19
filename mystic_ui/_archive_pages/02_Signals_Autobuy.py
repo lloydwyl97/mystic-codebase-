@@ -5,13 +5,10 @@ from typing import Any, Dict, List, MutableMapping, Optional, cast
 import pandas as pd
 import streamlit as st
 
-from streamlit.api_client import (
-    dc_autobuy_status,
-    dc_get_autobuy_signals,
-)
-from streamlit.state import get_app_state, render_sidebar_controls
-from streamlit.ui.data_adapter import safe_number_format
-from streamlit.ui.theme import inject_global_theme
+from mystic_ui.api_client import request_json as _req
+from mystic_ui._archive_pages.components.common_utils import get_app_state, render_sidebar_controls  # public wrapper
+from mystic_ui._archive_pages.components.common_utils import safe_number_format  # public wrapper
+from mystic_ui._archive_pages.components.common_utils import inject_global_theme  # public wrapper
 
 # Silence type checker for Streamlit's dynamic attributes
 _st = cast(Any, st)
@@ -44,7 +41,7 @@ def _extract_status_ok(payload: Optional[Dict[str, Any]]) -> bool:
 
 
 def main() -> None:
-    _st.set_page_config(page_title="Signals & Autobuy", layout="wide")
+    # set_page_config is centralized in mystic_ui/app.py
     inject_global_theme()
 
     # Sidebar controls and shared state
@@ -54,38 +51,22 @@ def main() -> None:
     # Fetch data
     with _st.spinner("Loading signals and autobuy status…"):
         try:
-            signals_res = dc_get_autobuy_signals(limit=100)
-        except Exception as e:
-            signals_res = {"data": None, "error": str(e), "route": None, "status": None}
+            signals_payload_any = _req("GET", "/api/autobuy/signals", params={"limit": 100})
+        except Exception:
+            signals_payload_any = None
         try:
-            autobuy_res = dc_autobuy_status()
-        except Exception as e:
-            autobuy_res = {"data": None, "error": str(e), "route": None, "status": None}
+            autobuy_payload_any = _req("GET", "/api/autobuy/status")
+        except Exception:
+            autobuy_payload_any = None
 
-    signals_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], signals_res.get("data"))
-    autobuy_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], autobuy_res.get("data"))
+    signals_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], signals_payload_any if isinstance(signals_payload_any, dict) else None)
+    autobuy_payload: Optional[Dict[str, Any]] = cast(Optional[Dict[str, Any]], autobuy_payload_any if isinstance(autobuy_payload_any, dict) else None)
 
     if not signals_payload:
-        route = signals_res.get("route")
-        status = signals_res.get("status")
-        err = signals_res.get("error")
-        msg = "Signals unavailable"
-        if route or status:
-            msg += f" — {route or ''} {f'({status})' if status is not None else ''}"
-        if err:
-            msg += f" • {err}"
-        _st.info(msg.strip())
+        _st.info("Signals unavailable")
 
     if not autobuy_payload:
-        route = autobuy_res.get("route")
-        status = autobuy_res.get("status")
-        err = autobuy_res.get("error")
-        msg = "Autobuy status unavailable"
-        if route or status:
-            msg += f" — {route or ''} {f'({status})' if status is not None else ''}"
-        if err:
-            msg += f" • {err}"
-        _st.info(msg.strip())
+        _st.info("Autobuy status unavailable")
 
     signals: List[Dict[str, Any]] = _extract_signals(signals_payload)
     unique_symbols = len({str(x.get("symbol", "")).upper() for x in signals}) if signals else 0
@@ -146,5 +127,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
 

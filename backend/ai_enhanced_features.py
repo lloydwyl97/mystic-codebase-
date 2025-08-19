@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 from dataclasses import dataclass
 import structlog
+from datetime import datetime, timezone
 
 # AI/ML imports
 try:
@@ -150,7 +151,7 @@ class EnhancedSentimentAnalyzer:
                 sentiment_score=overall_sentiment,
                 confidence=confidence,
                 sources=self.news_sources,
-                timestamp=datetime.timezone.utcnow(),
+                timestamp=datetime.now(timezone.utc),
                 news_count=len(news_data),
                 social_volume=len(social_data),
                 fear_greed_index=fear_greed,
@@ -163,7 +164,7 @@ class EnhancedSentimentAnalyzer:
                 sentiment_score=0.0,
                 confidence=0.0,
                 sources=[],
-                timestamp=datetime.timezone.utcnow(),
+                timestamp=datetime.now(timezone.utc),
                 news_count=0,
                 social_volume=0,
                 fear_greed_index=50.0,
@@ -266,7 +267,7 @@ class AdvancedPredictor:
                 timeframe="1h",
                 model_version="ensemble_v2",
                 features_used=list(features.keys()),
-                timestamp=datetime.timezone.utcnow(),
+                timestamp=datetime.now(timezone.utc),
             )
 
         except Exception as e:
@@ -279,7 +280,7 @@ class AdvancedPredictor:
                 timeframe="1h",
                 model_version="fallback",
                 features_used=[],
-                timestamp=datetime.timezone.utcnow(),
+                timestamp=datetime.now(timezone.utc),
             )
 
     def _prepare_features(
@@ -542,7 +543,7 @@ class AIStrategyGenerator:
             time_horizon="1d",
             stop_loss=None,
             take_profit=None,
-            timestamp=datetime.timezone.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
     def _create_fallback_recommendation(self, symbol: str) -> StrategyRecommendation:
@@ -557,7 +558,7 @@ class AIStrategyGenerator:
             time_horizon="1d",
             stop_loss=None,
             take_profit=None,
-            timestamp=datetime.timezone.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
 
@@ -607,7 +608,7 @@ class EnhancedAITrading:
                 "sentiment": sentiment,
                 "prediction": prediction,
                 "recommendation": recommendation,
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
         except Exception as e:
@@ -615,7 +616,7 @@ class EnhancedAITrading:
             return {
                 "symbol": symbol,
                 "error": str(e),
-                "timestamp": datetime.timezone.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
     async def get_portfolio_insights(self, portfolio_symbols: List[str]) -> Dict[str, Any]:
@@ -626,7 +627,7 @@ class EnhancedAITrading:
             "risk_assessment": "moderate",
             "recommendations": [],
             "high_confidence_signals": [],
-            "timestamp": datetime.timezone.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         # Aggregate sentiment
@@ -658,5 +659,4 @@ class EnhancedAITrading:
                 )
 
         return insights
-
 

@@ -12,9 +12,8 @@ _ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if _ROOT not in sys.path:
     sys.path.append(_ROOT)
 
-from streamlit.data_client import get_alerts, get_health_check, get_ai_heartbeat
-from streamlit.state import render_sidebar_controls
-from streamlit.ui_guard import display_guard
+from mystic_ui.api_client import request_json as _req
+from mystic_ui._archive_pages.components.common_utils import render_sidebar_controls, display_guard
 
 
 SEVERITY_COLOR = {
@@ -60,14 +59,14 @@ def _as_dict(x: Any) -> Dict[str, Any]:
 
 def main() -> None:
     _st = cast(Any, st)
-    _st.set_page_config(page_title="Alerts", layout="wide")
+    # set_page_config is centralized in mystic_ui/app.py
 
     # Sidebar controls (exchange/symbol/timeframe)
     render_sidebar_controls()
 
     # Health/AI summary pills
     try:
-        hc = get_health_check()
+        hc = _req("GET", "/api/health")
         hdata: Dict[str, Any] = _as_dict(hc)
         adapters: List[str] = [str(x) for x in cast(List[Any], hdata.get("adapters", []))] if isinstance(hdata.get("adapters"), list) else []
         autobuy_state: str = str(hdata.get("autobuy", ""))
@@ -86,7 +85,7 @@ def main() -> None:
         ])
         _st.markdown(pills, unsafe_allow_html=True)
         try:
-            ai = get_ai_heartbeat()
+            ai = _req("GET", "/api/ai/heartbeat")
             ai_data: Dict[str, Any] = _as_dict(ai)
             running = bool(ai_data.get("running"))
             last_ts = ai_data.get("last_decision_ts")
@@ -102,7 +101,7 @@ def main() -> None:
 
     # Alerts fetch
     with display_guard("Alerts Feed"):
-        res: Any = get_alerts(200)
+        res: Any = _req("GET", "/api/whale/alerts", params={"limit": 200})
         if isinstance(res, dict) and "__meta__" in res:
             meta_raw: Any = res["__meta__"] if "__meta__" in res else {}
             meta: Dict[str, Any] = cast(Dict[str, Any], meta_raw if isinstance(meta_raw, dict) else {})
@@ -133,26 +132,9 @@ def main() -> None:
         data: Any = raw_payload
         if isinstance(data, dict):
             data_dict: Dict[str, Any] = cast(Dict[str, Any], data)
-            if "__meta__" in data_dict:
-                alerts = []
-            else:
-                inner_any: Any = data_dict.get("data")
-                if isinstance(inner_any, dict):
-                    inner_dict: Dict[str, Any] = cast(Dict[str, Any], inner_any)
-                    notif_any: Any = inner_dict.get("notifications")
-                    alerts_any: Any = inner_dict.get("alerts")
-                    if isinstance(notif_any, list):
-                        alerts = cast(List[Dict[str, Any]], notif_any)
-                    elif isinstance(alerts_any, list):
-                        alerts = cast(List[Dict[str, Any]], alerts_any)
-                    else:
-                        alerts = []
-                elif isinstance(inner_any, list):
-                    alerts = cast(List[Dict[str, Any]], inner_any)
-                else:
-                    # some backends return the list at top-level
-                    top_alerts_any: Any = data_dict.get("alerts") or data_dict.get("notifications")
-                    alerts = cast(List[Dict[str, Any]], top_alerts_any or [])
+            # whale alerts endpoint returns {alerts: [...], count: N}
+            list_any: Any = data_dict.get("alerts") or data_dict.get("notifications") or []
+            alerts = cast(List[Dict[str, Any]], list_any if isinstance(list_any, list) else [])
         elif isinstance(data, list):
             alerts = cast(List[Dict[str, Any]], data)
 
@@ -188,5 +170,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
 

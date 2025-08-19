@@ -296,6 +296,7 @@ async def dashboard_home():
     <!DOCTYPE html>
     <html>
     <head>
+    <meta charset=\"utf-8\">
         <title>Mystic AI Trading Dashboard</title>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <style>
